@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:awjq/components/index_aw_page.dart';
 import 'package:awjq/pages/community/home_market.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flurry/flurry.dart';
@@ -469,7 +470,7 @@ class _HomeState extends State<Home> {
                                 child: Container(
                                   width: ScreenUtil().screenWidth,
                                   height: double.infinity,
-                                  child: IndexPage(
+                                  child: IndexAwPage(
                                     isShow: selectedKey == 1,
                                     id: cf.aw_navid,
                                   ),

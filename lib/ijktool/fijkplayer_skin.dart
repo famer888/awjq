@@ -390,7 +390,7 @@ class _CustomFijkPanelState extends State<CustomFijkPanel>
       height: 40,
       child: const CircularProgressIndicator(
         backgroundColor: Colors.white30,
-        valueColor: AlwaysStoppedAnimation(Color(0xff5197F1)),
+        valueColor: AlwaysStoppedAnimation(Color.fromRGBO(90, 75, 235, 1)),
         strokeWidth: 1.5,
       ),
     );

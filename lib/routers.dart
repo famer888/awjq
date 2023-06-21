@@ -232,7 +232,7 @@ class Routes {
         path: communityseltagpage,
         builder: (context, state) => CommunitySeltagPage(
           id: int.parse(state.params['id'] ?? "0"),
-          type: state.params['type'] ?? '',
+          type: state.params['type'] == "sc" ? '' : state.params['type'],
         ),
       ),
       GoRoute(
@@ -293,7 +293,9 @@ class Routes {
                   path: communityseltagpage,
                   builder: (context, state) => CommunitySeltagPage(
                     id: int.parse(state.params['id'] ?? "0"),
-                    type: state.params['type'] ?? '',
+                    type: state.params['type'] == "sc"
+                        ? ''
+                        : state.params['type'],
                   ),
                 ),
               ],

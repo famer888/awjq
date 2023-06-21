@@ -184,7 +184,7 @@ class MessageActionItem extends StatelessWidget {
                           vertical: ScreenUtil().setWidth(1),
                           horizontal: ScreenUtil().setWidth(8)),
                       decoration: BoxDecoration(
-                          color: Color(0xff5197F1),
+                          color: Color.fromRGBO(90, 75, 235, 1),
                           borderRadius:
                               BorderRadius.circular(ScreenUtil().setWidth(9))),
                       child: Text(

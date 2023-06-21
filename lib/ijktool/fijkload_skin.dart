@@ -492,8 +492,8 @@ class _FijkLoadSkinState extends State<FijkLoadSkin>
                               padding: EdgeInsets.only(right: 5, left: 5),
                               child: NewFijkSlider(
                                 colors: NewFijkSliderColors(
-                                  cursorColor: Color(0xff5197F1),
-                                  playedColor: Color(0xff5197F1),
+                                  cursorColor: Color.fromRGBO(90, 75, 235, 1),
+                                  playedColor: Color.fromRGBO(90, 75, 235, 1),
                                 ),
                                 onChangeEnd: (double value) {},
                                 value: 0,
@@ -506,8 +506,8 @@ class _FijkLoadSkinState extends State<FijkLoadSkin>
                               padding: EdgeInsets.only(right: 5, left: 5),
                               child: NewFijkSlider(
                                 colors: NewFijkSliderColors(
-                                  cursorColor: Color(0xff5197F1),
-                                  playedColor: Color(0xff5197F1),
+                                  cursorColor: Color.fromRGBO(90, 75, 235, 1),
+                                  playedColor: Color.fromRGBO(90, 75, 235, 1),
                                 ),
                                 value: currentValue,
                                 cacheValue:
@@ -622,7 +622,7 @@ class _FijkLoadSkinState extends State<FijkLoadSkin>
                     alignment: Alignment.bottomLeft,
                     color: Colors.white24,
                     child: Container(
-                      color: Color.fromRGBO(94, 79, 236, .7),
+                      color: Color.fromRGBO(90, 75, 235, .7),
                       width: curBottomProW is double ? curBottomProW : 0,
                       height: 2,
                     ),
@@ -739,7 +739,8 @@ class _FijkLoadSkinState extends State<FijkLoadSkin>
                 height: 40,
                 child: const CircularProgressIndicator(
                   backgroundColor: Colors.white30,
-                  valueColor: AlwaysStoppedAnimation(Color(0xff5197F1)),
+                  valueColor:
+                      AlwaysStoppedAnimation(Color.fromRGBO(90, 75, 235, 1)),
                   strokeWidth: 1.5,
                 ),
               ),
@@ -822,7 +823,8 @@ class _FijkLoadSkinState extends State<FijkLoadSkin>
               child: LinearProgressIndicator(
                 value: updateDargVarVal,
                 backgroundColor: Colors.white54,
-                valueColor: AlwaysStoppedAnimation(Color(0xff5197F1)),
+                valueColor:
+                    AlwaysStoppedAnimation(Color.fromRGBO(90, 75, 235, 1)),
               ),
             ),
           ],
@@ -853,7 +855,9 @@ class _FijkLoadSkinState extends State<FijkLoadSkin>
               child: Text(
                 mapKey + " X",
                 style: TextStyle(
-                  color: _speed == speedVals ? Color(0xff5197F1) : Colors.white,
+                  color: _speed == speedVals
+                      ? Color.fromRGBO(90, 75, 235, 1)
+                      : Colors.white,
                   fontSize: 16,
                 ),
               ),
@@ -1016,9 +1020,9 @@ class _FijkLoadSkinState extends State<FijkLoadSkin>
                             decoration: BoxDecoration(
                               gradient: LinearGradient(
                                 colors: [
-                                  Color(0xff5197F1)
+                                  Color.fromRGBO(90, 75, 235, 1)
                                       .withAlpha((0.6 * 255).toInt()),
-                                  Color(0xff5197F1)
+                                  Color.fromRGBO(90, 75, 235, 1)
                                       .withAlpha((0.6 * 255).toInt()),
                                 ],
                                 begin: Alignment.centerLeft,

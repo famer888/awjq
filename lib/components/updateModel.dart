@@ -704,7 +704,7 @@ class _DownloadApkState extends State<DownloadApk> {
                                         width: ScreenUtil().setWidth(185),
                                         height: ScreenUtil().setWidth(4),
                                         decoration: BoxDecoration(
-                                          color: Color(0xff5197F1),
+                                          color: Color.fromRGBO(90, 75, 235, 1),
                                         ),
                                       ),
                                     ),
@@ -720,7 +720,8 @@ class _DownloadApkState extends State<DownloadApk> {
                                               ScreenUtil().setWidth(185),
                                           height: ScreenUtil().setWidth(4),
                                           decoration: BoxDecoration(
-                                            color: Color(0xff5197F1),
+                                            color:
+                                                Color.fromRGBO(90, 75, 235, 1),
                                           ),
                                         ),
                                       ),
@@ -737,7 +738,7 @@ class _DownloadApkState extends State<DownloadApk> {
                         Center(
                           child: Text('$progress%',
                               style: TextStyle(
-                                  color: Color(0xff5197F1),
+                                  color: Color.fromRGBO(90, 75, 235, 1),
                                   fontSize: ScreenUtil().setSp(18),
                                   decoration: TextDecoration.none,
                                   fontWeight: FontWeight.bold)),

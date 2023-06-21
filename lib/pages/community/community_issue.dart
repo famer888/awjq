@@ -273,7 +273,7 @@ class _CommunityIssueState extends BaseWidgetState<CommunityIssue> {
               behavior: HitTestBehavior.translucent,
               onTap: () {
                 CommonUtils.debugPrint("click");
-                context.push("/communityseltagpage/${setLabel['id'] ?? 0}/''");
+                context.push("/communityseltagpage/${setLabel['id'] ?? 0}/sc");
               },
               child: Container(
                 padding:

@@ -219,7 +219,7 @@ class FlickVideoPcontrols extends StatelessWidget {
                         child: CircularProgressIndicator(
                           backgroundColor: Colors.grey[200],
                           valueColor: AlwaysStoppedAnimation(
-                            GQStyle.jellyCyanColor103224185,
+                            Color.fromRGBO(90, 75, 235, 1),
                           ),
                           strokeWidth: 1.0,
                         ),
@@ -405,8 +405,8 @@ class FlickVideoPcontrols extends StatelessWidget {
                             handleRadius: 3,
                             backgroundColor: Colors.white24,
                             bufferedColor: Colors.white38,
-                            playedColor: GQStyle.jellyCyanColor103224185,
-                            handleColor: GQStyle.jellyCyanColor103224185,
+                            playedColor: Color.fromRGBO(90, 75, 235, 1),
+                            handleColor: Color.fromRGBO(90, 75, 235, 1),
                           ),
                         ),
                       ),
@@ -433,8 +433,10 @@ class FlickVideoPcontrols extends StatelessWidget {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          Color(0xff5197F1).withAlpha((0.6 * 255).toInt()),
-                          Color(0xff5197F1).withAlpha((0.6 * 255).toInt()),
+                          Color.fromRGBO(90, 75, 235, 1)
+                              .withAlpha((0.6 * 255).toInt()),
+                          Color.fromRGBO(90, 75, 235, 1)
+                              .withAlpha((0.6 * 255).toInt()),
                           // Color.fromRGBO(0, 236, 252, 0.6),
                           // Color.fromRGBO(188, 233, 84, 0.6)
                         ],
@@ -474,7 +476,7 @@ class FlickVideoPcontrols extends StatelessWidget {
                     curveRadius: 0,
                     backgroundColor: Colors.white24,
                     bufferedColor: Colors.white38,
-                    playedColor: GQStyle.jellyCyanColor103224185,
+                    playedColor: Color.fromRGBO(90, 75, 235, 1),
                     handleColor: Colors.transparent,
                   ),
                 ),

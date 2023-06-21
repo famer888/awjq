@@ -198,6 +198,7 @@ class Config {
     this.potato_group,
     this.sort_nav,
     this.forum_nav,
+    this.vip_level_str,
   });
 
   String day_price;
@@ -234,6 +235,7 @@ class Config {
   String potato_group;
   List<dynamic> sort_nav;
   List<dynamic> forum_nav;
+  List<String> vip_level_str;
 
   factory Config.fromJson(Map<String, dynamic> json) => Config(
         day_price: json["day_price"] == null ? null : json["day_price"],
@@ -259,6 +261,9 @@ class Config {
         line: json["line"] == null
             ? null
             : List<dynamic>.from(json["line"].map((x) => x)),
+        vip_level_str: json["vip_level_str"] == null
+            ? []
+            : List<String>.from(json["vip_level_str"].map((x) => x.toString())),
         buoy: json["buoy"] == null
             ? null
             : List<dynamic>.from(json["buoy"].map((x) => x)),

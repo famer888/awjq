@@ -303,9 +303,9 @@ class _MineAgentToCashPageState extends BaseWidgetState<MineAgentToCashPage> {
                                               _sumResultMoney =
                                                   int.parse(value);
                                               _sumAllResultMoney =
-                                                  (int.parse(value) *
-                                                          (1 + _proxy_rate))
-                                                      .floor();
+                                                  (_sumResultMoney /
+                                                          (1 - _proxy_rate))
+                                                      .ceil();
                                             });
                                           }
                                         },

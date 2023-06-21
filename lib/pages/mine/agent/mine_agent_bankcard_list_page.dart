@@ -438,7 +438,7 @@ class MineBankCardWidget extends StatelessWidget {
                           dimension: ScreenUtil().setWidth(25),
                           child: Icon(
                             Icons.circle_outlined,
-                            color: Color(0xff5197F1),
+                            color: Color.fromRGBO(90, 75, 235, 1),
                           ),
                         ),
                 ),
