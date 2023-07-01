@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:awjq/store/homeConfig.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:awjq/base/baseWidget.dart';
 
@@ -48,6 +50,7 @@ class _CommunityMarketIssueState extends BaseWidgetState<CommunityMarketIssue> {
   int videoLimit = 1;
   List<Map> upList = [];
   Map video = {};
+  int isOpen = 1;
 
   @override
   void onCreate() {
@@ -178,6 +181,9 @@ class _CommunityMarketIssueState extends BaseWidgetState<CommunityMarketIssue> {
       CommonUtils.showText(CommonUtils.txt("q") + CommonUtils.txt("xzht"));
       return;
     }
+    if (setLabel['is_ai'] == 1) {
+      contact = "111111";
+    }
     if (title.isEmpty) {
       CommonUtils.showText(CommonUtils.txt("qsbtxx"));
       return;
@@ -200,6 +206,8 @@ class _CommunityMarketIssueState extends BaseWidgetState<CommunityMarketIssue> {
       upList.removeAt(0);
       upList.add(video);
     }
+    int money = Provider.of<HomeConfig>(context, listen: false).member.money;
+    int aipay = Provider.of<HomeConfig>(context, listen: false).config.pay_ai;
 
     initLoadGIF();
     communityPost(
@@ -210,6 +218,9 @@ class _CommunityMarketIssueState extends BaseWidgetState<CommunityMarketIssue> {
       coins: coins,
       type: 'fish',
       contact: contact,
+      is_public: isOpen,
+      context: context,
+      money: money - aipay,
     ).then((res) {
       BotToast.closeAllLoading();
       if (res.status == 1) {
@@ -245,6 +256,7 @@ class _CommunityMarketIssueState extends BaseWidgetState<CommunityMarketIssue> {
   @override
   Widget pageBody(BuildContext context) {
     // TODO: implement pageBody
+    int pay_ai = Provider.of<HomeConfig>(context, listen: false).config.pay_ai;
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
@@ -261,10 +273,21 @@ class _CommunityMarketIssueState extends BaseWidgetState<CommunityMarketIssue> {
             horizontal: GQStyle.pagePadding),
         child: Column(
           children: [
+            setLabel['is_ai'] == 1
+                ? Padding(
+                    padding: EdgeInsets.only(bottom: 20.w),
+                    child: Text(
+                      CommonUtils.txt('mtxq')
+                          .replaceAll("00", setLabel['name'])
+                          .replaceAll("11", "$pay_ai"),
+                      style: GQStyle.red14,
+                      maxLines: 3,
+                    ),
+                  )
+                : Container(),
             GestureDetector(
               behavior: HitTestBehavior.translucent,
               onTap: () {
-                CommonUtils.debugPrint("click");
                 context
                     .push("/communityseltagpage/${setLabel['id'] ?? 0}/fish");
               },
@@ -394,104 +417,191 @@ class _CommunityMarketIssueState extends BaseWidgetState<CommunityMarketIssue> {
                   ),
                 ),
                 SizedBox(height: 20.w),
-                SizedBox(
-                  height: ScreenUtil().setWidth(40),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Color(0xFFaaaaaa), width: .5),
-                      borderRadius: BorderRadius.all(
-                          Radius.circular(ScreenUtil().setWidth(5))),
-                    ),
-                    child: TextField(
-                      autofocus: false,
-                      style: GQStyle.white255_15,
-                      cursorColor: Color.fromRGBO(255, 255, 255, 1),
-                      textInputAction: TextInputAction.done,
-                      onChanged: (value) {
-                        contact = value;
-                      },
-                      decoration: InputDecoration(
-                        hoverColor: Colors.white,
-                        hintText: CommonUtils.txt('srlxfs'),
-                        hintStyle: TextStyle(
-                          color: Color(0xffa1a2a9),
-                          fontFamily: GQStyle.hanyi,
-                          fontSize: ScreenUtil().setSp(15),
+                setLabel['is_ai'] == 1
+                    ? SizedBox(
+                        height: ScreenUtil().setWidth(40),
+                        child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 8.w),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                  color: Color(0xFFaaaaaa), width: .5),
+                              borderRadius: BorderRadius.all(
+                                  Radius.circular(ScreenUtil().setWidth(5))),
+                            ),
+                            child: Row(
+                              children: [
+                                Text(
+                                  CommonUtils.txt('sffbmzxx') + "：",
+                                  style: TextStyle(
+                                    color: Color(0xffa1a2a9),
+                                    fontFamily: GQStyle.hanyi,
+                                    fontSize: ScreenUtil().setSp(15),
+                                  ),
+                                ),
+                                SizedBox(width: 10.w),
+                                GestureDetector(
+                                  behavior: HitTestBehavior.translucent,
+                                  onTap: () {
+                                    isOpen = 1;
+                                    setState(() {});
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        CommonUtils.txt('qwmzxx'),
+                                        style: TextStyle(
+                                          color: Color(0xffa1a2a9),
+                                          fontFamily: GQStyle.hanyi,
+                                          fontSize: ScreenUtil().setSp(15),
+                                        ),
+                                      ),
+                                      SizedBox(width: 2.w),
+                                      Icon(
+                                        isOpen == 1
+                                            ? Icons.check_circle
+                                            : Icons.circle_outlined,
+                                        size: 16.w,
+                                        color: isOpen == 1
+                                            ? Color.fromRGBO(55, 93, 245, 1)
+                                            : Color(0xffa1a2a9),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(width: 20.w),
+                                GestureDetector(
+                                  behavior: HitTestBehavior.translucent,
+                                  onTap: () {
+                                    isOpen = 0;
+                                    setState(() {});
+                                  },
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        CommonUtils.txt('qwmzsm'),
+                                        style: TextStyle(
+                                          color: Color(0xffa1a2a9),
+                                          fontFamily: GQStyle.hanyi,
+                                          fontSize: ScreenUtil().setSp(15),
+                                        ),
+                                      ),
+                                      SizedBox(width: 2.w),
+                                      Icon(
+                                        isOpen == 0
+                                            ? Icons.check_circle
+                                            : Icons.circle_outlined,
+                                        size: 16.w,
+                                        color: isOpen == 0
+                                            ? Color.fromRGBO(55, 93, 245, 1)
+                                            : Color(0xffa1a2a9),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            )))
+                    : SizedBox(
+                        height: ScreenUtil().setWidth(40),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border:
+                                Border.all(color: Color(0xFFaaaaaa), width: .5),
+                            borderRadius: BorderRadius.all(
+                                Radius.circular(ScreenUtil().setWidth(5))),
+                          ),
+                          child: TextField(
+                            autofocus: false,
+                            style: GQStyle.white255_15,
+                            cursorColor: Color.fromRGBO(255, 255, 255, 1),
+                            textInputAction: TextInputAction.done,
+                            onChanged: (value) {
+                              contact = value;
+                            },
+                            decoration: InputDecoration(
+                              hoverColor: Colors.white,
+                              hintText: CommonUtils.txt('srlxfs'),
+                              hintStyle: TextStyle(
+                                color: Color(0xffa1a2a9),
+                                fontFamily: GQStyle.hanyi,
+                                fontSize: ScreenUtil().setSp(15),
+                              ),
+                              contentPadding: EdgeInsets.symmetric(
+                                  horizontal: ScreenUtil().setWidth(8)),
+                              disabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(0.0),
+                                  borderSide: BorderSide(
+                                      color: Colors.transparent, width: 0)),
+                              focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(0.0),
+                                  borderSide: BorderSide(
+                                      color: Colors.transparent, width: 0)),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(0.0),
+                                  borderSide: BorderSide(
+                                      color: Colors.transparent, width: 0)),
+                              enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(0.0),
+                                  borderSide: BorderSide(
+                                      color: Colors.transparent, width: 0)),
+                            ),
+                          ),
                         ),
-                        contentPadding: EdgeInsets.symmetric(
-                            horizontal: ScreenUtil().setWidth(8)),
-                        disabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(0.0),
-                            borderSide: BorderSide(
-                                color: Colors.transparent, width: 0)),
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(0.0),
-                            borderSide: BorderSide(
-                                color: Colors.transparent, width: 0)),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(0.0),
-                            borderSide: BorderSide(
-                                color: Colors.transparent, width: 0)),
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(0.0),
-                            borderSide: BorderSide(
-                                color: Colors.transparent, width: 0)),
                       ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 20.w),
-                SizedBox(
-                  height: ScreenUtil().setWidth(40),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Color(0xFFaaaaaa), width: .5),
-                      borderRadius: BorderRadius.all(
-                          Radius.circular(ScreenUtil().setWidth(5))),
-                    ),
-                    child: TextField(
-                      inputFormatters: [
-                        FilteringTextInputFormatter(RegExp("[0-9]"),
-                            allow: true),
-                        LengthLimitingTextInputFormatter(3),
-                      ],
-                      autofocus: false,
-                      style: GQStyle.white255_15,
-                      cursorColor: Color.fromRGBO(255, 255, 255, 1),
-                      textInputAction: TextInputAction.done,
-                      onChanged: (value) {
-                        coins = value.isEmpty ? '0' : value;
-                      },
-                      decoration: InputDecoration(
-                        hoverColor: Colors.white,
-                        hintText: CommonUtils.txt('szjsjg'),
-                        hintStyle: TextStyle(
-                          color: Color(0xffa1a2a9),
-                          fontFamily: GQStyle.hanyi,
-                          fontSize: ScreenUtil().setSp(15),
+                SizedBox(height: setLabel['is_ai'] == 1 ? 0.w : 20.w),
+                setLabel['is_ai'] == 1
+                    ? SizedBox()
+                    : SizedBox(
+                        height: ScreenUtil().setWidth(40),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            border:
+                                Border.all(color: Color(0xFFaaaaaa), width: .5),
+                            borderRadius: BorderRadius.all(
+                                Radius.circular(ScreenUtil().setWidth(5))),
+                          ),
+                          child: TextField(
+                            inputFormatters: [
+                              FilteringTextInputFormatter(RegExp("[0-9]"),
+                                  allow: true),
+                              LengthLimitingTextInputFormatter(3),
+                            ],
+                            autofocus: false,
+                            style: GQStyle.white255_15,
+                            cursorColor: Color.fromRGBO(255, 255, 255, 1),
+                            textInputAction: TextInputAction.done,
+                            onChanged: (value) {
+                              coins = value.isEmpty ? '0' : value;
+                            },
+                            decoration: InputDecoration(
+                              hoverColor: Colors.white,
+                              hintText: CommonUtils.txt('szjsjg'),
+                              hintStyle: TextStyle(
+                                color: Color(0xffa1a2a9),
+                                fontFamily: GQStyle.hanyi,
+                                fontSize: ScreenUtil().setSp(15),
+                              ),
+                              contentPadding: EdgeInsets.symmetric(
+                                  horizontal: ScreenUtil().setWidth(8)),
+                              disabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(0.0),
+                                  borderSide: BorderSide(
+                                      color: Colors.transparent, width: 0)),
+                              focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(0.0),
+                                  borderSide: BorderSide(
+                                      color: Colors.transparent, width: 0)),
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(0.0),
+                                  borderSide: BorderSide(
+                                      color: Colors.transparent, width: 0)),
+                              enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(0.0),
+                                  borderSide: BorderSide(
+                                      color: Colors.transparent, width: 0)),
+                            ),
+                          ),
                         ),
-                        contentPadding: EdgeInsets.symmetric(
-                            horizontal: ScreenUtil().setWidth(8)),
-                        disabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(0.0),
-                            borderSide: BorderSide(
-                                color: Colors.transparent, width: 0)),
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(0.0),
-                            borderSide: BorderSide(
-                                color: Colors.transparent, width: 0)),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(0.0),
-                            borderSide: BorderSide(
-                                color: Colors.transparent, width: 0)),
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(0.0),
-                            borderSide: BorderSide(
-                                color: Colors.transparent, width: 0)),
-                      ),
-                    ),
-                  ),
-                )
+                      )
               ],
             ),
             Column(

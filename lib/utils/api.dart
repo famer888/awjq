@@ -778,6 +778,22 @@ Future<Basic> communitySortList(
   }
 }
 
+//社区排序列表
+Future<Basic> communityAiList({int page, int limit = 15}) async {
+  try {
+    Response<dynamic> res =
+        await PlatformAwareHttp.post('/api/community/ai_posts', data: {
+      "page": page,
+      "limit": limit,
+    });
+    CommonUtils.debugPrint(res.data);
+    return Basic.fromJson(res.data);
+  } catch (e) {
+    CommonUtils.debugPrint(e);
+    return null;
+  }
+}
+
 //话题详情-帖子分页
 Future<Basic> communityListTopicPost(
     {String topic_id,
@@ -843,6 +859,9 @@ Future<Basic> communityPost({
   String coins,
   String type = "",
   String contact = "",
+  int is_public = 0,
+  int money = 0,
+  BuildContext context,
 }) async {
   try {
     Response<dynamic> res =
@@ -854,9 +873,14 @@ Future<Basic> communityPost({
       "coins": coins,
       "type": type,
       "contact": contact,
+      "is_public": is_public,
     });
     CommonUtils.debugPrint(res.data);
-    return Basic.fromJson(res.data);
+    Basic data = Basic.fromJson(res.data);
+    if (data.status == 1 && money > 0) {
+      HomeConfig.setUserMoney(context, money);
+    }
+    return data;
   } catch (e) {
     CommonUtils.debugPrint(e);
     return null;

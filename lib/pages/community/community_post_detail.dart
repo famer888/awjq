@@ -602,20 +602,23 @@ class _CommunityPostDetailState extends BaseWidgetState<CommunityPostDetail> {
                                               }
                                             });
                                           })
-                                    : TextSpan(
-                                        text: CommonUtils.txt('sjlxfs') +
-                                            "${detailData["contact"]}【${CommonUtils.txt('djfz')}】",
-                                        style: TextStyle(
-                                            color: Colors.blue,
-                                            fontSize: 14.sp),
-                                        recognizer: TapGestureRecognizer()
-                                          ..onTap = () {
-                                            Clipboard.setData(ClipboardData(
-                                                text:
-                                                    '${detailData["contact"]}'));
-                                            CommonUtils.showText(
-                                                CommonUtils.txt('fzcglx'));
-                                          })
+                                    : (detailData["contact"] ?? "")
+                                            .contains("111111")
+                                        ? TextSpan()
+                                        : TextSpan(
+                                            text: CommonUtils.txt('sjlxfs') +
+                                                "${detailData["contact"]}【${CommonUtils.txt('djfz')}】",
+                                            style: TextStyle(
+                                                color: Colors.blue,
+                                                fontSize: 14.sp),
+                                            recognizer: TapGestureRecognizer()
+                                              ..onTap = () {
+                                                Clipboard.setData(ClipboardData(
+                                                    text:
+                                                        '${detailData["contact"]}'));
+                                                CommonUtils.showText(
+                                                    CommonUtils.txt('fzcglx'));
+                                              })
                               ])),
                             ),
                       Padding(

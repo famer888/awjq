@@ -136,9 +136,11 @@ class _IndexAwPageState extends BaseWidgetState<IndexAwPage> {
   Widget pageBody(BuildContext context) {
     // TODO: implement pageBody
     List array = Provider.of<HomeConfig>(context, listen: false).config.buoy;
-    Member user = Provider.of<HomeConfig>(context, listen: false).member;
-    List vip_level_str =
+    List<String> vip_level_str =
         Provider.of<HomeConfig>(context, listen: false).config.vip_level_str;
+    String vip_name_str =
+        Provider.of<HomeConfig>(context, listen: false).config.vip_name_str;
+    Member user = Provider.of<HomeConfig>(context, listen: false).member;
     return netWorkErr
         ? PageStatus.noNetWork(onTap: () {
             netWorkErr = false;
@@ -225,14 +227,12 @@ class _IndexAwPageState extends BaseWidgetState<IndexAwPage> {
                                   color: Colors.black.withOpacity(0.3)),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(CommonUtils.txt('djkt'),
-                                      style: GQStyle.white15),
-                                  Text(vip_level_str.join("/"),
-                                      style: GQStyle.blue80_15),
-                                  Text(CommonUtils.txt('kqawxqzy'),
-                                      style: GQStyle.white15),
-                                ],
+                                children: vip_name_str.split("#").map((e) {
+                                  if (e.contains("卡")) {
+                                    return Text(e, style: GQStyle.blue80_15);
+                                  }
+                                  return Text(e, style: GQStyle.white15);
+                                }).toList(),
                               ),
                             ),
                           ),

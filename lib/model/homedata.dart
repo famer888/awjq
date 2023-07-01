@@ -199,6 +199,9 @@ class Config {
     this.sort_nav,
     this.forum_nav,
     this.vip_level_str,
+    this.wdai_str,
+    this.vip_name_str,
+    this.pay_ai,
   });
 
   String day_price;
@@ -232,10 +235,13 @@ class Config {
   List<dynamic> buoy;
   int show_app;
   String tg_group;
+  String wdai_str;
+  String vip_name_str;
   String potato_group;
   List<dynamic> sort_nav;
   List<dynamic> forum_nav;
   List<String> vip_level_str;
+  int pay_ai;
 
   factory Config.fromJson(Map<String, dynamic> json) => Config(
         day_price: json["day_price"] == null ? null : json["day_price"],
@@ -311,6 +317,9 @@ class Config {
         show_app: json['show_app'],
         potato_group: json['potato_group'] ?? '',
         tg_group: json['tg_group'] ?? '',
+        wdai_str: json['wdai_str'] ?? '',
+        vip_name_str: json['vip_name_str'] ?? '',
+        pay_ai: json['pay_ai'] ?? 0,
       );
 
   Map<String, dynamic> toJson() => {
@@ -358,6 +367,9 @@ class Config {
         "show_app": show_app,
         "potato_group": potato_group,
         "tg_group": tg_group,
+        "wdai_str": wdai_str,
+        "vip_name_str": vip_name_str,
+        "pay_ai": pay_ai,
       };
 }
 

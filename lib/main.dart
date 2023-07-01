@@ -59,7 +59,7 @@ void main() async {
         CommonUtils.gvMD5(
             '${CommonUtils.randomId(16)}_${DateTime.now().millisecondsSinceEpoch.toString()}'),
     "bundleId": "com.pwa.awjq",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "oauth_type": "web",
     "language": 'zh',
     "via": 'pwa',
@@ -81,26 +81,20 @@ void main() async {
         "bundleId": packageInfo.packageName,
         "version": packageInfo.version,
         "oauth_type": "android",
-        // "build_affcode": "qWv3",
+        // "build_affcode": "pYpC",
       };
     } else {
       IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
       AppGlobal.appinfo = {
         "oauth_id": CommonUtils.gvMD5(iosInfo.identifierForVendor),
         "bundleId": packageInfo.packageName,
-        "version": "1.0.0",
+        "version": "1.1.0",
         "oauth_type": "ios",
       };
     }
   } else {
     AppGlobal.appBox.put('oauth_id', AppGlobal.appinfo['oauth_id']);
   }
-  //  test
-  // AppGlobal.appinfo = {
-  //   "oauth_id": "b91524d2fcd0ad89",
-  //   "version": "3.2.0",
-  //   "oauth_type": "android",
-  // };
 
   //路由初始化
   // final _frouter = FluroRouter();

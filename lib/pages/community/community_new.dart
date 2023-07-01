@@ -36,14 +36,20 @@ class _CommunityNewState extends State<CommunityNew> {
   }
 
   _getData() {
-    communitySortList(
-            id: widget.id, sort: widget.sort, page: page, type: widget.type)
+    (widget.id == 100
+            ? communityAiList(page: page)
+            : communitySortList(
+                id: widget.id,
+                sort: widget.sort,
+                page: page,
+                type: widget.type))
         .then((res) {
       if (res.data == null) {
         networkErr = true;
         setState(() {});
         return;
       }
+
       List st = List.from(res.data["posts"] ?? []);
       if (page == 1) {
         noMore = false;

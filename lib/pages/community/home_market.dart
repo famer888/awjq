@@ -43,9 +43,13 @@ class _HomeMarketState extends State<HomeMarket>
   ];
 
   _getData() {
+    Config config = Provider.of<HomeConfig>(context, listen: false).config;
     reqGetPostNav(type: "fish").then((value) {
       if (value.status == 1) {
         navs = List.from(value?.data ?? []);
+        if (config.wdai_str.isNotEmpty) {
+          navs.add({'id': 100, 'title': config.wdai_str});
+        }
         _isHud = false;
       } else {
         _netError = true;
@@ -99,10 +103,17 @@ class _HomeMarketState extends State<HomeMarket>
                           titles: navs
                               .map<String>((e) => e["title"] ?? "")
                               .toList(),
-                          pages: navs
-                              .map<Widget>(
-                                  (e) => CommunityChildPage(id: e["id"]))
-                              .toList(),
+                          pages: navs.map<Widget>((e) {
+                            if (e["id"] == 100) {
+                              return CommunityNew(
+                                id: e["id"],
+                                type: "fish",
+                                sort: e["type"],
+                              );
+                            } else {
+                              return CommunityChildPage(id: e["id"]);
+                            }
+                          }).toList(),
                           navColor: Colors.transparent,
                           type: YyqDiamondNavEnum.line,
                           defaultStyle: TextStyle(
