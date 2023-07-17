@@ -198,9 +198,13 @@ class _CommunityIssueState extends BaseWidgetState<CommunityIssue> {
         return;
       }
       //设置默认第一张图为封面
-      video["cover"] = upList.first["media_url"];
-      upList.removeAt(0);
-      upList.add(video);
+      int index = upList.indexWhere((el) => el['media_url'].contains('.mp4'));
+      if (index == -1) {
+        video["cover"] = upList.first["media_url"];
+        video["url"] = upList.first["url"];
+        upList.removeAt(0);
+        upList.add(video);
+      }
     }
     if (widget.type == 2) {
       if (content.length == 0) {
@@ -208,9 +212,7 @@ class _CommunityIssueState extends BaseWidgetState<CommunityIssue> {
         return;
       }
     }
-    // CommonUtils.debugPrint(
-    //     "topic_id: ${setLabel["id"].toString()}, title: $title content: $content, medias: ${json.encode(upList)}, coins: $coins");
-    // return;
+
     initLoadGIF();
     communityPost(
       topic_id: setLabel["id"].toString(),
@@ -677,7 +679,12 @@ class _CommunityIssueState extends BaseWidgetState<CommunityIssue> {
                                                         .translucent,
                                                     onTap: () {
                                                       video = {};
-                                                      setState(() {});
+                                                      upList.removeWhere((el) =>
+                                                          el['media_url']
+                                                              .contains(
+                                                                  '.mp4'));
+                                                      if (mounted)
+                                                        setState(() {});
                                                     },
                                                     child: LImage(
                                                       "report_del_n",

@@ -202,10 +202,15 @@ class _CommunityMarketIssueState extends BaseWidgetState<CommunityMarketIssue> {
     }
     if (video.isNotEmpty && upList.isNotEmpty) {
       //设置默认第一张图为封面
-      video["cover"] = upList.first["media_url"] ?? "";
-      upList.removeAt(0);
-      upList.add(video);
+      int index = upList.indexWhere((el) => el['media_url'].contains('.mp4'));
+      if (index == -1) {
+        video["cover"] = upList.first["media_url"];
+        video["url"] = upList.first["url"];
+        upList.removeAt(0);
+        upList.add(video);
+      }
     }
+
     int money = Provider.of<HomeConfig>(context, listen: false).member.money;
     int aipay = Provider.of<HomeConfig>(context, listen: false).config.pay_ai;
 
@@ -764,7 +769,10 @@ class _CommunityMarketIssueState extends BaseWidgetState<CommunityMarketIssue> {
                                                   HitTestBehavior.translucent,
                                               onTap: () {
                                                 video = {};
-                                                setState(() {});
+                                                upList.removeWhere((el) =>
+                                                    el['media_url']
+                                                        .contains('.mp4'));
+                                                if (mounted) setState(() {});
                                               },
                                               child: LImage(
                                                 "report_del_n",
