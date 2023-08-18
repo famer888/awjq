@@ -13,7 +13,7 @@ import 'package:awjq/utils/crypto.dart';
 import 'package:hive/hive.dart';
 import 'package:awjq/utils/common.dart';
 import 'package:awjq/utils/index.dart';
-import 'package:awjq/utils/logUtil.dart';
+import 'package:awjq/utils/logUtilS.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class DownloadComics {
