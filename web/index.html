@@ -43,6 +43,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="暗网禁区">
+  <link rel="icon" type="image/png" href="favicon.png" />
 
   <style>
     video {
@@ -75,6 +76,7 @@
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('flutter-first-frame', function () {
+        navigator.serviceWorker.register('flutter_service_worker.js');
         var customServiceWorkerUrl = './sw.js';
         navigator.serviceWorker.register(customServiceWorkerUrl, { scope: '.' }).then(function (registration) {
           // Registration was successful
@@ -83,7 +85,6 @@
           // registration failed 
           console.log('CustomServiceWorker registration failed: ', err);
         });
-        navigator.serviceWorker.register('flutter_service_worker.js');
       });
     }
   </script>

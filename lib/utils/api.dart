@@ -1047,7 +1047,6 @@ Future<Basic> searchHotList() async {
   try {
     Response<dynamic> res = await PlatformAwareHttp.post('/api/search/index');
     Basic result = Basic.fromJson(res.data);
-    CommonUtils.debugPrint("hjhjhjbjbjda==${result.data}");
     return result;
   } catch (e) {
     CommonUtils.debugPrint(e);

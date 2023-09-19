@@ -459,7 +459,9 @@ class _HomeState extends State<Home> {
       var version = Provider.of<HomeConfig>(context, listen: false).versionMsg;
       var config = Provider.of<HomeConfig>(context, listen: false).config;
       checkUpdateAnnouncement(version, config);
+      return;
     }
+    _addMainScreen();
   }
 
   _onTapSwiper(Notice notice) {
