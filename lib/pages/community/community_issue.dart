@@ -46,6 +46,7 @@ class _CommunityIssueState extends BaseWidgetState<CommunityIssue> {
 
   int picLimit = 9;
   int videoLimit = 1;
+  int isLive = 1;
   List<Map> upList = [];
   Map video = {};
 
@@ -124,6 +125,7 @@ class _CommunityIssueState extends BaseWidgetState<CommunityIssue> {
             _initializeVideoPlayerFuture = _controller.initialize();
             video = {
               "media_url": url,
+              "type": 1,
               "thumb_width": 1600,
               "thumb_height": 900,
             };
@@ -166,6 +168,7 @@ class _CommunityIssueState extends BaseWidgetState<CommunityIssue> {
         "url": AppGlobal.imgBase + url,
         "thumb_width": image.width,
         "thumb_height": image.height,
+        "type": 0,
       });
       setState(() {});
     } else {
@@ -193,12 +196,16 @@ class _CommunityIssueState extends BaseWidgetState<CommunityIssue> {
         CommonUtils.showText(CommonUtils.txt("qsctp"));
         return;
       }
-      if (video.length == 0) {
+      if (video.length == 0 && setLabel['is_live'] != 1) {
         CommonUtils.showText(CommonUtils.txt("qscsp"));
         return;
       }
+      if (video.length == 0 && setLabel['is_live'] == 1) {
+        CommonUtils.showText(CommonUtils.txt("srzbdz"));
+        return;
+      }
       //设置默认第一张图为封面
-      int index = upList.indexWhere((el) => el['media_url'].contains('.mp4'));
+      int index = upList.indexWhere((el) => el['type'] == 1);
       if (index == -1) {
         video["cover"] = upList.first["media_url"];
         video["url"] = upList.first["url"];
@@ -220,6 +227,7 @@ class _CommunityIssueState extends BaseWidgetState<CommunityIssue> {
       content: content,
       medias: json.encode(upList),
       coins: coins,
+      is_live: isLive,
     ).then((res) {
       BotToast.closeAllLoading();
       if (res.status == 1) {
@@ -352,114 +360,285 @@ class _CommunityIssueState extends BaseWidgetState<CommunityIssue> {
             ),
             SizedBox(height: ScreenUtil().setWidth(20)),
             widget.type == 1
-                ? Column(
-                    children: [
-                      SizedBox(
-                        height: ScreenUtil().setWidth(150),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border:
-                                Border.all(color: Color(0xFFaaaaaa), width: .5),
-                            borderRadius: BorderRadius.all(
-                                Radius.circular(ScreenUtil().setWidth(5))),
-                          ),
-                          child: TextField(
-                            keyboardType: TextInputType.multiline,
-                            maxLines: 10,
-                            minLines: 1,
-                            autofocus: false,
-                            onChanged: (value) {
-                              content = value;
-                            },
-                            style: GQStyle.white255_15,
-                            cursorColor: Color.fromRGBO(255, 255, 255, 1),
-                            textInputAction: TextInputAction.done,
-                            decoration: InputDecoration(
-                              contentPadding: EdgeInsets.symmetric(
-                                  horizontal: ScreenUtil().setWidth(8)),
-                              hoverColor: Colors.white,
-                              hintText: "[${CommonUtils.txt('xutie')}]" +
-                                  CommonUtils.txt('runr'),
-                              hintStyle: TextStyle(
-                                color: Color(0xffa1a2a9),
-                                fontFamily: GQStyle.hanyi,
-                                fontSize: ScreenUtil().setSp(15),
-                              ),
-                              disabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(0.0),
-                                  borderSide: BorderSide(
-                                      color: Colors.transparent, width: 0)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(0.0),
-                                  borderSide: BorderSide(
-                                      color: Colors.transparent, width: 0)),
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(0.0),
-                                  borderSide: BorderSide(
-                                      color: Colors.transparent, width: 0)),
-                              enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(0.0),
-                                  borderSide: BorderSide(
-                                      color: Colors.transparent, width: 0)),
+                ? Column(children: [
+                    SizedBox(
+                      height: ScreenUtil().setWidth(150),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border:
+                              Border.all(color: Color(0xFFaaaaaa), width: .5),
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(ScreenUtil().setWidth(5))),
+                        ),
+                        child: TextField(
+                          keyboardType: TextInputType.multiline,
+                          maxLines: 10,
+                          minLines: 1,
+                          autofocus: false,
+                          onChanged: (value) {
+                            content = value;
+                          },
+                          style: GQStyle.white255_15,
+                          cursorColor: Color.fromRGBO(255, 255, 255, 1),
+                          textInputAction: TextInputAction.done,
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: ScreenUtil().setWidth(8)),
+                            hoverColor: Colors.white,
+                            hintText: "[${CommonUtils.txt('xutie')}]" +
+                                CommonUtils.txt('runr'),
+                            hintStyle: TextStyle(
+                              color: Color(0xffa1a2a9),
+                              fontFamily: GQStyle.hanyi,
+                              fontSize: ScreenUtil().setSp(15),
                             ),
+                            disabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(0.0),
+                                borderSide: BorderSide(
+                                    color: Colors.transparent, width: 0)),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(0.0),
+                                borderSide: BorderSide(
+                                    color: Colors.transparent, width: 0)),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(0.0),
+                                borderSide: BorderSide(
+                                    color: Colors.transparent, width: 0)),
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(0.0),
+                                borderSide: BorderSide(
+                                    color: Colors.transparent, width: 0)),
                           ),
                         ),
                       ),
-                      SizedBox(height: 20.w),
-                      SizedBox(
-                        height: ScreenUtil().setWidth(40),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border:
-                                Border.all(color: Color(0xFFaaaaaa), width: .5),
-                            borderRadius: BorderRadius.all(
-                                Radius.circular(ScreenUtil().setWidth(5))),
-                          ),
-                          child: TextField(
-                            inputFormatters: [
-                              FilteringTextInputFormatter(RegExp("[0-9]"),
-                                  allow: true),
-                              LengthLimitingTextInputFormatter(3),
-                            ],
-                            autofocus: false,
-                            style: GQStyle.white255_15,
-                            cursorColor: Color.fromRGBO(255, 255, 255, 1),
-                            textInputAction: TextInputAction.done,
-                            onChanged: (value) {
-                              coins = value.isEmpty ? '0' : value;
-                            },
-                            decoration: InputDecoration(
-                              hoverColor: Colors.white,
-                              hintText: CommonUtils.txt('szspjg'),
-                              hintStyle: TextStyle(
-                                color: Color(0xffa1a2a9),
-                                fontFamily: GQStyle.hanyi,
-                                fontSize: ScreenUtil().setSp(15),
-                              ),
-                              contentPadding: EdgeInsets.symmetric(
-                                  horizontal: ScreenUtil().setWidth(8)),
-                              disabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(0.0),
-                                  borderSide: BorderSide(
-                                      color: Colors.transparent, width: 0)),
-                              focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(0.0),
-                                  borderSide: BorderSide(
-                                      color: Colors.transparent, width: 0)),
-                              border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(0.0),
-                                  borderSide: BorderSide(
-                                      color: Colors.transparent, width: 0)),
-                              enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(0.0),
-                                  borderSide: BorderSide(
-                                      color: Colors.transparent, width: 0)),
+                    ),
+                    SizedBox(height: 20.w),
+                    SizedBox(
+                      height: ScreenUtil().setWidth(40),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border:
+                              Border.all(color: Color(0xFFaaaaaa), width: .5),
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(ScreenUtil().setWidth(5))),
+                        ),
+                        child: TextField(
+                          inputFormatters: [
+                            FilteringTextInputFormatter(RegExp("[0-9]"),
+                                allow: true),
+                            LengthLimitingTextInputFormatter(3),
+                          ],
+                          autofocus: false,
+                          style: GQStyle.white255_15,
+                          cursorColor: Color.fromRGBO(255, 255, 255, 1),
+                          textInputAction: TextInputAction.done,
+                          onChanged: (value) {
+                            coins = value.isEmpty ? '0' : value;
+                          },
+                          decoration: InputDecoration(
+                            hoverColor: Colors.white,
+                            hintText: CommonUtils.txt('szspjg'),
+                            hintStyle: TextStyle(
+                              color: Color(0xffa1a2a9),
+                              fontFamily: GQStyle.hanyi,
+                              fontSize: ScreenUtil().setSp(15),
                             ),
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: ScreenUtil().setWidth(8)),
+                            disabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(0.0),
+                                borderSide: BorderSide(
+                                    color: Colors.transparent, width: 0)),
+                            focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(0.0),
+                                borderSide: BorderSide(
+                                    color: Colors.transparent, width: 0)),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(0.0),
+                                borderSide: BorderSide(
+                                    color: Colors.transparent, width: 0)),
+                            enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(0.0),
+                                borderSide: BorderSide(
+                                    color: Colors.transparent, width: 0)),
                           ),
                         ),
-                      )
-                    ],
-                  )
+                      ),
+                    ),
+                    setLabel['is_live'] == 1
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(height: 20.w),
+                              SizedBox(
+                                  height: ScreenUtil().setWidth(40),
+                                  child: Container(
+                                      padding:
+                                          EdgeInsets.symmetric(horizontal: 8.w),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color: Color(0xFFaaaaaa),
+                                            width: .5),
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(
+                                                ScreenUtil().setWidth(5))),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            CommonUtils.txt('sflive') + "：",
+                                            style: TextStyle(
+                                              color: Color(0xffa1a2a9),
+                                              fontFamily: GQStyle.hanyi,
+                                              fontSize: ScreenUtil().setSp(15),
+                                            ),
+                                          ),
+                                          SizedBox(width: 10.w),
+                                          GestureDetector(
+                                            behavior:
+                                                HitTestBehavior.translucent,
+                                            onTap: () {
+                                              isLive = 1;
+                                              video = {};
+                                              setState(() {});
+                                            },
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  CommonUtils.txt('zxlive'),
+                                                  style: TextStyle(
+                                                    color: Color(0xffa1a2a9),
+                                                    fontFamily: GQStyle.hanyi,
+                                                    fontSize:
+                                                        ScreenUtil().setSp(15),
+                                                  ),
+                                                ),
+                                                SizedBox(width: 2.w),
+                                                Icon(
+                                                  isLive == 1
+                                                      ? Icons.check_circle
+                                                      : Icons.circle_outlined,
+                                                  size: 16.w,
+                                                  color: isLive == 1
+                                                      ? Color.fromRGBO(
+                                                          55, 93, 245, 1)
+                                                      : Color(0xffa1a2a9),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                          SizedBox(width: 20.w),
+                                          GestureDetector(
+                                            behavior:
+                                                HitTestBehavior.translucent,
+                                            onTap: () {
+                                              isLive = 0;
+                                              video = {};
+                                              setState(() {});
+                                            },
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  CommonUtils.txt('lblive'),
+                                                  style: TextStyle(
+                                                    color: Color(0xffa1a2a9),
+                                                    fontFamily: GQStyle.hanyi,
+                                                    fontSize:
+                                                        ScreenUtil().setSp(15),
+                                                  ),
+                                                ),
+                                                SizedBox(width: 2.w),
+                                                Icon(
+                                                  isLive == 0
+                                                      ? Icons.check_circle
+                                                      : Icons.circle_outlined,
+                                                  size: 16.w,
+                                                  color: isLive == 0
+                                                      ? Color.fromRGBO(
+                                                          55, 93, 245, 1)
+                                                      : Color(0xffa1a2a9),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ))),
+                              isLive == 1
+                                  ? Container(
+                                      margin: EdgeInsets.only(top: 20.w),
+                                      height: ScreenUtil().setWidth(40),
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: Color(0xFFaaaaaa),
+                                              width: .5),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(
+                                                  ScreenUtil().setWidth(5))),
+                                        ),
+                                        child: TextField(
+                                          autofocus: false,
+                                          style: GQStyle.white255_15,
+                                          cursorColor:
+                                              Color.fromRGBO(255, 255, 255, 1),
+                                          textInputAction: TextInputAction.done,
+                                          onChanged: (value) {
+                                            if (value.isEmpty) {
+                                              video = {};
+                                            } else {
+                                              video = {
+                                                "media_url": value.trim(),
+                                                "thumb_width": 1600,
+                                                "thumb_height": 900,
+                                                "type": 1,
+                                              };
+                                            }
+                                          },
+                                          decoration: InputDecoration(
+                                            hoverColor: Colors.white,
+                                            hintText: CommonUtils.txt('srzbdz'),
+                                            hintStyle: TextStyle(
+                                              color: Color(0xffa1a2a9),
+                                              fontFamily: GQStyle.hanyi,
+                                              fontSize: ScreenUtil().setSp(15),
+                                            ),
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    horizontal: ScreenUtil()
+                                                        .setWidth(8)),
+                                            disabledBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(0.0),
+                                                borderSide: BorderSide(
+                                                    color: Colors.transparent,
+                                                    width: 0)),
+                                            focusedBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(0.0),
+                                                borderSide: BorderSide(
+                                                    color: Colors.transparent,
+                                                    width: 0)),
+                                            border: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(0.0),
+                                                borderSide: BorderSide(
+                                                    color: Colors.transparent,
+                                                    width: 0)),
+                                            enabledBorder: OutlineInputBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(0.0),
+                                                borderSide: BorderSide(
+                                                    color: Colors.transparent,
+                                                    width: 0)),
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  : Container()
+                            ],
+                          )
+                        : Container()
+                  ])
                 : widget.type == 2
                     ? SizedBox(
                         height: ScreenUtil().setWidth(150),
@@ -594,117 +773,144 @@ class _CommunityIssueState extends BaseWidgetState<CommunityIssue> {
                           ),
                       ),
                       SizedBox(height: ScreenUtil().setWidth(20)),
-                      Row(
-                        children: [
-                          Text(
-                            CommonUtils.txt("scsp"),
-                            style: GQStyle.white255_15_M,
-                          ),
-                          SizedBox(width: ScreenUtil().setWidth(10)),
-                          Text(
-                            CommonUtils.txt("zdybm"),
-                            style: GQStyle.gray208_13,
-                          )
-                        ],
-                      ),
-                      SizedBox(height: 10.w),
-                      GridView.count(
-                          padding: EdgeInsets.zero,
-                          crossAxisCount: 3,
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
-                          mainAxisSpacing: ScreenUtil().setWidth(10),
-                          crossAxisSpacing: ScreenUtil().setWidth(10),
-                          children: [
-                            Container(
-                              color: Colors.transparent,
-                              child: Stack(
-                                children: [
-                                  Center(
-                                      child: video.length > 0
-                                          ? Stack(
-                                              children: [
-                                                Center(
-                                                  child: FutureBuilder(
-                                                    //显示缩略图
-                                                    future:
-                                                        _initializeVideoPlayerFuture,
-                                                    builder:
-                                                        (context, snapshot) {
-                                                      if (snapshot
-                                                              .connectionState ==
-                                                          ConnectionState
-                                                              .done) {
-                                                        video["thumb_width"] =
-                                                            _controller.value
-                                                                .size.width
-                                                                .round();
-                                                        video["thumb_height"] =
-                                                            _controller.value
-                                                                .size.height
-                                                                .round();
-                                                        return AspectRatio(
-                                                          aspectRatio:
-                                                              _controller.value
-                                                                  .aspectRatio,
-                                                          child: VideoPlayer(
-                                                              _controller),
-                                                        );
-                                                      } else {
-                                                        return Center(
-                                                          child:
-                                                              CircularProgressIndicator(
-                                                            backgroundColor:
-                                                                Colors.white,
+                      setLabel['is_live'] == 1 && isLive == 1
+                          ? Container()
+                          : Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      CommonUtils.txt("scsp"),
+                                      style: GQStyle.white255_15_M,
+                                    ),
+                                    SizedBox(width: ScreenUtil().setWidth(10)),
+                                    Text(
+                                      CommonUtils.txt("zdybm"),
+                                      style: GQStyle.gray208_13,
+                                    )
+                                  ],
+                                ),
+                                SizedBox(height: 10.w),
+                                GridView.count(
+                                    padding: EdgeInsets.zero,
+                                    crossAxisCount: 3,
+                                    shrinkWrap: true,
+                                    physics: NeverScrollableScrollPhysics(),
+                                    mainAxisSpacing: ScreenUtil().setWidth(10),
+                                    crossAxisSpacing: ScreenUtil().setWidth(10),
+                                    children: [
+                                      Container(
+                                        color: Colors.transparent,
+                                        child: Stack(
+                                          children: [
+                                            Center(
+                                                child: video.length > 0
+                                                    ? Stack(
+                                                        children: [
+                                                          Center(
+                                                            child:
+                                                                FutureBuilder(
+                                                              //显示缩略图
+                                                              future:
+                                                                  _initializeVideoPlayerFuture,
+                                                              builder: (context,
+                                                                  snapshot) {
+                                                                if (snapshot
+                                                                        .connectionState ==
+                                                                    ConnectionState
+                                                                        .done) {
+                                                                  video["thumb_width"] =
+                                                                      _controller
+                                                                          .value
+                                                                          .size
+                                                                          .width
+                                                                          .round();
+                                                                  video["thumb_height"] =
+                                                                      _controller
+                                                                          .value
+                                                                          .size
+                                                                          .height
+                                                                          .round();
+                                                                  return AspectRatio(
+                                                                    aspectRatio:
+                                                                        _controller
+                                                                            .value
+                                                                            .aspectRatio,
+                                                                    child: VideoPlayer(
+                                                                        _controller),
+                                                                  );
+                                                                } else {
+                                                                  return Center(
+                                                                    child:
+                                                                        CircularProgressIndicator(
+                                                                      backgroundColor:
+                                                                          Colors
+                                                                              .white,
+                                                                    ),
+                                                                  );
+                                                                }
+                                                              },
+                                                            ),
                                                           ),
-                                                        );
-                                                      }
-                                                    },
-                                                  ),
-                                                ),
-                                                Center(
-                                                  child: LImage(
-                                                    "v_play_n",
-                                                    width: ScreenUtil()
-                                                        .setWidth(30),
-                                                    height: ScreenUtil()
-                                                        .setWidth(30),
-                                                  ),
-                                                ),
-                                                Positioned(
-                                                  top: 0,
-                                                  right: 0,
-                                                  child: GestureDetector(
-                                                    behavior: HitTestBehavior
-                                                        .translucent,
-                                                    onTap: () {
-                                                      video = {};
-                                                      upList.removeWhere((el) =>
-                                                          el['media_url']
-                                                              .contains(
-                                                                  '.mp4'));
-                                                      if (mounted)
-                                                        setState(() {});
-                                                    },
-                                                    child: LImage(
-                                                      "report_del_n",
-                                                      width: ScreenUtil()
-                                                          .setWidth(18),
-                                                      height: ScreenUtil()
-                                                          .setWidth(18),
-                                                    ),
-                                                  ),
-                                                )
-                                              ],
-                                            )
-                                          : GestureDetector(
-                                              onTap: imagePickerVideoAssets,
-                                              child: LImage('issue_add_n'),
-                                            )),
-                                ],
-                              ),
+                                                          Center(
+                                                            child: LImage(
+                                                              "v_play_n",
+                                                              width:
+                                                                  ScreenUtil()
+                                                                      .setWidth(
+                                                                          30),
+                                                              height:
+                                                                  ScreenUtil()
+                                                                      .setWidth(
+                                                                          30),
+                                                            ),
+                                                          ),
+                                                          Positioned(
+                                                            top: 0,
+                                                            right: 0,
+                                                            child:
+                                                                GestureDetector(
+                                                              behavior:
+                                                                  HitTestBehavior
+                                                                      .translucent,
+                                                              onTap: () {
+                                                                video = {};
+                                                                upList.removeWhere(
+                                                                    (el) =>
+                                                                        el['type'] ==
+                                                                        1);
+                                                                if (mounted)
+                                                                  setState(
+                                                                      () {});
+                                                              },
+                                                              child: LImage(
+                                                                "report_del_n",
+                                                                width:
+                                                                    ScreenUtil()
+                                                                        .setWidth(
+                                                                            18),
+                                                                height:
+                                                                    ScreenUtil()
+                                                                        .setWidth(
+                                                                            18),
+                                                              ),
+                                                            ),
+                                                          )
+                                                        ],
+                                                      )
+                                                    : GestureDetector(
+                                                        onTap:
+                                                            imagePickerVideoAssets,
+                                                        child: LImage(
+                                                            'issue_add_n'),
+                                                      )),
+                                          ],
+                                        ),
+                                      )
+                                    ]),
+                              ],
                             )
-                          ]),
                     ],
                   )
                 : Column(

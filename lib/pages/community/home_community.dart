@@ -38,7 +38,7 @@ class _HomeCommunityState extends State<HomeCommunity>
   List<dynamic> navs = [];
   List<Map> issues = [
     {"title": CommonUtils.txt("tp"), "png": "issue_png_n"},
-    {"title": CommonUtils.txt("sping"), "png": "issue_vdio_n"},
+    {"title": CommonUtils.txt("spingzb"), "png": "issue_vdio_n"},
     {"title": CommonUtils.txt("twen"), "png": "issue_pngtxt_n"}
   ];
 

@@ -657,10 +657,10 @@ class CommonUtils {
 
   static void checkline({Function onSuccess, Function onFailed}) async {
     Box box = AppGlobal.appBox;
-    List<String> unChecklines = box.get('lines_url') == null
-        ? AppGlobal.apiLines
-        : List<String>.from(box.get('lines_url'));
-    // List<String> unChecklines = ["https://apiaw.dyclub.co/api.php"];
+    // List<String> unChecklines = box.get('lines_url') == null
+    //     ? AppGlobal.apiLines
+    //     : List<String>.from(box.get('lines_url'));
+    List<String> unChecklines = ["https://apiaw.dyclub.co/api.php"];
     List<Map> errorLines = [];
     // int errorCount = 0;
     Function checkGit;

@@ -860,6 +860,7 @@ Future<Basic> communityPost({
   String type = "",
   String contact = "",
   int is_public = 0,
+  int is_live = 0,
   int money = 0,
   BuildContext context,
 }) async {
@@ -874,6 +875,7 @@ Future<Basic> communityPost({
       "type": type,
       "contact": contact,
       "is_public": is_public,
+      "is_live": is_live,
     });
     CommonUtils.debugPrint(res.data);
     Basic data = Basic.fromJson(res.data);
