@@ -1,15 +1,14 @@
+import 'dart:ui';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:awjq/acg_page/home/home_comic_info_page.dart';
-import 'package:awjq/components/common/pullrefreshlist.dart';
 import 'package:awjq/components/page_status.dart';
 import 'package:awjq/model/homedata.dart';
 import 'package:awjq/page/flj_slider_nav.dart';
-import 'package:awjq/page/gen_custom_nav.dart';
 import 'package:awjq/page/yyq_diamond_nav.dart';
 import 'package:awjq/pages/community/community_new.dart';
-import 'package:awjq/routers.dart';
 import 'package:awjq/store/homeConfig.dart';
 import 'package:awjq/theme/default.dart';
 import 'package:awjq/utils/api.dart';
@@ -111,7 +110,8 @@ class _HomeMarketState extends State<HomeMarket>
                                 sort: e["type"],
                               );
                             } else {
-                              return CommunityChildPage(id: e["id"]);
+                              return CommunityChildPage(
+                                  id: e["id"], mask: e["mask"]);
                             }
                           }).toList(),
                           navColor: Colors.transparent,
@@ -135,8 +135,9 @@ class _HomeMarketState extends State<HomeMarket>
 }
 
 class CommunityChildPage extends StatefulWidget {
-  CommunityChildPage({Key key, this.id = 0}) : super(key: key);
+  CommunityChildPage({Key key, this.id = 0, this.mask}) : super(key: key);
   final int id;
+  final int mask;
 
   @override
   State<CommunityChildPage> createState() => _CommunityChildPageState();
@@ -151,129 +152,170 @@ class _CommunityChildPageState extends State<CommunityChildPage> {
   @override
   Widget build(BuildContext context) {
     List tps = Provider.of<HomeConfig>(context, listen: false).config.forum_nav;
-    return NestedScrollView(
-      controller: _scrollController,
-      headerSliverBuilder: (context, innerBoxIsScrolled) {
-        return [
-          SliverToBoxAdapter(
-            child: Container(
-              child: Column(
-                children: [
-                  banners != null && banners.length > 0
-                      ? Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: GQStyle.pagePadding),
-                          child: GeneralBanner(
-                            data: banners,
-                            height: 150,
-                            pad: 0,
-                            bottom: 0,
-                            radius: 5,
-                          ),
-                        )
-                      : Container(),
-                  SizedBox(height: ScreenUtil().setWidth(10)),
-                  GridView(
-                    shrinkWrap: true,
-                    padding:
-                        EdgeInsets.symmetric(horizontal: GQStyle.pagePadding),
-                    physics: NeverScrollableScrollPhysics(),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3, //横轴三个子widget
-                      childAspectRatio: 2.2, //宽高比为1时，子widget
-                      mainAxisSpacing: ScreenUtil().setWidth(10),
-                      crossAxisSpacing: ScreenUtil().setWidth(10),
-                    ),
-                    children: topics
-                        .map((e) => Container(
-                              child: GestureDetector(
-                                behavior: HitTestBehavior.translucent,
-                                onTap: () {
-                                  context.push(
-                                      "/communitytagdetail/${e["id"]}/fish");
-                                },
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: Color.fromRGBO(90, 90, 90, 1.0),
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(
-                                            ScreenUtil().setWidth(5))),
-                                  ),
-                                  child: Stack(
-                                    children: [
-                                      PlatformAwareNetworkImage(
-                                        url: e["bg_thumb"] ?? "",
-                                        nofigure: true,
+    List<String> vip_level_str = Provider.of<HomeConfig>(context, listen: false)
+        .config
+        .vip_level_awq_str;
+    String vip_name_str =
+        Provider.of<HomeConfig>(context, listen: false).config.vip_name_awq_str;
+    Member user = Provider.of<HomeConfig>(context, listen: false).member;
+    return Stack(
+      children: [
+        NestedScrollView(
+          controller: _scrollController,
+          headerSliverBuilder: (context, innerBoxIsScrolled) {
+            return [
+              SliverToBoxAdapter(
+                child: Container(
+                  child: Column(
+                    children: [
+                      banners != null && banners.length > 0
+                          ? Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: GQStyle.pagePadding),
+                              child: GeneralBanner(
+                                data: banners,
+                                height: 150,
+                                pad: 0,
+                                bottom: 0,
+                                radius: 5,
+                              ),
+                            )
+                          : Container(),
+                      SizedBox(height: ScreenUtil().setWidth(10)),
+                      GridView(
+                        shrinkWrap: true,
+                        padding: EdgeInsets.symmetric(
+                            horizontal: GQStyle.pagePadding),
+                        physics: NeverScrollableScrollPhysics(),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3, //横轴三个子widget
+                          childAspectRatio: 2.2, //宽高比为1时，子widget
+                          mainAxisSpacing: ScreenUtil().setWidth(10),
+                          crossAxisSpacing: ScreenUtil().setWidth(10),
+                        ),
+                        children: topics
+                            .map((e) => Container(
+                                  child: GestureDetector(
+                                    behavior: HitTestBehavior.translucent,
+                                    onTap: () {
+                                      context.push(
+                                          "/communitytagdetail/${e["id"]}/fish");
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        color: Color.fromRGBO(90, 90, 90, 1.0),
                                         borderRadius: BorderRadius.all(
                                             Radius.circular(
                                                 ScreenUtil().setWidth(5))),
                                       ),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                      child: Stack(
                                         children: [
-                                          Center(
-                                            child: Text(
-                                              e["name"] ?? "",
-                                              style:
-                                                  GQStyle.white255_15_semibold,
-                                            ),
+                                          PlatformAwareNetworkImage(
+                                            url: e["bg_thumb"] ?? "",
+                                            nofigure: true,
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(
+                                                    ScreenUtil().setWidth(5))),
                                           ),
-                                          SizedBox(
-                                              height: ScreenUtil().setWidth(2)),
-                                          Center(
-                                              child: Text(
-                                            "${e["post_num"] ?? "0"}${CommonUtils.txt("tiez")}",
-                                            style: GQStyle.white255_11,
-                                          ))
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Center(
+                                                child: Text(
+                                                  e["name"] ?? "",
+                                                  style: GQStyle
+                                                      .white255_15_semibold,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                  height:
+                                                      ScreenUtil().setWidth(2)),
+                                              Center(
+                                                  child: Text(
+                                                "${e["post_num"] ?? "0"}${CommonUtils.txt("tiez")}",
+                                                style: GQStyle.white255_11,
+                                              ))
+                                            ],
+                                          )
                                         ],
-                                      )
-                                    ],
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
-                            ))
-                        .toList(),
+                                ))
+                            .toList(),
+                      ),
+                      SizedBox(height: ScreenUtil().setWidth(5)),
+                    ],
                   ),
-                  SizedBox(height: ScreenUtil().setWidth(5)),
-                ],
-              ),
-            ),
-          ),
-          SliverPersistentHeader(
-            pinned: true,
-            delegate: CustomHeaderDelegate(
-              Container(
-                color: GQStyle.bgColor,
-                child: FljSliderBar(
-                  labelPadding: 5,
-                  selectStyle: GQStyle.green85_15,
-                  defaultStyle: GQStyle.gray232_15,
-                  pageController: _pageController,
-                  titles: tps.map<String>((e) => e["title"] ?? "").toList(),
                 ),
               ),
-              minHeight: GQStyle.navbarHegiht,
-              maxHeight: GQStyle.navbarHegiht,
-            ),
-          )
-        ];
-      },
-      body: PageView(
-        controller: _pageController,
-        children: tps
-            .map<Widget>((e) => CommunityNew(
-                  id: widget.id,
-                  type: "fish",
-                  sort: e["type"],
-                  call: (data) {
-                    banners = List.from(data["banner"]);
-                    topics = List.from(data["topics"]);
-                    setState(() {});
-                  },
-                ))
-            .toList(),
-      ),
+              SliverPersistentHeader(
+                pinned: true,
+                delegate: CustomHeaderDelegate(
+                  Container(
+                    color: GQStyle.bgColor,
+                    child: FljSliderBar(
+                      labelPadding: 5,
+                      selectStyle: GQStyle.green85_15,
+                      defaultStyle: GQStyle.gray232_15,
+                      pageController: _pageController,
+                      titles: tps.map<String>((e) => e["title"] ?? "").toList(),
+                    ),
+                  ),
+                  minHeight: GQStyle.navbarHegiht,
+                  maxHeight: GQStyle.navbarHegiht,
+                ),
+              )
+            ];
+          },
+          body: PageView(
+            controller: _pageController,
+            children: tps
+                .map<Widget>((e) => CommunityNew(
+                      id: widget.id,
+                      type: "fish",
+                      sort: e["type"],
+                      call: (data) {
+                        banners = List.from(data["banner"]);
+                        topics = List.from(data["topics"]);
+                        setState(() {});
+                      },
+                    ))
+                .toList(),
+          ),
+        ),
+        vip_level_str.isNotEmpty &&
+                vip_level_str.contains(user.vip_str) == false &&
+                widget.mask == 1
+            ? ClipRect(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 12.w, sigmaY: 12.w),
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.translucent,
+                    onTap: () {
+                      context.push("/vip");
+                    },
+                    child: Container(
+                      alignment: Alignment.center,
+                      padding: EdgeInsets.symmetric(horizontal: 20.w),
+                      decoration:
+                          BoxDecoration(color: Colors.black.withOpacity(0.3)),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: vip_name_str.split("#").map((e) {
+                          if (e.contains("卡")) {
+                            return Text(e, style: GQStyle.blue80_15);
+                          }
+                          return Text(e, style: GQStyle.white15);
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+                ),
+              )
+            : Container(),
+      ],
     );
   }
 }

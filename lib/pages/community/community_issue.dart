@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:awjq/pages/community/shortv_player.dart';
 import 'package:bot_toast/bot_toast.dart';
+import 'package:common_utils/common_utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -196,12 +198,12 @@ class _CommunityIssueState extends BaseWidgetState<CommunityIssue> {
         CommonUtils.showText(CommonUtils.txt("qsctp"));
         return;
       }
-      if (video.length == 0 && setLabel['is_live'] != 1) {
-        CommonUtils.showText(CommonUtils.txt("qscsp"));
+      if (video.length == 0 && setLabel['is_live'] == 1 && isLive == 1) {
+        CommonUtils.showText(CommonUtils.txt("srzbdz"));
         return;
       }
-      if (video.length == 0 && setLabel['is_live'] == 1) {
-        CommonUtils.showText(CommonUtils.txt("srzbdz"));
+      if (video.length == 0) {
+        CommonUtils.showText(CommonUtils.txt("qscsp"));
         return;
       }
       //设置默认第一张图为封面
@@ -282,8 +284,13 @@ class _CommunityIssueState extends BaseWidgetState<CommunityIssue> {
             GestureDetector(
               behavior: HitTestBehavior.translucent,
               onTap: () {
-                CommonUtils.debugPrint("click");
-                context.push("/communityseltagpage/${setLabel['id'] ?? 0}/sc");
+                if (widget.type == 1) {
+                  context
+                      .push("/communityseltagpage/${setLabel['id'] ?? 0}/sc/0");
+                } else {
+                  context
+                      .push("/communityseltagpage/${setLabel['id'] ?? 0}/sc/1");
+                }
               },
               child: Container(
                 padding:
@@ -521,7 +528,7 @@ class _CommunityIssueState extends BaseWidgetState<CommunityIssue> {
                                                   size: 16.w,
                                                   color: isLive == 1
                                                       ? Color.fromRGBO(
-                                                          55, 93, 245, 1)
+                                                          94, 79, 236, 1)
                                                       : Color(0xffa1a2a9),
                                                 ),
                                               ],
@@ -555,7 +562,7 @@ class _CommunityIssueState extends BaseWidgetState<CommunityIssue> {
                                                   size: 16.w,
                                                   color: isLive == 0
                                                       ? Color.fromRGBO(
-                                                          55, 93, 245, 1)
+                                                          94, 79, 236, 1)
                                                       : Color(0xffa1a2a9),
                                                 ),
                                               ],
@@ -576,61 +583,180 @@ class _CommunityIssueState extends BaseWidgetState<CommunityIssue> {
                                               Radius.circular(
                                                   ScreenUtil().setWidth(5))),
                                         ),
-                                        child: TextField(
-                                          autofocus: false,
-                                          style: GQStyle.white255_15,
-                                          cursorColor:
-                                              Color.fromRGBO(255, 255, 255, 1),
-                                          textInputAction: TextInputAction.done,
-                                          onChanged: (value) {
-                                            if (value.isEmpty) {
-                                              video = {};
-                                            } else {
-                                              video = {
-                                                "media_url": value.trim(),
-                                                "thumb_width": 1600,
-                                                "thumb_height": 900,
-                                                "type": 1,
-                                              };
-                                            }
-                                          },
-                                          decoration: InputDecoration(
-                                            hoverColor: Colors.white,
-                                            hintText: CommonUtils.txt('srzbdz'),
-                                            hintStyle: TextStyle(
-                                              color: Color(0xffa1a2a9),
-                                              fontFamily: GQStyle.hanyi,
-                                              fontSize: ScreenUtil().setSp(15),
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                              child: TextField(
+                                                autofocus: false,
+                                                style: GQStyle.white255_15,
+                                                cursorColor: Color.fromRGBO(
+                                                    255, 255, 255, 1),
+                                                textInputAction:
+                                                    TextInputAction.done,
+                                                onChanged: (value) {
+                                                  if (value.isEmpty) {
+                                                    video = {};
+                                                  } else {
+                                                    video = {
+                                                      "media_url": value.trim(),
+                                                      "thumb_width": 1600,
+                                                      "thumb_height": 900,
+                                                      "type": 1,
+                                                    };
+                                                  }
+                                                },
+                                                decoration: InputDecoration(
+                                                  hoverColor: Colors.white,
+                                                  hintText:
+                                                      CommonUtils.txt('srzbdz'),
+                                                  hintStyle: TextStyle(
+                                                    color: Color(0xffa1a2a9),
+                                                    fontFamily: GQStyle.hanyi,
+                                                    fontSize:
+                                                        ScreenUtil().setSp(15),
+                                                  ),
+                                                  contentPadding:
+                                                      EdgeInsets.symmetric(
+                                                          horizontal:
+                                                              ScreenUtil()
+                                                                  .setWidth(8)),
+                                                  disabledBorder:
+                                                      OutlineInputBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      0.0),
+                                                          borderSide: BorderSide(
+                                                              color: Colors
+                                                                  .transparent,
+                                                              width: 0)),
+                                                  focusedBorder:
+                                                      OutlineInputBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      0.0),
+                                                          borderSide: BorderSide(
+                                                              color: Colors
+                                                                  .transparent,
+                                                              width: 0)),
+                                                  border: OutlineInputBorder(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              0.0),
+                                                      borderSide: BorderSide(
+                                                          color: Colors
+                                                              .transparent,
+                                                          width: 0)),
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(
+                                                                      0.0),
+                                                          borderSide: BorderSide(
+                                                              color: Colors
+                                                                  .transparent,
+                                                              width: 0)),
+                                                ),
+                                              ),
                                             ),
-                                            contentPadding:
-                                                EdgeInsets.symmetric(
-                                                    horizontal: ScreenUtil()
-                                                        .setWidth(8)),
-                                            disabledBorder: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(0.0),
-                                                borderSide: BorderSide(
-                                                    color: Colors.transparent,
-                                                    width: 0)),
-                                            focusedBorder: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(0.0),
-                                                borderSide: BorderSide(
-                                                    color: Colors.transparent,
-                                                    width: 0)),
-                                            border: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(0.0),
-                                                borderSide: BorderSide(
-                                                    color: Colors.transparent,
-                                                    width: 0)),
-                                            enabledBorder: OutlineInputBorder(
-                                                borderRadius:
-                                                    BorderRadius.circular(0.0),
-                                                borderSide: BorderSide(
-                                                    color: Colors.transparent,
-                                                    width: 0)),
-                                          ),
+                                            SizedBox(width: 10.w),
+                                            GestureDetector(
+                                              behavior:
+                                                  HitTestBehavior.translucent,
+                                              onTap: () async {
+                                                if (video['media_url'] == null)
+                                                  return;
+                                                showDialog<dynamic>(
+                                                  context: context,
+                                                  barrierDismissible: true,
+                                                  builder: (context) {
+                                                    return StatefulBuilder(
+                                                        builder: (context,
+                                                            setDialogState) {
+                                                      return Dialog(
+                                                        backgroundColor:
+                                                            Colors.transparent,
+                                                        child: Container(
+                                                          margin: EdgeInsets
+                                                              .symmetric(
+                                                                  horizontal:
+                                                                      40.w),
+                                                          decoration: BoxDecoration(
+                                                              color: GQStyle
+                                                                  .blackColor49,
+                                                              borderRadius: BorderRadius
+                                                                  .all(Radius
+                                                                      .circular(
+                                                                          5.w))),
+                                                          child: Column(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
+                                                            children: [
+                                                              SizedBox(
+                                                                height: 50.w,
+                                                                child: Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .end,
+                                                                  children: [
+                                                                    GestureDetector(
+                                                                      onTap:
+                                                                          () {
+                                                                        Navigator.of(context)
+                                                                            .pop();
+                                                                      },
+                                                                      child:
+                                                                          Icon(
+                                                                        Icons
+                                                                            .close,
+                                                                        color: Colors
+                                                                            .white,
+                                                                        size: 20
+                                                                            .w,
+                                                                      ),
+                                                                    ),
+                                                                    SizedBox(
+                                                                        width: GQStyle
+                                                                            .pagePadding),
+                                                                  ],
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                width: double
+                                                                    .infinity,
+                                                                height: (ScreenUtil()
+                                                                            .screenWidth -
+                                                                        80.w) /
+                                                                    7 *
+                                                                    10,
+                                                                child:
+                                                                    ShortVPlayer(
+                                                                  id: 0,
+                                                                  cover_url: '',
+                                                                  url: video[
+                                                                          'media_url'] ??
+                                                                      '',
+                                                                  coins: 0,
+                                                                  is_live: 1,
+                                                                ),
+                                                              )
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      );
+                                                    });
+                                                  },
+                                                );
+                                              },
+                                              child: Text(
+                                                  CommonUtils.txt('dwcskk'),
+                                                  style: GQStyle.blue80_14_M),
+                                            ),
+                                            SizedBox(width: 10.w),
+                                          ],
                                         ),
                                       ),
                                     )

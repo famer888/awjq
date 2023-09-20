@@ -461,6 +461,7 @@ class _CommunityPostDetailState extends BaseWidgetState<CommunityPostDetail> {
                                   if (e['type'] == 2) {
                                     e["unlock_coins"] =
                                         detailData["unlock_coins"];
+                                    e["is_live"] = detailData["is_live"];
                                   }
                                   CommonUtils.debugPrint(e);
                                   double width = ScreenUtil().screenWidth -

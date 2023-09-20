@@ -294,7 +294,7 @@ class _CommunityMarketIssueState extends BaseWidgetState<CommunityMarketIssue> {
               behavior: HitTestBehavior.translucent,
               onTap: () {
                 context
-                    .push("/communityseltagpage/${setLabel['id'] ?? 0}/fish");
+                    .push("/communityseltagpage/${setLabel['id'] ?? 0}/fish/0");
               },
               child: Container(
                 padding:
@@ -467,7 +467,7 @@ class _CommunityMarketIssueState extends BaseWidgetState<CommunityMarketIssue> {
                                             : Icons.circle_outlined,
                                         size: 16.w,
                                         color: isOpen == 1
-                                            ? Color.fromRGBO(55, 93, 245, 1)
+                                            ? Color.fromRGBO(94, 79, 236, 1)
                                             : Color(0xffa1a2a9),
                                       ),
                                     ],
@@ -497,7 +497,7 @@ class _CommunityMarketIssueState extends BaseWidgetState<CommunityMarketIssue> {
                                             : Icons.circle_outlined,
                                         size: 16.w,
                                         color: isOpen == 0
-                                            ? Color.fromRGBO(55, 93, 245, 1)
+                                            ? Color.fromRGBO(94, 79, 236, 1)
                                             : Color(0xffa1a2a9),
                                       ),
                                     ],

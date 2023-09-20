@@ -11,9 +11,11 @@ import 'package:awjq/utils/networkImage.dart';
 import 'package:awjq/utils/util_eventbus_class.dart';
 
 class CommunitySeltagPage extends BaseWidget {
-  CommunitySeltagPage({Key key, this.id, this.type}) : super(key: key);
+  CommunitySeltagPage({Key key, this.id, this.type, this.nolive})
+      : super(key: key);
   int id;
   String type;
+  String nolive;
 
   @override
   State<StatefulWidget> cState() {
@@ -45,6 +47,7 @@ class _CommunitySeltagPageState extends BaseWidgetState<CommunitySeltagPage> {
       } else {
         noMore = true;
       }
+      if (widget.nolive == "1") tops.removeWhere((el) => el['is_live'] == 1);
       isHud = false;
       setState(() {});
     });

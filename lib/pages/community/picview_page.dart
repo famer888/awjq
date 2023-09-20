@@ -99,6 +99,7 @@ class _TeaPicViewPageState extends State<PicViewPage> {
                               cover_url: e['cover'] ?? '',
                               url: e['media_url'] ?? '',
                               coins: e['unlock_coins'] ?? 0,
+                              is_live: e['is_live'] ?? 0,
                             )
                           : PlatformAwareNetworkImage(
                               background: Colors.black,

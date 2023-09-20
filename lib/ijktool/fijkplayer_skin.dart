@@ -351,7 +351,7 @@ class _CustomFijkPanelState extends State<CustomFijkPanel>
           ),
           // 错误信息
           Text(
-            "播放失败404，反馈给客服！",
+            widget.videoInfo.is_live == 1 ? "主播正在赶来的路上！" : "播放失败404，反馈给客服！",
             style: TextStyle(
               color: Colors.white,
               fontSize: 12,

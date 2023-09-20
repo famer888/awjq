@@ -248,175 +248,186 @@ class FlickVideoPcontrols extends StatelessWidget {
             ),
           ),
         ),
-        Positioned.fill(
-          child: FlickAutoHideChild(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: ScreenUtil().setWidth(8)),
-                  alignment: Alignment.centerLeft,
-                  height: ScreenUtil().setWidth(22),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+        data.is_live == 1
+            ? Container()
+            : Positioned.fill(
+                child: FlickAutoHideChild(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      showBack
-                          ? SizedBox(width: 22)
-                          : noback
-                              ? Container()
-                              : Container(
-                                  width: 22,
-                                  height: 22,
-                                  decoration: BoxDecoration(
-                                    boxShadow: [
-                                      BoxShadow(
-                                          color: Color.fromRGBO(0, 0, 0, 0.2),
-                                          offset: Offset(0, 0),
-                                          blurRadius: ScreenUtil().setWidth(16))
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: ScreenUtil().setWidth(8)),
+                        alignment: Alignment.centerLeft,
+                        height: ScreenUtil().setWidth(22),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            showBack
+                                ? SizedBox(width: 22)
+                                : noback
+                                    ? Container()
+                                    : Container(
+                                        width: 22,
+                                        height: 22,
+                                        decoration: BoxDecoration(
+                                          boxShadow: [
+                                            BoxShadow(
+                                                color: Color.fromRGBO(
+                                                    0, 0, 0, 0.2),
+                                                offset: Offset(0, 0),
+                                                blurRadius:
+                                                    ScreenUtil().setWidth(16))
+                                          ],
+                                        ),
+                                        child: GestureDetector(
+                                          behavior: HitTestBehavior.translucent,
+                                          child: LImage("nav_back_w_n"),
+                                          onTap: () {
+                                            if (showBack) {
+                                              context.pop();
+                                            } else {
+                                              controlManager.toggleFullscreen();
+                                            }
+                                          },
+                                        ),
+                                      ),
+                            Expanded(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: vtitle.length == 0
+                                            ? Colors.transparent
+                                            : Color.fromRGBO(0, 0, 0, 0.2),
+                                        offset: Offset(0, 0),
+                                        blurRadius: ScreenUtil().setWidth(16))
+                                  ],
+                                ),
+                                child:
+                                    Text(vtitle, style: GQStyle.white255_18_B),
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          vertical: ScreenUtil().setWidth(10),
+                        ),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              Color.fromRGBO(0, 0, 0, 0.0),
+                              Color.fromRGBO(0, 0, 0, 0.5),
+                            ],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                          ),
+                        ),
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: ScreenUtil().setWidth(8)),
+                              child: Row(
+                                children: [
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      // kIsWeb
+                                      //     ? FlickSoundToggle(
+                                      //         muteChild: LImage("sound_min_n",
+                                      //             width: ScreenUtil().setWidth(18.7),
+                                      //             height: ScreenUtil().setWidth(15)),
+                                      //         unmuteChild: LImage("sound_max_n",
+                                      //             width: ScreenUtil().setWidth(18.7),
+                                      //             height: ScreenUtil().setWidth(15)),
+                                      //       )
+                                      //     : Container(),
+                                      // SizedBox(
+                                      //     width:
+                                      //         ScreenUtil().setWidth(kIsWeb ? 10 : 0)),
+                                      FlickCurrentPosition(
+                                        fontSize: fontSize,
+                                      ),
+                                      Text(
+                                        ' / ',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: fontSize),
+                                      ),
+                                      FlickTotalDuration(
+                                        fontSize: fontSize,
+                                      ),
                                     ],
                                   ),
-                                  child: GestureDetector(
-                                    behavior: HitTestBehavior.translucent,
-                                    child: LImage("nav_back_w_n"),
-                                    onTap: () {
-                                      if (showBack) {
-                                        context.pop();
-                                      } else {
-                                        controlManager.toggleFullscreen();
-                                      }
-                                    },
+                                  Expanded(
+                                    child: Container(),
                                   ),
+                                  isPreview
+                                      ? Container()
+                                      : FlickFullScreenToggle(
+                                          enterFullScreenChild: LImage(
+                                            "v_nofull_n",
+                                            width: 18,
+                                            height: 18,
+                                          ),
+                                          exitFullScreenChild: LImage(
+                                            "v_nowfull_n",
+                                            width: 18,
+                                            height: 18,
+                                          ),
+                                          toggleFullscreen: () {
+                                            if (kIsWeb) {
+                                              html.VideoElement video = html
+                                                  .document
+                                                  .querySelector('video');
+                                              video.muted = false;
+                                              video.volume = 1;
+                                              video.setAttribute(
+                                                  'playsinline', 'true');
+                                              video.setAttribute(
+                                                  'autoplay', 'true');
+                                              if (html.document
+                                                      .fullscreenElement ==
+                                                  null) {
+                                                video.enterFullscreen();
+                                              } else {
+                                                html.document.exitFullscreen();
+                                              }
+                                            } else {
+                                              controlManager.toggleFullscreen();
+                                            }
+                                          },
+                                        ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: ScreenUtil().setWidth(8)),
+                              child: FlickVideoProgressBar(
+                                flickProgressBarSettings:
+                                    FlickProgressBarSettings(
+                                  height: 3,
+                                  handleRadius: 3,
+                                  backgroundColor: Colors.white24,
+                                  bufferedColor: Colors.white38,
+                                  playedColor: Color.fromRGBO(90, 75, 235, 1),
+                                  handleColor: Color.fromRGBO(90, 75, 235, 1),
                                 ),
-                      Expanded(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            boxShadow: [
-                              BoxShadow(
-                                  color: vtitle.length == 0
-                                      ? Colors.transparent
-                                      : Color.fromRGBO(0, 0, 0, 0.2),
-                                  offset: Offset(0, 0),
-                                  blurRadius: ScreenUtil().setWidth(16))
-                            ],
-                          ),
-                          child: Text(vtitle, style: GQStyle.white255_18_B),
+                              ),
+                            ),
+                          ],
                         ),
                       )
                     ],
                   ),
                 ),
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    vertical: ScreenUtil().setWidth(10),
-                  ),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Color.fromRGBO(0, 0, 0, 0.0),
-                        Color.fromRGBO(0, 0, 0, 0.5),
-                      ],
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                    ),
-                  ),
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: ScreenUtil().setWidth(8)),
-                        child: Row(
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                // kIsWeb
-                                //     ? FlickSoundToggle(
-                                //         muteChild: LImage("sound_min_n",
-                                //             width: ScreenUtil().setWidth(18.7),
-                                //             height: ScreenUtil().setWidth(15)),
-                                //         unmuteChild: LImage("sound_max_n",
-                                //             width: ScreenUtil().setWidth(18.7),
-                                //             height: ScreenUtil().setWidth(15)),
-                                //       )
-                                //     : Container(),
-                                // SizedBox(
-                                //     width:
-                                //         ScreenUtil().setWidth(kIsWeb ? 10 : 0)),
-                                FlickCurrentPosition(
-                                  fontSize: fontSize,
-                                ),
-                                Text(
-                                  ' / ',
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: fontSize),
-                                ),
-                                FlickTotalDuration(
-                                  fontSize: fontSize,
-                                ),
-                              ],
-                            ),
-                            Expanded(
-                              child: Container(),
-                            ),
-                            isPreview
-                                ? Container()
-                                : FlickFullScreenToggle(
-                                    enterFullScreenChild: LImage(
-                                      "v_nofull_n",
-                                      width: 18,
-                                      height: 18,
-                                    ),
-                                    exitFullScreenChild: LImage(
-                                      "v_nowfull_n",
-                                      width: 18,
-                                      height: 18,
-                                    ),
-                                    toggleFullscreen: () {
-                                      if (kIsWeb) {
-                                        html.VideoElement video = html.document
-                                            .querySelector('video');
-                                        video.muted = false;
-                                        video.volume = 1;
-                                        video.setAttribute(
-                                            'playsinline', 'true');
-                                        video.setAttribute('autoplay', 'true');
-                                        if (html.document.fullscreenElement ==
-                                            null) {
-                                          video.enterFullscreen();
-                                        } else {
-                                          html.document.exitFullscreen();
-                                        }
-                                      } else {
-                                        controlManager.toggleFullscreen();
-                                      }
-                                    },
-                                  ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: ScreenUtil().setWidth(8)),
-                        child: FlickVideoProgressBar(
-                          flickProgressBarSettings: FlickProgressBarSettings(
-                            height: 3,
-                            handleRadius: 3,
-                            backgroundColor: Colors.white24,
-                            bufferedColor: Colors.white38,
-                            playedColor: Color.fromRGBO(90, 75, 235, 1),
-                            handleColor: Color.fromRGBO(90, 75, 235, 1),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-        ),
+              ),
         isPreview
             ? Positioned(
                 right: 0,
@@ -464,23 +475,25 @@ class FlickVideoPcontrols extends StatelessWidget {
         !flickVideoManager.videoPlayerValue.isInitialized ||
                 flickDisplayManager.showPlayerControls
             ? Container()
-            : Positioned(
-                right: 0,
-                left: 0,
-                bottom: 0,
-                child: FlickVideoProgressBar(
-                  flickProgressBarSettings: FlickProgressBarSettings(
-                    padding: EdgeInsets.only(bottom: 0),
-                    height: 2,
-                    handleRadius: 0,
-                    curveRadius: 0,
-                    backgroundColor: Colors.white24,
-                    bufferedColor: Colors.white38,
-                    playedColor: Color.fromRGBO(90, 75, 235, 1),
-                    handleColor: Colors.transparent,
+            : data.is_live == 1
+                ? Container()
+                : Positioned(
+                    right: 0,
+                    left: 0,
+                    bottom: 0,
+                    child: FlickVideoProgressBar(
+                      flickProgressBarSettings: FlickProgressBarSettings(
+                        padding: EdgeInsets.only(bottom: 0),
+                        height: 2,
+                        handleRadius: 0,
+                        curveRadius: 0,
+                        backgroundColor: Colors.white24,
+                        bufferedColor: Colors.white38,
+                        playedColor: Color.fromRGBO(90, 75, 235, 1),
+                        handleColor: Colors.transparent,
+                      ),
+                    ),
                   ),
-                ),
-              ),
         showBack
             ? Positioned(
                 top: ScreenUtil().setWidth(8),

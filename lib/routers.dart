@@ -223,7 +223,8 @@ class Routes {
   static String originalenter = 'originalenter'; //申请入驻
   static String picview = 'picview'; //预览图片
   static String minepostpage = 'minepostpage'; //我的帖子
-  static String communityseltagpage = 'communityseltagpage/:id/:type'; //选择帖子板块
+  static String communityseltagpage =
+      'communityseltagpage/:id/:type/:nolive'; //选择帖子板块
   static String welfarepage = 'welfarePage'; //福利
 
   static List<GoRoute> getDetailRoutes() {
@@ -233,6 +234,7 @@ class Routes {
         builder: (context, state) => CommunitySeltagPage(
           id: int.parse(state.params['id'] ?? "0"),
           type: state.params['type'] == "sc" ? '' : state.params['type'],
+          nolive: state.params['nolive'],
         ),
       ),
       GoRoute(
@@ -296,6 +298,7 @@ class Routes {
                     type: state.params['type'] == "sc"
                         ? ''
                         : state.params['type'],
+                    nolive: state.params['nolive'],
                   ),
                 ),
               ],

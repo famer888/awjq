@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -232,6 +234,7 @@ class _CommunityChildPageState extends State<CommunityChildPage> {
   @override
   Widget build(BuildContext context) {
     List tps = Provider.of<HomeConfig>(context, listen: false).config.forum_nav;
+
     return NestedScrollView(
       controller: _scrollController,
       headerSliverBuilder: (context, innerBoxIsScrolled) {

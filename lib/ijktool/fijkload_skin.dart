@@ -970,7 +970,7 @@ class _FijkLoadSkinState extends State<FijkLoadSkin>
               ),
             ),
             // 播放器底部控制器
-            _buildBottomBar(context),
+            widget.info.is_live == 1 ? Container() : _buildBottomBar(context),
           ],
         ),
       ),

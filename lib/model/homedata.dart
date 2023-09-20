@@ -199,8 +199,10 @@ class Config {
     this.sort_nav,
     this.forum_nav,
     this.vip_level_str,
+    this.vip_level_awq_str,
     this.wdai_str,
     this.vip_name_str,
+    this.vip_name_awq_str,
     this.pay_ai,
   });
 
@@ -237,10 +239,12 @@ class Config {
   String tg_group;
   String wdai_str;
   String vip_name_str;
+  String vip_name_awq_str;
   String potato_group;
   List<dynamic> sort_nav;
   List<dynamic> forum_nav;
   List<String> vip_level_str;
+  List<String> vip_level_awq_str;
   int pay_ai;
 
   factory Config.fromJson(Map<String, dynamic> json) => Config(
@@ -270,6 +274,10 @@ class Config {
         vip_level_str: json["vip_level_str"] == null
             ? []
             : List<String>.from(json["vip_level_str"].map((x) => x.toString())),
+        vip_level_awq_str: json["vip_level_awq_str"] == null
+            ? []
+            : List<String>.from(
+                json["vip_level_awq_str"].map((x) => x.toString())),
         buoy: json["buoy"] == null
             ? null
             : List<dynamic>.from(json["buoy"].map((x) => x)),
@@ -319,6 +327,7 @@ class Config {
         tg_group: json['tg_group'] ?? '',
         wdai_str: json['wdai_str'] ?? '',
         vip_name_str: json['vip_name_str'] ?? '',
+        vip_name_awq_str: json['vip_name_awq_str'] ?? '',
         pay_ai: json['pay_ai'] ?? 0,
       );
 
@@ -369,6 +378,9 @@ class Config {
         "tg_group": tg_group,
         "wdai_str": wdai_str,
         "vip_name_str": vip_name_str,
+        "vip_name_awq_str": vip_name_awq_str,
+        "vip_level_str": vip_level_str,
+        "vip_level_awq_str": vip_level_awq_str,
         "pay_ai": pay_ai,
       };
 }

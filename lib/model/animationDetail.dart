@@ -136,6 +136,7 @@ class DetailData {
     this.userAction,
     this.series_id,
     this.second_title,
+    this.is_live,
   });
 
   int id;
@@ -194,6 +195,7 @@ class DetailData {
   int rejectAt;
   int isTop;
   int clubId;
+  int is_live;
   int isTester;
   String desc;
   int isPopular;
@@ -283,6 +285,7 @@ class DetailData {
           ? 0
           : double.parse(json["discount"].toString()),
       favorites: json["favorites"] == null ? 0 : json["favorites"],
+      is_live: json["is_live"] == null ? 0 : json["is_live"],
       series_id: json["series_id"] == null ? 0 : json["series_id"]);
 
   Map<String, dynamic> toJson() => {
@@ -347,6 +350,7 @@ class DetailData {
         "is_tiptop": isTiptop == null ? null : isTiptop,
         "userFavorites": userFavorites == null ? 0 : userFavorites,
         "userLike": userLike == null ? null : userLike,
+        "is_live": is_live ?? 0,
         "cover_horizontal":
             coverThumbHorizontal == null ? null : coverThumbHorizontal,
         "cover_vertical":

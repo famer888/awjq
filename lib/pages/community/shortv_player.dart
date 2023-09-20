@@ -20,12 +20,14 @@ class ShortVPlayer extends StatefulWidget {
     this.isSimple = false,
     this.coins = 0,
     this.id = 0,
+    this.is_live = 0,
   }) : super(key: key);
   final String url;
   final String cover_url;
   final bool isSimple;
   final int coins;
   final int id;
+  final int is_live;
 
   @override
   State<ShortVPlayer> createState() => _ShortVPlayerState();
@@ -61,6 +63,7 @@ class _ShortVPlayerState extends State<ShortVPlayer> {
     videoInfo.coverThumbHorizontal = widget.cover_url;
     videoInfo.coverThumbVerticle = widget.cover_url;
     videoInfo.title = '';
+    videoInfo.is_live = widget.is_live;
     // initURL();
   }
 
