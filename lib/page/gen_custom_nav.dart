@@ -44,8 +44,7 @@ class GenCustomNavState extends State<GenCustomNav>
             _onTabPageChange(index, isOnTab: true);
           },
           indicatorColor: Colors.transparent,
-          labelPadding:
-              EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(16)),
+          labelPadding: EdgeInsets.only(left: GQStyle.pagePadding),
           isScrollable: true,
           physics: BouncingScrollPhysics(),
           tabs: widget.titles

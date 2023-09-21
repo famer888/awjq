@@ -167,7 +167,6 @@ class _CommunityTagDetailState extends BaseWidgetState<CommunityTagDetail> {
                         key: _anchorKey,
                         color: GQStyle.naviColor,
                         child: FljSliderBar(
-                          labelPadding: 5,
                           selectStyle: GQStyle.white13medium,
                           defaultStyle: GQStyle.white255_13,
                           pageController: _pageController,

@@ -256,7 +256,6 @@ class _CommunityChildPageState extends State<CommunityChildPage> {
                   Container(
                     color: GQStyle.bgColor,
                     child: FljSliderBar(
-                      labelPadding: 5,
                       selectStyle: GQStyle.green85_15,
                       defaultStyle: GQStyle.gray232_15,
                       pageController: _pageController,

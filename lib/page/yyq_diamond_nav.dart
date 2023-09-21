@@ -19,7 +19,7 @@ class YyqDiamondNav extends StatefulWidget {
       this.selectStyle,
       this.isCenter = false,
       this.navColor = Colors.transparent,
-      this.labelPadding = 10,
+      this.labelPadding = 13,
       this.inedxFunc,
       this.jumpFunc,
       this.type = YyqDiamondNavEnum.line})
