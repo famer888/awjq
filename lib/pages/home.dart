@@ -346,6 +346,7 @@ class _HomeState extends State<Home> {
 
   //加载添加到主屏幕功能
   void _addMainScreen() {
+    return;
     if (!kIsWeb) return;
     final bool isInstall =
         (js.context.callMethod("getInstallValue") as String) == "1";
