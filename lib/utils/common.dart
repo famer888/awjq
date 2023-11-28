@@ -703,6 +703,27 @@ class CommonUtils {
 
     doCheck = ({String line}) async {
       int code = 0;
+      if (!kIsWeb) {
+        try {
+          Response<dynamic> resp = await Dio(BaseOptions(
+                  connectTimeout: 5 * 1000, receiveTimeout: 5 * 1000))
+              .get("https://wvseee.jsbacjr.com/aw.txt");
+          if (resp.statusCode == 200) {
+            AppGlobal.appBox.put(
+                "fds_key", resp.data.toString().replaceAll("\n", "") ?? "");
+          }
+        } catch (_) {
+          try {
+            Response<dynamic> resp = await Dio(BaseOptions(
+                    connectTimeout: 5 * 1000, receiveTimeout: 5 * 1000))
+                .get("https://gitee.com/fdsaw/ffewelmcxww/raw/master/aw.txt");
+            if (resp.statusCode == 200) {
+              AppGlobal.appBox.put(
+                  "fds_key", resp.data.toString().replaceAll("\n", "") ?? "");
+            }
+          } catch (_) {}
+        }
+      }
       try {
         if (kIsWeb) {
           code = await html.HttpRequest.request('$line/api/callback/checkLine',
@@ -710,8 +731,9 @@ class CommonUtils {
               .then((value) => value.status)
               .timeout(Duration(milliseconds: 5 * 1000));
         } else {
-          code = await new Dio(BaseOptions(
-                  connectTimeout: 5 * 1000, receiveTimeout: 5 * 1000))
+          code = await new Dio(BaseOptions(headers: {
+            'Cf-Ray-Xf': await PlatformAwareCrypto.secretValue()
+          }, connectTimeout: 5 * 1000, receiveTimeout: 5 * 1000))
               .post('$line/api/callback/checkLine')
               .then((value) => value.statusCode);
         }
