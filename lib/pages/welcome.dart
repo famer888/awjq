@@ -47,36 +47,43 @@ class _WelcomeState extends State<Welcome> {
               }
             },
             child: AppGlobal.apiBaseURL.isEmpty
-                ? Center(
-                    child: isCheck
-                        ? Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text.rich(
-                                TextSpan(
+                ? Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 20.w),
+                    child: Center(
+                      child: isCheck
+                          ? Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text.rich(
+                                  TextSpan(
                                     text: CommonUtils.txt('jcxlsd'),
-                                    style: GQStyle.gray14),
-                              ),
-                              SizedBox(height: 20.w),
-                              weburl.isNotEmpty
-                                  ? GestureDetector(
-                                      onTap: () {
-                                        CommonUtils.launchURL(weburl);
-                                      },
-                                      child: Text(
-                                        CommonUtils.txt('gwdzdz') + '：$weburl',
-                                        style: GQStyle.red14,
-                                        maxLines: 3,
-                                      ),
-                                    )
-                                  : Container()
-                            ],
-                          )
-                        : PageStatus.noNetWork(
-                            text: CommonUtils.txt('wfljqsz'),
-                            onTap: () {
-                              checkLines();
-                            }),
+                                    style: GQStyle.gray14,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                SizedBox(height: 20.w),
+                                weburl.isNotEmpty
+                                    ? GestureDetector(
+                                        onTap: () {
+                                          CommonUtils.launchURL(weburl);
+                                        },
+                                        child: Text(
+                                          CommonUtils.txt('gwdzdz') +
+                                              '：$weburl',
+                                          style: GQStyle.red14,
+                                          maxLines: 3,
+                                          textAlign: TextAlign.center,
+                                        ),
+                                      )
+                                    : Container()
+                              ],
+                            )
+                          : PageStatus.noNetWork(
+                              text: CommonUtils.txt('wfljqsz'),
+                              onTap: () {
+                                checkLines();
+                              }),
+                    ),
                   )
                 : adsmap == null
                     ? Home()

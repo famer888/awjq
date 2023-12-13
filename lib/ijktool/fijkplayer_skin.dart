@@ -351,8 +351,10 @@ class _CustomFijkPanelState extends State<CustomFijkPanel>
           ),
           // 错误信息
           Text(
-            widget.videoInfo.is_live == 1 ? "主播正在赶来的路上！" : "播放失败404，反馈给客服！",
-            style: TextStyle(
+            widget.videoInfo.is_live == 1
+                ? "主播正在赶来的路上！"
+                : "【ID:${widget.videoInfo.id}_${_duration2String(player?.currentPos ?? const Duration(seconds: 0))}】播放失败，反馈给客服！",
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 12,
               fontWeight: FontWeight.bold,
@@ -381,6 +383,22 @@ class _CustomFijkPanelState extends State<CustomFijkPanel>
         ],
       ),
     );
+  }
+
+  String _duration2String(Duration duration) {
+    if (duration.inMilliseconds < 0) return "-: negtive";
+
+    String twoDigits(int n) {
+      if (n >= 10) return "$n";
+      return "0$n";
+    }
+
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+    int inHours = duration.inHours;
+    return inHours > 0
+        ? "$inHours:$twoDigitMinutes:$twoDigitSeconds"
+        : "$twoDigitMinutes:$twoDigitSeconds";
   }
 
   // 加载中slot
