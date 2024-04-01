@@ -1,6 +1,5 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:dotted_decoration/dotted_decoration.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -11,7 +10,7 @@ import 'package:awjq/components/common/pullrefreshlist.dart';
 import 'package:awjq/components/page_status.dart';
 import 'package:awjq/components/yy_dialog.dart';
 import 'package:awjq/global.dart';
-import 'package:awjq/pages/community/community_post_review.dart';
+import 'package:awjq/pages/community/community_bit_post_review.dart';
 import 'package:awjq/routers.dart';
 import 'package:awjq/store/homeConfig.dart';
 import 'package:awjq/theme/default.dart';
@@ -21,18 +20,19 @@ import 'package:awjq/utils/extensionlibrary.dart';
 import 'package:awjq/utils/input_box_comment.dart';
 import 'package:awjq/utils/networkImage.dart';
 
-class CommunityPostDetail extends BaseWidget {
-  CommunityPostDetail({Key key, this.id}) : super(key: key);
+class CommunityBitPostDetail extends BaseWidget {
+  CommunityBitPostDetail({Key key, this.id}) : super(key: key);
   final String id;
 
   @override
   State<StatefulWidget> cState() {
     // TODO: implement cState
-    return _CommunityPostDetailState();
+    return _CommunityBitPostDetailState();
   }
 }
 
-class _CommunityPostDetailState extends BaseWidgetState<CommunityPostDetail> {
+class _CommunityBitPostDetailState
+    extends BaseWidgetState<CommunityBitPostDetail> {
   int page = 1;
   bool noMore = false;
   bool networkErr = false;
@@ -61,110 +61,6 @@ class _CommunityPostDetailState extends BaseWidgetState<CommunityPostDetail> {
           child: PlatformAwareNetworkImage(url: attributes["src"] ?? ""),
         );
       };
-  @override
-  Widget appbar() {
-    return Column(
-      children: [
-        Container(
-          height: MediaQuery.of(context).padding.top,
-          color: Colors.transparent,
-        ),
-        Container(
-          color: Colors.transparent,
-          padding: EdgeInsets.symmetric(horizontal: GQStyle.pagePadding),
-          height: GQStyle.navbarHegiht,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              GestureDetector(
-                child: SizedBox(
-                  height: double.infinity,
-                  child: LImage(
-                    "nav_back_n",
-                    width: ScreenUtil().setWidth(20),
-                    height: ScreenUtil().setWidth(20),
-                  ),
-                ),
-                onTap: () {
-                  finish();
-                },
-              ),
-              SizedBox(width: 10.w),
-              Expanded(
-                  child: detailData == null
-                      ? Container()
-                      : Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            GestureDetector(
-                              behavior: HitTestBehavior.translucent,
-                              onTap: () {
-                                context.push(
-                                    '/mineUserCenter/${detailData["user"]["aff"]}');
-                              },
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SizedBox(
-                                    height: ScreenUtil().setWidth(30),
-                                    width: ScreenUtil().setWidth(30),
-                                    child: PlatformAwareNetworkImage(
-                                      imageName: "flj_logo_icon",
-                                      url: detailData["user"]["thumb"] ?? "",
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(
-                                              ScreenUtil().setWidth(15))),
-                                      background: Color(0xFF26313b),
-                                    ),
-                                  ),
-                                  SizedBox(width: ScreenUtil().setWidth(10)),
-                                  Text(
-                                    detailData["user"]["nickname"] ?? "",
-                                    style: GQStyle.white255_15_M,
-                                  ),
-                                  SizedBox(width: 2.w),
-                                  detailData["user"]['agent'] == 1
-                                      ? Icon(Icons.verified_sharp,
-                                          size: 14.w,
-                                          color:
-                                              Color.fromRGBO(247, 208, 93, 1))
-                                      : Container(),
-                                ],
-                              ),
-                            ),
-                            GestureDetector(
-                              behavior: HitTestBehavior.translucent,
-                              onTap: () {
-                                _resetXcfocusNode();
-                                communityFollowUser(
-                                        aff: detailData["user"]["aff"]
-                                            .toString())
-                                    .then((res) {
-                                  if (res.status == 1) {
-                                    detailData["user"]["is_follow"] =
-                                        detailData["user"]["is_follow"] == 1
-                                            ? 0
-                                            : 1;
-                                    _countFocus.value =
-                                        detailData["user"]["is_follow"];
-                                  } else {
-                                    CommonUtils.showText(res.msg);
-                                  }
-                                });
-                              },
-                              child: ValueListenableBuilder<int>(
-                                builder: _buildWithFocus,
-                                valueListenable: _countFocus,
-                              ),
-                            )
-                          ],
-                        ))
-            ],
-          ),
-        )
-      ],
-    );
-  }
 
   _resetXcfocusNode() {
     isReplay = false;
@@ -174,7 +70,7 @@ class _CommunityPostDetailState extends BaseWidgetState<CommunityPostDetail> {
 
   //加载详情
   _getData() {
-    communityTopicDetail(id: widget.id).then((res) {
+    bitTopicDetail(id: widget.id).then((res) {
       if (res.data == null) {
         networkErr = true;
         setState(() {});
@@ -192,7 +88,7 @@ class _CommunityPostDetailState extends BaseWidgetState<CommunityPostDetail> {
 
   //加载评论
   _getReviewData({bool isShow = false}) {
-    communityPostComments(id: widget.id, page: page).then((res) {
+    bitPostComments(id: widget.id, page: page).then((res) {
       if (isShow) BotToast.closeAllLoading();
       if (res.data == null) {
         CommonUtils.showText(res.msg);
@@ -215,11 +111,12 @@ class _CommunityPostDetailState extends BaseWidgetState<CommunityPostDetail> {
   @override
   void onCreate() {
     // TODO: implement onCreate
+    setAppTitle(title: CommonUtils.txt("zyxq"));
     _getData();
   }
 
   @override
-  void didUpdateWidget(covariant CommunityPostDetail oldWidget) {
+  void didUpdateWidget(covariant CommunityBitPostDetail oldWidget) {
     // TODO: implement didUpdateWidget
     super.didUpdateWidget(oldWidget);
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -235,127 +132,6 @@ class _CommunityPostDetailState extends BaseWidgetState<CommunityPostDetail> {
     _countCollect.dispose();
     _countFocus.dispose();
     _countLike.dispose();
-  }
-
-  _showExceptionalAlert() {
-    int money = Provider.of<HomeConfig>(context, listen: false).member.money;
-    bool isInsufficient = money < 1;
-    YyShowDialog.showdialog(
-      context,
-      title:
-          isInsufficient ? CommonUtils.txt('jbbz') : CommonUtils.txt('gxdyds'),
-      btnText:
-          isInsufficient ? CommonUtils.txt("qwcz") : CommonUtils.txt('ljdsang'),
-      callBack: () {
-        focusNode.unfocus();
-        if (isInsufficient) {
-          context.push('/${Routes.coinRecharge}');
-        } else {
-          if (txtcontroller.text.length == 0) {
-            CommonUtils.showText(CommonUtils.txt("srdsbs"));
-            return;
-          }
-          initLoadGIF(tip: CommonUtils.txt("jzz"));
-          communityTopicReward(
-                  id: detailData["id"].toString(),
-                  amount: txtcontroller.text.toString(),
-                  context: context,
-                  coins: money - int.parse(txtcontroller.text))
-              .then((res) {
-            BotToast.closeAllLoading();
-            if (res.status == 1) {
-              CommonUtils.showText(res.msg);
-              detailData["reward_amount"] += int.parse(txtcontroller.text);
-              setState(() {});
-            } else {
-              CommonUtils.showText(res.msg);
-            }
-          });
-        }
-      },
-      cancelText: CommonUtils.txt("qx"),
-      prohibitClose: false,
-      content: (setDialogState) {
-        return DefaultTextStyle(
-            style: GQStyle.gray203_13,
-            child: Column(
-              children: [
-                Container(
-                  height: ScreenUtil().setWidth(32),
-                  decoration: BoxDecoration(
-                    color: Color(0xFF0e1420),
-                    borderRadius: BorderRadius.all(
-                        Radius.circular(ScreenUtil().setWidth(16))),
-                  ),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: ScreenUtil().setWidth(20),
-                  ),
-                  width: ScreenUtil().setWidth(170),
-                  child: TextField(
-                      autofocus: false,
-                      focusNode: focusNode,
-                      controller: txtcontroller,
-                      style: GQStyle.white255_15_M,
-                      cursorColor: Colors.white,
-                      keyboardType: TextInputType.number,
-                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                      decoration: InputDecoration(
-                          hoverColor: Colors.white,
-                          hintText: CommonUtils.txt('srdsbs'),
-                          hintStyle: TextStyle(
-                            color: Color(0xffffffff),
-                            fontFamily: GQStyle.hanyi,
-                            fontWeight: FontWeight.w500,
-                            fontSize: ScreenUtil().setSp(15),
-                          ),
-                          contentPadding: EdgeInsets.zero,
-                          disabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30.0),
-                              borderSide: BorderSide(
-                                  color: Colors.transparent, width: 0)),
-                          focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30.0),
-                              borderSide: BorderSide(
-                                  color: Colors.transparent, width: 0)),
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30.0),
-                              borderSide: BorderSide(
-                                  color: Colors.transparent, width: 0)),
-                          enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30.0),
-                              borderSide: BorderSide(
-                                  color: Colors.transparent, width: 0)))),
-                ),
-                SizedBox(height: ScreenUtil().setWidth(15)),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                        CommonUtils.txt('kyje') +
-                            "：$money" +
-                            CommonUtils.txt('jb'),
-                        style: GQStyle.gray203_13),
-                    SizedBox(width: ScreenUtil().setWidth(13.5)),
-                    GestureDetector(
-                      behavior: HitTestBehavior.translucent,
-                      onTap: () {
-                        focusNode.unfocus();
-                        context.pop();
-                        context.push('/${Routes.coinRecharge}');
-                      },
-                      child: Row(
-                        children: [
-                          Text(CommonUtils.txt('qcz'),
-                              style: GQStyle.blue80_13_M),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ],
-            ));
-      },
-    );
   }
 
   @override
@@ -414,7 +190,7 @@ class _CommunityPostDetailState extends BaseWidgetState<CommunityPostDetail> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                                "${CommonUtils.renderFixedNumber(detailData["view_num"] ?? 0)}${CommonUtils.txt("llan")}",
+                                "${CommonUtils.renderFixedNumber(detailData["fake_view_ct"] ?? 0)}${CommonUtils.txt("llan")}",
                                 style: TextStyle(
                                     color: Colors.white54, fontSize: 12.sp)),
                             Text(
@@ -429,22 +205,7 @@ class _CommunityPostDetailState extends BaseWidgetState<CommunityPostDetail> {
                         margin: EdgeInsets.symmetric(
                             horizontal: GQStyle.pagePadding),
                         height: ScreenUtil().setWidth(0.5),
-                        color: Color(0xFF2a2a33),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                            left: GQStyle.pagePadding,
-                            right: GQStyle.pagePadding,
-                            top: 10.w),
-                        child: (detailData["content"] ?? "").isEmpty
-                            ? Container()
-                            : RichText(
-                                text: TextSpan(
-                                  text: detailData["content"] ?? "",
-                                  style: TextStyle(
-                                      color: Colors.white70, fontSize: 14.sp),
-                                ),
-                              ),
+                        color: Color.fromRGBO(218, 218, 218, 0.05),
                       ),
                       Builder(builder: (cx) {
                         List tps = List.from(detailData['medias']);
@@ -462,7 +223,6 @@ class _CommunityPostDetailState extends BaseWidgetState<CommunityPostDetail> {
                                   if (e['type'] == 2) {
                                     e["unlock_coins"] =
                                         detailData["unlock_coins"];
-                                    e["is_live"] = detailData["is_live"];
                                   }
                                   CommonUtils.debugPrint(e);
                                   double width = ScreenUtil().screenWidth -
@@ -511,11 +271,9 @@ class _CommunityPostDetailState extends BaseWidgetState<CommunityPostDetail> {
                                             SizedBox(height: 10.w),
                                             RichText(
                                                 text: TextSpan(children: [
-                                              (detailData['unlock_coins'] ?? 0) >
-                                                          0 &&
-                                                      (detailData["contact"] ??
-                                                              "")
-                                                          .isEmpty
+                                              (detailData['unlock_coins'] ??
+                                                          0) >
+                                                      0
                                                   ? TextSpan(
                                                       text:
                                                           "${detailData['unlock_coins']}${CommonUtils.txt('jbjsgk')}:",
@@ -525,7 +283,7 @@ class _CommunityPostDetailState extends BaseWidgetState<CommunityPostDetail> {
                                                           fontSize: 14.sp))
                                                   : TextSpan(
                                                       text: CommonUtils.txt(
-                                                              'sping') +
+                                                              'shp') +
                                                           ":",
                                                       style: TextStyle(
                                                           color: Colors.white70,
@@ -571,110 +329,35 @@ class _CommunityPostDetailState extends BaseWidgetState<CommunityPostDetail> {
                                         );
                                 });
                       }),
-                      (detailData["contact"] ?? "").isEmpty
-                          ? Container()
-                          : Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: GQStyle.pagePadding,
-                                  vertical: 10.w),
-                              child: (detailData['unlock_coins'] ?? 0) > 0 &&
-                                      (detailData["contact"] ?? "")
-                                          .contains("***")
-                                  ? Column(
-                                      children: [
-                                        Container(
-                                          height: 75.w,
-                                          decoration: DottedDecoration(
-                                              borderRadius: BorderRadius.all(
-                                                  Radius.circular(4.w)),
-                                              shape: Shape.box,
-                                              color: GQStyle.cyanColor00edfd,
-                                              strokeWidth: 1.w),
-                                          alignment: Alignment.center,
-                                          child: Text(
-                                              CommonUtils.txt("nrycjsck"),
-                                              style: GQStyle.blue80_14_M),
-                                        ),
-                                        SizedBox(height: 10.w),
-                                        GestureDetector(
-                                          behavior: HitTestBehavior.translucent,
-                                          onTap: () {
-                                            CommonUtils.startLoadGIF();
-                                            reqGetPostURL(id: detailData['id'])
-                                                .then((value) {
-                                              BotToast.closeAllLoading();
-                                              if (value.status == 1) {
-                                                detailData['contact'] =
-                                                    value.data['contact'] ?? '';
-                                                setState(() {});
-                                              } else {
-                                                CommonUtils.showText(
-                                                    value.msg ?? '');
-                                              }
-                                            });
-                                          },
-                                          child: Container(
-                                            height: 40.w,
-                                            alignment: Alignment.center,
-                                            decoration: BoxDecoration(
-                                                gradient:
-                                                    GQStyle.gradient_90_114,
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(4.w))),
-                                            child: Text(
-                                                "${detailData['unlock_coins']}${CommonUtils.txt('jbkqawjy')}",
-                                                style: GQStyle.white14Medium),
-                                          ),
-                                        )
-                                      ],
-                                    )
-                                  : (detailData["contact"] ?? "")
-                                          .contains("111111")
-                                      ? Container()
-                                      : RichText(
-                                          text: TextSpan(children: [
-                                          (detailData["contact"] ?? "")
-                                                  .contains("111111")
-                                              ? TextSpan()
-                                              : TextSpan(
-                                                  children: [
-                                                      TextSpan(
-                                                          text: CommonUtils.txt(
-                                                              'sjlxfs'),
-                                                          style: TextStyle(
-                                                              color: Colors
-                                                                  .white70,
-                                                              fontSize: 14.sp)),
-                                                      TextSpan(
-                                                          text:
-                                                              "${detailData["contact"]}",
-                                                          style: TextStyle(
-                                                              color: GQStyle
-                                                                  .cyanColor00edfd,
-                                                              fontSize: 14.sp)),
-                                                      TextSpan(
-                                                          text:
-                                                              "【${CommonUtils.txt('dwfz')}】",
-                                                          style: TextStyle(
-                                                              color: Colors.red,
-                                                              fontSize: 14.sp)),
-                                                    ],
-                                                  recognizer:
-                                                      TapGestureRecognizer()
-                                                        ..onTap = () {
-                                                          Clipboard.setData(
-                                                              ClipboardData(
-                                                                  text:
-                                                                      '${detailData["contact"]}'));
-                                                          CommonUtils.showText(
-                                                              CommonUtils.txt(
-                                                                  'fzcglx'));
-                                                        })
-                                        ])),
-                            ),
                       Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: GQStyle.pagePadding, vertical: 10.w),
+                        padding: EdgeInsets.only(
+                            left: GQStyle.pagePadding,
+                            right: GQStyle.pagePadding,
+                            top: 10.w),
+                        child: (detailData["content"] ?? "").isEmpty
+                            ? Container()
+                            : RichText(
+                                text: TextSpan(
+                                  text: detailData["content"] ?? "",
+                                  style: TextStyle(
+                                      color: Colors.white70, fontSize: 14.sp),
+                                ),
+                              ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            left: GQStyle.pagePadding,
+                            right: GQStyle.pagePadding,
+                            top: 10.w),
+                        child: _limitWidget(),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          left: GQStyle.pagePadding,
+                          right: GQStyle.pagePadding,
+                          top: 30.w,
+                          bottom: 10.w,
+                        ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
@@ -682,8 +365,7 @@ class _CommunityPostDetailState extends BaseWidgetState<CommunityPostDetail> {
                               behavior: HitTestBehavior.translucent,
                               onTap: () {
                                 _resetXcfocusNode();
-                                communityTopicLike(
-                                        id: detailData["id"].toString())
+                                bitTopicLike(id: detailData["id"].toString())
                                     .then((res) {
                                   if (res.status == 1) {
                                     detailData["is_like"] =
@@ -704,7 +386,7 @@ class _CommunityPostDetailState extends BaseWidgetState<CommunityPostDetail> {
                               behavior: HitTestBehavior.translucent,
                               onTap: () {
                                 _resetXcfocusNode();
-                                communityTopicFavorite(
+                                bitTopicFavorite(
                                         id: detailData["id"].toString())
                                     .then((res) {
                                   if (res.status == 1) {
@@ -753,7 +435,7 @@ class _CommunityPostDetailState extends BaseWidgetState<CommunityPostDetail> {
                         margin: EdgeInsets.symmetric(
                             horizontal: GQStyle.pagePadding),
                         height: ScreenUtil().setWidth(0.5),
-                        color: Color(0xFF2a2a33),
+                        color: Color.fromRGBO(218, 218, 218, 0.05),
                       ),
                       SizedBox(height: 20.w),
                       Padding(
@@ -782,7 +464,7 @@ class _CommunityPostDetailState extends BaseWidgetState<CommunityPostDetail> {
                                 physics: NeverScrollableScrollPhysics(),
                                 itemCount: reviewData.length,
                                 itemBuilder: (context, index) {
-                                  return CommunityPostReview(
+                                  return CommunityBitPostReview(
                                     data: reviewData[index],
                                     replyCall: (dp, pid, cmid) {
                                       isReplay = true;
@@ -818,8 +500,7 @@ class _CommunityPostDetailState extends BaseWidgetState<CommunityPostDetail> {
         return;
       }
       initLoadGIF(tip: CommonUtils.txt("fbioz"));
-      communityPostComment(
-              post_id: post_id, comment_id: comment_id, content: value)
+      bitPostComment(post_id: post_id, comment_id: comment_id, content: value)
           .then((res) {
         BotToast.closeAllLoading();
         if (res.status == 1) {
@@ -829,7 +510,7 @@ class _CommunityPostDetailState extends BaseWidgetState<CommunityPostDetail> {
         }
       });
     } else {
-      YyShowDialog.showdPNGDiaog(
+      YyShowDialog.showdialog(
         context,
         title: CommonUtils.txt("ts"),
         content: (setDialogState) {
@@ -897,29 +578,220 @@ class _CommunityPostDetailState extends BaseWidgetState<CommunityPostDetail> {
   final ValueNotifier<int> _countFocus = ValueNotifier<int>(0);
   Widget _buildWithFocus(BuildContext context, int value, Widget child) {
     return Container(
-      width: ScreenUtil().setWidth(55),
-      height: ScreenUtil().setWidth(25),
-      decoration: BoxDecoration(
-          color: detailData["user"]["is_follow"] == 1
-              ? GQStyle.cyanColor00edfd
-              : Colors.transparent,
-          borderRadius:
-              BorderRadius.all(Radius.circular(ScreenUtil().setWidth(25 / 2))),
-          border: Border.all(
+      height: 28.w,
+      padding: EdgeInsets.symmetric(horizontal: 8.w),
+      decoration: ShapeDecoration(
+        color: detailData["user"]["is_follow"] == 1
+            ? Colors.white.withOpacity(0.04)
+            : Color(0x19EBAE36),
+        shape: RoundedRectangleBorder(
+          side: BorderSide(
+              width: 1,
               color: detailData["user"]["is_follow"] == 1
                   ? Colors.transparent
-                  : GQStyle.cyanColor00edfd,
-              width: ScreenUtil().setWidth(0.5))),
+                  : Color(0x99EBAE36)),
+          borderRadius: BorderRadius.circular(8),
+        ),
+      ),
       child: Center(
-        child: Text(
-          detailData["user"]["is_follow"] == 1
-              ? CommonUtils.txt("ygz")
-              : "+ ${CommonUtils.txt("gz")}",
-          style: detailData["user"]["is_follow"] == 1
-              ? GQStyle.white11
-              : GQStyle.blue80_11,
+        child: Row(
+          children: [
+            detailData["user"]["is_follow"] == 1
+                ? const SizedBox.shrink()
+                : Row(
+                    children: [
+                      LImage(
+                        "2024_sq_gz",
+                        width: 16.w,
+                        height: 16.w,
+                      ),
+                      SizedBox(
+                        width: 2.w,
+                      )
+                    ],
+                  ),
+            Text(
+              detailData["user"]["is_follow"] == 1
+                  ? CommonUtils.txt("ygz")
+                  : CommonUtils.txt("gz"),
+              style: detailData["user"]["is_follow"] == 1
+                  ? GQStyle.white11
+                  : GQStyle.blue80_11,
+            )
+          ],
         ),
       ),
     );
+  }
+
+  _limitWidget() {
+    if (detailData["link"].isEmpty && detailData["type"] == 1) {
+      String seed_vip_tip =
+          Provider.of<HomeConfig>(context, listen: false).config.seed_vip_tip;
+      return Column(
+        children: [
+          Container(
+            height: 75.w,
+            decoration: DottedDecoration(
+                borderRadius: BorderRadius.all(Radius.circular(4.w)),
+                shape: Shape.box,
+                color: GQStyle.cyanColor00edfd,
+                strokeWidth: 1.w),
+            alignment: Alignment.center,
+            child:
+                Text(CommonUtils.txt('nrycjsck'), style: GQStyle.blue80_14_M),
+          ),
+          SizedBox(height: 10.w),
+          GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: () {
+              context.push("/vip");
+            },
+            child: Container(
+              height: 40.w,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                  gradient: GQStyle.gradient_90_114,
+                  borderRadius: BorderRadius.all(Radius.circular(4.w))),
+              child: Text(seed_vip_tip, style: GQStyle.white14Medium),
+            ),
+          ),
+        ],
+      );
+    }
+    if (detailData["link"].isEmpty && detailData["type"] == 2) {
+      int money = Provider.of<HomeConfig>(context, listen: false).member.money;
+      String seed_coins_tip =
+          Provider.of<HomeConfig>(context, listen: false).config.seed_coins_tip;
+      return Column(children: [
+        Container(
+          height: 75.w,
+          decoration: DottedDecoration(
+              borderRadius: BorderRadius.all(Radius.circular(4.w)),
+              shape: Shape.box,
+              color: GQStyle.cyanColor00edfd,
+              strokeWidth: 1.w),
+          alignment: Alignment.center,
+          child: Text(CommonUtils.txt("nrycjsck"), style: GQStyle.blue80_14_M),
+        ),
+        SizedBox(height: 10.w),
+        GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          onTap: () {
+            CommonUtils.startLoadGIF(tip: CommonUtils.txt("dhz"));
+            buyBit(
+                    id: detailData["id"],
+                    coins: money - detailData["coins"],
+                    context: context)
+                .then((res) {
+              //关闭加载动画
+              BotToast.closeAllLoading();
+              if (res.status != 0) {
+                detailData["link"] = res.data;
+                setState(() {});
+              } else {
+                CommonUtils.showText(res.msg);
+              }
+            });
+          },
+          child: Container(
+            height: 40.w,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+                gradient: GQStyle.gradient_90_114,
+                borderRadius: BorderRadius.all(Radius.circular(4.w))),
+            child: Text(
+                seed_coins_tip.replaceAll("#", "${detailData["coins"] ?? 0}"),
+                style: GQStyle.white14Medium),
+          ),
+        )
+      ]);
+    }
+    return detailData["topic"]["type"] == 0
+        ? Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: () {
+                  if (detailData['secret'].isEmpty) return;
+                  Clipboard.setData(
+                      ClipboardData(text: "${detailData['secret']}"));
+                  CommonUtils.showText(CommonUtils.txt('fzcg'));
+                },
+                child: RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                          text: CommonUtils.txt("jymm"),
+                          style: TextStyle(
+                              color: Colors.white70, fontSize: 14.sp)),
+                      TextSpan(
+                          text: detailData['secret'].isEmpty
+                              ? CommonUtils.txt("ptjc")
+                              : "${detailData['secret']}",
+                          style: TextStyle(
+                              color: GQStyle.cyanColor00edfd, fontSize: 14.sp)),
+                      detailData['secret'].isEmpty
+                          ? TextSpan()
+                          : TextSpan(
+                              text: " [${CommonUtils.txt("dwfz")}]",
+                              style: TextStyle(
+                                  color: Colors.red, fontSize: 14.sp)),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: 10.w),
+              GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: () {
+                  Clipboard.setData(
+                      ClipboardData(text: "${detailData['link']}"));
+                  CommonUtils.showText(CommonUtils.txt('fzcg'));
+                },
+                child: RichText(
+                  text: TextSpan(
+                    children: [
+                      TextSpan(
+                          text: CommonUtils.txt("xzlj"),
+                          style: TextStyle(
+                              color: Colors.white70, fontSize: 14.sp)),
+                      TextSpan(
+                          text: "${detailData['link']}".replaceAll(",", "\n"),
+                          style: TextStyle(
+                              color: GQStyle.cyanColor00edfd, fontSize: 14.sp)),
+                      TextSpan(
+                          text: " [${CommonUtils.txt("dwfz")}]",
+                          style: TextStyle(color: Colors.red, fontSize: 14.sp)),
+                    ],
+                  ),
+                ),
+              )
+            ],
+          )
+        : GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: () {
+              Clipboard.setData(ClipboardData(text: "${detailData['link']}"));
+              CommonUtils.showText(CommonUtils.txt('fzcg'));
+            },
+            child: RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                      text: CommonUtils.txt("wzwz"),
+                      style: TextStyle(color: Colors.white70, fontSize: 14.sp)),
+                  TextSpan(
+                      text: "${detailData['link']}".replaceAll(",", "\n"),
+                      style: TextStyle(
+                          color: GQStyle.cyanColor00edfd, fontSize: 14.sp)),
+                  TextSpan(
+                      text: " [${CommonUtils.txt("dwfz")}]",
+                      style: TextStyle(color: Colors.red, fontSize: 14.sp)),
+                ],
+              ),
+            ),
+          );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:awjq/pages/community/community_bit_post.dart';
 import 'package:flutter/material.dart';
 import 'package:awjq/components/common/pagetitlebar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -28,6 +29,7 @@ class _CollectPageState extends State<CollectPage> {
     {'id': 1, 'name': CommonUtils.txt('sping')},
     // {'id': 18, 'name': CommonUtils.txt('xany')},
     {'id': 14, 'name': CommonUtils.txt('tiezt')},
+    {'id': 19, 'name': CommonUtils.txt('zyuan')},
     // {'id': 2, 'name': CommonUtils.txt('mh')},
     // {'id': 3, 'name': CommonUtils.txt('xs')},
     // {'id': 6, 'name': CommonUtils.txt('mt')},
@@ -213,6 +215,26 @@ class _CollectListState extends State<CollectList> {
     );
   }
 
+  Widget _postBitList() {
+    return PullRefreshList(
+      isAll: noMore,
+      onRefresh: () {
+        page = 1;
+        last_ix = "";
+        _getData();
+      },
+      onLoading: () {
+        page++;
+        _getData();
+      },
+      child: ListView.builder(
+          itemCount: 1, //标签+帖子
+          itemBuilder: (context, index) {
+            return CommunityBitPost(data: dataList);
+          }),
+    );
+  }
+
   getListWidget() {
     switch (widget.id) {
       case 1:
@@ -220,8 +242,8 @@ class _CollectListState extends State<CollectList> {
         break;
       case 14:
         return _postList();
-      case 18:
-        return _postList();
+      case 19:
+        return _postBitList();
         break;
     }
   }

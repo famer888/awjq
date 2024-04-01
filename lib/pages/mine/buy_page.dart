@@ -1,3 +1,4 @@
+import 'package:awjq/pages/community/community_bit_post.dart';
 import 'package:flutter/material.dart';
 import 'package:awjq/components/common/pagetitlebar.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -27,6 +28,7 @@ class _BuyPageState extends State<BuyPage> with TickerProviderStateMixin {
     {'id': 1, 'name': CommonUtils.txt('sping')},
     // {'id': 18, 'name': CommonUtils.txt('xany')},
     {'id': 14, 'name': CommonUtils.txt('tiezt')},
+    {'id': 19, 'name': CommonUtils.txt('zyuan')},
   ];
 
   @override
@@ -439,6 +441,25 @@ class _BuyListState extends State<BuyList> {
     );
   }
 
+  Widget _postBitList() {
+    return PullRefreshList(
+      isAll: noMore,
+      onRefresh: () {
+        page = 1;
+        _getData();
+      },
+      onLoading: () {
+        page++;
+        _getData();
+      },
+      child: ListView.builder(
+          itemCount: 1, //标签+帖子
+          itemBuilder: (context, index) {
+            return CommunityBitPost(data: dataList);
+          }),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -452,8 +473,8 @@ class _BuyListState extends State<BuyList> {
         break;
       case 14:
         return _postList();
-      case 18:
-        return _postList();
+      case 19:
+        return _postBitList();
         break;
     }
   }

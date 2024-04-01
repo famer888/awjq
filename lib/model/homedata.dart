@@ -204,6 +204,11 @@ class Config {
     this.vip_name_str,
     this.vip_name_awq_str,
     this.pay_ai,
+    this.seed_nav,
+    this.seed_sort_nav,
+    this.seed_top_nav,
+    this.seed_vip_tip,
+    this.seed_coins_tip,
   });
 
   String day_price;
@@ -246,6 +251,11 @@ class Config {
   List<String> vip_level_str;
   List<String> vip_level_awq_str;
   int pay_ai;
+  List<dynamic> seed_nav;
+  List<dynamic> seed_sort_nav;
+  List<dynamic> seed_top_nav;
+  String seed_vip_tip;
+  String seed_coins_tip;
 
   factory Config.fromJson(Map<String, dynamic> json) => Config(
         day_price: json["day_price"] == null ? null : json["day_price"],
@@ -329,6 +339,23 @@ class Config {
         vip_name_str: json['vip_name_str'] ?? '',
         vip_name_awq_str: json['vip_name_awq_str'] ?? '',
         pay_ai: json['pay_ai'] ?? 0,
+        seed_nav: json["seed_nav"] == null
+            ? []
+            : List<dynamic>.from(
+                json["seed_nav"].map((x) => x),
+              ),
+        seed_sort_nav: json["seed_sort_nav"] == null
+            ? []
+            : List<dynamic>.from(
+                json["seed_sort_nav"].map((x) => x),
+              ),
+        seed_top_nav: json["seed_top_nav"] == null
+            ? []
+            : List<dynamic>.from(
+                json["seed_top_nav"].map((x) => x),
+              ),
+        seed_vip_tip: json['seed_vip_tip'] ?? "",
+        seed_coins_tip: json['seed_coins_tip'] ?? "",
       );
 
   Map<String, dynamic> toJson() => {
@@ -382,6 +409,16 @@ class Config {
         "vip_level_str": vip_level_str,
         "vip_level_awq_str": vip_level_awq_str,
         "pay_ai": pay_ai,
+        "seed_nav":
+            seed_nav == null ? [] : List<dynamic>.from(seed_nav.map((x) => x)),
+        "seed_sort_nav": seed_sort_nav == null
+            ? []
+            : List<dynamic>.from(seed_sort_nav.map((x) => x)),
+        "seed_top_nav": seed_top_nav == null
+            ? []
+            : List<dynamic>.from(seed_top_nav.map((x) => x)),
+        "seed_vip_tip": seed_vip_tip,
+        "seed_coins_tip": seed_coins_tip,
       };
 }
 

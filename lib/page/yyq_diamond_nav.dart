@@ -70,7 +70,6 @@ class YyqDiamondNavState extends State<YyqDiamondNav>
               (x) => Container(
                 child: Tab(
                   // text: widget.titles[x],
-
                   height: GQStyle.navbarHegiht, //防止overlayout
                   child: _bottomIndicator(x),
                 ),
@@ -128,21 +127,10 @@ class YyqDiamondNavState extends State<YyqDiamondNav>
     } else {
       return Container(
         padding: EdgeInsets.symmetric(horizontal: ScreenUtil().setWidth(12)),
-        height: ScreenUtil().setWidth(24),
+        height: 30.w,
         decoration: BoxDecoration(
-          gradient: _selectIndex == x
-              ? LinearGradient(
-                  colors: [Color(0xFF00baef), Color(0xFF00edfa)],
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                )
-              : null,
-          borderRadius:
-              BorderRadius.all(Radius.circular(ScreenUtil().setWidth(12))),
-          border: _selectIndex == x
-              ? null
-              : Border.all(
-                  color: Color(0xffffffff), width: ScreenUtil().setWidth(0.5)),
+          gradient: _selectIndex == x ? GQStyle.gradient_90_114 : null,
+          borderRadius: BorderRadius.all(Radius.circular(15.w)),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

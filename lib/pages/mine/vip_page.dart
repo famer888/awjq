@@ -39,6 +39,7 @@ class _VipPageState extends BaseWidgetState<VipPage> with PayMixin {
   dynamic selectP;
   bool networkErr = false;
   List rightsList = [];
+  List<String> description = [];
   String product_vip_text = "";
 
   _initPage() async {
@@ -53,7 +54,9 @@ class _VipPageState extends BaseWidgetState<VipPage> with PayMixin {
       products = res.data["product"];
       product_vip_text = res.data["product_vip_text"];
       selectP = products.first;
-
+      description = selectP["description"].toString().isEmpty
+          ? []
+          : selectP["description"].toString().split("#");
       if (products.length > 0) {
         var firse = products[0];
         if (firse['right'] != null) {
@@ -136,8 +139,11 @@ class _VipPageState extends BaseWidgetState<VipPage> with PayMixin {
 
   void onIndexChanged() {
     var firse = selectP;
+    description = firse["description"].toString().isEmpty
+        ? []
+        : firse["description"].toString().split("#");
     rightsList = firse['right'] != null ? firse['right'] : [];
-    setState(() {});
+    if (mounted) setState(() {});
   }
 
   @override
@@ -314,6 +320,21 @@ class _VipPageState extends BaseWidgetState<VipPage> with PayMixin {
                                       ),
                                       SizedBox(
                                           height: ScreenUtil().setWidth(20)),
+                                      description.isEmpty
+                                          ? Container()
+                                          : Padding(
+                                              padding:
+                                                  EdgeInsets.only(bottom: 20.w),
+                                              child: Column(
+                                                children: description
+                                                    .map((e) => Center(
+                                                          child: Text(e,
+                                                              style: GQStyle
+                                                                  .white14Medium),
+                                                        ))
+                                                    .toList(),
+                                              ),
+                                            ),
                                       GridView(
                                         padding: EdgeInsets.symmetric(
                                             horizontal: GQStyle.pagePadding),

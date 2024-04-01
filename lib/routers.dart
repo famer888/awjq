@@ -84,6 +84,8 @@ import 'package:awjq/utils/index.dart';
 import 'package:awjq/pages/mine/mine_user_center.dart';
 import 'package:universal_html/html.dart';
 
+import 'pages/community/community_bit_post_detail.dart';
+
 class Routes {
   static String mineUserCenter = 'mineUserCenter/:aff';
   static String rank = 'rank/:type/:time';
@@ -226,6 +228,8 @@ class Routes {
   static String communityseltagpage =
       'communityseltagpage/:id/:type/:nolive'; //选择帖子板块
   static String welfarepage = 'welfarePage'; //福利
+
+  static String communitybitpostdetail = 'communitybitpostdetail/:id'; //种子帖子详情
 
   static List<GoRoute> getDetailRoutes() {
     return [
@@ -833,6 +837,17 @@ class Routes {
 
   static GoRouter init() {
     List<GoRoute> rootRoutes = [
+      GoRoute(
+        path: communitybitpostdetail,
+        builder: (context, state) {
+          return CommunityBitPostDetail(
+            id: state.params["id"] == null
+                ? "0"
+                : state.params["id"].toString(),
+          );
+        },
+        routes: getDetailRoutes(),
+      ),
       GoRoute(
           path: minepostpage,
           builder: (context, state) => MinePostPage(),

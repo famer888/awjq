@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:awjq/components/index_aw_page.dart';
+import 'package:awjq/pages/community/home_bit_community.dart';
 import 'package:awjq/pages/community/home_market.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flurry/flurry.dart';
@@ -50,6 +51,12 @@ class _HomeState extends State<Home> {
       "title": CommonUtils.txt("aw"),
       "activeIcon": "tab_aw_s",
       "icon": "tab_aw_n",
+      "newyear_icon": "qy_newyear_tab_home",
+    },
+    {
+      "title": CommonUtils.txt("zyuan"),
+      "activeIcon": "tab_zy_s",
+      "icon": "tab_zy_n",
       "newyear_icon": "qy_newyear_tab_home",
     },
     {
@@ -579,7 +586,8 @@ class _HomeState extends State<Home> {
                                 child: Container(
                                   width: ScreenUtil().screenWidth,
                                   height: double.infinity,
-                                  child: HomeMarket(isShow: selectedKey == 2),
+                                  child: HomeBitCommunity(
+                                      isShow: selectedKey == 2),
                                 )),
                             Positioned(
                                 left: (-selectedKey + 3) *
@@ -589,8 +597,7 @@ class _HomeState extends State<Home> {
                                 child: Container(
                                   width: ScreenUtil().screenWidth,
                                   height: double.infinity,
-                                  child:
-                                      HomeCommunity(isShow: selectedKey == 3),
+                                  child: HomeMarket(isShow: selectedKey == 3),
                                 )),
                             Positioned(
                                 left: (-selectedKey + 4) *
@@ -598,10 +605,21 @@ class _HomeState extends State<Home> {
                                 top: 0,
                                 bottom: 0,
                                 child: Container(
+                                  width: ScreenUtil().screenWidth,
+                                  height: double.infinity,
+                                  child:
+                                      HomeCommunity(isShow: selectedKey == 4),
+                                )),
+                            Positioned(
+                                left: (-selectedKey + 5) *
+                                    ScreenUtil().screenWidth,
+                                top: 0,
+                                bottom: 0,
+                                child: Container(
                                     width: ScreenUtil().screenWidth,
                                     height: double.infinity,
                                     child: Wode(
-                                      isShow: selectedKey == 4,
+                                      isShow: selectedKey == 5,
                                     ))),
                           ],
                         )),
