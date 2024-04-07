@@ -22,9 +22,9 @@ class AppGlobal {
   static String apiBaseURL = "";
   static int smallVideoLimit = 15;
   static List<String> apiLines = [
-    'https://api1.wsbavzgwws.com/api.php',
-    'https://bpi1.wsbavzgwws.com/api.php',
-    'https://hafeiv.wsbavzgwws.com/api.php',
+    'https://qhv.ybvmebotad.com/api.php',
+    'https://lnx.ybvmebotad.com/api.php',
+    'https://dmp.ybvmebotad.com/api.php',
   ];
   static String uploadImgUrl;
   static String uploadImgKey;
