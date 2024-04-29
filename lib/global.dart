@@ -23,6 +23,7 @@ class AppGlobal {
   static int smallVideoLimit = 15;
   static List<String> apiLines = [
     'https://d2bxlcvme0ldc2.cloudfront.net/api.php',
+    'https://dmp.xidowxig.com/api.php',
   ];
   static String uploadImgUrl;
   static String uploadImgKey;
