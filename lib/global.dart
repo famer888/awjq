@@ -9,6 +9,7 @@
 // 应用级全局变量
 import 'package:fluro/fluro.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hive/hive.dart';
 
@@ -21,11 +22,14 @@ class AppGlobal {
   static bool isSave = false;
   static String apiBaseURL = "";
   static int smallVideoLimit = 15;
-  static List<String> apiLines = [
-    'https://d225ilsto3novd.cloudfront.net/api.php',
-    'https://dmp.xidowxig.com/api.php',
-    // 'https://d2i7v9uktjmxdx.cloudfront.net/api.php', //打包分开 pwa
-  ];
+  static List<String> apiLines = kIsWeb
+      ? [
+          'https://d2i7v9uktjmxdx.cloudfront.net/api.php',
+        ]
+      : [
+          'https://d225ilsto3novd.cloudfront.net/api.php',
+          'https://qhv.uh6vg7yu.com/api.php',
+        ];
   static String uploadImgUrl;
   static String uploadImgKey;
   static String bannerImgBase;
