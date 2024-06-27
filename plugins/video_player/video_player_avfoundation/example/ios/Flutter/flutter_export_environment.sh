@@ -1,7 +1,7 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
-export "FLUTTER_ROOT=/Users/mac/fvm/versions/3.22.0"
-export "FLUTTER_APPLICATION_PATH=/Users/mac/Desktop/awjq-优化/plugins/video_player/video_player_avfoundation/example"
+export "FLUTTER_ROOT=/Users/mac/fvm/versions/3.7.10"
+export "FLUTTER_APPLICATION_PATH=/Users/mac/Desktop/mrds/plugins/video_player/video_player_avfoundation/example"
 export "COCOAPODS_PARALLEL_CODE_SIGN=true"
 export "FLUTTER_TARGET=lib/main.dart"
 export "FLUTTER_BUILD_DIR=build"

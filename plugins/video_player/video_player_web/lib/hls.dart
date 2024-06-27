@@ -2,7 +2,6 @@
 library hls.js;
 
 import 'dart:html';
-import 'dart:js/js_wasm.dart';
 
 import 'package:js/js.dart';
 
