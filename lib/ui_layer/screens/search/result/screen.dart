@@ -1,3 +1,5 @@
+import 'package:awjq/ui_layer/screens/common_widgets/feed/card/online_video_card.dart';
+import 'package:awjq/ui_layer/screens/common_widgets/feed/card/surveillance_video_card.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -48,10 +50,10 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
               child: _VideoView(word: widget.title),
             ),
             KeepAliveWrapper(
-              child: _ZhiboView(word: widget.title),
+              child: _OnlineVideoView(word: widget.title),
             ),
             KeepAliveWrapper(
-              child: _JKView(word: widget.title),
+              child: _SurveillanceVideoView(word: widget.title),
             ),
             KeepAliveWrapper(
               child: _TieztView(word: widget.title),
@@ -98,14 +100,14 @@ class _VideoViewState extends State<_VideoView> {
   }
 }
 
-class _ZhiboView extends StatefulWidget {
-  const _ZhiboView({required this.word});
+class _OnlineVideoView extends StatefulWidget {
+  const _OnlineVideoView({required this.word});
   final String word;
   @override
-  State<_ZhiboView> createState() => _ZhiboViewState();
+  State<_OnlineVideoView> createState() => _OnlineVideoViewState();
 }
 
-class _ZhiboViewState extends State<_ZhiboView> {
+class _OnlineVideoViewState extends State<_OnlineVideoView> {
   late final mvDomain = context.read<MvDomain>();
 
   Future<List<FeedVideoModel>> _getData({
@@ -122,9 +124,9 @@ class _ZhiboViewState extends State<_ZhiboView> {
   Widget build(BuildContext context) {
     return MyListView.grid(
       padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
-      childAspectRatio: FeedCard.aspectRatio,
+      childAspectRatio: FeedCard.videoRatio,
       crossAxisSpacing: 8.w,
-      itemBuilder: (_, item, __) => Container(),
+      itemBuilder: (_, item, __) => OnlineVideoCard(data: item),
       onFetchingMore: (currentPage, pageSize) => _getData(
         page: currentPage,
         pageSize: pageSize,
@@ -133,14 +135,14 @@ class _ZhiboViewState extends State<_ZhiboView> {
   }
 }
 
-class _JKView extends StatefulWidget {
-  const _JKView({required this.word});
+class _SurveillanceVideoView extends StatefulWidget {
+  const _SurveillanceVideoView({required this.word});
   final String word;
   @override
-  State<_JKView> createState() => _JKViewState();
+  State<_SurveillanceVideoView> createState() => _SurveillanceVideoViewState();
 }
 
-class _JKViewState extends State<_JKView> {
+class _SurveillanceVideoViewState extends State<_SurveillanceVideoView> {
   late final mvDomain = context.read<MvDomain>();
 
   Future<List<FeedVideoModel>> _getData({
@@ -157,9 +159,9 @@ class _JKViewState extends State<_JKView> {
   Widget build(BuildContext context) {
     return MyListView.grid(
       padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
-      childAspectRatio: FeedCard.aspectRatio,
+      childAspectRatio: FeedCard.videoRatio,
       crossAxisSpacing: 8.w,
-      itemBuilder: (_, item, __) => Container(),
+      itemBuilder: (_, item, __) => SurveillanceVideoCard(data: item),
       onFetchingMore: (currentPage, pageSize) => _getData(
         page: currentPage,
         pageSize: pageSize,

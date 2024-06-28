@@ -124,4 +124,10 @@ class MyImagePaths {
   static const appTabShequN = './assets/images/app_tab_shequ_n.png';
   static const appVideoCoinN = './assets/images/app_video_coin_n.png';
   static const appAnnouncementUpBg = './assets/images/app_announcement_up_bg.png';
+  static const appCardBottomBg = './assets/images/app_card_bottombg.png';
+  static const appBroadcast = './assets/images/app_broadcast.png';
+  static const appHots = './assets/images/app_hots.png';
+  static const appOffline = './assets/images/app_offline.png';
+  static const appOnline = './assets/images/app_online.png';
+
 }

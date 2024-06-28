@@ -7,6 +7,8 @@ import 'card/video_card.dart';
 class FeedCard extends StatelessWidget {
   const FeedCard({super.key, required this.feed});
   static const aspectRatio = 163 / 158;
+  static const videoRatio = 170 / 94;
+
   final FeedModel feed;
   @override
   Widget build(BuildContext context) {
