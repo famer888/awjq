@@ -1,3 +1,4 @@
+import 'package:awjq/logger.dart';
 import 'package:dio/dio.dart';
 
 import '../../../domain/exception.dart';
@@ -15,6 +16,8 @@ abstract class BaseService {
     if (result == null) {
       throw ResponseNullException();
     }
+    //打印返回数据
+    logger.i('requstPath: /api/$service$path, params: $data, result: $result');
     return result;
   }
 }
