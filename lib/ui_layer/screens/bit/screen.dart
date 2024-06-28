@@ -1,7 +1,7 @@
+import '../../../domain/model/bit_seed_nav_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-
 import '../../../domain/api_validator.dart';
 import '../../../domain/async_value.dart';
 import '../../../domain/domain.dart';
@@ -12,6 +12,8 @@ import '../common_widgets/screen_background.dart';
 import '../common_widgets/status/loading.dart';
 import '../common_widgets/status/network_error.dart';
 import '../theme.dart';
+import 'OnlineVideo/screen.dart';
+import 'SurveillanceVideo/screen.dart';
 import 'content.dart';
 
 class BitScreen extends StatefulWidget {
@@ -28,6 +30,14 @@ class _BitScreenState extends State<BitScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+
+    //测试代码
+    if (navList.length != 4){
+      navList.insert(0, BitSeedNavModel(title: '直播', value: 0));
+      navList.add(BitSeedNavModel(title: '监控', value: 3));
+    }
+
+
     return ScreenBackground(
       child: Scaffold(
         appBar: _AppBar(
@@ -36,7 +46,15 @@ class _BitScreenState extends State<BitScreen> with TickerProviderStateMixin {
         ),
         body: TabBarView(
           controller: tabController,
-          children: navList.map((e) => _BitView(id: e.value)).toList(),
+          children: navList.map((e) {
+            if (e.title == '直播') {
+              return _OnlinVideoView(id: e.value);
+            } else if (e.title == '监控') {
+              return _SurveillanceVideoView(id: e.value);
+            } else {
+              return _BitView(id: e.value);
+            }
+          }).toList(),
         ),
       ),
     );
@@ -144,3 +162,104 @@ class _BitViewState extends State<_BitView> {
     );
   }
 }
+
+class _OnlinVideoView extends StatefulWidget {
+  const _OnlinVideoView({required this.id});
+  final int id;
+  @override
+  State<_OnlinVideoView> createState() => _OnlinVideoViewState();
+}
+
+class _OnlinVideoViewState extends State<_OnlinVideoView> {
+  late final _appDomain = context.read<SeedDomain>();
+
+  AsyncValue<List<BitNavModel>> _asyncValue = const AsyncInit();
+
+  @override
+  void initState() {
+    _init();
+    super.initState();
+  }
+
+  Future<void> _init() async {
+    if (_asyncValue.isLoading) return;
+    setState(() {
+      _asyncValue = const AsyncLoading();
+    });
+
+    final result = await _appDomain.reqGetPostBit(id: widget.id);
+
+    if (result.data case final data? when result.isValid) {
+      _asyncValue = AsyncData(data);
+    } else {
+      _asyncValue = const AsyncError();
+    }
+
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _asyncValue.maybeWhen(
+      data: (data) => TabBarWithView.line(
+        titles: data.map((e) => e.name).toList(),
+        views: data.map((e) => OnlineVideoView(nav: e)).toList(),
+      ),
+      error: (_, __) => NetworkErrorView(onTap: _init),
+      orElse: () => const LoadingView(),
+    );
+  }
+}
+
+class _SurveillanceVideoView extends StatefulWidget {
+  const _SurveillanceVideoView({required this.id});
+  final int id;
+  @override
+  State<_SurveillanceVideoView> createState() => __SurveillanceVideoViewState();
+}
+
+class __SurveillanceVideoViewState extends State<_SurveillanceVideoView> {
+  late final _appDomain = context.read<SeedDomain>();
+
+  AsyncValue<List<BitNavModel>> _asyncValue = const AsyncInit();
+
+  @override
+  void initState() {
+    _init();
+    super.initState();
+  }
+
+  Future<void> _init() async {
+    if (_asyncValue.isLoading) return;
+    setState(() {
+      _asyncValue = const AsyncLoading();
+    });
+
+    final result = await _appDomain.reqGetPostBit(id: widget.id);
+
+    if (result.data case final data? when result.isValid) {
+      _asyncValue = AsyncData(data);
+    } else {
+      _asyncValue = const AsyncError();
+    }
+
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _asyncValue.maybeWhen(
+      data: (data) => TabBarWithView.line(
+        titles: data.map((e) => e.name).toList(),
+        views: data.map((e) => SurveillanceVideoView(nav: e)).toList(),
+      ),
+      error: (_, __) => NetworkErrorView(onTap: _init),
+      orElse: () => const LoadingView(),
+    );
+  }
+}
+

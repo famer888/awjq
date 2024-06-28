@@ -17,7 +17,7 @@ abstract class BaseService {
       throw ResponseNullException();
     }
     //打印返回数据
-    logger.i('requstPath: /api/$service$path, params: $data, result: $result');
+    logger.i('RequstPath: /api/$service$path, params: $data, \nResult: $result');
     return result;
   }
 }
