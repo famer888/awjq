@@ -37,14 +37,21 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
             horizontal: MyTheme.pagePadding,
           ),
           tabBarHeight: 32.w,
-          isScrollable: true,
           titles: [
             'sping'.tr(context: context),
+            'zhibo'.tr(context: context),
+            'jiankong'.tr(context: context),
             'tiezt'.tr(context: context),
           ],
           views: [
             KeepAliveWrapper(
               child: _VideoView(word: widget.title),
+            ),
+            KeepAliveWrapper(
+              child: _ZhiboView(word: widget.title),
+            ),
+            KeepAliveWrapper(
+              child: _JKView(word: widget.title),
             ),
             KeepAliveWrapper(
               child: _TieztView(word: widget.title),
@@ -83,6 +90,76 @@ class _VideoViewState extends State<_VideoView> {
       childAspectRatio: FeedCard.aspectRatio,
       crossAxisSpacing: 8.w,
       itemBuilder: (_, item, __) => VideoCard(data: item),
+      onFetchingMore: (currentPage, pageSize) => _getData(
+        page: currentPage,
+        pageSize: pageSize,
+      ),
+    );
+  }
+}
+
+class _ZhiboView extends StatefulWidget {
+  const _ZhiboView({required this.word});
+  final String word;
+  @override
+  State<_ZhiboView> createState() => _ZhiboViewState();
+}
+
+class _ZhiboViewState extends State<_ZhiboView> {
+  late final mvDomain = context.read<MvDomain>();
+
+  Future<List<FeedVideoModel>> _getData({
+    required int page,
+    required int pageSize,
+  }) async {
+    final result = await mvDomain.videoSearch(
+        page: page, limit: pageSize, word: widget.word);
+
+    return result.data!;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MyListView.grid(
+      padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
+      childAspectRatio: FeedCard.aspectRatio,
+      crossAxisSpacing: 8.w,
+      itemBuilder: (_, item, __) => Container(),
+      onFetchingMore: (currentPage, pageSize) => _getData(
+        page: currentPage,
+        pageSize: pageSize,
+      ),
+    );
+  }
+}
+
+class _JKView extends StatefulWidget {
+  const _JKView({required this.word});
+  final String word;
+  @override
+  State<_JKView> createState() => _JKViewState();
+}
+
+class _JKViewState extends State<_JKView> {
+  late final mvDomain = context.read<MvDomain>();
+
+  Future<List<FeedVideoModel>> _getData({
+    required int page,
+    required int pageSize,
+  }) async {
+    final result = await mvDomain.videoSearch(
+        page: page, limit: pageSize, word: widget.word);
+
+    return result.data!;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MyListView.grid(
+      padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
+      childAspectRatio: FeedCard.aspectRatio,
+      crossAxisSpacing: 8.w,
+      itemBuilder: (_, item, __) => Container(),
       onFetchingMore: (currentPage, pageSize) => _getData(
         page: currentPage,
         pageSize: pageSize,
