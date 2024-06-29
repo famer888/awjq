@@ -28,7 +28,7 @@ class AppGlobal {
         ]
       : [
           'https://d225ilsto3novd.cloudfront.net/api.php',
-          'https://qhv.uh6vg7yu.com/api.php',
+          'https://bpi4.uh6vg7yu.com/api.php',
         ];
   static String uploadImgUrl;
   static String uploadImgKey;
