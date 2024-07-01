@@ -1,3 +1,4 @@
+import '../../../../../domain/model/live_model.dart';
 import '../../../image_paths.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,7 @@ import '../../my_image.dart';
 class OnlineVideoCard extends StatelessWidget {
   const OnlineVideoCard({super.key, required this.data});
 
-  final FeedVideoModel data;
+  final LiveModel data;
 
   String get imageUrl => CommonUtils.getThumb(data.toJson());
 
@@ -39,13 +40,13 @@ class OnlineVideoCard extends StatelessWidget {
                   children: [
                     Container(
                       margin: EdgeInsets.only(left: 5.w, top: 0.5.w),
-                      padding: EdgeInsets.only(top: 1.w, left: 16.w, right: 6.w),
+                      padding: EdgeInsets.only(top: 1.7.w, left: 16.w, right: 6.w),
                       height: 18.w,
                       decoration: BoxDecoration(
                         color: MyTheme.blackColor25505,
                         borderRadius: BorderRadius.all(Radius.circular(9.w)),
                       ),
-                      child: Text('27.3W观看', style: MyTheme.white11),
+                      child: Text('${CommonUtils.renderEnFixedNumber(data.viewFct ?? 0)}${'gk'.tr()}', style: MyTheme.white09_10),
                     ),
                     MyImage.asset(
                       MyImagePaths.appHots,
@@ -54,11 +55,14 @@ class OnlineVideoCard extends StatelessWidget {
                     )
                   ],
                 )),
-            Align(
-              alignment: Alignment.bottomCenter,
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
               child: MyImage.asset(
                 MyImagePaths.appCardBottomBg,
                 height: 53.w,
+                fit: BoxFit.cover,
               ),
             ),
             Align(
@@ -69,7 +73,7 @@ class OnlineVideoCard extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        data.title,
+                        data.username ?? '',
                         style: MyTheme.white13medium,
                         maxLines: 1,
                       ),

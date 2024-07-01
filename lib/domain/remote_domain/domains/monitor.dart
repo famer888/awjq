@@ -1,8 +1,9 @@
+import '../../model/monitor_model.dart';
 import '../../type_def.dart';
 
 abstract class MonitorDomain {
 
-  AsyncJson getMonitorIndex({
+  AsyncResult<MonitorWithBannersModel> getMonitorIndex({
     required int id,
     required int page,
     required int limit,

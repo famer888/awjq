@@ -1,3 +1,4 @@
+import '../../../domain/model/monitor_model.dart';
 import '../../../domain/type_def.dart';
 import 'base_service.dart';
 

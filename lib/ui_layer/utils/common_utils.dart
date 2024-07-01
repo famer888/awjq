@@ -165,6 +165,20 @@ class CommonUtils {
     return tips;
   }
 
+  static renderEnFixedNumber(int value) {
+    late final String tips;
+    if (value >= 10000) {
+      var newvalue = (value / 1000) / 10.round();
+      tips = formatNum(newvalue, 1) + 'w';
+    } else if (value >= 1000) {
+      var newvalue = (value / 100) / 10.round();
+      tips = formatNum(newvalue, 1) + 'k';
+    } else {
+      tips = value.toString().split('.')[0];
+    }
+    return tips;
+  }
+
   static formatNum(double number, int postion) {
     if ((number.toString().length - number.toString().lastIndexOf('.') - 1) <
         postion) {

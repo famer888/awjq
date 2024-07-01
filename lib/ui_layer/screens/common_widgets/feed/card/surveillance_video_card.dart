@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../../domain/model/monitor_model.dart';
 import '../../../../router/routes.dart';
 import '../../../../../domain/model/feed/feed_model.dart';
 import '../../../../utils/common_utils.dart';
@@ -11,7 +12,7 @@ import '../../my_image.dart';
 class SurveillanceVideoCard extends StatelessWidget {
   const SurveillanceVideoCard({super.key, required this.data});
 
-  final FeedVideoModel data;
+  final MionitorModel data;
 
   String get imageUrl => CommonUtils.getThumb(data.toJson());
 
@@ -31,11 +32,14 @@ class SurveillanceVideoCard extends StatelessWidget {
               borderRadius: 5,
               backgroundColor: MyTheme.imageBgColor,
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
               child: MyImage.asset(
                 MyImagePaths.appCardBottomBg,
                 height: 53.w,
+                fit: BoxFit.cover,
               ),
             ),
             Align(
@@ -46,23 +50,26 @@ class SurveillanceVideoCard extends StatelessWidget {
                   children: [
                     Expanded(
                       child: Text(
-                        '1303号摄像头',
+                        data.title ?? '',
                         style: MyTheme.white13medium,
                         maxLines: 1,
                       ),
                     ),
-                    MyImage.asset(
-                      MyImagePaths.appOffline,
-                      height: 12.w,
-                      width: 12.w,
-                    ),
-                    SizedBox(width: 3.w),
-                    Text(
-                      '离线',
-                      style: MyTheme.white10medium,
-                      maxLines: 1,
-                    ),
-                  ],
+                    //实时监控才显示在线
+                    (data.online ?? false) ?
+                    Row(children: [
+                      MyImage.asset(
+                        MyImagePaths.appOnline,
+                        height: 12.w,
+                        width: 12.w,
+                      ),
+                      SizedBox(width: 3.w),
+                      Text(
+                        '在线',
+                        style: MyTheme.white10medium,
+                        maxLines: 1,
+                      )
+                    ]) : const SizedBox.shrink()],
                 ),
               ),
             ),

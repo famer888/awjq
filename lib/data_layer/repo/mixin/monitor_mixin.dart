@@ -3,7 +3,7 @@ part of '../repo.dart';
 mixin _Monitor on _BaseAppRepo implements MonitorDomain {
 
   @override
-  AsyncJson getMonitorIndex({
+  AsyncResult<MonitorWithBannersModel> getMonitorIndex({
     required int id,
     required int page,
     required int limit,
@@ -11,6 +11,6 @@ mixin _Monitor on _BaseAppRepo implements MonitorDomain {
       _monitorService.getMonitorIndex(
         id: id,
         page: page,
-        limit: limit,
-      );
+        limit: limit
+      ).deserializeJsonBy(MonitorWithBannersModel.fromJson).guard;
 }

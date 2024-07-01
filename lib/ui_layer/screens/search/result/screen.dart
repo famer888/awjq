@@ -126,7 +126,8 @@ class _OnlineVideoViewState extends State<_OnlineVideoView> {
       padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
       childAspectRatio: FeedCard.videoRatio,
       crossAxisSpacing: 8.w,
-      itemBuilder: (_, item, __) => OnlineVideoCard(data: item),
+      // itemBuilder: (_, item, __) => OnlineVideoCard(data: item),
+      itemBuilder: (_, item, __) => Container(),///todo：item得转成LiveModel类型再处理
       onFetchingMore: (currentPage, pageSize) => _getData(
         page: currentPage,
         pageSize: pageSize,
@@ -161,7 +162,8 @@ class _SurveillanceVideoViewState extends State<_SurveillanceVideoView> {
       padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
       childAspectRatio: FeedCard.videoRatio,
       crossAxisSpacing: 8.w,
-      itemBuilder: (_, item, __) => SurveillanceVideoCard(data: item),
+      // itemBuilder: (_, item, __) => SurveillanceVideoCard(data: item),
+      itemBuilder: (_, item, __) => Container(),///todo：item得转成LiveModel类型再处理
       onFetchingMore: (currentPage, pageSize) => _getData(
         page: currentPage,
         pageSize: pageSize,

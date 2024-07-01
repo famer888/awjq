@@ -36,6 +36,7 @@ import '../../domain/model/income_detail_data_model.dart';
 import '../../domain/model/live_model.dart';
 import '../../domain/model/member_model.dart';
 import '../../domain/model/mine_withdrawal_record_model.dart';
+import '../../domain/model/monitor_model.dart';
 import '../../domain/model/notice_message.dart';
 import '../../domain/model/official_group_model.dart';
 import '../../domain/model/order_model.dart';

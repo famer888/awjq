@@ -1,4 +1,3 @@
-
 import 'banner_model.dart';
 
 class LiveWithBannersModel {
@@ -14,11 +13,12 @@ class LiveWithBannersModel {
             json['lives'].map((e) => LiveModel.fromJson(e))),
         banners: List<BannerModel>.from(
             json['banners'].map((e) => BannerModel.fromJson(e))),
-        tips: List<TipModel>.from(
-            json['tips'].map((e) => TipModel.fromJson(e))),
+        tips:
+            List<TipModel>.from(json['tips'].map((e) => TipModel.fromJson(e))),
       );
 
-  Map<String, dynamic> toJson() => {'lives': lives, 'banners': banners, 'tips': tips};
+  Map<String, dynamic> toJson() =>
+      {'lives': lives, 'banners': banners, 'tips': tips};
 }
 
 class LiveModel {
@@ -51,6 +51,15 @@ class LiveModel {
             ? List.from(json['hls'].map((e) => HlsModel.fromJson(e)))
             : null,
       );
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'cover': cover,
+        'username': username,
+        'view_fct': viewFct,
+        'comment_ct': commentFct,
+        'hls': hls,
+      };
 }
 
 class HlsModel {
