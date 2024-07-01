@@ -2,7 +2,9 @@ import '../../../../domain/model/banner_model.dart';
 import '../../../../domain/model/bit_nav_model.dart';
 import '../../../../domain/model/navigator_model.dart';
 import '../../../../domain/model/post_model.dart';
+import '../../../../domain/remote_domain/domains/monitor.dart';
 import '../../../../domain/remote_domain/domains/seed.dart';
+import '../../../../domain/type_def.dart';
 import '../../../notifiers/home_config_notifier.dart';
 import '../../common_widgets/general_banner.dart';
 import '../../common_widgets/my_list_view.dart';
@@ -22,7 +24,7 @@ class SurveillanceVideoView extends StatefulWidget {
 }
 
 class _SurveillanceVideoViewState extends State<SurveillanceVideoView> {
-  late final _domain = context.read<SeedDomain>();
+  late final _domain = context.read<MonitorDomain>();
   late final _homeConfig = context.read<HomeConfigNotifier>();
   final ValueNotifier<List<BannerModel>> _bannersNotifier = ValueNotifier([]);
   late final List<NavigatorModel> _titles =
@@ -32,9 +34,8 @@ class _SurveillanceVideoViewState extends State<SurveillanceVideoView> {
 
   Future<List<PostModel>?> _getData(
       {required int page, required int pageSize, required String sort}) async {
-    final result = await _domain.bitSortList(
+    final result = await _domain.getMonitorIndex(
       id: widget.nav.id,
-      sort: sort,
       page: page,
       limit: pageSize,
     );

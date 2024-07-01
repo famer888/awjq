@@ -12,7 +12,7 @@ class BuildConfig {
   /// 备用接口线路
   static final apiLines = [
     'https://d225ilsto3novd.cloudfront.net/api.php',
-    'https://dmp.xidowxig.com/api.php',
+    'https://bpi4.uh6vg7yu.com/api.php'
   ];
 
   /// 备用线路

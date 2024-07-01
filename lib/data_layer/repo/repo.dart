@@ -33,6 +33,7 @@ import '../../domain/model/feedback_data_model.dart';
 import '../../domain/model/follow_user_model.dart';
 import '../../domain/model/home_data_model.dart';
 import '../../domain/model/income_detail_data_model.dart';
+import '../../domain/model/live_model.dart';
 import '../../domain/model/member_model.dart';
 import '../../domain/model/mine_withdrawal_record_model.dart';
 import '../../domain/model/notice_message.dart';
@@ -54,6 +55,8 @@ import '../../domain/model/topics_with_banners_model.dart';
 import '../../domain/model/video_comment_model.dart';
 import '../../domain/model/video_detail_model.dart';
 import '../../domain/model/welfare_task_model.dart';
+import '../../domain/remote_domain/domains/live.dart';
+import '../../domain/remote_domain/domains/monitor.dart';
 import '../../domain/result.dart';
 import '../../domain/type_def.dart';
 import '../../domain/domain.dart';
@@ -63,7 +66,9 @@ import '../data_source/remote/community_service.dart';
 import '../data_source/remote/dynamic_service.dart';
 import '../data_source/remote/element_service.dart';
 import '../data_source/remote/home_service.dart';
+import '../data_source/remote/live_service.dart';
 import '../data_source/remote/message_service.dart';
+import '../data_source/remote/monitor_service.dart';
 import '../data_source/remote/mv_service.dart';
 import '../data_source/remote/order_service.dart';
 import '../data_source/remote/privilege_service.dart';
@@ -91,6 +96,8 @@ part 'mixin/search_mixin.dart';
 part 'mixin/mv_mixin.dart';
 part 'mixin/message_mixin.dart';
 part 'mixin/privilege_mixin.dart';
+part 'mixin/live_mixin.dart';
+part 'mixin/monitor_mixin.dart';
 
 class AppRepo extends _BaseAppRepo
     with
@@ -108,7 +115,9 @@ class AppRepo extends _BaseAppRepo
         _Search,
         _Mv,
         _Message,
-        _Privilege {}
+        _Privilege,
+        _Live,
+        _Monitor {}
 
 abstract class _BaseAppRepo implements AppDomain {
   late final _homeService = HomeService(_apiDio);
@@ -126,6 +135,8 @@ abstract class _BaseAppRepo implements AppDomain {
   late final _mvService = MvService(_apiDio);
   late final _messageService = MessageService(_apiDio);
   late final _privilegeService = PrivilegeService(_apiDio);
+  late final _liveService = LiveService(_apiDio);
+  late final _monitorService = MonitorService(_apiDio);
 
   final _cacheManager = _CacheManager();
 
@@ -239,7 +250,7 @@ abstract class _BaseAppRepo implements AppDomain {
     final info = kIsWeb
         ? {
             'bundleId': BuildConfig.webBundleId,
-            'version': '1.4.0',
+            'version': '1.4.1',
             'language': 'zh',
             'via': 'pwa',
           }

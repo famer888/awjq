@@ -1,3 +1,5 @@
+import 'package:awjq/domain/model/bit_nav_model.dart';
+
 import 'bit_seed_nav_model.dart';
 import 'navigator_model.dart';
 
@@ -142,6 +144,8 @@ class Config {
     this.forumNav,
     this.seedSortNav,
     required this.seedTopNav,
+    required this.liveTopNav,
+    required this.monitorTopNav,
     this.showApp,
     required this.potatoGroup,
     required this.tgGroup,
@@ -191,6 +195,8 @@ class Config {
   final List<NavigatorModel>? forumNav;
   final List<NavigatorModel>? seedSortNav;
   final List<BitSeedNavModel> seedTopNav;
+  final List<BitNavModel> liveTopNav;
+  final List<BitNavModel> monitorTopNav;
 
   final int payAi;
   final int? showApp;
@@ -251,6 +257,12 @@ class Config {
         seedTopNav: List<BitSeedNavModel>.from(
             json['seed_top_nav']?.map((x) => BitSeedNavModel.fromJson(x)) ??
                 []),
+        liveTopNav: List<BitNavModel>.from(
+            json['live_top_nav']?.map((x) => BitNavModel.fromJson(x)) ??
+                []),
+        monitorTopNav: List<BitNavModel>.from(
+            json['monitor_top_nav']?.map((x) => BitNavModel.fromJson(x)) ??
+                []),
         payAi: json['pay_ai'] ?? 0,
         showApp: json['show_app'],
         potatoGroup: json['potato_group'] ?? '',
@@ -301,6 +313,8 @@ class Config {
         'sort_nav': sortNav?.map((x) => x).toList() ?? [],
         'forum_nav': forumNav?.map((e) => e).toList() ?? [],
         'seed_top_nav': seedTopNav.map((e) => e).toList(),
+        'live_top_nav': liveTopNav.map((e) => e).toList(),
+        'monitor_top_nav': monitorTopNav.map((e) => e).toList(),
         'seed_sort_nav': seedSortNav?.map((e) => e).toList() ?? [],
         'pay_ai': payAi,
         'show_app': showApp,

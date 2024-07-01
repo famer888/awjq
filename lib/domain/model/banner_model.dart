@@ -3,7 +3,7 @@ class BannerModel {
   final String linkUrl;
   final String resourceUrl;
   final int redirectType;
-  final String? name;
+  final String? title;
   final String? desc;
   final String router;
   final int? openType;
@@ -17,7 +17,7 @@ class BannerModel {
       required this.linkUrl,
       required this.resourceUrl,
       required this.redirectType,
-      this.name,
+      this.title,
       this.desc,
       required this.router,
       this.openType,
@@ -31,7 +31,7 @@ class BannerModel {
       linkUrl: json['link_url'],
       resourceUrl: json['resource_url'],
       redirectType: json['redirect_type'],
-      name: json['name'],
+      title: json['title'],
       desc: json['desc'],
       router: json['router'] ?? '',
       openType: json['open_type'],
@@ -45,7 +45,7 @@ class BannerModel {
         'link_url': linkUrl,
         'resource_url': resourceUrl,
         'redirect_type': redirectType,
-        'name': name,
+        'title': title,
         'desc': desc,
         'router': router,
         'open_type': openType,

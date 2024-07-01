@@ -117,6 +117,7 @@ class _TabBarWithViewState extends State<TabBarWithView>
                             padding: EdgeInsets.symmetric(vertical: 2.w),
                             controller: _tabController,
                             tabs: tabs,
+                            tabAlignment: widget.isScrollable ? TabAlignment.start : TabAlignment.fill,
                           ),
                         ),
                       ),

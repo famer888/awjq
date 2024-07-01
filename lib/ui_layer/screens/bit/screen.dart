@@ -31,12 +31,6 @@ class _BitScreenState extends State<BitScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
 
-    //测试代码
-    if (navList.length != 4){
-      navList.insert(0, BitSeedNavModel(title: '直播', value: 0));
-      navList.add(BitSeedNavModel(title: '监控', value: 0));
-    }
-
     return ScreenBackground(
       child: Scaffold(
         appBar: _AppBar(
@@ -171,31 +165,17 @@ class _OnlinVideoView extends StatefulWidget {
 
 class _OnlinVideoViewState extends State<_OnlinVideoView> {
   late final _appDomain = context.read<SeedDomain>();
-
+  late final config = context.read<HomeConfigNotifier>().config;
+  late final navList = config.liveTopNav;
   AsyncValue<List<BitNavModel>> _asyncValue = const AsyncInit();
 
   @override
   void initState() {
-    _init();
     super.initState();
-  }
-
-  Future<void> _init() async {
-    if (_asyncValue.isLoading) return;
-    setState(() {
-      _asyncValue = const AsyncLoading();
-    });
-
-    final result = await _appDomain.reqGetPostBit(id: widget.id);
-
-    if (result.data case final data? when result.isValid) {
-      _asyncValue = AsyncData(data);
+    if (navList.isNotEmpty) {
+      _asyncValue = AsyncData(navList);
     } else {
       _asyncValue = const AsyncError();
-    }
-
-    if (mounted) {
-      setState(() {});
     }
   }
 
@@ -203,10 +183,9 @@ class _OnlinVideoViewState extends State<_OnlinVideoView> {
   Widget build(BuildContext context) {
     return _asyncValue.maybeWhen(
       data: (data) => TabBarWithView.line(
-        titles: data.map((e) => e.name).toList(),
-        views: data.map((e) => OnlineVideoView(nav: e)).toList(),
+        titles: navList.map((e) => e.name).toList(),
+        views: navList.map((e) => OnlineVideoView(nav: e)).toList(),
       ),
-      error: (_, __) => NetworkErrorView(onTap: _init),
       orElse: () => const LoadingView(),
     );
   }
@@ -221,31 +200,17 @@ class _SurveillanceVideoView extends StatefulWidget {
 
 class __SurveillanceVideoViewState extends State<_SurveillanceVideoView> {
   late final _appDomain = context.read<SeedDomain>();
-
+  late final config = context.read<HomeConfigNotifier>().config;
+  late final navList = config.monitorTopNav;
   AsyncValue<List<BitNavModel>> _asyncValue = const AsyncInit();
 
   @override
   void initState() {
-    _init();
     super.initState();
-  }
-
-  Future<void> _init() async {
-    if (_asyncValue.isLoading) return;
-    setState(() {
-      _asyncValue = const AsyncLoading();
-    });
-
-    final result = await _appDomain.reqGetPostBit(id: widget.id);
-
-    if (result.data case final data? when result.isValid) {
-      _asyncValue = AsyncData(data);
+    if (navList.isNotEmpty) {
+      _asyncValue = AsyncData(navList);
     } else {
       _asyncValue = const AsyncError();
-    }
-
-    if (mounted) {
-      setState(() {});
     }
   }
 
@@ -253,10 +218,10 @@ class __SurveillanceVideoViewState extends State<_SurveillanceVideoView> {
   Widget build(BuildContext context) {
     return _asyncValue.maybeWhen(
       data: (data) => TabBarWithView.line(
+        isScrollable: false,
         titles: data.map((e) => e.name).toList(),
         views: data.map((e) => SurveillanceVideoView(nav: e)).toList(),
       ),
-      error: (_, __) => NetworkErrorView(onTap: _init),
       orElse: () => const LoadingView(),
     );
   }

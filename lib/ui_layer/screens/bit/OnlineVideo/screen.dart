@@ -1,8 +1,12 @@
 import '../../../../domain/model/banner_model.dart';
 import '../../../../domain/model/bit_nav_model.dart';
+import '../../../../domain/model/live_model.dart';
 import '../../../../domain/model/navigator_model.dart';
 import '../../../../domain/model/post_model.dart';
+import '../../../../domain/remote_domain/domains/live.dart';
+import '../../../../domain/remote_domain/domains/monitor.dart';
 import '../../../../domain/remote_domain/domains/seed.dart';
+import '../../../../domain/type_def.dart';
 import '../../../notifiers/home_config_notifier.dart';
 import '../../common_widgets/general_banner.dart';
 import '../../common_widgets/my_list_view.dart';
@@ -22,19 +26,15 @@ class OnlineVideoView extends StatefulWidget {
 }
 
 class _OnlineVideoViewState extends State<OnlineVideoView> {
-  late final _domain = context.read<SeedDomain>();
-  late final _homeConfig = context.read<HomeConfigNotifier>();
+  late final _domain = context.read<LiveDomain>();
   final ValueNotifier<List<BannerModel>> _bannersNotifier = ValueNotifier([]);
-  late final List<NavigatorModel> _titles =
-      _homeConfig.config.seedSortNav ?? [];
 
   bool isInit = false;
 
-  Future<List<PostModel>?> _getData(
-      {required int page, required int pageSize, required String sort}) async {
-    final result = await _domain.bitSortList(
+  Future<List<LiveModel>?> _getData(
+      {required int page, required int pageSize}) async {
+    final result = await _domain.getLiveIndex(
       id: widget.nav.id,
-      sort: sort,
       page: page,
       limit: pageSize,
     );
@@ -49,7 +49,7 @@ class _OnlineVideoViewState extends State<OnlineVideoView> {
       when data.isNotEmpty && _bannersNotifier.value.isEmpty) {
         _bannersNotifier.value = data;
       }
-      return result.data?.posts;
+      return result.data?.lives;
     } else {
       MyToast.showText(text: result.msg ?? '');
     }
@@ -62,11 +62,9 @@ class _OnlineVideoViewState extends State<OnlineVideoView> {
       header: _Header(bannersNotifier: _bannersNotifier),
       contentPadding: 15.w,
       padding: EdgeInsets.symmetric(vertical: MyTheme.pagePadding, horizontal: MyTheme.pagePadding),
-      itemBuilder: (context, item, index) => PostCard.bit(
-        data: item,
-      ),
+      itemBuilder: (context, item, index) => Container(),
       onFetchingMore: (currentPage, pageSize) => _getData(
-          page: currentPage, pageSize: pageSize, sort: 'hot'),
+          page: currentPage, pageSize: pageSize),
     );
   }
 }
