@@ -1,5 +1,5 @@
-import 'package:awjq/ui_layer/screens/common_widgets/feed/card/online_video_card.dart';
-import 'package:awjq/ui_layer/screens/common_widgets/feed/card/surveillance_video_card.dart';
+import 'package:awjq/ui_layer/screens/common_widgets/feed/card/live_video_card.dart';
+import 'package:awjq/ui_layer/screens/common_widgets/feed/card/monitor_card.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -129,7 +129,7 @@ class _OnlineVideoViewState extends State<_OnlineVideoView> {
       padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
       childAspectRatio: FeedCard.videoRatio,
       crossAxisSpacing: 8.w,
-      itemBuilder: (_, item, __) => OnlineVideoCard(data: item),
+      itemBuilder: (_, item, __) => LiveVideoCard(data: item),
       onFetchingMore: (currentPage, pageSize) => _getData(
         page: currentPage,
         pageSize: pageSize,
@@ -148,7 +148,7 @@ class _SurveillanceVideoView extends StatefulWidget {
 class _SurveillanceVideoViewState extends State<_SurveillanceVideoView> {
   late final _domain = context.read<MonitorDomain>();
 
-  Future<List<MionitorModel>?> _getData({
+  Future<List<MonitorModel>?> _getData({
     required int page,
     required int pageSize,
   }) async {
@@ -164,7 +164,7 @@ class _SurveillanceVideoViewState extends State<_SurveillanceVideoView> {
       padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
       childAspectRatio: FeedCard.videoRatio,
       crossAxisSpacing: 8.w,
-      itemBuilder: (_, item, __) => SurveillanceVideoCard(data: item),
+      itemBuilder: (_, item, __) => MonitorCard(data: item),
       onFetchingMore: (currentPage, pageSize) => _getData(
         page: currentPage,
         pageSize: pageSize,

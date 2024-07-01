@@ -8,7 +8,7 @@ import '../../../../domain/remote_domain/domains/monitor.dart';
 import '../../../../domain/remote_domain/domains/seed.dart';
 import '../../../../domain/type_def.dart';
 import '../../../notifiers/home_config_notifier.dart';
-import '../../common_widgets/feed/card/surveillance_video_card.dart';
+import '../../common_widgets/feed/card/monitor_card.dart';
 import '../../common_widgets/feed/feed_card.dart';
 import '../../common_widgets/general_banner.dart';
 import '../../common_widgets/marquee_widget.dart';
@@ -23,21 +23,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
-class SurveillanceVideoView extends StatefulWidget {
-  const SurveillanceVideoView({super.key, required this.nav});
+class MonitorVideoView extends StatefulWidget {
+  const MonitorVideoView({super.key, required this.nav});
   final BitNavModel nav;
   @override
-  State<SurveillanceVideoView> createState() => _SurveillanceVideoViewState();
+  State<MonitorVideoView> createState() => _MonitorVideoViewState();
 }
 
-class _SurveillanceVideoViewState extends State<SurveillanceVideoView> {
+class _MonitorVideoViewState extends State<MonitorVideoView> {
   late final _domain = context.read<MonitorDomain>();
   final ValueNotifier<List<BannerModel>> _bannersNotifier = ValueNotifier([]);
   final ValueNotifier<List<TipModel>> _tipsNotifier = ValueNotifier([]);
 
   bool isInit = false;
 
-  Future<List<MionitorModel>?> _getData(
+  Future<List<MonitorModel>?> _getData(
       {required int page, required int pageSize}) async {
     final result = await _domain.getMonitorIndex(
       id: widget.nav.id,
@@ -78,7 +78,7 @@ class _SurveillanceVideoViewState extends State<SurveillanceVideoView> {
         if (widget.nav.id == 1) {
           item.online = true;//只有实时监控才会是在线状态
         }
-        return SurveillanceVideoCard(data: item);
+        return MonitorCard(data: item);
       },
       onFetchingMore: (currentPage, pageSize) => _getData(
           page: currentPage, pageSize: pageSize),

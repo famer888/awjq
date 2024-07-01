@@ -9,7 +9,7 @@ abstract class MonitorDomain {
     required int limit,
   });
 
-  AsyncResult<List<MionitorModel>?> getMonitorSearch({
+  AsyncResult<List<MonitorModel>?> getMonitorSearch({
     required String word,
     required int page,
     required int limit,

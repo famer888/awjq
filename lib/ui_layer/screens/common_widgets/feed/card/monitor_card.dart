@@ -9,10 +9,10 @@ import '../../../image_paths.dart';
 import '../../../theme.dart';
 import '../../my_image.dart';
 
-class SurveillanceVideoCard extends StatelessWidget {
-  const SurveillanceVideoCard({super.key, required this.data});
+class MonitorCard extends StatelessWidget {
+  const MonitorCard({super.key, required this.data});
 
-  final MionitorModel data;
+  final MonitorModel data;
 
   String get imageUrl => CommonUtils.getThumb(data.toJson());
 

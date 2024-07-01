@@ -4,7 +4,7 @@ import 'banner_model.dart';
 import 'live_model.dart';
 
 class MonitorWithBannersModel {
-  List<MionitorModel>? monitors;
+  List<MonitorModel>? monitors;
   List<BannerModel>? banners;
   List<TipModel>? tips;
 
@@ -12,8 +12,8 @@ class MonitorWithBannersModel {
 
   factory MonitorWithBannersModel.fromJson(Map<String, dynamic> json) =>
       MonitorWithBannersModel(
-        monitors: List<MionitorModel>.from(
-            json['monitors'].map((e) => MionitorModel.fromJson(e))),
+        monitors: List<MonitorModel>.from(
+            json['monitors'].map((e) => MonitorModel.fromJson(e))),
         banners: List<BannerModel>.from(
             json['banners'].map((e) => BannerModel.fromJson(e))),
         tips:
@@ -24,20 +24,20 @@ class MonitorWithBannersModel {
       {'monitors': monitors, 'banners': banners, 'tips': tips};
 }
 
-class MionitorModel {
+class MonitorModel {
   final int? id;
   final String? title;
   final String? cover;
         bool? online;//自定义字段：只有实时监控才会是在线状态
 
-  MionitorModel({
+  MonitorModel({
     this.id,
     this.title,
     this.cover,
     this.online = false,
   });
 
-  factory MionitorModel.fromJson(Map<String, dynamic> json) => MionitorModel(
+  factory MonitorModel.fromJson(Map<String, dynamic> json) => MonitorModel(
     id: json['id'],
     cover: json['cover'],
     title: json['title'],

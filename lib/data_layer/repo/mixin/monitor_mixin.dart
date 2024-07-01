@@ -15,7 +15,7 @@ mixin _Monitor on _BaseAppRepo implements MonitorDomain {
       ).deserializeJsonBy(MonitorWithBannersModel.fromJson).guard;
 
   @override
-  AsyncResult<List<MionitorModel>?> getMonitorSearch({
+  AsyncResult<List<MonitorModel>?> getMonitorSearch({
     required String word,
     required int page,
     required int limit,
@@ -23,6 +23,6 @@ mixin _Monitor on _BaseAppRepo implements MonitorDomain {
     word: word,
     page: page,
     limit: limit,
-  ).deserializeJsonListBy((e) => e.map(MionitorModel.fromJson).toList()).guard;
+  ).deserializeJsonListBy((e) => e.map(MonitorModel.fromJson).toList()).guard;
 
 }

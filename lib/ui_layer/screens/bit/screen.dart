@@ -12,8 +12,8 @@ import '../common_widgets/screen_background.dart';
 import '../common_widgets/status/loading.dart';
 import '../common_widgets/status/network_error.dart';
 import '../theme.dart';
-import 'OnlineVideo/screen.dart';
-import 'SurveillanceVideo/screen.dart';
+import 'LiveVideo/screen.dart';
+import 'MonitorVideo/screen.dart';
 import 'content.dart';
 
 class BitScreen extends StatefulWidget {
@@ -43,7 +43,7 @@ class _BitScreenState extends State<BitScreen> with TickerProviderStateMixin {
             if (e.title == '直播') {
               return _OnlinVideoView(id: e.value);
             } else if (e.title == '监控') {
-              return _SurveillanceVideoView(id: e.value);
+              return _MonitorVideoView(id: e.value);
             } else {
               return _BitView(id: e.value);
             }
@@ -184,21 +184,21 @@ class _OnlinVideoViewState extends State<_OnlinVideoView> {
     return _asyncValue.maybeWhen(
       data: (data) => TabBarWithView.line(
         titles: navList.map((e) => e.name).toList(),
-        views: navList.map((e) => OnlineVideoView(nav: e)).toList(),
+        views: navList.map((e) => LiveVideoView(nav: e)).toList(),
       ),
       orElse: () => const LoadingView(),
     );
   }
 }
 
-class _SurveillanceVideoView extends StatefulWidget {
-  const _SurveillanceVideoView({required this.id});
+class _MonitorVideoView extends StatefulWidget {
+  const _MonitorVideoView({required this.id});
   final int id;
   @override
-  State<_SurveillanceVideoView> createState() => __SurveillanceVideoViewState();
+  State<_MonitorVideoView> createState() => ___MonitorVideoViewState();
 }
 
-class __SurveillanceVideoViewState extends State<_SurveillanceVideoView> {
+class ___MonitorVideoViewState extends State<_MonitorVideoView> {
   late final _appDomain = context.read<SeedDomain>();
   late final config = context.read<HomeConfigNotifier>().config;
   late final navList = config.monitorTopNav;
@@ -220,7 +220,7 @@ class __SurveillanceVideoViewState extends State<_SurveillanceVideoView> {
       data: (data) => TabBarWithView.line(
         isScrollable: false,
         titles: data.map((e) => e.name).toList(),
-        views: data.map((e) => SurveillanceVideoView(nav: e)).toList(),
+        views: data.map((e) => MonitorVideoView(nav: e)).toList(),
       ),
       orElse: () => const LoadingView(),
     );

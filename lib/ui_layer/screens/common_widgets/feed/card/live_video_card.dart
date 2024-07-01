@@ -9,8 +9,8 @@ import '../../../../utils/common_utils.dart';
 import '../../../theme.dart';
 import '../../my_image.dart';
 
-class OnlineVideoCard extends StatelessWidget {
-  const OnlineVideoCard({super.key, required this.data});
+class LiveVideoCard extends StatelessWidget {
+  const LiveVideoCard({super.key, required this.data});
 
   final LiveModel data;
 

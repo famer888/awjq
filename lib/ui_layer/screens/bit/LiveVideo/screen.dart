@@ -8,7 +8,7 @@ import '../../../../domain/remote_domain/domains/monitor.dart';
 import '../../../../domain/remote_domain/domains/seed.dart';
 import '../../../../domain/type_def.dart';
 import '../../../notifiers/home_config_notifier.dart';
-import '../../common_widgets/feed/card/online_video_card.dart';
+import '../../common_widgets/feed/card/live_video_card.dart';
 import '../../common_widgets/feed/card/video_card.dart';
 import '../../common_widgets/feed/feed_card.dart';
 import '../../common_widgets/general_banner.dart';
@@ -24,14 +24,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
-class OnlineVideoView extends StatefulWidget {
-  const OnlineVideoView({super.key, required this.nav});
+class LiveVideoView extends StatefulWidget {
+  const LiveVideoView({super.key, required this.nav});
   final BitNavModel nav;
   @override
-  State<OnlineVideoView> createState() => _OnlineVideoViewState();
+  State<LiveVideoView> createState() => _LiveVideoViewState();
 }
 
-class _OnlineVideoViewState extends State<OnlineVideoView> {
+class _LiveVideoViewState extends State<LiveVideoView> {
   late final _domain = context.read<LiveDomain>();
   final ValueNotifier<List<BannerModel>> _bannersNotifier = ValueNotifier([]);
   final ValueNotifier<List<TipModel>> _tipsNotifier = ValueNotifier([]);
@@ -75,7 +75,7 @@ class _OnlineVideoViewState extends State<OnlineVideoView> {
       header: _Header(bannersNotifier: _bannersNotifier, tipsNotifier: _tipsNotifier),
       contentPadding: 15.w,
       padding: EdgeInsets.symmetric(vertical: MyTheme.pagePadding, horizontal: MyTheme.pagePadding),
-      itemBuilder: (context, item, index) => OnlineVideoCard(data: item),
+      itemBuilder: (context, item, index) => LiveVideoCard(data: item),
       onFetchingMore: (currentPage, pageSize) => _getData(
           page: currentPage, pageSize: pageSize),
     );
