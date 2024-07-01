@@ -13,4 +13,17 @@ mixin _Live on _BaseAppRepo implements LiveDomain {
         page: page,
         limit: limit,
       ).deserializeJsonBy(LiveWithBannersModel.fromJson).guard;
+
+  @override
+  AsyncResult<List<LiveModel>?> getLiveSearch({
+    required String word,
+    required int page,
+    required int limit,
+  }) => _liveService.getLiveSearch(
+    word: word,
+    page: page,
+    limit: limit,
+  ).deserializeJsonListBy((e) => e.map(LiveModel.fromJson).toList());
+
+
 }

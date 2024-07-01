@@ -9,4 +9,10 @@ abstract class LiveDomain {
     required int limit,
   });
 
+  AsyncResult<List<LiveModel>?> getLiveSearch({
+    required String word,
+    required int page,
+    required int limit,
+  });
+
 }

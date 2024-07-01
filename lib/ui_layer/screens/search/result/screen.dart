@@ -7,7 +7,11 @@ import 'package:provider/provider.dart';
 
 import '../../../../domain/domain.dart';
 import '../../../../domain/model/feed/feed_model.dart';
+import '../../../../domain/model/live_model.dart';
+import '../../../../domain/model/monitor_model.dart';
 import '../../../../domain/model/post_model.dart';
+import '../../../../domain/remote_domain/domains/live.dart';
+import '../../../../domain/remote_domain/domains/monitor.dart';
 import '../../common_widgets/feed/feed_card.dart';
 import '../../common_widgets/keep_alive_wrapper.dart';
 import '../../common_widgets/my_app_bar.dart';
@@ -108,16 +112,15 @@ class _OnlineVideoView extends StatefulWidget {
 }
 
 class _OnlineVideoViewState extends State<_OnlineVideoView> {
-  late final mvDomain = context.read<MvDomain>();
+  late final _domain = context.read<LiveDomain>();
 
-  Future<List<FeedVideoModel>> _getData({
+  Future<List<LiveModel>?> _getData({
     required int page,
     required int pageSize,
   }) async {
-    final result = await mvDomain.videoSearch(
+    final result = await _domain.getLiveSearch(
         page: page, limit: pageSize, word: widget.word);
-
-    return result.data!;
+    return result.data;
   }
 
   @override
@@ -126,8 +129,7 @@ class _OnlineVideoViewState extends State<_OnlineVideoView> {
       padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
       childAspectRatio: FeedCard.videoRatio,
       crossAxisSpacing: 8.w,
-      // itemBuilder: (_, item, __) => OnlineVideoCard(data: item),
-      itemBuilder: (_, item, __) => Container(),///todo：item得转成LiveModel类型再处理
+      itemBuilder: (_, item, __) => OnlineVideoCard(data: item),
       onFetchingMore: (currentPage, pageSize) => _getData(
         page: currentPage,
         pageSize: pageSize,
@@ -144,13 +146,13 @@ class _SurveillanceVideoView extends StatefulWidget {
 }
 
 class _SurveillanceVideoViewState extends State<_SurveillanceVideoView> {
-  late final mvDomain = context.read<MvDomain>();
+  late final _domain = context.read<MonitorDomain>();
 
-  Future<List<FeedVideoModel>> _getData({
+  Future<List<MionitorModel>?> _getData({
     required int page,
     required int pageSize,
   }) async {
-    final result = await mvDomain.videoSearch(
+    final result = await _domain.getMonitorSearch(
         page: page, limit: pageSize, word: widget.word);
 
     return result.data!;
@@ -162,8 +164,7 @@ class _SurveillanceVideoViewState extends State<_SurveillanceVideoView> {
       padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
       childAspectRatio: FeedCard.videoRatio,
       crossAxisSpacing: 8.w,
-      // itemBuilder: (_, item, __) => SurveillanceVideoCard(data: item),
-      itemBuilder: (_, item, __) => Container(),///todo：item得转成LiveModel类型再处理
+      itemBuilder: (_, item, __) => SurveillanceVideoCard(data: item),
       onFetchingMore: (currentPage, pageSize) => _getData(
         page: currentPage,
         pageSize: pageSize,

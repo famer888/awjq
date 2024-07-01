@@ -14,5 +14,10 @@ class LiveService extends BaseService {
     required int limit}) =>
       post('/index', data: {'id': id, 'page': page, 'limit': limit});
 
+  AsyncJson getLiveSearch({
+    required String word,
+    required int page,
+    required int limit}) =>
+      post('/search', data: {'word': word, 'page': page, 'limit': limit});
 
 }
