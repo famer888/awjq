@@ -34,9 +34,8 @@ class _BitScreenState extends State<BitScreen> with TickerProviderStateMixin {
     //测试代码
     if (navList.length != 4){
       navList.insert(0, BitSeedNavModel(title: '直播', value: 0));
-      navList.add(BitSeedNavModel(title: '监控', value: 3));
+      navList.add(BitSeedNavModel(title: '监控', value: 0));
     }
-
 
     return ScreenBackground(
       child: Scaffold(

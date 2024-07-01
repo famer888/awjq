@@ -58,18 +58,15 @@ class _OnlineVideoViewState extends State<OnlineVideoView> {
 
   @override
   Widget build(BuildContext context) {
-    return NestedScrollView(
-      headerSliverBuilder: (_, __) => [
-        SliverToBoxAdapter(
-          child: _Header(
-            bannersNotifier: _bannersNotifier,
-          ),
-        ),
-      ],
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
-        child: Container(),
+    return MyListView.list(
+      header: _Header(bannersNotifier: _bannersNotifier),
+      contentPadding: 15.w,
+      padding: EdgeInsets.symmetric(vertical: MyTheme.pagePadding, horizontal: MyTheme.pagePadding),
+      itemBuilder: (context, item, index) => PostCard.bit(
+        data: item,
       ),
+      onFetchingMore: (currentPage, pageSize) => _getData(
+          page: currentPage, pageSize: pageSize, sort: 'hot'),
     );
   }
 }
