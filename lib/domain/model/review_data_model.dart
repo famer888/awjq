@@ -25,6 +25,10 @@ class ReviewData {
   final List<ReviewData>? comments;
   final List<MediaModel>? medias;
   final UserModel? user;
+  final int? likeCt;
+  final int? likeFct;
+  final String? text;
+  final UserModel? member;
 
   ReviewData({
     this.id,
@@ -50,6 +54,10 @@ class ReviewData {
     this.comments,
     this.medias,
     this.user,
+    this.likeCt,
+    this.likeFct,
+    this.text,
+    this.member,
   });
 
   factory ReviewData.fromJson(Map<String, dynamic> json) {
@@ -81,6 +89,11 @@ class ReviewData {
           ? List.from(json['medias'].map((e) => MediaModel.fromJson(e)))
           : null,
       user: json['user'] == null ? null : UserModel.fromJson(json['user']),
+      likeCt: json['like_ct'],
+      likeFct: json['like_fct'],
+      text: json['text'],
+      member: json['member'] == null ? null : UserModel.fromJson(json['user']),
+
     );
   }
 
@@ -108,6 +121,10 @@ class ReviewData {
     List<ReviewData>? comments,
     List<MediaModel>? medias,
     UserModel? user,
+    int? likeCt,
+    int? likeFct,
+    String? text,
+    UserModel? member,
   }) {
     return ReviewData(
       id: id ?? this.id,
@@ -133,6 +150,10 @@ class ReviewData {
       comments: comments ?? this.comments,
       medias: medias ?? this.medias,
       user: user ?? this.user,
+      likeCt: likeCt ?? this.likeCt,
+      likeFct: likeFct ?? this.likeFct,
+      text: text ?? this.text,
+      member: member ?? this.member,
     );
   }
 }

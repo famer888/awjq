@@ -23,7 +23,69 @@ mixin _Live on _BaseAppRepo implements LiveDomain {
     word: word,
     page: page,
     limit: limit,
-  ).deserializeJsonListBy((e) => e.map(LiveModel.fromJson).toList());
+  ).deserializeJsonListBy((e) => e.map(LiveModel.fromJson).toList()).guard;
 
+  @override
+  AsyncResult<LiveModel?> getLiveDetail({required int id}) =>
+      _liveService.getLiveDetail(id: id)
+          .deserializeJsonBy(LiveModel.fromJson).guard;
+
+  @override
+  AsyncResult<List<LiveModel>?> getLiveRecommend({
+    required int id,
+    required int page,
+    required int limit,
+  }) => _liveService.getLiveRecommend(
+    id: id,
+    page: page,
+    limit: limit,
+  ).deserializeJsonListBy((e) => e.map(LiveModel.fromJson).toList()).guard;
+
+  @override
+  AsyncResult getLiveFavorite({required int id}) =>
+      _liveService.getLiveFavorite(id: id).deserialize().guard;
+
+  @override
+  AsyncResult getLiveBuy({required int id}) =>
+      _liveService.getLiveBuy(id: id).deserialize().guard;
+
+  @override
+  AsyncResult<List<LiveModel>?> getLiveListFavorite({
+    required int page,
+    required int limit,
+  }) => _liveService.getLiveListFavorite(
+    page: page,
+    limit: limit,
+  ).deserializeJsonListBy((e) => e.map(LiveModel.fromJson).toList()).guard;
+
+  @override
+  AsyncResult<List<LiveModel>?> getLiveListBuy({
+    required int page,
+    required int limit,
+  }) => _liveService.getLiveListBuy(
+    page: page,
+    limit: limit,
+  ).deserializeJsonListBy((e) => e.map(LiveModel.fromJson).toList()).guard;
+
+  @override
+  AsyncResult getLiveComment({
+    required String text,
+    required int id}) =>
+      _liveService.getLiveComment(text: text, id: id).deserialize().guard;
+
+  @override
+  AsyncResult<List<ReviewData>?> getLiveListComment({
+    required int id,
+    required int page,
+    required int limit,
+  }) => _liveService.getLiveListComment(
+    id: id,
+    page: page,
+    limit: limit,
+  ).deserializeJsonListBy((e) => e.map(ReviewData.fromJson).toList()).guard;
+
+  @override
+  AsyncResult getLiveLikeComment({required int id}) =>
+      _liveService.getLiveLikeComment(id: id).deserialize().guard;
 
 }

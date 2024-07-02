@@ -29,23 +29,50 @@ class MonitorModel {
   final String? title;
   final String? cover;
         bool? online;//自定义字段：只有实时监控才会是在线状态
+  final String? hls;
+  final String? show;
+  final int? type;
+  final int? coins;
+  final String? intro;
+  final int? isFavorite;
+  final String? payTip;
 
   MonitorModel({
     this.id,
     this.title,
     this.cover,
     this.online = false,
+    this.hls,
+    this.show,
+    this.type,
+    this.coins,
+    this.intro,
+    this.isFavorite,
+    this.payTip,
   });
 
   factory MonitorModel.fromJson(Map<String, dynamic> json) => MonitorModel(
     id: json['id'],
     cover: json['cover'],
     title: json['title'],
+    show: json['show'],
+    type: json['type'],
+    coins: json['coins'],
+    intro: json['intro'],
+    isFavorite: json['is_favorite'],
+    payTip: json['pay_tip'],
   );
 
   Map<String, dynamic> toJson() => {
     'id': id,
     'cover': cover,
     'title': title,
+    'hls': hls,
+    'show': show,
+    'type': type,
+    'coins': coins,
+    'intro': intro,
+    'is_favorite': isFavorite,
+    'pay_tip': payTip,
   };
 }
