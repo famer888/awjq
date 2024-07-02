@@ -55,10 +55,10 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
               child: _VideoView(word: widget.title),
             ),
             KeepAliveWrapper(
-              child: _OnlineVideoView(word: widget.title),
+              child: _LiveVideoView(word: widget.title),
             ),
             KeepAliveWrapper(
-              child: _SurveillanceVideoView(word: widget.title),
+              child: _MonitorVideoView(word: widget.title),
             ),
             KeepAliveWrapper(
               child: _TieztView(word: widget.title),
@@ -105,14 +105,14 @@ class _VideoViewState extends State<_VideoView> {
   }
 }
 
-class _OnlineVideoView extends StatefulWidget {
-  const _OnlineVideoView({required this.word});
+class _LiveVideoView extends StatefulWidget {
+  const _LiveVideoView({required this.word});
   final String word;
   @override
-  State<_OnlineVideoView> createState() => _OnlineVideoViewState();
+  State<_LiveVideoView> createState() => _LiveVideoViewState();
 }
 
-class _OnlineVideoViewState extends State<_OnlineVideoView> {
+class _LiveVideoViewState extends State<_LiveVideoView> {
   late final _domain = context.read<LiveDomain>();
 
   Future<List<LiveModel>?> _getData({
@@ -139,14 +139,14 @@ class _OnlineVideoViewState extends State<_OnlineVideoView> {
   }
 }
 
-class _SurveillanceVideoView extends StatefulWidget {
-  const _SurveillanceVideoView({required this.word});
+class _MonitorVideoView extends StatefulWidget {
+  const _MonitorVideoView({required this.word});
   final String word;
   @override
-  State<_SurveillanceVideoView> createState() => _SurveillanceVideoViewState();
+  State<_MonitorVideoView> createState() => _MonitorVideoViewState();
 }
 
-class _SurveillanceVideoViewState extends State<_SurveillanceVideoView> {
+class _MonitorVideoViewState extends State<_MonitorVideoView> {
   late final _domain = context.read<MonitorDomain>();
 
   Future<List<MonitorModel>?> _getData({
