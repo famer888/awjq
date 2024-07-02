@@ -227,7 +227,12 @@ class CommonUtils {
               paramsStr += '/${Uri.decodeComponent(value)}';
             });
           }
-          context.push('/${urlList.first}$paramsStr');
+
+          String path = urlList.first ?? '';
+          if (path == 'vip') {//如果是VIP直接进入VIP中心界面
+            path = 'mineVipCenter';
+          }
+          context.push('/${path}$paramsStr');
         }
       } else {
         launchUrl(data['link_url'].trim());
