@@ -1,4 +1,3 @@
-import '../../../domain/model/bit_seed_nav_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
