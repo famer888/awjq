@@ -4,9 +4,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../domain/model/collection_model.dart';
+import '../../../../domain/model/live_model.dart';
+import '../../../../domain/model/monitor_model.dart';
 import '../../../../domain/model/post_model.dart';
+import '../../../../domain/remote_domain/domains/live.dart';
+import '../../../../domain/remote_domain/domains/monitor.dart';
 import '../../../../domain/remote_domain/domains/user.dart';
 import '../../../../domain/result.dart';
+import '../../common_widgets/feed/card/live_video_card.dart';
+import '../../common_widgets/feed/card/monitor_card.dart';
+import '../../common_widgets/feed/feed_card.dart';
 import '../../common_widgets/keep_alive_wrapper.dart';
 import '../../common_widgets/my_app_bar.dart';
 import '../../common_widgets/my_list_view.dart';
@@ -47,6 +54,8 @@ class _MineBuyScreenState extends State<MineBuyScreen> {
             'sping'.tr(context: context),
             'tiezt'.tr(context: context),
             'zyuan'.tr(context: context),
+            'zhibo'.tr(context: context),
+            'jiankong'.tr(context: context),
           ],
           views: const [
             KeepAliveWrapper(
@@ -57,6 +66,12 @@ class _MineBuyScreenState extends State<MineBuyScreen> {
             ),
             KeepAliveWrapper(
               child: _TieztView(type: _TieztType.bit),
+            ),
+            KeepAliveWrapper(
+              child: _LiveView(),
+            ),
+            KeepAliveWrapper(
+              child: _MonitorView(),
             ),
           ],
         ),
@@ -148,6 +163,76 @@ class _TieztViewState extends State<_TieztView> {
         page: currentPage,
         pageSize: pageSize,
       ),
+    );
+  }
+}
+
+class _LiveView extends StatefulWidget {
+  const _LiveView();
+
+  @override
+  State<_LiveView> createState() => _LiveViewState();
+}
+
+class _LiveViewState extends State<_LiveView> {
+  late final liveDomain = context.read<LiveDomain>();
+
+  Future<List<LiveModel>?> _getData({
+    required int page,
+    required int pageSize,
+  }) async {
+    final result = await liveDomain.getLiveListBuy(
+      page: page,
+      limit: pageSize,
+    );
+    return result.data;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MyListView.grid(
+      childAspectRatio: FeedCard.videoRatio,
+      contentPadding: 15.w,
+      padding: EdgeInsets.symmetric(vertical: MyTheme.pagePadding, horizontal: MyTheme.pagePadding),
+      itemBuilder: (context, item, index) => LiveVideoCard(data: item),
+      onFetchingMore: (currentPage, pageSize) => _getData(
+          page: currentPage, pageSize: pageSize),
+    );;
+  }
+}
+
+class _MonitorView extends StatefulWidget {
+  const _MonitorView();
+
+  @override
+  State<_MonitorView> createState() => _MonitorViewState();
+}
+
+class _MonitorViewState extends State<_MonitorView> {
+  late final monitorDomain = context.read<MonitorDomain>();
+
+  Future<List<MonitorModel>?> _getData({
+    required int page,
+    required int pageSize,
+  }) async {
+    final result = await monitorDomain.getMonitorListBuy(
+      page: page,
+      limit: pageSize,
+    );
+    return result.data;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MyListView.grid(
+      childAspectRatio: FeedCard.videoRatio,
+      contentPadding: 15.w,
+      padding: EdgeInsets.symmetric(vertical: MyTheme.pagePadding, horizontal: MyTheme.pagePadding),
+      itemBuilder: (context, item, index) {
+        return MonitorCard(data: item);
+      },
+      onFetchingMore: (currentPage, pageSize) => _getData(
+          page: currentPage, pageSize: pageSize),
     );
   }
 }
