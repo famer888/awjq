@@ -1,6 +1,7 @@
 import '../../model/monitor_model.dart';
 import '../../model/monitor_video_detail_model.dart';
 import '../../model/review_data_model.dart';
+import '../../model/video_comment_model.dart';
 import '../../type_def.dart';
 
 abstract class MonitorDomain {
@@ -46,11 +47,11 @@ abstract class MonitorDomain {
     required int id});
 
   /// 监控评论列表
-  AsyncResult<List<ReviewData>?> getMonitorListComment({
+  AsyncResult<List<VideoCommentListModel>?> getMonitorListComment({
     required int id,
     required int page,
     required int limit});
 
-  /// 监控点赞
+  /// 监控评论点赞
   AsyncResult getMonitorLikeComment({required int id});
 }

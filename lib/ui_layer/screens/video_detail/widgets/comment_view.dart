@@ -106,7 +106,7 @@ class _CommentViewState extends State<CommentView> {
 }
 
 class _CommentTile extends StatelessWidget {
-  const _CommentTile({required this.data});
+  const _CommentTile({super.key, required this.data});
   final VideoCommentListModel data;
 
   @override

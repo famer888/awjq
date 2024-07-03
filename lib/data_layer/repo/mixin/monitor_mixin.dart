@@ -74,7 +74,7 @@ mixin _Monitor on _BaseAppRepo implements MonitorDomain {
       _monitorService.getMonitorComment(text: text, id: id).deserialize().guard;
 
   @override
-  AsyncResult<List<ReviewData>?> getMonitorListComment({
+  AsyncResult<List<VideoCommentListModel>?> getMonitorListComment({
     required int id,
     required int page,
     required int limit,
@@ -82,7 +82,7 @@ mixin _Monitor on _BaseAppRepo implements MonitorDomain {
     id: id,
     page: page,
     limit: limit,
-  ).deserializeJsonListBy((e) => e.map(ReviewData.fromJson).toList()).guard;
+  ).deserializeJsonListBy((e) => e.map(VideoCommentListModel.fromJson).toList()).guard;
 
   @override
   AsyncResult getMonitorLikeComment({required int id}) =>

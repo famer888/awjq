@@ -3,11 +3,10 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
-
-import '../../../../../domain/domain.dart';
 import '../../../../../domain/model/video_comment_model.dart';
 import '../../../../../domain/remote_domain/domains/live.dart';
 import '../../../../const.dart';
+import '../../../../utils/common_utils.dart';
 import '../../../common_widgets/member_vip.dart';
 import '../../../common_widgets/my_avatar.dart';
 import '../../../common_widgets/my_image.dart';
@@ -15,7 +14,6 @@ import '../../../common_widgets/my_list_view.dart';
 import '../../../common_widgets/post/comment_input.dart';
 import '../../../image_paths.dart';
 import '../../../theme.dart';
-import '../../../../utils/common_utils.dart';
 import '../../../../utils/my_toast.dart';
 import '../../../../../domain/api_validator.dart';
 
@@ -102,7 +100,7 @@ class _LiveVideoCommentViewState extends State<LiveVideoCommentView> {
 }
 
 class _CommentTile extends StatelessWidget {
-  const _CommentTile({required this.data});
+  const _CommentTile({super.key, required this.data});
   final VideoCommentListModel data;
 
   @override
@@ -167,8 +165,8 @@ class _CommentTile extends StatelessWidget {
               behavior: HitTestBehavior.translucent,
               onTap: () async {
                 if (data.id case final id?) {
-                  final mvDomain = context.read<MvDomain>();
-                  final res = await mvDomain.cartoonCommentMvLike(id: id);
+                  final liveDomain = context.read<LiveDomain>();
+                  final res = await liveDomain.getLiveLikeComment(id: id);
                   if (res.isValid) {
                     data.isLike = isLike ? 0 : 1;
                     isLike ? data.likeCount-- : data.likeCount++;

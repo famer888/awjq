@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../../domain/domain.dart';
 import '../../../../../domain/model/video_comment_model.dart';
-import '../../../../../domain/remote_domain/domains/live.dart';
+import '../../../../../domain/remote_domain/domains/monitor.dart';
 import '../../../../const.dart';
+import '../../../../utils/common_utils.dart';
 import '../../../common_widgets/member_vip.dart';
 import '../../../common_widgets/my_avatar.dart';
 import '../../../common_widgets/my_image.dart';
@@ -15,7 +15,6 @@ import '../../../common_widgets/my_list_view.dart';
 import '../../../common_widgets/post/comment_input.dart';
 import '../../../image_paths.dart';
 import '../../../theme.dart';
-import '../../../../utils/common_utils.dart';
 import '../../../../utils/my_toast.dart';
 import '../../../../../domain/api_validator.dart';
 
@@ -35,13 +34,13 @@ class _MonitorVideoCommentViewState extends State<MonitorVideoCommentView> {
 
   final hintNotifier = ValueNotifier('wyddxf'.tr());
 
-  late final liveDomain = context.read<LiveDomain>();
+  late final monitorDomain = context.read<MonitorDomain>();
 
   Future<List<VideoCommentListModel>?> _getData({
     required int currentPage,
     required int limit,
   }) async {
-    final result = await liveDomain.getLiveListComment(
+    final result = await monitorDomain.getMonitorListComment(
       id: int.parse(widget.id),
       page: currentPage,
       limit: limit,
@@ -60,7 +59,7 @@ class _MonitorVideoCommentViewState extends State<MonitorVideoCommentView> {
       return;
     }
     MyToast.showLoading(text: 'fbioz'.tr(context: context));
-    final result = await liveDomain.getLiveComment(
+    final result = await monitorDomain.getMonitorComment(
       text: text,
       id: int.parse(widget.id),
     );
@@ -102,7 +101,7 @@ class _MonitorVideoCommentViewState extends State<MonitorVideoCommentView> {
 }
 
 class _CommentTile extends StatelessWidget {
-  const _CommentTile({required this.data});
+  const _CommentTile({super.key, required this.data});
   final VideoCommentListModel data;
 
   @override
@@ -167,8 +166,8 @@ class _CommentTile extends StatelessWidget {
               behavior: HitTestBehavior.translucent,
               onTap: () async {
                 if (data.id case final id?) {
-                  final mvDomain = context.read<MvDomain>();
-                  final res = await mvDomain.cartoonCommentMvLike(id: id);
+                  final monitorDomain = context.read<MonitorDomain>();
+                  final res = await monitorDomain.getMonitorLikeComment(id: id);
                   if (res.isValid) {
                     data.isLike = isLike ? 0 : 1;
                     isLike ? data.likeCount-- : data.likeCount++;

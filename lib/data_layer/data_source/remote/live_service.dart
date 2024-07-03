@@ -63,7 +63,7 @@ class LiveService extends BaseService {
     required int limit}) =>
       post('/list_comment', data: {'id': id, 'page': page, 'limit': limit});
 
-  /// 直播点赞
+  /// 直播评论点赞
   AsyncJson getLiveLikeComment({required int id}) =>
       post('/like_comment', data: {'id': id});
 
