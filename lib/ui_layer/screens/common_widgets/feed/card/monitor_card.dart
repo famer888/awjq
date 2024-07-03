@@ -19,7 +19,7 @@ class MonitorCard extends StatelessWidget {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
-        VideoDetailRoute('${data.id}').push(context);
+        MonitorVideoDetailRoute('${data.id}').push(context);
       },
       child: SizedBox(
         height: 94.w,

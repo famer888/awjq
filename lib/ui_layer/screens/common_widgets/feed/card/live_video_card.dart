@@ -20,7 +20,7 @@ class LiveVideoCard extends StatelessWidget {
     return GestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
-        VideoDetailRoute('${data.id}').push(context);
+        LiveVideoDetailRoute('${data.id}').push(context);
       },
       child: SizedBox(
         height: 94.w,

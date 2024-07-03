@@ -26,9 +26,9 @@ mixin _Live on _BaseAppRepo implements LiveDomain {
   ).deserializeJsonListBy((e) => e.map(LiveModel.fromJson).toList()).guard;
 
   @override
-  AsyncResult<LiveModel?> getLiveDetail({required int id}) =>
+  AsyncResult<LiveVideoDetailData?> getLiveDetail({required int id}) =>
       _liveService.getLiveDetail(id: id)
-          .deserializeJsonBy(LiveModel.fromJson).guard;
+          .deserializeJsonBy(LiveVideoDetailData.fromJson).guard;
 
   @override
   AsyncResult<List<LiveModel>?> getLiveRecommend({
@@ -74,7 +74,7 @@ mixin _Live on _BaseAppRepo implements LiveDomain {
       _liveService.getLiveComment(text: text, id: id).deserialize().guard;
 
   @override
-  AsyncResult<List<ReviewData>?> getLiveListComment({
+  AsyncResult<List<VideoCommentListModel>?> getLiveListComment({
     required int id,
     required int page,
     required int limit,
@@ -82,7 +82,7 @@ mixin _Live on _BaseAppRepo implements LiveDomain {
     id: id,
     page: page,
     limit: limit,
-  ).deserializeJsonListBy((e) => e.map(ReviewData.fromJson).toList()).guard;
+  ).deserializeJsonListBy((e) => e.map(VideoCommentListModel.fromJson).toList()).guard;
 
   @override
   AsyncResult getLiveLikeComment({required int id}) =>

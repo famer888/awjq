@@ -36,6 +36,9 @@ class MonitorModel {
   final String? intro;
   final int? isFavorite;
   final String? payTip;
+  final int? viewFct;
+  final int? commentCt;
+  final int? favoriteFct;
 
   MonitorModel({
     this.id,
@@ -49,6 +52,9 @@ class MonitorModel {
     this.intro,
     this.isFavorite,
     this.payTip,
+    this.viewFct,
+    this.favoriteFct,
+    this.commentCt,
   });
 
   factory MonitorModel.fromJson(Map<String, dynamic> json) => MonitorModel(
@@ -61,6 +67,9 @@ class MonitorModel {
     intro: json['intro'],
     isFavorite: json['is_favorite'],
     payTip: json['pay_tip'],
+    viewFct: json['view_fct'],
+    favoriteFct: json['favorite_fct'],
+    commentCt: json['comment_ct'],
   );
 
   Map<String, dynamic> toJson() => {
@@ -74,5 +83,8 @@ class MonitorModel {
     'intro': intro,
     'is_favorite': isFavorite,
     'pay_tip': payTip,
+    'view_fct': viewFct,
+    'comment_ct': commentCt,
+    'favorite_fct': favoriteFct,
   };
 }

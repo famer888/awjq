@@ -1,5 +1,7 @@
 import '../../model/live_model.dart';
+import '../../model/live_video_detail_model.dart';
 import '../../model/review_data_model.dart';
+import '../../model/video_comment_model.dart';
 import '../../type_def.dart';
 
 abstract class LiveDomain {
@@ -19,7 +21,7 @@ abstract class LiveDomain {
   });
 
   /// 直播详情
-  AsyncResult<LiveModel?> getLiveDetail({required int id});
+  AsyncResult<LiveVideoDetailData?> getLiveDetail({required int id});
 
   /// 直播推荐数据
   AsyncResult<List<LiveModel>?> getLiveRecommend({
@@ -47,7 +49,7 @@ abstract class LiveDomain {
     required int id});
 
   /// 直播评论列表
-  AsyncResult<List<ReviewData>?> getLiveListComment({
+  AsyncResult<List<VideoCommentListModel>?> getLiveListComment({
     required int id,
     required int page,
     required int limit});

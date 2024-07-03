@@ -26,9 +26,9 @@ mixin _Monitor on _BaseAppRepo implements MonitorDomain {
   ).deserializeJsonListBy((e) => e.map(MonitorModel.fromJson).toList()).guard;
 
   @override
-  AsyncResult<MonitorModel?> getMonitorDetail({required int id}) =>
+  AsyncResult<MonitorVideoDetailData?> getMonitorDetail({required int id}) =>
       _monitorService.getMonitorDetail(id: id)
-          .deserializeJsonBy(MonitorModel.fromJson).guard;
+          .deserializeJsonBy(MonitorVideoDetailData.fromJson).guard;
 
   @override
   AsyncResult<List<MonitorModel>?> getMonitorRecommend({

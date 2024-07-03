@@ -41,6 +41,8 @@ List<RouteBase> get $appRoutes => [
       $communityTagDetailRoute,
       $mineBuyRoute,
       $videoDetailRoute,
+      $liveVideoDetailRoute,
+      $monitorVideoDetailRoute,
       $mineDownloadRoute,
       $mineFillCodeRoute,
       $mineHelpRoute,
@@ -1041,6 +1043,62 @@ extension $VideoDetailRouteExtension on VideoDetailRoute {
 
   String get location => GoRouteData.$location(
         '/videoDetail',
+      );
+
+  void go(BuildContext context) => context.go(location, extra: $extra);
+
+  Future<T?> push<T>(BuildContext context) =>
+      context.push<T>(location, extra: $extra);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location, extra: $extra);
+
+  void replace(BuildContext context) =>
+      context.replace(location, extra: $extra);
+}
+
+RouteBase get $liveVideoDetailRoute => GoRouteData.$route(
+      path: '/liveVideoDetail',
+      parentNavigatorKey: LiveVideoDetailRoute.$parentNavigatorKey,
+      factory: $LiveVideoDetailRouteExtension._fromState,
+    );
+
+extension $LiveVideoDetailRouteExtension on LiveVideoDetailRoute {
+  static LiveVideoDetailRoute _fromState(GoRouterState state) =>
+      LiveVideoDetailRoute(
+        state.extra as String,
+      );
+
+  String get location => GoRouteData.$location(
+        '/liveVideoDetail',
+      );
+
+  void go(BuildContext context) => context.go(location, extra: $extra);
+
+  Future<T?> push<T>(BuildContext context) =>
+      context.push<T>(location, extra: $extra);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location, extra: $extra);
+
+  void replace(BuildContext context) =>
+      context.replace(location, extra: $extra);
+}
+
+RouteBase get $monitorVideoDetailRoute => GoRouteData.$route(
+      path: '/monitorVideoDetail',
+      parentNavigatorKey: MonitorVideoDetailRoute.$parentNavigatorKey,
+      factory: $MonitorVideoDetailRouteExtension._fromState,
+    );
+
+extension $MonitorVideoDetailRouteExtension on MonitorVideoDetailRoute {
+  static MonitorVideoDetailRoute _fromState(GoRouterState state) =>
+      MonitorVideoDetailRoute(
+        state.extra as String,
+      );
+
+  String get location => GoRouteData.$location(
+        '/monitorVideoDetail',
       );
 
   void go(BuildContext context) => context.go(location, extra: $extra);

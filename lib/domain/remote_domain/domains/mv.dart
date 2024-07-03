@@ -21,7 +21,7 @@ abstract class MvDomain {
   });
 
   /// 获取视频详情
-  AsyncResult<VideoDetailData> getVideoDetail({required String id});
+  AsyncResult<VideoDetailData?> getVideoDetail({required String id});
 
   /// 视频详情推荐视频
   AsyncResult<List<FeedModel>> getDetailRecommendList({required String id});

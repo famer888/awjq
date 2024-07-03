@@ -1,4 +1,5 @@
 import '../../model/monitor_model.dart';
+import '../../model/monitor_video_detail_model.dart';
 import '../../model/review_data_model.dart';
 import '../../type_def.dart';
 
@@ -17,7 +18,7 @@ abstract class MonitorDomain {
   });
 
   /// 监控详情
-  AsyncResult<MonitorModel?> getMonitorDetail({required int id});
+  AsyncResult<MonitorVideoDetailData?> getMonitorDetail({required int id});
 
   /// 监控推荐数据
   AsyncResult<List<MonitorModel>?> getMonitorRecommend({
