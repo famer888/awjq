@@ -34,11 +34,11 @@ class MonitorModel {
   final int? type;
   final int? coins;
   final String? intro;
-  final int? isFavorite;
+        int? isFavorite;
   final String? payTip;
   final int? viewFct;
   final int? commentCt;
-  final int? favoriteFct;
+        int? favoriteFct;
 
   MonitorModel({
     this.id,
@@ -65,10 +65,10 @@ class MonitorModel {
     type: json['type'],
     coins: json['coins'],
     intro: json['intro'],
-    isFavorite: json['is_favorite'],
+    isFavorite: json['is_favorite'] ?? 0,
     payTip: json['pay_tip'],
     viewFct: json['view_fct'],
-    favoriteFct: json['favorite_fct'],
+    favoriteFct: json['favorite_fct'] ?? 0,
     commentCt: json['comment_ct'],
   );
 

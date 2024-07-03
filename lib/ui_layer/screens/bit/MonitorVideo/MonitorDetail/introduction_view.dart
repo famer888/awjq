@@ -1,6 +1,4 @@
-import '../../../../../domain/domain.dart';
-import '../../../../../domain/model/live_model.dart';
-import '../../../../../domain/model/live_video_detail_model.dart';
+
 import '../../../../../domain/model/monitor_model.dart';
 import '../../../../../domain/model/monitor_video_detail_model.dart';
 import '../../../../../domain/remote_domain/domains/live.dart';
@@ -18,7 +16,6 @@ import '../../../../utils/my_toast.dart';
 import '../../../../../domain/api_validator.dart';
 
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -98,6 +95,12 @@ class _HeaderViewState extends State<_HeaderView> {
                 style: MyTheme.white255_18_M,
                 maxLines: 2,
               ),
+              Offstage(
+                  offstage: videoInfo.intro?.isEmpty ?? false,
+                  child: Padding(
+                      padding: EdgeInsets.only(top: 15.w , bottom: 0),
+                      child: Text(videoInfo.intro ?? '',
+                          style: MyTheme.whiteOpacity614w500))),
               SizedBox(height: 22.w),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -126,27 +129,31 @@ class _HeaderViewState extends State<_HeaderView> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       StatefulBuilder(builder: (_, setState) {
-                        final isFavorites = videoInfo.isFavorite == 1;
+                        final isFavorite = videoInfo.isFavorite == 1;
 
                         return GestureDetector(
                           onTap: () async {
                             if (videoInfo.id case final id?) {
-                              final userDomain = context.read<UserDomain>();
+                              final monitorDomain = context.read<MonitorDomain>();
                               final res =
-                              await userDomain.userFavorites(type: 1, id: id);
+                              await monitorDomain.getMonitorFavorite(id: id);
                               if (res.isValid) {
-                                // videoInfo.userFavorites = isFavorites ? 0 : 1;
-                                // isFavorites
-                                //     ? videoInfo.favoriteFct--
-                                //     : videoInfo.favoriteFct++;
-                                // setState(() {});
+                                if (res.data['is_favorite'] == 0) {
+                                  videoInfo.isFavorite = 0;
+                                  videoInfo.favoriteFct = (videoInfo.favoriteFct ?? 0) - 1;
+                                  videoInfo.favoriteFct! <= 0 ? 0 : videoInfo.favoriteFct;
+                                } else {
+                                  videoInfo.isFavorite = 1;
+                                  videoInfo.favoriteFct = (videoInfo.favoriteFct ?? 0) + 1;
+                                }
+                                setState(() {});
                               } else if (res.msg case final msg?) {
                                 MyToast.showText(text: msg);
                               }
                             }
                           },
                           child: _btnItem(
-                            icon: isFavorites
+                            icon: isFavorite
                                 ? MyImagePaths.app2024ComScOn
                                 : MyImagePaths.app2024ComScOff,
                             name: CommonUtils.renderFixedNumber(
@@ -164,8 +171,6 @@ class _HeaderViewState extends State<_HeaderView> {
                           name: 'fx'.tr(context: context),
                         ),
                       ),
-                      if (!kIsWeb) SizedBox(width: 20.w),
-
                     ],
                   )
                 ],

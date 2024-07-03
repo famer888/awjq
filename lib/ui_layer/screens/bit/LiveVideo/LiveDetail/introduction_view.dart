@@ -86,18 +86,22 @@ class _HeaderViewState extends State<_HeaderView> {
     final videoInfo = widget.data.live;
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
-        child: SizedBox(
-          width: double.infinity, // 确保宽度约束
-          child: Column(
+        child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 5.w),
+              // SizedBox(height: 5.w),
               Text(
                 videoInfo.username ?? '',
-                style: MyTheme.white255_18_M,
+                style: MyTheme.white255_16_M,
                 maxLines: 2,
               ),
-              SizedBox(height: 22.w),
+              Offstage(
+              offstage: videoInfo.intro?.isEmpty ?? false,
+              child: Padding(
+                  padding: EdgeInsets.only(top: 15.w , bottom: 0),
+                  child: Text(videoInfo.intro ?? '',
+                      style: MyTheme.whiteOpacity614w500))),
+          SizedBox(height: 22.w),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -112,11 +116,11 @@ class _HeaderViewState extends State<_HeaderView> {
                         width: 4.w,
                       ),
                       Text(
-                        CommonUtils.renderFixedNumber(videoInfo.viewFct ?? 0),
+                        CommonUtils.renderEnFixedNumber(videoInfo.viewFct ?? 0),
                         style: MyTheme.whiteOpacity612w500,
                       ),
                       Text(
-                        'rqk'.tr(context: context),
+                        'cbf'.tr(context: context),
                         style: MyTheme.whiteOpacity612w500,
                       ),
                     ],
@@ -125,27 +129,32 @@ class _HeaderViewState extends State<_HeaderView> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       StatefulBuilder(builder: (_, setState) {
-                        final isFavorites = videoInfo.isFavorite == 1;
+
+                        final isFavorite = videoInfo.isFavorite == 1;
 
                         return GestureDetector(
                           onTap: () async {
                             if (videoInfo.id case final id?) {
-                              final userDomain = context.read<UserDomain>();
+                              final liveDomain = context.read<LiveDomain>();
                               final res =
-                              await userDomain.userFavorites(type: 1, id: id);
+                              await liveDomain.getLiveFavorite(id: id);
                               if (res.isValid) {
-                                // videoInfo.userFavorites = isFavorites ? 0 : 1;
-                                // isFavorites
-                                //     ? videoInfo.favoriteFct--
-                                //     : videoInfo.favoriteFct++;
-                                // setState(() {});
+                                if (res.data['is_favorite'] == 0) {
+                                  videoInfo.isFavorite = 0;
+                                  videoInfo.favoriteFct = (videoInfo.favoriteFct ?? 0) - 1;
+                                  videoInfo.favoriteFct! <= 0 ? 0 : videoInfo.favoriteFct;
+                                } else {
+                                  videoInfo.isFavorite = 1;
+                                  videoInfo.favoriteFct = (videoInfo.favoriteFct ?? 0) + 1;
+                                }
+                                setState(() {});
                               } else if (res.msg case final msg?) {
                                 MyToast.showText(text: msg);
                               }
                             }
                           },
                           child: _btnItem(
-                            icon: isFavorites
+                            icon: isFavorite
                                 ? MyImagePaths.app2024ComScOn
                                 : MyImagePaths.app2024ComScOff,
                             name: CommonUtils.renderFixedNumber(
@@ -163,8 +172,6 @@ class _HeaderViewState extends State<_HeaderView> {
                           name: 'fx'.tr(context: context),
                         ),
                       ),
-                      if (!kIsWeb) SizedBox(width: 20.w),
-
                     ],
                   )
                 ],
@@ -178,7 +185,7 @@ class _HeaderViewState extends State<_HeaderView> {
               ),
               if (widget.data.banners case final banners? when banners.isNotEmpty)
                 Padding(
-                  padding: EdgeInsets.only(bottom: 12.w),
+                  padding: EdgeInsets.only(bottom: 15.w),
                   child: GeneralBanner(
                     data: banners,
                     aspectRatio: 10 / 3,
@@ -187,7 +194,6 @@ class _HeaderViewState extends State<_HeaderView> {
               Text('jctj'.tr(context: context), style: MyTheme.white16medium),
             ],
           ),
-        ),
       );
   }
 

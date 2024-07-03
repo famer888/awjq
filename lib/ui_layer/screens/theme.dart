@@ -70,6 +70,11 @@ class MyTheme {
       fontSize: 12.sp,
       fontWeight: FontWeight.w500);
 
+  static final TextStyle whiteOpacity614w500 = TextStyle(
+      color: Colors.white.withOpacity(0.6),
+      fontSize: 14.sp,
+      fontWeight: FontWeight.w500);
+
   ///@@@@@@@@@@
 
   static const gradient_90_114_colors = [

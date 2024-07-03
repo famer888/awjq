@@ -27,12 +27,12 @@ class LiveModel {
   final String? username;
   final int? viewFct;
   final int? commentCt;
-  final int? favoriteFct;
+        int? favoriteFct;
   final List<HlsModel>? hls;
   final String? show;
   final int? type;
   final int? coins;
-  final int? isFavorite;
+        int? isFavorite;
   final String? payTip;
   final String? intro;
 
@@ -57,7 +57,7 @@ class LiveModel {
         cover: json['cover'],
         username: json['username'],
         viewFct: json['view_fct'],
-        favoriteFct: json['favorite_fct'],
+        favoriteFct: json['favorite_fct'] ?? 0,
         commentCt: json['comment_ct'],
         hls: json['hls'] != null
             ? List.from(json['hls'].map((e) => HlsModel.fromJson(e)))
@@ -65,7 +65,7 @@ class LiveModel {
         show: json['show'],
         type: json['type'],
         coins: json['coins'],
-        isFavorite: json['is_favorite'],
+        isFavorite: json['is_favorite'] ?? 0,
         payTip: json['pay_tip'],
         intro: json['intro'],
       );
