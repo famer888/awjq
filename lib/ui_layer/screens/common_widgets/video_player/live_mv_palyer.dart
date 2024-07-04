@@ -15,6 +15,7 @@ import '../../../../domain/remote_domain/domains/live.dart';
 import '../../../notifiers/home_config_notifier.dart';
 import '../../../notifiers/user_notifier.dart';
 import '../../../router/routes.dart';
+import '../../../utils/common_utils.dart';
 import '../../../utils/my_toast.dart';
 import '../../image_paths.dart';
 import '../../theme.dart';
@@ -55,24 +56,40 @@ class _LiveMvPlayerState extends State<LiveMvPlayer> with NVideoURLMinxin {
   @override
   void initState() {
     super.initState();
+    initURL();
+  }
+
+  initURL() async {
 
     if (widget.info.show != 'public') {//show的值 != “public” 直接显示已下线
       widget.info.hls = [];//防止以下线用户存有播放链接导致继续播放
     }
 
+    //筛选出高分辨率播放链接播放
     if (widget.info.hls?.isNotEmpty ?? false) {
+      // 遍历视频列表，将每个视频信息按优先级存入 Map
+      for (HlsModel hls in widget.info.hls!) {
+        String label = hls.label;
+        if (label.contains('720')) {
+          widget.info.hls = [hls];
+          break;
+        } else if (label.contains('480')) {
+          widget.info.hls = [hls];
+          break;
+        } else if (label.contains('240')) {
+          widget.info.hls = [hls];
+          break;
+        }
+      }
       playerStr = widget.info.hls?.first.url ?? '';
     }
 
-    initURL();
-  }
-
-  initURL() async {
     VideoPlayerController? cr = await initController(source240: playerStr, isLocal: widget.isLocal);
     flickManager = FlickManager(
         videoPlayerController: cr!,
         autoPlay: !kIsWeb,
         onVideoEnd: () {
+          flickManager?.flickControlManager?.replay();
           if (mounted) setState(() {});
         });
     if (mounted) setState(() {});
@@ -134,7 +151,7 @@ class _LiveMvPlayerState extends State<LiveMvPlayer> with NVideoURLMinxin {
             videoFit: BoxFit.contain,
             controls: _SinkPortraitLandWidget(
               info: widget.info,
-              noBack: true,
+              noBack: false,
             ),
           ),
         ),
@@ -232,8 +249,7 @@ class _LiveMvPlayerState extends State<LiveMvPlayer> with NVideoURLMinxin {
       userNotifier.setMoney(money: money);
       List<HlsModel> hls = res.data['hls'];
       if (hls.isNotEmpty) {
-        widget.info.hls?.first = hls.first;
-        playerStr = hls.first.url;
+        widget.info.hls = hls;
       }
       initURL();
     } else {
@@ -267,63 +283,6 @@ class _SinkPortraitLandWidget extends StatefulWidget {
 }
 
 class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
-  double _speed = 1.0;
-  Map<String, double> speedList = {
-    '2.0': 2.0,
-    '1.8': 1.8,
-    '1.5': 1.5,
-    '1.2': 1.2,
-    '1.0': 1.0,
-  };
-  bool _hideSpeedStu = true;
-
-  // build 倍数列表
-  List<Widget> _buildSpeedListWidget() {
-    FlickVideoManager flickVideoManager =
-    Provider.of<FlickVideoManager>(context);
-    List<Widget> columnChild = [];
-    speedList.forEach((String mapKey, double speedVals) {
-      columnChild.add(
-        Ink(
-          child: InkWell(
-            onTap: () {
-              if (_speed == speedVals) return;
-              _speed = speedVals;
-              _hideSpeedStu = true;
-              flickVideoManager.videoPlayerController?.setPlaybackSpeed(_speed);
-              setState(() {});
-            },
-            child: Container(
-              alignment: Alignment.center,
-              width: 50,
-              height: 30,
-              child: Text(
-                '$mapKey X',
-                style: TextStyle(
-                  color: _speed == speedVals
-                      ? const Color.fromRGBO(90, 75, 235, 1)
-                      : Colors.white,
-                  fontSize: 16,
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-      columnChild.add(
-        Padding(
-          padding: const EdgeInsets.only(top: 5, bottom: 5),
-          child: Container(
-            width: 50,
-            height: 1,
-            color: Colors.white54,
-          ),
-        ),
-      );
-    });
-    columnChild.removeAt(columnChild.length - 1);
-    return columnChild;
-  }
 
   Widget _noConditionWidget(context) {
     FlickVideoManager flickVideoManager =
@@ -338,6 +297,8 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
         !flickVideoManager.videoPlayerValue!.isInitialized;
 
     double rate = flickVideoManager.videoPlayerValue?.aspectRatio ?? 0.0;
+    // 获取屏幕方向
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
 
     return Stack(
       children: [
@@ -356,82 +317,33 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                       strokeWidth: 1.5,
                     ),
                   ),
-                )
-                    : Container() ///直播不需要暂停播放按钮
-                // const FlickAutoHideChild(
-                //   showIfVideoNotInitialized: false,
-                //   child: FlickPlayToggle(
-                //     replayChild: MyImage.asset(
-                //       MyImagePaths.appVReplayN,
-                //       width: 40,
-                //       height: 40,
-                //     ),
-                //     playChild: MyImage.asset(
-                //       MyImagePaths.appVPlayN,
-                //       width: 40,
-                //       height: 40,
-                //     ),
-                //     pauseChild: MyImage.asset(
-                //       MyImagePaths.appVPauseN,
-                //       width: 40,
-                //       height: 40,
-                //     ),
-                //   ),
-                // ),
+                ) : Container()
               ),
             ),
           ),
         ),
-        // FlickAutoHideChild(
-        //   child: Stack(
-        //     children: [
-        //       Positioned(
-        //         left: 0,
-        //         right: 0,
-        //         bottom: 0,
-        //         child: IgnorePointer(
-        //           child: Container(
-        //             height: 55,
-        //             decoration: const BoxDecoration(
-        //               gradient: LinearGradient(
-        //                 colors: [
-        //                   Color.fromRGBO(0, 0, 0, 0.0),
-        //                   Color.fromRGBO(0, 0, 0, 0.1),
-        //                   Color.fromRGBO(0, 0, 0, 0.3),
-        //                   Color.fromRGBO(0, 0, 0, 0.9),
-        //                 ],
-        //                 begin: Alignment.topCenter,
-        //                 end: Alignment.bottomCenter,
-        //               ),
-        //             ),
-        //           ),
-        //         ),
-        //       ),
-        //       Positioned(
-        //         right: controlManager.isFullscreen == false
-        //             ? (rate > 1 ? 39 : 3)
-        //             : (rate > 1 ? 50 : 3),
-        //         bottom: 55,
-        //         child: !_hideSpeedStu
-        //             ? FlickAutoHideChild(
-        //           child: Container(
-        //             decoration: BoxDecoration(
-        //               color: Colors.black45,
-        //               borderRadius: BorderRadius.circular(5),
-        //             ),
-        //             child: Padding(
-        //               padding: const EdgeInsets.all(5),
-        //               child: Column(
-        //                 children: _buildSpeedListWidget(),
-        //               ),
-        //             ),
-        //           ),
-        //         )
-        //             : Container(),
-        //       ),
-        //     ],
-        //   ),
-        // ),
+         Positioned(
+            top: MediaQuery.of(context).padding.top + 11.w,
+            right: 10.w,
+            child: Stack(
+              children: [
+                Container(
+                  margin: const EdgeInsets.only(left: 7, top: 0.5),
+                  padding: const EdgeInsets.only(top: 2.5, left: 16, right: 6),
+                  height: 18,
+                  decoration: const BoxDecoration(
+                    color: MyTheme.blackColor25505,
+                    borderRadius: BorderRadius.all(Radius.circular(9)),
+                  ),
+                  child: Text('${CommonUtils.renderEnFixedNumber(widget.info?.viewFct ?? 0)}${'gk'.tr()}', style: MyTheme.white09_10),
+                ),
+                const MyImage.asset(
+                  MyImagePaths.appHots,
+                  height: 19,
+                  width: 19,
+                )
+              ],
+            )),
         Positioned(
           top: 0,
           left: 2,
@@ -439,37 +351,42 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
             if (widget.noBack) {
               return const SizedBox.shrink();
             }
-            return GestureDetector(
-              behavior: HitTestBehavior.translucent,
-              child: Container(
-                width: 40,
-                height: 40,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Color.fromRGBO(0, 0, 0, 0.1),
-                      offset: Offset(0, 0),
-                      spreadRadius: 5,
-                      blurRadius: 5,
-                    )
-                  ],
+            return Row(
+              children: [
+                GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  child: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color.fromRGBO(0, 0, 0, 0.1),
+                          offset: Offset(0, 0),
+                          spreadRadius: 5,
+                          blurRadius: 5,
+                        )
+                      ],
+                    ),
+                    alignment: Alignment.center,
+                    child: const MyImage.asset(
+                      MyImagePaths.appNavBackWN,
+                      width: 18,
+                      height: 18,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                  onTap: () {
+                    if (widget.isBack) {
+                      context.pop();
+                    } else {
+                      controlManager.toggleFullscreen();
+                    }
+                  },
                 ),
-                alignment: Alignment.center,
-                child: const MyImage.asset(
-                  MyImagePaths.appNavBackWN,
-                  width: 18,
-                  height: 18,
-                  fit: BoxFit.contain,
-                ),
-              ),
-              onTap: () {
-                if (widget.isBack) {
-                  context.pop();
-                } else {
-                  controlManager.toggleFullscreen();
-                }
-              },
+                Text(isPortrait ? '' : (widget.info?.username ?? ''), style: MyTheme.white20medium),
+              ],
             );
           }),
         ),
@@ -477,14 +394,18 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
           bottom: 10,
           right: 10,
           child: FlickFullScreenToggle(
-            enterFullScreenChild: const Icon(
-                Icons.fullscreen,
-                size: 25,
-                color: Colors.white),
-            exitFullScreenChild: const Icon(
-                Icons.fullscreen_exit,
-                size: 25,
-                color: Colors.white),
+            enterFullScreenChild: const MyImage.asset(
+              MyImagePaths.appFullScreen,
+              width: 25,
+              height: 25,
+              fit: BoxFit.contain,
+            ),
+            exitFullScreenChild: const MyImage.asset(
+              MyImagePaths.appFullScreen,
+              width: 25,
+              height: 25,
+              fit: BoxFit.contain,
+            ),
             toggleFullscreen: () {
               if (kIsWeb) {
                 html.VideoElement video = html

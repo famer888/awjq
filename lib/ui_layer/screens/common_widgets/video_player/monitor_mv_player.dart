@@ -18,6 +18,7 @@ import '../../../router/routes.dart';
 import '../../../utils/my_toast.dart';
 import '../../image_paths.dart';
 import '../../theme.dart';
+import '../current_timer.dart';
 import '../dialog/my_dialog.dart';
 import '../dialog/widgets/png_dialog.dart';
 import '../dialog/widgets/regular_dialog.dart';
@@ -63,6 +64,7 @@ class _MonitorMvPlayerState extends State<MonitorMvPlayer> with NVideoURLMinxin 
         videoPlayerController: cr!,
         autoPlay: !kIsWeb,
         onVideoEnd: () {
+          flickManager?.flickControlManager?.replay();
           if (mounted) setState(() {});
         });
     if (mounted) setState(() {});
@@ -124,7 +126,7 @@ class _MonitorMvPlayerState extends State<MonitorMvPlayer> with NVideoURLMinxin 
           videoFit: BoxFit.contain,
           controls: _SinkPortraitLandWidget(
             info: widget.info,
-            noBack: true,
+            noBack: false,
           ),
         ),
       ),
@@ -253,63 +255,6 @@ class _SinkPortraitLandWidget extends StatefulWidget {
 }
 
 class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
-  double _speed = 1.0;
-  Map<String, double> speedList = {
-    '2.0': 2.0,
-    '1.8': 1.8,
-    '1.5': 1.5,
-    '1.2': 1.2,
-    '1.0': 1.0,
-  };
-  bool _hideSpeedStu = true;
-
-  // build 倍数列表
-  List<Widget> _buildSpeedListWidget() {
-    FlickVideoManager flickVideoManager =
-    Provider.of<FlickVideoManager>(context);
-    List<Widget> columnChild = [];
-    speedList.forEach((String mapKey, double speedVals) {
-      columnChild.add(
-        Ink(
-          child: InkWell(
-            onTap: () {
-              if (_speed == speedVals) return;
-              _speed = speedVals;
-              _hideSpeedStu = true;
-              flickVideoManager.videoPlayerController?.setPlaybackSpeed(_speed);
-              setState(() {});
-            },
-            child: Container(
-              alignment: Alignment.center,
-              width: 50,
-              height: 30,
-              child: Text(
-                '$mapKey X',
-                style: TextStyle(
-                  color: _speed == speedVals
-                      ? const Color.fromRGBO(90, 75, 235, 1)
-                      : Colors.white,
-                  fontSize: 16,
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-      columnChild.add(
-        Padding(
-          padding: const EdgeInsets.only(top: 5, bottom: 5),
-          child: Container(
-            width: 50,
-            height: 1,
-            color: Colors.white54,
-          ),
-        ),
-      );
-    });
-    columnChild.removeAt(columnChild.length - 1);
-    return columnChild;
-  }
 
   Widget _noConditionWidget(context) {
     FlickVideoManager flickVideoManager =
@@ -324,6 +269,8 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
         !flickVideoManager.videoPlayerValue!.isInitialized;
 
     double rate = flickVideoManager.videoPlayerValue?.aspectRatio ?? 0.0;
+    // 获取屏幕方向
+    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
 
     return Stack(
       children: [
@@ -342,163 +289,191 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                       strokeWidth: 1.5,
                     ),
                   ),
-                )
-                    : Container() ///监控不需要暂停播放按钮
-                // const FlickAutoHideChild(
-                //   showIfVideoNotInitialized: false,
-                //   child: FlickPlayToggle(
-                //     replayChild: MyImage.asset(
-                //       MyImagePaths.appVReplayN,
-                //       width: 40,
-                //       height: 40,
-                //     ),
-                //     playChild: MyImage.asset(
-                //       MyImagePaths.appVPlayN,
-                //       width: 40,
-                //       height: 40,
-                //     ),
-                //     pauseChild: MyImage.asset(
-                //       MyImagePaths.appVPauseN,
-                //       width: 40,
-                //       height: 40,
-                //     ),
-                //   ),
-                // ),
+                ) : Container()
               ),
             ),
           ),
         ),
-        // FlickAutoHideChild(
-        //   child: Stack(
-        //     children: [
-        //       Positioned(
-        //         left: 0,
-        //         right: 0,
-        //         bottom: 0,
-        //         child: IgnorePointer(
-        //           child: Container(
-        //             height: 55,
-        //             decoration: const BoxDecoration(
-        //               gradient: LinearGradient(
-        //                 colors: [
-        //                   Color.fromRGBO(0, 0, 0, 0.0),
-        //                   Color.fromRGBO(0, 0, 0, 0.1),
-        //                   Color.fromRGBO(0, 0, 0, 0.3),
-        //                   Color.fromRGBO(0, 0, 0, 0.9),
-        //                 ],
-        //                 begin: Alignment.topCenter,
-        //                 end: Alignment.bottomCenter,
-        //               ),
-        //             ),
-        //           ),
+        // Positioned(
+        //   left: 0,
+        //   right: 0,
+        //   bottom: 0,
+        //   child: IgnorePointer(
+        //     child: Container(
+        //       height: 55,
+        //       decoration: const BoxDecoration(
+        //         gradient: LinearGradient(
+        //           colors: [
+        //             Color.fromRGBO(0, 0, 0, 0.0),
+        //             Color.fromRGBO(0, 0, 0, 0.1),
+        //             Color.fromRGBO(0, 0, 0, 0.3),
+        //             Color.fromRGBO(0, 0, 0, 0.9),
+        //           ],
+        //           begin: Alignment.topCenter,
+        //           end: Alignment.bottomCenter,
         //         ),
         //       ),
-        //       Positioned(
-        //         right: controlManager.isFullscreen == false
-        //             ? (rate > 1 ? 39 : 3)
-        //             : (rate > 1 ? 50 : 3),
-        //         bottom: 55,
-        //         child: !_hideSpeedStu
-        //             ? FlickAutoHideChild(
-        //           child: Container(
-        //             decoration: BoxDecoration(
-        //               color: Colors.black45,
-        //               borderRadius: BorderRadius.circular(5),
-        //             ),
-        //             child: Padding(
-        //               padding: const EdgeInsets.all(5),
-        //               child: Column(
-        //                 children: _buildSpeedListWidget(),
-        //               ),
-        //             ),
-        //           ),
-        //         )
-        //             : Container(),
-        //       ),
-        //     ],
+        //     ),
         //   ),
         // ),
         Positioned(
-          top: 0,
-          left: 2,
+          top: isPortrait ? 0 : 5.w,
+          left: 2.w,
           child: Builder(builder: (context) {
             if (widget.noBack) {
               return const SizedBox.shrink();
             }
-            return GestureDetector(
-              behavior: HitTestBehavior.translucent,
-              child: Container(
-                width: 40,
-                height: 40,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Color.fromRGBO(0, 0, 0, 0.1),
-                      offset: Offset(0, 0),
-                      spreadRadius: 5,
-                      blurRadius: 5,
-                    )
-                  ],
+            return Row(
+              children: [
+                GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  child: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Color.fromRGBO(0, 0, 0, 0.1),
+                          offset: Offset(0, 0),
+                          spreadRadius: 5,
+                          blurRadius: 5,
+                        )
+                      ],
+                    ),
+                    alignment: Alignment.center,
+                    child: const MyImage.asset(
+                      MyImagePaths.appNavBackWN,
+                      width: 18,
+                      height: 18,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                  onTap: () {
+                    if (widget.isBack) {
+                      context.pop();
+                    } else {
+                      controlManager.toggleFullscreen();
+                    }
+                  },
                 ),
-                alignment: Alignment.center,
-                child: const MyImage.asset(
-                  MyImagePaths.appNavBackWN,
-                  width: 18,
-                  height: 18,
-                  fit: BoxFit.contain,
-                ),
-              ),
-              onTap: () {
-                if (widget.isBack) {
-                  context.pop();
-                } else {
-                  controlManager.toggleFullscreen();
-                }
-              },
+                Text(isPortrait ? '' : (widget.info?.title ?? ''), style: MyTheme.white20medium),
+              ],
             );
           }),
         ),
         Positioned(
           bottom: 10,
+          left: 10,
+          child: Row(
+            children: [
+              ChinaTimeWidget(textStyle: MyTheme.white11),
+              const SizedBox(width: 5),
+              GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                child: controlManager.isMute ? const MyImage.asset(
+                  MyImagePaths.appIsMute,
+                  width: 25,
+                  height: 25,
+                  fit: BoxFit.contain) : const MyImage.asset(
+                    MyImagePaths.appMute,
+                    width: 25,
+                    height: 25,
+                    fit: BoxFit.contain,
+                  ),
+                onTap: () {
+                  if (controlManager.isMute) {
+                    controlManager.unmute();
+                  } else {
+                    controlManager.mute();
+                  }
+                  if (mounted) setState(() {});
+                },
+              ),
+            ],
+          ),
+        ),
+        Positioned(
+          bottom: 10,
           right: 10,
-          child: FlickFullScreenToggle(
-            enterFullScreenChild: const Icon(
-                Icons.fullscreen,
-                size: 25,
-                color: Colors.white),
-            exitFullScreenChild: const Icon(
-                Icons.fullscreen_exit,
-                size: 25,
-                color: Colors.white),
-            toggleFullscreen: () {
-              if (kIsWeb) {
-                html.VideoElement video = html
-                    .document
-                    .querySelector('video')
-                as html.VideoElement;
-                video.muted = false;
-                video.volume = 1;
-                video.setAttribute(
-                    'playsinline', 'true');
-                video.setAttribute(
-                    'autoplay', 'true');
-                if (html.document
-                    .fullscreenElement ==
-                    null) {
-                  video.enterFullscreen();
-                } else {
-                  html.document.exitFullscreen();
-                }
-              } else {
-                controlManager.toggleFullscreen();
-              }
-            },
+          child: Column(
+            children: [
+              // GestureDetector(
+              //   behavior: HitTestBehavior.translucent,
+              //   child: widget.info?.isFavorite == 1 ? const MyImage.asset(
+              //       MyImagePaths.appzanSlect,
+              //       width: 25,
+              //       height: 25,
+              //       fit: BoxFit.contain) : const MyImage.asset(
+              //     MyImagePaths.appZanNormal,
+              //     width: 25,
+              //     height: 25,
+              //     fit: BoxFit.contain,
+              //   ),
+              //   onTap: () {
+              //     if (widget.info?.isFavorite == 1) {
+              //       widget.info?.isFavorite == 0;
+              //     } else {
+              //       widget.info?.isFavorite == 1;
+              //     }
+              //     if (mounted) setState(() {});
+              //   },
+              // ),
+              // SizedBox(height: 35.w),
+              FlickFullScreenToggle(
+                enterFullScreenChild: const MyImage.asset(
+                  MyImagePaths.appFullScreen,
+                  width: 25,
+                  height: 25,
+                  fit: BoxFit.contain,
+                ),
+                exitFullScreenChild: const MyImage.asset(
+                  MyImagePaths.appFullScreen,
+                  width: 25,
+                  height: 25,
+                  fit: BoxFit.contain,
+                ),
+                toggleFullscreen: () {
+                  if (kIsWeb) {
+                    html.VideoElement video = html
+                        .document
+                        .querySelector('video')
+                    as html.VideoElement;
+                    video.muted = false;
+                    video.volume = 1;
+                    video.setAttribute(
+                        'playsinline', 'true');
+                    video.setAttribute(
+                        'autoplay', 'true');
+                    if (html.document
+                        .fullscreenElement ==
+                        null) {
+                      video.enterFullscreen();
+                    } else {
+                      html.document.exitFullscreen();
+                    }
+                  } else {
+                    controlManager.toggleFullscreen();
+                  }
+                },
+              ),
+            ],
           ),
         )
       ],
     );
   }
+
+//   Future zanVideoRes(int money) async {
+//     final monitorDomain = context.read<MonitorDomain>();
+//     final res = await monitorDomain.getMonitorLikeComment(id: widget.info.id ?? 0);
+//     if (res.isValid) {
+//
+//     } else {
+//       MyToast.showText(text: res.msg ?? '');
+//     }
+//   }
+// }
 
   Widget _conditionWidget(BuildContext context) {
     Widget dgt = Container();

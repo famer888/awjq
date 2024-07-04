@@ -129,5 +129,13 @@ class MyImagePaths {
   static const appHots = './assets/images/app_hots.png';
   static const appOffline = './assets/images/app_offline.png';
   static const appOnline = './assets/images/app_online.png';
-
+  static const appCommentWhite = './assets/images/app_comment_w.png';
+  static const appDaSan = './assets/images/app_ds.png';
+  static const appFullScreen = './assets/images/app_fullscreen.png';
+  static const appOffDanmu = './assets/images/app_offdm.png';
+  static const appOnDanmu = './assets/images/app_ondm.png';
+  static const appIsMute = './assets/images/app_ismute.png';
+  static const appMute = './assets/images/app_mute.png';
+  static const appZanNormal = './assets/images/app_zan_n.png';
+  static const appzanSlect = './assets/images/app_zan_s.png';
 }
