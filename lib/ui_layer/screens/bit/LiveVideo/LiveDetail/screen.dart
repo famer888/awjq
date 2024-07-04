@@ -3,6 +3,7 @@ import '../../../../../domain/model/live_model.dart';
 import '../../../../../domain/model/live_video_detail_model.dart';
 import '../../../../../domain/model/video_detail_model.dart';
 import '../../../../../domain/remote_domain/domains/live.dart';
+import '../../../common_widgets/video_player/live_mv_palyer.dart';
 import '../../../video_detail/screen.dart';
 import '../../../common_widgets/keep_alive_wrapper.dart';
 import '../../../common_widgets/screen_background.dart';
@@ -97,12 +98,27 @@ class _LiveVideoDetailScreenState extends State<LiveVideoDetailScreen> {
             error: (_, __) => NetworkErrorView(onTap: _initData),
             data: (data) => Column(
               children: [
-                VideoView(data: VideoData()),//todo：待处理
+                 _VideoView(data: data.live),
                 Expanded(child: _Body(id: widget.id, data: data)),
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _VideoView extends StatelessWidget {
+  const _VideoView({required this.data});
+
+  final LiveModel data;
+  @override
+  Widget build(BuildContext context) {
+    return AspectRatio(
+      aspectRatio: 16 / 9,
+      child: LiveMvPlayer(
+        info: data,
       ),
     );
   }

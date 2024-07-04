@@ -28,9 +28,9 @@ class LiveModel {
   final int? viewFct;
   final int? commentCt;
         int? favoriteFct;
-  final List<HlsModel>? hls;
-  final String? show;
-  final int? type;
+        List<HlsModel>? hls;
+        String? show;
+        int? type;
   final int? coins;
         int? isFavorite;
   final String? payTip;

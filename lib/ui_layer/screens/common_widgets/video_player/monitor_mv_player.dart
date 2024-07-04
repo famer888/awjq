@@ -24,6 +24,11 @@ import '../dialog/widgets/regular_dialog.dart';
 import '../my_image.dart';
 import 'utils/nvideourl_minxin.dart';
 
+//判断hls.length > 0 直接播放
+//hls.length = 0 则判断type值
+//type = 1 显示pay_tip 按钮跳转VIP购买
+//type = 2 显示pay_tip 按钮金币购买 金币数conis
+
 class MonitorMvPlayer extends StatefulWidget {
   const MonitorMvPlayer({
     super.key,
@@ -338,80 +343,81 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                     ),
                   ),
                 )
-                    : const FlickAutoHideChild(
-                  showIfVideoNotInitialized: false,
-                  child: FlickPlayToggle(
-                    replayChild: MyImage.asset(
-                      MyImagePaths.appVReplayN,
-                      width: 40,
-                      height: 40,
-                    ),
-                    playChild: MyImage.asset(
-                      MyImagePaths.appVPlayN,
-                      width: 40,
-                      height: 40,
-                    ),
-                    pauseChild: MyImage.asset(
-                      MyImagePaths.appVPauseN,
-                      width: 40,
-                      height: 40,
-                    ),
-                  ),
-                ),
+                    : Container() ///监控不需要暂停播放按钮
+                // const FlickAutoHideChild(
+                //   showIfVideoNotInitialized: false,
+                //   child: FlickPlayToggle(
+                //     replayChild: MyImage.asset(
+                //       MyImagePaths.appVReplayN,
+                //       width: 40,
+                //       height: 40,
+                //     ),
+                //     playChild: MyImage.asset(
+                //       MyImagePaths.appVPlayN,
+                //       width: 40,
+                //       height: 40,
+                //     ),
+                //     pauseChild: MyImage.asset(
+                //       MyImagePaths.appVPauseN,
+                //       width: 40,
+                //       height: 40,
+                //     ),
+                //   ),
+                // ),
               ),
             ),
           ),
         ),
-        FlickAutoHideChild(
-          child: Stack(
-            children: [
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom: 0,
-                child: IgnorePointer(
-                  child: Container(
-                    height: 55,
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        colors: [
-                          Color.fromRGBO(0, 0, 0, 0.0),
-                          Color.fromRGBO(0, 0, 0, 0.1),
-                          Color.fromRGBO(0, 0, 0, 0.3),
-                          Color.fromRGBO(0, 0, 0, 0.9),
-                        ],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-              Positioned(
-                right: controlManager.isFullscreen == false
-                    ? (rate > 1 ? 39 : 3)
-                    : (rate > 1 ? 50 : 3),
-                bottom: 55,
-                child: !_hideSpeedStu
-                    ? FlickAutoHideChild(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.black45,
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(5),
-                      child: Column(
-                        children: _buildSpeedListWidget(),
-                      ),
-                    ),
-                  ),
-                )
-                    : Container(),
-              ),
-            ],
-          ),
-        ),
+        // FlickAutoHideChild(
+        //   child: Stack(
+        //     children: [
+        //       Positioned(
+        //         left: 0,
+        //         right: 0,
+        //         bottom: 0,
+        //         child: IgnorePointer(
+        //           child: Container(
+        //             height: 55,
+        //             decoration: const BoxDecoration(
+        //               gradient: LinearGradient(
+        //                 colors: [
+        //                   Color.fromRGBO(0, 0, 0, 0.0),
+        //                   Color.fromRGBO(0, 0, 0, 0.1),
+        //                   Color.fromRGBO(0, 0, 0, 0.3),
+        //                   Color.fromRGBO(0, 0, 0, 0.9),
+        //                 ],
+        //                 begin: Alignment.topCenter,
+        //                 end: Alignment.bottomCenter,
+        //               ),
+        //             ),
+        //           ),
+        //         ),
+        //       ),
+        //       Positioned(
+        //         right: controlManager.isFullscreen == false
+        //             ? (rate > 1 ? 39 : 3)
+        //             : (rate > 1 ? 50 : 3),
+        //         bottom: 55,
+        //         child: !_hideSpeedStu
+        //             ? FlickAutoHideChild(
+        //           child: Container(
+        //             decoration: BoxDecoration(
+        //               color: Colors.black45,
+        //               borderRadius: BorderRadius.circular(5),
+        //             ),
+        //             child: Padding(
+        //               padding: const EdgeInsets.all(5),
+        //               child: Column(
+        //                 children: _buildSpeedListWidget(),
+        //               ),
+        //             ),
+        //           ),
+        //         )
+        //             : Container(),
+        //       ),
+        //     ],
+        //   ),
+        // ),
         Positioned(
           top: 0,
           left: 2,

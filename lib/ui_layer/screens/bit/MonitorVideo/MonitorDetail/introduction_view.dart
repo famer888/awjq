@@ -116,11 +116,11 @@ class _HeaderViewState extends State<_HeaderView> {
                         width: 4.w,
                       ),
                       Text(
-                        CommonUtils.renderFixedNumber(videoInfo.viewFct ?? 0),
+                        CommonUtils.renderEnFixedNumber(videoInfo.viewFct ?? 0),
                         style: MyTheme.whiteOpacity612w500,
                       ),
                       Text(
-                        'rqk'.tr(context: context),
+                        'cbf'.tr(context: context),
                         style: MyTheme.whiteOpacity612w500,
                       ),
                     ],
