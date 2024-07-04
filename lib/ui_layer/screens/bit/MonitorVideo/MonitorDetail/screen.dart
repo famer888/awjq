@@ -1,9 +1,12 @@
 import '../../../../../domain/async_value.dart';
 import '../../../../../domain/model/live_video_detail_model.dart';
+import '../../../../../domain/model/monitor_model.dart';
 import '../../../../../domain/model/monitor_video_detail_model.dart';
 import '../../../../../domain/model/video_detail_model.dart';
 import '../../../../../domain/remote_domain/domains/live.dart';
 import '../../../../../domain/remote_domain/domains/monitor.dart';
+import '../../../common_widgets/video_player/monitor_mv_player.dart';
+import '../../../common_widgets/video_player/shortv_mv_player.dart';
 import '../../../video_detail/screen.dart';
 import '../../../common_widgets/keep_alive_wrapper.dart';
 import '../../../common_widgets/screen_background.dart';
@@ -97,12 +100,27 @@ class _MonitorVideoDetailScreenState extends State<MonitorVideoDetailScreen> {
             error: (_, __) => NetworkErrorView(onTap: _initData),
             data: (data) => Column(
               children: [
-                VideoView(data: VideoData()),//todo：待处理
+                _VideoView(data: data.monitor),//todo：待处理
                 Expanded(child: _Body(id: widget.id, data: data)),
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _VideoView extends StatelessWidget {
+  const _VideoView({required this.data});
+
+  final MonitorModel data;
+  @override
+  Widget build(BuildContext context) {
+    return AspectRatio(
+      aspectRatio: 16 / 9,
+      child: MonitorMvPlayer(
+        info: data,
       ),
     );
   }

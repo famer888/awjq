@@ -7,12 +7,12 @@ class MarqueeWidget extends StatefulWidget {
 
   /// 注: 构造函数入参的默认值必须是常量。
   const MarqueeWidget({
-    Key? key,
+    super.key,
     this.pauseDuration = const Duration(milliseconds: 100),
     this.forwardDuration = const Duration(milliseconds: 3000),
     this.scrollSpeed = 30.0,
     required this.child,
-  }) : super(key: key);
+  });
 
   @override
   State createState() => _MarqueeWidgetState();
@@ -44,14 +44,17 @@ class _MarqueeWidgetState extends State<MarqueeWidget>
     return LayoutBuilder(
       builder: (BuildContext context, BoxConstraints constraints) {
         _boxWidth = constraints.maxWidth;
-        return SingleChildScrollView(
-          // 禁止手动滑动。
-          physics: const NeverScrollableScrollPhysics(),
-          controller: _controller,
-          scrollDirection: Axis.horizontal,
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: _boxWidth),
-            child: widget.child,
+        return ScrollConfiguration(
+          behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
+          child: SingleChildScrollView(
+            // 禁止手动滑动。
+            physics: const NeverScrollableScrollPhysics(),
+            controller: _controller,
+            scrollDirection: Axis.horizontal,
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: _boxWidth),
+              child: widget.child,
+            ),
           ),
         );
       },

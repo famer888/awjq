@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 import 'banner_model.dart';
 import 'live_model.dart';
@@ -29,9 +28,9 @@ class MonitorModel {
   final String? title;
   final String? cover;
         bool? online;//自定义字段：只有实时监控才会是在线状态
-  final String? hls;
+        String? hls;
   final String? show;
-  final int? type;
+        int? type;
   final int? coins;
   final String? intro;
         int? isFavorite;
@@ -61,6 +60,7 @@ class MonitorModel {
     id: json['id'],
     cover: json['cover'],
     title: json['title'],
+    hls: json['hls'],
     show: json['show'],
     type: json['type'],
     coins: json['coins'],
