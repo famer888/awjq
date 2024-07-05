@@ -62,7 +62,7 @@ class _MonitorMvPlayerState extends State<MonitorMvPlayer> with NVideoURLMinxin 
     VideoPlayerController? cr = await initController(source240: widget.info.hls ?? '', isLocal: widget.isLocal);
     flickManager = FlickManager(
         videoPlayerController: cr!,
-        autoPlay: !kIsWeb,
+        autoPlay: true,
         onVideoEnd: () {
           flickManager?.flickControlManager?.replay();
           if (mounted) setState(() {});
@@ -372,7 +372,8 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
           child: FlickAutoHideChild(
             child: Row(
               children: [
-                SizedBox(width: 105, child: ChinaTimeWidget(textStyle: MyTheme.white11)),
+                ChinaTimeWidget(textStyle: MyTheme.white11),
+                const SizedBox(width: 5),
                 GestureDetector(
                   behavior: HitTestBehavior.translucent,
                   child: controlManager.isMute ? const MyImage.asset(
@@ -440,25 +441,25 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                     fit: BoxFit.contain,
                   ),
                   toggleFullscreen: () {
-                    if (kIsWeb) {
-                      List<html.VideoElement> elements = html
-                          .document.querySelectorAll('video');
-                      if (elements.isEmpty) return;
-
-                      html.VideoElement video = elements.last;
-                      video.muted = false;
-                      video.volume = 1;
-                      video.setAttribute('playsinline', 'true');
-                      video.setAttribute('autoplay', 'true');
-                      if (html.document.fullscreenElement ==
-                          null) {
-                        video.enterFullscreen();
-                      } else {
-                        html.document.exitFullscreen();
-                      }
-                    } else {
+                    // if (kIsWeb) {
+                    //   List<html.VideoElement> elements = html
+                    //       .document.querySelectorAll('video');
+                    //   if (elements.isEmpty) return;
+                    //
+                    //   html.VideoElement video = elements.last;
+                    //   video.muted = false;
+                    //   video.volume = 1;
+                    //   video.setAttribute('playsinline', 'true');
+                    //   video.setAttribute('autoplay', 'true');
+                    //   if (html.document.fullscreenElement ==
+                    //       null) {
+                    //     video.enterFullscreen();
+                    //   } else {
+                    //     html.document.exitFullscreen();
+                    //   }
+                    // } else {
                       controlManager.toggleFullscreen();
-                    }
+                    // }
                   },
                 ),
               ],
