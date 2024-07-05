@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -21,6 +22,7 @@ import '../../../utils/my_toast.dart';
 import '../../image_paths.dart';
 import '../../theme.dart';
 import '../dialog/my_dialog.dart';
+import '../dialog/widgets/dansan_dialog.dart';
 import '../dialog/widgets/png_dialog.dart';
 import '../dialog/widgets/regular_dialog.dart';
 import '../my_image.dart';
@@ -298,18 +300,24 @@ class _SinkPortraitLandWidget extends StatefulWidget {
 
 class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
   final TextEditingController _textFieldController = TextEditingController();
-
   final FocusNode _focusNode = FocusNode();
+
+  final TextEditingController _dsTextFieldController = TextEditingController();
+  final FocusNode _dsFocusNode = FocusNode();
 
   void _hideKeyboard(BuildContext context) {
     _textFieldController.text = '';
     _focusNode.unfocus();
+    _dsTextFieldController.text = '';
+    _dsFocusNode.unfocus();
   }
 
   @override
   void dispose() {
     _textFieldController.dispose();
     _focusNode.dispose();
+    _dsTextFieldController.dispose();
+    _dsFocusNode.dispose();
     super.dispose();
   }
 
@@ -384,7 +392,8 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                 children: [
                   Container(
                     margin: const EdgeInsets.only(left: 7, top: 0.5),
-                    padding: const EdgeInsets.only(top: 2.5, left: 16, right: 6),
+                    padding:
+                        const EdgeInsets.only(top: 2.5, left: 16, right: 6),
                     height: 18,
                     decoration: const BoxDecoration(
                       color: MyTheme.blackColor25505,
@@ -518,22 +527,24 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
         ),
         Positioned.fill(
             child: FlickAutoHideChild(
-              child: FutureBuilder<bool>(
-                future: getIsbarrage(),
-                builder: (context, snapshot) {
-                  bool isBarrage = snapshot.data ?? false;
-                  return isBarrage ? PlayerBarrageWidget(
-                    dataList: [
-                      CommentItemModel(comment: '牛逼'),
-                      CommentItemModel(comment: '厉害'),
-                      CommentItemModel(comment: '超级你比'),
-                      CommentItemModel(comment: '好好好'),
-                    ],
-                    isOpen: true,
-                  ) : Container();
-                },
-              ),
-            ))
+          child: FutureBuilder<bool>(
+            future: getIsbarrage(),
+            builder: (context, snapshot) {
+              bool isBarrage = snapshot.data ?? false;
+              return isBarrage
+                  ? PlayerBarrageWidget(
+                      dataList: [
+                        CommentItemModel(comment: '牛逼'),
+                        CommentItemModel(comment: '厉害'),
+                        CommentItemModel(comment: '超级你比'),
+                        CommentItemModel(comment: '好好好'),
+                      ],
+                      isOpen: true,
+                    )
+                  : Container();
+            },
+          ),
+        ))
       ],
     );
   }
@@ -541,50 +552,100 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
   //打赏
   showDaSanDialog({bool goby = false}) {
     Member member = context.read<UserNotifier>().member;
-    bool isInsufficient = member.money < (widget.info?.coins ?? 0);
-
     MyDialog.showDialog(
         context: context,
-        child: RegularDialog(
-          title: tr('ts'),
-          cancelText: isInsufficient ? tr('qwcz') : tr('gmgk'),
-          //前往充值 - 立即购买
-          buttonText: tr('fxdv'),
-          //做任务得VIP
-          confirmOnTap: () {
-            const MineWelfareRoute(index: 1).push(context);
-          },
-          cancelOnTap: () {
-            // if (isInsufficient) {
-            //   const CoinRechargeRoute().push(context);
-            // } else {
-            //   byVideoRes(member.money - widget.info.coins!);
-            // }
-          },
-          content: DefaultTextStyle(
-            style: MyTheme.gray203_13,
-            child: Column(
-              children: [
-                Text(tr('gmspkwz'), style: MyTheme.gray203_13, maxLines: 3),
-                //金币购买本视频解锁精彩完整版！
-                SizedBox(height: 15.w),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text('${widget.info?.coins}${tr('jb')}', //金币
-                        style: MyTheme.blue80_13_M),
-                  ],
+        child: DanSanDialog(
+          title: tr('das'),
+          content: Column(
+            children: [
+              Text(tr('dxds'), style: MyTheme.gray203_16), //多谢金主爸爸的打赏哦～
+              SizedBox(height: 15.w),
+              //输入框
+              Container(
+                height: 46.w,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(23.w),
+                  border: Border.all(
+                    color: MyTheme.grayColor180, // 设置边框颜色
+                    width: 0.5, // 设置边框宽度
+                  ),
                 ),
-                SizedBox(height: 15.w),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("${tr('kyje')}：${member.money}${tr('jb')}", //可用金币
-                        style: MyTheme.gray203_13),
-                  ],
-                ),
-              ],
-            ),
+                child: Row(children: [
+                  SizedBox(width: 20.w),
+                  Expanded(
+                    child: TextField(
+                      keyboardType: TextInputType.number,
+                      inputFormatters: <TextInputFormatter>[
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
+                      style: const TextStyle(
+                          color: MyTheme.white08Color,
+                          fontSize: 16,
+                          overflow: TextOverflow.ellipsis,
+                          decoration: TextDecoration.none),
+                      controller: _dsTextFieldController,
+                      focusNode: _dsFocusNode,
+                      decoration: InputDecoration(
+                        isCollapsed: true,
+                        hintText: tr('srdsje'),
+                        hintStyle: const TextStyle(
+                            color: MyTheme.grayColor180,
+                            fontSize: 16,
+                            overflow: TextOverflow.ellipsis,
+                            decoration: TextDecoration.none),
+                        contentPadding: EdgeInsets.zero,
+                        // 确保内容填充足够
+                        border: InputBorder.none,
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      //立即打赏
+                      context.pop();
+                      var payMoney = int.parse(_dsTextFieldController.text) ?? 0;
+                      bool isSufficient = member.money > payMoney;
+                      if (isSufficient) {//足够余额打赏
+                        dasanOptional(payMoney);
+                      } else {
+                        MyToast.showText(text: tr('ybzcz'));
+                      }
+                    },
+                    child: Container(
+                        width: 95.w,
+                        height: 46.w,
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(23.w), // 右上角圆角
+                              bottomRight: Radius.circular(23.w), // 右下角圆角
+                            ),
+                            color: MyTheme.jellyCyanColor103224185),
+                        child:
+                            Text(tr('ljds'), style: MyTheme.white15semibold)),
+                  )
+                ]),
+              ),
+              SizedBox(height: 30.w),
+              Row(
+                children: [
+                  Text('${tr('dqye')}: ', style: MyTheme.gray203_13), //当前余额
+                  Text("${member.money}${tr('jb')}",
+                      style: MyTheme.orange247_13), //金币
+                  const Spacer(),
+                  InkWell(
+                    onTap: () {
+                      context.pop();
+                      const CoinRechargeRoute().push(context);
+                    },
+                    child: Text(
+                      '${tr('qwcz')} >',
+                      style: MyTheme.blue80_13_M_Line,
+                    ),
+                  ), //前往充值
+                ],
+              ),
+            ],
           ),
         ));
   }
@@ -597,6 +658,20 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
       return isBarrage;
     } catch (e) {
       return false; // 返回默认值
+    }
+  }
+
+  Future dasanOptional(int money) async {
+    MyToast.showLoading(text: tr('dasz'));
+    final userNotifier = context.read<UserNotifier>();
+    final liverDomain = context.read<LiveDomain>();
+    final res = await liverDomain.getLiveReward(id: widget.info?.id ?? 0, coins: money);
+    MyToast.closeAllLoading();
+    if (res.isValid) {
+      userNotifier.setMoney(money: userNotifier.member.money - money);
+      MyToast.showText(text: res.msg ?? '');
+    } else {
+      MyToast.showText(text: res.msg ?? '');
     }
   }
 
@@ -672,9 +747,11 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
             const SizedBox(width: 10),
             GestureDetector(
               behavior: HitTestBehavior.translucent,
-              child: isBarrage ? const MyImage.asset(MyImagePaths.appOnDanmu,
-                  width: 25, height: 25, fit: BoxFit.contain) : const MyImage.asset(MyImagePaths.appOffDanmu,
-                  width: 25, height: 25, fit: BoxFit.contain),
+              child: isBarrage
+                  ? const MyImage.asset(MyImagePaths.appOnDanmu,
+                      width: 25, height: 25, fit: BoxFit.contain)
+                  : const MyImage.asset(MyImagePaths.appOffDanmu,
+                      width: 25, height: 25, fit: BoxFit.contain),
               onTap: () {
                 //弹幕开关
                 final cacheDomain = context.read<CacheDomain>();
@@ -690,7 +767,6 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
             Text(tr('dmkg'), style: MyTheme.white12),
           ]);
         });
-
   }
 
   Widget _conditionWidget(BuildContext context) {

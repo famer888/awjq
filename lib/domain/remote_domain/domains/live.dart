@@ -56,4 +56,7 @@ abstract class LiveDomain {
 
   /// 直播点赞
   AsyncResult getLiveLikeComment({required int id});
+
+  /// 直播点赞
+  AsyncResult getLiveReward({required int id, required int coins});
 }

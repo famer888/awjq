@@ -133,6 +133,7 @@ class MyTheme {
   static const Color brownColor91_60_44 = Color.fromRGBO(118, 75, 51, 1);
   static const Color grayColor180 = Color.fromRGBO(180, 180, 180, 1);
   static const Color grayColor150 = Color.fromRGBO(150, 150, 150, 1);
+  static const Color orange24718713 = Color.fromRGBO(247, 187, 13, 1);
 
   static const Color goldColor234_202_147 = Color.fromRGBO(234, 202, 147, 1);
 
@@ -691,6 +692,18 @@ class MyTheme {
       overflow: TextOverflow.ellipsis,
       decoration: TextDecoration.none);
 
+  static final TextStyle gray203_16 = TextStyle(
+      color: const Color.fromRGBO(190, 189, 194, 1),
+      fontSize: 16.sp,
+      overflow: TextOverflow.ellipsis,
+      decoration: TextDecoration.none);
+
+  static final TextStyle orange247_13 = TextStyle(
+      color: orange24718713,
+      fontSize: 13.sp,
+      overflow: TextOverflow.ellipsis,
+      decoration: TextDecoration.none);
+
   static final TextStyle gray203_13_T = TextStyle(
       color: const Color.fromRGBO(203, 202, 200, 1),
       fontSize: 13.sp,
@@ -973,6 +986,13 @@ class MyTheme {
       overflow: TextOverflow.ellipsis,
       fontWeight: FontWeight.w500,
       decoration: TextDecoration.none);
+
+  static final TextStyle blue80_13_M_Line = TextStyle(
+      color: MyTheme.jellyCyanColor103224185,
+      fontSize: 13.sp,
+      decoration: TextDecoration.underline,
+      decorationColor: jellyCyanColor103224185,
+  );
 
   static final TextStyle blue96_13_M = TextStyle(
       color: MyTheme.jellyCyanColor103224185,
