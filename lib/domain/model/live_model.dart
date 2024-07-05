@@ -1,3 +1,4 @@
+import '../../ui_layer/screens/common_widgets/player_barrage_widget.dart';
 import 'banner_model.dart';
 
 class LiveWithBannersModel {
@@ -35,7 +36,6 @@ class LiveModel {
         int? isFavorite;
   final String? payTip;
   final String? intro;
-
   LiveModel({
     this.id,
     this.cover,
@@ -84,7 +84,6 @@ class LiveModel {
         'is_favorite': isFavorite,
         'pay_tip': payTip,
         'intro': intro,
-
   };
 }
 

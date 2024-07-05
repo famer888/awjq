@@ -305,11 +305,30 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
   final TextEditingController _dsTextFieldController = TextEditingController();
   final FocusNode _dsFocusNode = FocusNode();
 
+  bool isbarrage = false;
+
+  List<CommentItemModel> commentItems = []; //弹幕数据
+
+  final _barrageKey = GlobalKey<BarrageState>();
+
   void _hideKeyboard(BuildContext context) {
     _textFieldController.text = '';
     _focusNode.unfocus();
     _dsTextFieldController.text = '';
     _dsFocusNode.unfocus();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    initializeData();
+  }
+
+  Future<void> initializeData() async {
+    // 执行异步初始化逻辑
+    _getCommentData();
+    isbarrage = await getIsbarrage();
+    if (mounted) setState(() {});
   }
 
   @override
@@ -472,20 +491,21 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
           child: FlickAutoHideChild(
             child: Row(
               children: [
-                isPortrait ?
-                GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  child: const MyImage.asset(MyImagePaths.appDaSan,
-                      width: 60, height: 25, fit: BoxFit.contain),
-                  onTap: () {
-                    _hideKeyboard(context);
-                    if (widget.isBack) {
-                      showDaSanDialog();
-                    } else {
-                      //横屏时适配有问题，暂时不做处理
-                    }
-                  },
-                ) : Container(),
+                isPortrait
+                    ? GestureDetector(
+                        behavior: HitTestBehavior.translucent,
+                        child: const MyImage.asset(MyImagePaths.appDaSan,
+                            width: 60, height: 25, fit: BoxFit.contain),
+                        onTap: () {
+                          _hideKeyboard(context);
+                          if (widget.isBack) {
+                            showDaSanDialog();
+                          } else {
+                            //横屏时适配有问题，暂时不做处理
+                          }
+                        },
+                      )
+                    : Container(),
                 SizedBox(width: 10.w),
                 FlickFullScreenToggle(
                   enterFullScreenChild: const MyImage.asset(
@@ -528,23 +548,13 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
         ),
         Positioned.fill(
             child: FlickAutoHideChild(
-          child: FutureBuilder<bool>(
-            future: getIsbarrage(),
-            builder: (context, snapshot) {
-              bool isBarrage = snapshot.data ?? false;
-              return isBarrage
-                  ? PlayerBarrageWidget(
-                      dataList: [
-                        CommentItemModel(comment: '牛逼'),
-                        CommentItemModel(comment: '厉害'),
-                        CommentItemModel(comment: '超级你比'),
-                        CommentItemModel(comment: '好好好'),
-                      ],
-                      isOpen: true,
-                    )
-                  : Container();
-            },
-          ),
+          child: isbarrage && commentItems.isNotEmpty
+              ? PlayerBarrageWidget(
+                  globalKey: _barrageKey,
+                  dataList: commentItems,
+                  isOpen: true,
+                )
+              : Container(),
         ))
       ],
     );
@@ -604,9 +614,11 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                     onTap: () {
                       //立即打赏
                       context.pop();
-                      var payMoney = int.parse(_dsTextFieldController.text) ?? 0;
+                      var payMoney =
+                          int.parse(_dsTextFieldController.text) ?? 0;
                       bool isSufficient = member.money > payMoney;
-                      if (isSufficient) {//足够余额打赏
+                      if (isSufficient) {
+                        //足够余额打赏
                         dasanOptional(payMoney);
                       } else {
                         MyToast.showText(text: tr('ybzcz'));
@@ -651,6 +663,46 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
         ));
   }
 
+  //获取弹幕--使用直播评论数据
+  void _getCommentData() async {
+    final lviveDomain = context.read<LiveDomain>();
+    final result = await lviveDomain.getLiveListComment(
+        id: widget.info?.id ?? 0, page: 1, limit: 100);
+
+    if (result.msg case final msg? when !result.isValid) {
+      MyToast.showText(text: msg);
+    }
+
+    result.data?.forEach((m) {
+      commentItems.add(CommentItemModel(comment: m.content));
+    });
+
+    if (mounted) setState(() {});
+  }
+
+  //发送弹幕 -- 直接使用直播评论接口
+  Future<void> _sendComment({required String text}) async {
+    final lviveDomain = context.read<LiveDomain>();
+    if (text.trim().isEmpty) {
+      MyToast.showText(text: 'qsrdm'.tr(context: context));
+      return;
+    }
+    final result = await lviveDomain.getLiveComment(
+      text: text,
+      id: widget.info?.id ?? 0,
+    );
+    if (result.isValid) {
+      //弹幕发送成功后直接显示再屏幕上
+      final m = CommentItemModel(comment: text);
+      commentItems.insert(0, m);
+      //单独播放这条弹幕
+      _barrageKey.currentState?.addTask(m);
+      setState(() {});
+    } else {
+      MyToast.showText(text: result.msg ?? '');
+    }
+  }
+
   //获取弹幕开关状态
   Future<bool> getIsbarrage() async {
     final cacheDomain = context.read<CacheDomain>();
@@ -666,7 +718,8 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
     MyToast.showLoading(text: tr('dasz'));
     final userNotifier = context.read<UserNotifier>();
     final liverDomain = context.read<LiveDomain>();
-    final res = await liverDomain.getLiveReward(id: widget.info?.id ?? 0, coins: money);
+    final res =
+        await liverDomain.getLiveReward(id: widget.info?.id ?? 0, coins: money);
     MyToast.closeAllLoading();
     if (res.isValid) {
       userNotifier.setMoney(money: userNotifier.member.money - money);
@@ -678,108 +731,101 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
 
   //弹幕相关
   Widget _danMuWidget(BuildContext context) {
-    return FutureBuilder<bool>(
-        future: getIsbarrage(), // 获取弹幕开关状态的 Future
-        builder: (context, snapshot) {
-          bool isBarrage = snapshot.data ?? false;
-          return Row(children: [
+    return Row(children: [
+      Container(
+        height: 28,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          color: MyTheme.white02Color,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const MyImage.asset(MyImagePaths.appCommentWhite,
+                width: 25, height: 25),
             Container(
+              alignment: Alignment.center,
+              width: 60,
               height: 28,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(14),
-                color: MyTheme.white02Color,
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const MyImage.asset(MyImagePaths.appCommentWhite,
-                      width: 25, height: 25),
-                  Container(
-                    alignment: Alignment.center,
-                    width: 60,
-                    height: 28,
-                    child: TextField(
-                      style: const TextStyle(
-                          color: MyTheme.white08Color,
-                          fontSize: 12,
-                          overflow: TextOverflow.ellipsis,
-                          decoration: TextDecoration.none),
-                      controller: _textFieldController,
-                      focusNode: _focusNode,
-                      decoration: InputDecoration(
-                        isCollapsed: true,
-                        hintText: tr('ftdm'),
-                        hintStyle: const TextStyle(
-                            color: MyTheme.white08Color,
-                            fontSize: 12,
-                            overflow: TextOverflow.ellipsis,
-                            decoration: TextDecoration.none),
-                        contentPadding: EdgeInsets.zero,
-                        // 确保内容填充足够
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 0, right: 5),
-                    child: GestureDetector(
-                      behavior: HitTestBehavior.translucent,
-                      child: Container(
-                        alignment: Alignment.center,
-                        height: 18,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(9),
-                          gradient: MyTheme.gradient_90_114,
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: Text(tr('fas'), style: MyTheme.white08_12),
-                        ),
-                      ),
-                      onTap: () {
-                        //发送弹幕
-                        _hideKeyboard(context);
-                      },
-                    ),
-                  ),
-                ],
+              child: TextField(
+                style: const TextStyle(
+                    color: MyTheme.white08Color,
+                    fontSize: 12,
+                    overflow: TextOverflow.ellipsis,
+                    decoration: TextDecoration.none),
+                controller: _textFieldController,
+                focusNode: _focusNode,
+                decoration: InputDecoration(
+                  isCollapsed: true,
+                  hintText: tr('ftdm'),
+                  hintStyle: const TextStyle(
+                      color: MyTheme.white08Color,
+                      fontSize: 12,
+                      overflow: TextOverflow.ellipsis,
+                      decoration: TextDecoration.none),
+                  contentPadding: EdgeInsets.zero,
+                  // 确保内容填充足够
+                  border: InputBorder.none,
+                ),
               ),
             ),
-            const SizedBox(width: 10),
-            GestureDetector(
-              behavior: HitTestBehavior.translucent,
-              child: isBarrage
-                  ? const MyImage.asset(MyImagePaths.appOnDanmu,
-                      width: 25, height: 25, fit: BoxFit.contain)
-                  : const MyImage.asset(MyImagePaths.appOffDanmu,
-                      width: 25, height: 25, fit: BoxFit.contain),
-              onTap: () {
-                //弹幕开关
-                final cacheDomain = context.read<CacheDomain>();
-                if (isBarrage) {
-                  cacheDomain.upsertIsBarrage(false);
-                } else {
-                  cacheDomain.upsertIsBarrage(true);
-                }
-                if (mounted) setState(() {});
-              },
+            Padding(
+              padding: const EdgeInsets.only(left: 0, right: 5),
+              child: GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                child: Container(
+                  alignment: Alignment.center,
+                  height: 18,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(9),
+                    gradient: MyTheme.gradient_90_114,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Text(tr('fas'), style: MyTheme.white08_12),
+                  ),
+                ),
+                onTap: () {
+                  //发送弹幕
+                  _sendComment(text: _textFieldController.text);
+                  _hideKeyboard(context);
+                },
+              ),
             ),
-            const SizedBox(width: 3),
-            Text(tr('dmkg'), style: MyTheme.white12),
-          ]);
-        });
+          ],
+        ),
+      ),
+      const SizedBox(width: 10),
+      GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        child: isbarrage
+            ? const MyImage.asset(MyImagePaths.appOnDanmu,
+                width: 25, height: 25, fit: BoxFit.contain)
+            : const MyImage.asset(MyImagePaths.appOffDanmu,
+                width: 25, height: 25, fit: BoxFit.contain),
+        onTap: () {
+          //弹幕开关
+          final cacheDomain = context.read<CacheDomain>();
+          if (isbarrage) {
+            cacheDomain.upsertIsBarrage(false);
+            isbarrage = false;
+          } else {
+            cacheDomain.upsertIsBarrage(true);
+            isbarrage = true;
+          }
+          if (mounted) setState(() {});
+        },
+      ),
+      const SizedBox(width: 3),
+      Text(tr('dmkg'), style: MyTheme.white12),
+    ]);
   }
 
   Widget _conditionWidget(BuildContext context) {
     Widget dgt = Container();
     var vflag = false;
     Member user = context.read<UserNotifier>().member;
-    if (widget.info?.show != 'public') {
-      return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 15.w),
-        child: Center(child: Text(tr('yhyxx'), style: MyTheme.white255_14_M)),
-      );
-    } else if (user.vipLevel < 1 && widget.info?.type == 1) {
+    if (user.vipLevel < 1 && widget.info?.type == 1) {
       //需要VIP
       dgt = Text(tr('kvbw'),
           style: MyTheme.white255_14_M, maxLines: 2); //开通VIP或做任务获取VIP解锁精彩完整版！
@@ -910,6 +956,13 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.info?.show != 'public') {
+      return Padding(
+        padding: EdgeInsets.symmetric(horizontal: 15.w),
+        child: Center(child: Text(tr('yhyxx'), style: MyTheme.white255_14_M)),
+      );
+    }
+
     return (widget.info?.hls?.isNotEmpty ?? false)
         ? _noConditionWidget(context)
         : _conditionWidget(context);

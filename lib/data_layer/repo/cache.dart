@@ -48,7 +48,7 @@ class _CacheManager implements CacheDomain {
 
   @override
   Future<bool> readIsBarrage() async =>
-      await appBox.read(_isBarrage) ?? false;
+      await appBox.read(_isBarrage) ?? true;
   @override
   Future<void> upsertIsBarrage(bool isBarrage) async {
     return appBox.upsert(_isBarrage, isBarrage);

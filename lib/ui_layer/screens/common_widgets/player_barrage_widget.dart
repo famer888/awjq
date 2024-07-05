@@ -6,17 +6,17 @@ import 'package:flutter/material.dart';
 class PlayerBarrageWidget extends StatefulWidget {
   final List<CommentItemModel> dataList;
   final bool isOpen;
+  final GlobalKey<BarrageState> globalKey;
   const PlayerBarrageWidget(
-      {super.key, this.dataList = const [], this.isOpen = false});
+      {super.key, this.dataList = const [], this.isOpen = false, required this.globalKey});
 
   @override
   State createState() => _PlayerBarrageWidgetState();
 }
 
 class _PlayerBarrageWidgetState extends State<PlayerBarrageWidget> {
-  final _barrageKey = GlobalKey<BarrageState>();
   int mills = 500; // 执行间隔
-  int showCount = 2; //
+  int showCount = 2; //显示行数
   Timer? _timer;
 
   @override
@@ -36,20 +36,20 @@ class _PlayerBarrageWidgetState extends State<PlayerBarrageWidget> {
   void startBarrage() {
     if (_timer?.isActive ?? false) return;
     _timer?.cancel(); // cancle
-    var destList = widget.dataList;
+    var destList = widget.dataList.where((e) => (e.comment?.isNotEmpty ?? false)).toList();
     if (destList.isEmpty) return;
     _timer = Timer.periodic(Duration(milliseconds: mills), (timer) {
       if (destList.isEmpty) return timer.cancel();
-      _barrageKey.currentState?.addTask(destList.removeAt(0));
+      widget.globalKey.currentState?.addTask(destList.removeAt(0));
     });
   }
 
   @override
   Widget build(BuildContext context) {
     // return const SizedBox(width: double.infinity, height: 80);
-    var destList = widget.dataList;
+    var destList = widget.dataList.where((e) => (e.comment?.isNotEmpty ?? false)).toList();
     if (destList.isEmpty || !widget.isOpen) return const SizedBox();
-    Widget child = Barrage(key: _barrageKey, showCount: showCount);
+    Widget child = Barrage(key: widget.globalKey, showCount: showCount);
     return SizedBox(width: double.infinity, height: 80, child: child);
   }
 }
@@ -58,13 +58,12 @@ class _PlayerBarrageWidgetState extends State<PlayerBarrageWidget> {
 /// des: 弹幕平移
 ///
 class BarrageTransition extends StatefulWidget {
-  const BarrageTransition({
-    Key? key,
+  const BarrageTransition({super.key,
     required this.child,
     required this.duration,
     required this.onComplete,
     this.direction = TransitionDirection.rtl,
-  }) : super(key: key);
+  });
 
   final Widget child;
 
@@ -306,10 +305,6 @@ class BarrageState extends State<Barrage> {
 
   @override
   void initState() {
-    // 忘记1年前 这个是要干嘛的呢
-    // _timer = Timer.periodic(const Duration(milliseconds: 1000), (timer) {
-    //   _barrageList.removeWhere((f) => false);
-    // });
     super.initState();
     // 最大执行任务
     barTask = List.filled(widget.showCount * 2 - 1, false);
