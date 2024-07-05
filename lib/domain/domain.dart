@@ -30,6 +30,10 @@ abstract class CacheDomain
   /// 获取广告缓存
   Future<AdModel?> readAds();
 
+  Future<bool> readIsBarrage();
+
+  Future<void> upsertIsBarrage(bool isBarrage);
+
   /// 获取官网链结缓存
   Future<String?> readOfficeWeb();
 

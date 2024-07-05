@@ -12,6 +12,7 @@ class _CacheManager implements CacheDomain {
   final _fdsKey = 'fds_key';
   final _linesUrlKey = 'lines_url';
   final _githubKey = 'github_url';
+  final _isBarrage = 'isBarrage';
   final _officeWebKey = 'office_web';
   final _adsKey = 'ads';
   final _searchHistoryKey = 'search_history';
@@ -44,6 +45,14 @@ class _CacheManager implements CacheDomain {
   Future<String?> readGithubUrl() async =>
       (await appBox.read(_githubKey))?.toString();
   Future<void> upsertGithubUrl(String url) => appBox.upsert(_githubKey, url);
+
+  @override
+  Future<bool> readIsBarrage() async =>
+      await appBox.read(_isBarrage) ?? false;
+  @override
+  Future<void> upsertIsBarrage(bool isBarrage) async {
+    return appBox.upsert(_isBarrage, isBarrage);
+  }
 
   Future<List<String>?> readLinesUrl() async {
     if (await appBox.read(_linesUrlKey) case final data? when data.isNotEmpty) {

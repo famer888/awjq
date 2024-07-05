@@ -294,28 +294,30 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
             ),
           ),
         ),
-        // Positioned(
-        //   left: 0,
-        //   right: 0,
-        //   bottom: 0,
-        //   child: IgnorePointer(
-        //     child: Container(
-        //       height: 55,
-        //       decoration: const BoxDecoration(
-        //         gradient: LinearGradient(
-        //           colors: [
-        //             Color.fromRGBO(0, 0, 0, 0.0),
-        //             Color.fromRGBO(0, 0, 0, 0.1),
-        //             Color.fromRGBO(0, 0, 0, 0.3),
-        //             Color.fromRGBO(0, 0, 0, 0.9),
-        //           ],
-        //           begin: Alignment.topCenter,
-        //           end: Alignment.bottomCenter,
-        //         ),
-        //       ),
-        //     ),
-        //   ),
-        // ),
+        Positioned(
+          left: 0,
+          right: 0,
+          bottom: 0,
+          child: FlickAutoHideChild(
+            child: IgnorePointer(
+              child: Container(
+                height: 55,
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Color.fromRGBO(0, 0, 0, 0.0),
+                      Color.fromRGBO(0, 0, 0, 0.1),
+                      Color.fromRGBO(0, 0, 0, 0.3),
+                      Color.fromRGBO(0, 0, 0, 0.9),
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
         Positioned(
           top: isPortrait ? 0 : 5.w,
           left: 2.w,
@@ -323,141 +325,144 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
             if (widget.noBack) {
               return const SizedBox.shrink();
             }
-            return Row(
-              children: [
-                GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  child: Container(
-                    width: 40,
-                    height: 40,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Color.fromRGBO(0, 0, 0, 0.1),
-                          offset: Offset(0, 0),
-                          spreadRadius: 5,
-                          blurRadius: 5,
-                        )
-                      ],
+            return FlickAutoHideChild(
+              child: Row(
+                children: [
+                  GestureDetector(
+                    behavior: HitTestBehavior.translucent,
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: const BoxDecoration(
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Color.fromRGBO(0, 0, 0, 0.1),
+                            offset: Offset(0, 0),
+                            spreadRadius: 5,
+                            blurRadius: 5,
+                          )
+                        ],
+                      ),
+                      alignment: Alignment.center,
+                      child: const MyImage.asset(
+                        MyImagePaths.appNavBackWN,
+                        width: 18,
+                        height: 18,
+                        fit: BoxFit.contain,
+                      ),
                     ),
-                    alignment: Alignment.center,
-                    child: const MyImage.asset(
-                      MyImagePaths.appNavBackWN,
-                      width: 18,
-                      height: 18,
-                      fit: BoxFit.contain,
-                    ),
+                    onTap: () {
+                      if (widget.isBack) {
+                        context.pop();
+                      } else {
+                        controlManager.toggleFullscreen();
+                      }
+                    },
                   ),
-                  onTap: () {
-                    if (widget.isBack) {
-                      context.pop();
-                    } else {
-                      controlManager.toggleFullscreen();
-                    }
-                  },
-                ),
-                Text(isPortrait ? '' : (widget.info?.title ?? ''), style: MyTheme.white20medium),
-              ],
+                  Text(isPortrait ? '' : (widget.info?.title ?? ''), style: MyTheme.white20medium),
+                ],
+              ),
             );
           }),
         ),
         Positioned(
           bottom: 10,
           left: 10,
-          child: Row(
-            children: [
-              ChinaTimeWidget(textStyle: MyTheme.white11),
-              const SizedBox(width: 5),
-              GestureDetector(
-                behavior: HitTestBehavior.translucent,
-                child: controlManager.isMute ? const MyImage.asset(
-                  MyImagePaths.appIsMute,
-                  width: 25,
-                  height: 25,
-                  fit: BoxFit.contain) : const MyImage.asset(
-                    MyImagePaths.appMute,
+          child: FlickAutoHideChild(
+            child: Row(
+              children: [
+                SizedBox(width: 110, child: ChinaTimeWidget(textStyle: MyTheme.white11)),
+                GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  child: controlManager.isMute ? const MyImage.asset(
+                    MyImagePaths.appIsMute,
                     width: 25,
                     height: 25,
-                    fit: BoxFit.contain,
-                  ),
-                onTap: () {
-                  if (controlManager.isMute) {
-                    controlManager.unmute();
-                  } else {
-                    controlManager.mute();
-                  }
-                  if (mounted) setState(() {});
-                },
-              ),
-            ],
+                    fit: BoxFit.contain) : const MyImage.asset(
+                      MyImagePaths.appMute,
+                      width: 25,
+                      height: 25,
+                      fit: BoxFit.contain,
+                    ),
+                  onTap: () {
+                    if (controlManager.isMute) {
+                      controlManager.unmute();
+                    } else {
+                      controlManager.mute();
+                    }
+                    if (mounted) setState(() {});
+                  },
+                ),
+              ],
+            ),
           ),
         ),
         Positioned(
           bottom: 10,
           right: 10,
-          child: Column(
-            children: [
-              // GestureDetector(
-              //   behavior: HitTestBehavior.translucent,
-              //   child: widget.info?.isFavorite == 1 ? const MyImage.asset(
-              //       MyImagePaths.appzanSlect,
-              //       width: 25,
-              //       height: 25,
-              //       fit: BoxFit.contain) : const MyImage.asset(
-              //     MyImagePaths.appZanNormal,
-              //     width: 25,
-              //     height: 25,
-              //     fit: BoxFit.contain,
-              //   ),
-              //   onTap: () {
-              //     if (widget.info?.isFavorite == 1) {
-              //       widget.info?.isFavorite == 0;
-              //     } else {
-              //       widget.info?.isFavorite == 1;
-              //     }
-              //     if (mounted) setState(() {});
-              //   },
-              // ),
-              // SizedBox(height: 35.w),
-              FlickFullScreenToggle(
-                enterFullScreenChild: const MyImage.asset(
-                  MyImagePaths.appFullScreen,
-                  width: 25,
-                  height: 25,
-                  fit: BoxFit.contain,
-                ),
-                exitFullScreenChild: const MyImage.asset(
-                  MyImagePaths.appFullScreen,
-                  width: 25,
-                  height: 25,
-                  fit: BoxFit.contain,
-                ),
-                toggleFullscreen: () {
-                  if (kIsWeb) {
-                    html.VideoElement video = html
-                        .document
-                        .querySelector('video')
-                    as html.VideoElement;
-                    video.muted = false;
-                    video.volume = 1;
-                    video.setAttribute(
-                        'playsinline', 'true');
-                    video.setAttribute(
-                        'autoplay', 'true');
-                    if (html.document
-                        .fullscreenElement ==
-                        null) {
-                      video.enterFullscreen();
+          child: FlickAutoHideChild(
+            child: Column(
+              children: [
+                // GestureDetector(
+                //   behavior: HitTestBehavior.translucent,
+                //   child: widget.info?.isFavorite == 1 ? const MyImage.asset(
+                //       MyImagePaths.appzanSlect,
+                //       width: 25,
+                //       height: 25,
+                //       fit: BoxFit.contain) : const MyImage.asset(
+                //     MyImagePaths.appZanNormal,
+                //     width: 25,
+                //     height: 25,
+                //     fit: BoxFit.contain,
+                //   ),
+                //   onTap: () {
+                //     if (widget.info?.isFavorite == 1) {
+                //       widget.info?.isFavorite == 0;
+                //     } else {
+                //       widget.info?.isFavorite == 1;
+                //     }
+                //     if (mounted) setState(() {});
+                //   },
+                // ),
+                // SizedBox(height: 35.w),
+                FlickFullScreenToggle(
+                  enterFullScreenChild: const MyImage.asset(
+                    MyImagePaths.appFullScreen,
+                    width: 25,
+                    height: 25,
+                    fit: BoxFit.contain,
+                  ),
+                  exitFullScreenChild: const MyImage.asset(
+                    MyImagePaths.appFullScreen,
+                    width: 25,
+                    height: 25,
+                    fit: BoxFit.contain,
+                  ),
+                  toggleFullscreen: () {
+                    if (kIsWeb) {
+                      List<html.VideoElement> elements = html
+                          .document.querySelectorAll('video');
+                      if (elements.isEmpty) return;
+
+                      html.VideoElement video = elements.last;
+                      video.muted = false;
+                      video.volume = 1;
+                      video.setAttribute('playsinline', 'true');
+                      video.setAttribute('autoplay', 'true');
+                      if (html.document.fullscreenElement ==
+                          null) {
+                        video.enterFullscreen();
+                      } else {
+                        html.document.exitFullscreen();
+                      }
                     } else {
-                      html.document.exitFullscreen();
+                      controlManager.toggleFullscreen();
                     }
-                  } else {
-                    controlManager.toggleFullscreen();
-                  }
-                },
-              ),
-            ],
+                  },
+                ),
+              ],
+            ),
           ),
         )
       ],
@@ -546,8 +551,8 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
           ),
           child: Column(
             children: [
-              Text(widget.info?.payTip ?? '', style: MyTheme.white255_14_M),
-              const SizedBox(height: 10),
+              // Text(widget.info?.payTip ?? '', style: MyTheme.white255_14_M),
+              const SizedBox(height: 15),
               dgt,
             ],
           ),
