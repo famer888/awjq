@@ -372,7 +372,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
           child: FlickAutoHideChild(
             child: Row(
               children: [
-                SizedBox(width: 110, child: ChinaTimeWidget(textStyle: MyTheme.white11)),
+                SizedBox(width: 105, child: ChinaTimeWidget(textStyle: MyTheme.white11)),
                 GestureDetector(
                   behavior: HitTestBehavior.translucent,
                   child: controlManager.isMute ? const MyImage.asset(

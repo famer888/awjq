@@ -310,7 +310,7 @@ abstract class _BaseAppRepo implements AppDomain {
         _apiDio.options.headers = headers;
         break;
       }
-      errorLines.add({'url': line});
+      errorLines.add({'url': line, 'code': '0'});
     }
 
     /// use backup line
@@ -318,6 +318,7 @@ abstract class _BaseAppRepo implements AppDomain {
 
     if (targetLine != null) {
       _apiDio.options.baseUrl = targetLine;
+      _reportSucessLine([{'url': targetLine, 'code': '1'}]);
       if (errorLines.isNotEmpty) {
         _reportErrorLine(errorLines);
       }
@@ -379,7 +380,11 @@ abstract class _BaseAppRepo implements AppDomain {
 
   /// 回报错误线路
   Future<void> _reportErrorLine(List<Map> lines) =>
-      _apiDio.post('/api/home/domainCheckReport', data: {'list': lines});
+      _apiDio.post('/api/home/domainCheckReport2', data: {'list': lines});
+
+  /// 回报成功线路
+  Future<void> _reportSucessLine(List<Map> lines) =>
+      _apiDio.post('/api/home/domainCheckReport2', data: {'list': lines});
 
   @override
   AsyncJson uploadImage({

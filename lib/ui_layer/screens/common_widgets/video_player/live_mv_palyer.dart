@@ -437,6 +437,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                       ),
                     ),
                     onTap: () {
+                      _hideKeyboard(context);
                       if (widget.isBack) {
                         context.pop();
                       } else {
@@ -467,6 +468,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                   child: const MyImage.asset(MyImagePaths.appDaSan,
                       width: 60, height: 25, fit: BoxFit.contain),
                   onTap: () {
+                    _hideKeyboard(context);
                     if (widget.isBack) {
                       showDaSanDialog();
                     } else {
@@ -489,6 +491,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                     fit: BoxFit.contain,
                   ),
                   toggleFullscreen: () {
+                    _hideKeyboard(context);
                     if (kIsWeb) {
                       List<html.VideoElement> elements =
                           html.document.querySelectorAll('video');

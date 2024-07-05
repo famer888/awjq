@@ -98,7 +98,7 @@ class _LiveVideoDetailScreenState extends State<LiveVideoDetailScreen> {
             error: (_, __) => NetworkErrorView(onTap: _initData),
             data: (data) => Column(
               children: [
-                 _VideoView(data: data.live),
+                _VideoView(data: data.live),
                 Expanded(child: _Body(id: widget.id, data: data)),
               ],
             ),
