@@ -472,6 +472,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
           child: FlickAutoHideChild(
             child: Row(
               children: [
+                isPortrait ?
                 GestureDetector(
                   behavior: HitTestBehavior.translucent,
                   child: const MyImage.asset(MyImagePaths.appDaSan,
@@ -481,10 +482,10 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                     if (widget.isBack) {
                       showDaSanDialog();
                     } else {
-                      MyToast.showText(text: '回详情页操作');
+                      //横屏时适配有问题，暂时不做处理
                     }
                   },
-                ),
+                ) : Container(),
                 SizedBox(width: 10.w),
                 FlickFullScreenToggle(
                   enterFullScreenChild: const MyImage.asset(
