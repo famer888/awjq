@@ -441,25 +441,25 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                     fit: BoxFit.contain,
                   ),
                   toggleFullscreen: () {
-                    // if (kIsWeb) {
-                    //   List<html.VideoElement> elements = html
-                    //       .document.querySelectorAll('video');
-                    //   if (elements.isEmpty) return;
-                    //
-                    //   html.VideoElement video = elements.last;
-                    //   video.muted = false;
-                    //   video.volume = 1;
-                    //   video.setAttribute('playsinline', 'true');
-                    //   video.setAttribute('autoplay', 'true');
-                    //   if (html.document.fullscreenElement ==
-                    //       null) {
-                    //     video.enterFullscreen();
-                    //   } else {
-                    //     html.document.exitFullscreen();
-                    //   }
-                    // } else {
+                    if (kIsWeb) {
+                      List<html.VideoElement> elements = html
+                          .document.querySelectorAll('video');
+                      if (elements.isEmpty) return;
+
+                      html.VideoElement video = elements.last;
+                      video.muted = false;
+                      video.volume = 1;
+                      video.setAttribute('playsinline', 'true');
+                      video.setAttribute('autoplay', 'true');
+                      if (html.document.fullscreenElement ==
+                          null) {
+                        video.enterFullscreen();
+                      } else {
+                        html.document.exitFullscreen();
+                      }
+                    } else {
                       controlManager.toggleFullscreen();
-                    // }
+                    }
                   },
                 ),
               ],

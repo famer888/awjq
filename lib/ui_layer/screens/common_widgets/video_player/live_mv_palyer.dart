@@ -94,7 +94,7 @@ class _LiveMvPlayerState extends State<LiveMvPlayer> with NVideoURLMinxin {
         await initController(source240: playerStr, isLocal: widget.isLocal);
     flickManager = FlickManager(
         videoPlayerController: cr!,
-        autoPlay: !kIsWeb,
+        autoPlay: true,
         onVideoEnd: () {
           flickManager?.flickControlManager?.replay();
           if (mounted) setState(() {});
