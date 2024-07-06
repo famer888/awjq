@@ -10,9 +10,11 @@ import 'package:provider/provider.dart';
 import '../../../domain/api_validator.dart';
 import '../../../domain/enum.dart';
 import '../../../domain/model/media_model.dart';
+import '../../../domain/model/member_model.dart';
 import '../../../domain/model/video_detail_model.dart';
 import '../../../domain/remote_domain/domains/community.dart';
 import '../../../domain/type_def.dart';
+import '../../notifiers/user_notifier.dart';
 import '../../utils/common_utils.dart';
 import '../../utils/my_toast.dart';
 import '../common_widgets/my_image.dart';
@@ -205,6 +207,7 @@ class _ShortVPlayerState extends State<ShortVPlayer> {
   @override
   Widget build(BuildContext context) {
     final data = widget.data;
+    Member member = context.read<UserNotifier>().member;
     return data.mediaUrl.isEmpty && (data.unlockCoins ?? 0) > 0
         ? Stack(
             children: [

@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
-import '../../common_widgets/feed/card/live_video_card.dart';
-import '../../common_widgets/feed/card/monitor_card.dart';
+import '../../common_widgets/Live/live_video_card.dart';
+import '../../common_widgets/Monitor/monitor_card.dart';
 import '../../../../domain/domain.dart';
 import '../../../../domain/model/feed/feed_model.dart';
 import '../../../../domain/model/live_model.dart';

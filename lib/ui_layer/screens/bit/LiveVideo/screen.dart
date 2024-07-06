@@ -2,7 +2,7 @@ import '../../../../domain/model/banner_model.dart';
 import '../../../../domain/model/bit_nav_model.dart';
 import '../../../../domain/model/live_model.dart';
 import '../../../../domain/remote_domain/domains/live.dart';
-import '../../common_widgets/feed/card/live_video_card.dart';
+import '../../common_widgets/Live/live_video_card.dart';
 import '../../common_widgets/feed/feed_card.dart';
 import '../../common_widgets/general_banner.dart';
 import '../../common_widgets/marquee_widget.dart';

@@ -714,6 +714,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
     }
   }
 
+  //打赏操作
   Future dasanOptional(int money) async {
     MyToast.showLoading(text: tr('dasz'));
     final userNotifier = context.read<UserNotifier>();

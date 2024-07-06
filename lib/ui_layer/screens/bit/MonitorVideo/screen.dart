@@ -3,7 +3,7 @@ import '../../../../domain/model/bit_nav_model.dart';
 import '../../../../domain/model/live_model.dart';
 import '../../../../domain/model/monitor_model.dart';
 import '../../../../domain/remote_domain/domains/monitor.dart';
-import '../../common_widgets/feed/card/monitor_card.dart';
+import '../../common_widgets/Monitor/monitor_card.dart';
 import '../../common_widgets/feed/feed_card.dart';
 import '../../common_widgets/general_banner.dart';
 import '../../common_widgets/marquee_widget.dart';

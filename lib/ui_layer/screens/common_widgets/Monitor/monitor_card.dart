@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../../domain/model/monitor_model.dart';
-import '../../../../router/routes.dart';
-import '../../../../utils/common_utils.dart';
-import '../../../image_paths.dart';
-import '../../../theme.dart';
-import '../../my_image.dart';
+import '../../../../domain/model/monitor_model.dart';
+import '../../../router/routes.dart';
+import '../../../utils/common_utils.dart';
+import '../../image_paths.dart';
+import '../../theme.dart';
+import '../my_image.dart';
 
 class MonitorCard extends StatelessWidget {
   const MonitorCard({super.key, required this.data});

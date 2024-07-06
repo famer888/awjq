@@ -141,8 +141,8 @@ class _CommunityScreenState extends State<CommunityScreen> {
           behavior: HitTestBehavior.translucent,
           child: MyImage.asset(
             MyImagePaths.appIssueIcon,
-            width: 50.w,
-            height: 50.w,
+            width: 60.w,
+            height: 60.w,
           ),
         ),
       ),

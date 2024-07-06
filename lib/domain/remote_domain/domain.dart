@@ -8,7 +8,9 @@ import 'domains/community.dart';
 import 'domains/dynamic.dart';
 import 'domains/element.dart';
 import 'domains/home.dart';
+import 'domains/live.dart';
 import 'domains/message.dart';
+import 'domains/monitor.dart';
 import 'domains/mv.dart';
 import 'domains/order.dart';
 import 'domains/privilege.dart';
@@ -35,7 +37,9 @@ abstract class RemoteDomain
         SearchDomain,
         MvDomain,
         MessageDomain,
-        PrivilegeDomain {
+        PrivilegeDomain,
+        LiveDomain,
+        MonitorDomain {
   Stream<MyTokenStatus?> get tokenStatusStream;
   Future<bool> initLine();
 
