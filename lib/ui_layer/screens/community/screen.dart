@@ -201,12 +201,12 @@ class _BodyState extends State<_Body> {
             return Stack(
               fit: StackFit.expand,
               children: [
-                CommunityContentView(id: e.id),
+                CommunityContentView(id: e.id, isFish: widget.isFish),
                 const _BlurView(),
               ],
             );
           }
-          return CommunityContentView(id: e.id);
+          return CommunityContentView(id: e.id, isFish: widget.isFish);
         }).toList(),
       ),
       error: (_, __) => NetworkErrorView(onTap: _init),

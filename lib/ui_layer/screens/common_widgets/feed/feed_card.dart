@@ -9,6 +9,8 @@ class FeedCard extends StatelessWidget {
   static const aspectRatio = 163 / 158;
   static const videoRatio = 170 / 94;
 
+  static const fishRatio = 170 / 295;
+
   final FeedModel feed;
   @override
   Widget build(BuildContext context) {

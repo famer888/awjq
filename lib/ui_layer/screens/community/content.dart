@@ -11,6 +11,8 @@ import '../../../domain/model/topic_model.dart';
 import '../../notifiers/user_notifier.dart';
 import '../../router/routes.dart';
 import '../../utils/my_toast.dart';
+import '../common_widgets/Fish/fish_card.dart';
+import '../common_widgets/feed/feed_card.dart';
 import '../common_widgets/my_image.dart';
 import '../common_widgets/my_tab_bar.dart';
 import '../../notifiers/home_config_notifier.dart';
@@ -20,8 +22,11 @@ import '../common_widgets/post/card/card.dart';
 import '../theme.dart';
 
 class CommunityContentView extends StatefulWidget {
-  const CommunityContentView({super.key, required this.id});
+  const CommunityContentView({super.key, required this.id, required this.isFish});
   final int id;
+
+  final bool isFish;
+
   @override
   State<CommunityContentView> createState() => _CommunityContentViewState();
 }
@@ -115,7 +120,16 @@ class _CommunityContentViewState extends State<CommunityContentView> {
                     isInit ? [for (final title in _titles) title.title] : [],
                 views: [
                   for (final NavigatorModel nav in _titles)
-                    MyListView.list(
+                    widget.isFish ? MyListView.grid(
+                      childAspectRatio: FeedCard.fishRatio,
+                      crossAxisSpacing: 8.w,
+                      padding: EdgeInsets.symmetric(vertical: MyTheme.pagePadding),
+                      itemBuilder: (context, item, index) => FishCard(data: item),
+                      onFetchingMore: (currentPage, pageSize) => _getData(
+                          page: currentPage,
+                          pageSize: pageSize,
+                          sort: nav.type),
+                    ) : MyListView.list(
                       contentPadding: 15.w,
                       padding:
                           EdgeInsets.symmetric(vertical: MyTheme.pagePadding),
