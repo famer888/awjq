@@ -103,17 +103,7 @@ class _CommunityContentViewState extends State<CommunityContentView> {
       ],
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
-        child: widget.id == 100
-            ? MyListView.list(
-                contentPadding: 15.w,
-                padding: EdgeInsets.symmetric(vertical: MyTheme.pagePadding),
-                itemBuilder: (context, item, index) => PostCard.community(
-                  data: item,
-                ),
-                onFetchingMore: (currentPage, pageSize) =>
-                    _getData(page: currentPage, pageSize: pageSize, sort: ''),
-              )
-            : TabBarWithView.fillColor(
+        child: TabBarWithView.fillColor(
                 tabBarPadding: EdgeInsets.symmetric(vertical: 6.w),
                 tabBarHeight: 32.w,
                 titles:

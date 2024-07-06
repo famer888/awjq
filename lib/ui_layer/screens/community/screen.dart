@@ -181,9 +181,6 @@ class _BodyState extends State<_Body> {
 
     setState(() {
       if (result.data case final data?) {
-        if (widget.isFish && _config.wdaiStr.isNotEmpty) {
-          data.add(CommunityNavModel(id: 100, title: _config.wdaiStr, mask: 0));
-        }
         _asyncValue = AsyncData(data);
       } else {
         _asyncValue = const AsyncError();
