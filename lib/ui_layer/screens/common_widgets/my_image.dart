@@ -160,6 +160,9 @@ class MyImage extends StatelessWidget {
             fadeOutDuration: const Duration(milliseconds: 300),
             fadeInDuration: const Duration(milliseconds: 500),
             placeholder: kTransparentImage,
+            imageErrorBuilder: (context, error, stackTrace) {
+              return Container();//todo: 图片请求出错时可在此设置异常图片显示
+            },
           );
           if (placeHolder == null) {
             return img;
@@ -192,10 +195,14 @@ class MyImage extends StatelessWidget {
     }
 
     if (borderRadius case final radius? when radius > 0) {
-      imageWidget = ClipRRect(
-        clipBehavior: Clip.hardEdge,
-        borderRadius: BorderRadius.circular(radius),
-        child: imageWidget,
+      imageWidget = SizedBox(
+        width: width,
+        height: height,
+        child: ClipRRect(
+          clipBehavior: Clip.hardEdge,
+          borderRadius: BorderRadius.circular(radius),
+          child: imageWidget,
+        ),
       );
     }
 

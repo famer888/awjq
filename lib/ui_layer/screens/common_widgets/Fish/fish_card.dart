@@ -8,7 +8,6 @@ import '../../../utils/common_utils.dart';
 import '../../theme.dart';
 import '../my_image.dart';
 
-
 class FishCard extends StatelessWidget {
   const FishCard({super.key, required this.data});
   final PostModel data;
@@ -45,30 +44,51 @@ class FishCard extends StatelessWidget {
                       borderRadius: 4,
                       backgroundColor: MyTheme.imageBgColor,
                     ),
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 8.w),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    (data.unlockNum ?? 0) > 0 ?
+                    Positioned(
+                        top: 11.w,
+                        left: 0.w,
+                        right: 11.w,
+                        child: Stack(
                           children: [
-                            Text(
-                              '${data.unlockNum}+人解锁',
-                              style: MyTheme.orange247_13,
+                            Container(
+                              padding: EdgeInsets.only(left: 5.w, right: 10.w),
+                              height: 22.w,
+                              decoration: BoxDecoration(
+                                color: MyTheme.blackColor25505,
+                                borderRadius: BorderRadius.only(
+                                    bottomRight: Radius.circular(11.w),
+                                    topRight: Radius.circular(11.w)),
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.only(top: 2.w),
+                                child: Text(
+                                  (data.unlockNum ?? 0) < 1000 ? '${data.unlockNum}人解锁' : '1000+人解锁',
+                                  style: MyTheme.orange247_13,
+                                ),
+                              ),
                             ),
                           ],
-                        ),
-                      ),
-                    ),
+                        )) : Container(),
                   ],
                 ),
               ),
-              SizedBox(height: 4.w),
+              SizedBox(height: 7.w),
               Text(
-                data.title,
-                style: MyTheme.white244_14,
-                maxLines: 2,
-              ),
+                data.title, style: MyTheme.white244_15_M, maxLines: 1),
+              SizedBox(height: 7.w),
+              Row(
+                children: [
+                  MyImage.network(
+                      data.user?.thumb ?? '',
+                    fit: BoxFit.cover,
+                    borderRadius: 12.5.w,
+                    width: 25.w, height: 25.w),
+                  SizedBox(width: 5.w),
+                  Expanded(child: Text(
+                      data.user?.nickname ?? '', style: MyTheme.white06_12, maxLines: 1))
+                ],
+              )
             ],
           ),
         ],
