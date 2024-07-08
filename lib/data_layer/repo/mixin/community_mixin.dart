@@ -27,9 +27,10 @@ mixin _Community on _BaseAppRepo implements CommunityDomain {
     required String sort,
     required int page,
     required int limit,
+    required String type,
   }) =>
       _communityService
-          .communitySortList(id: id, sort: sort, page: page, limit: limit)
+          .communitySortList(id: id, sort: sort, page: page, limit: limit, type: type)
           .deserializeJsonBy(CommunityWithBannerModel.fromJson)
           .guard;
 

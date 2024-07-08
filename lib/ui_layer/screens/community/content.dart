@@ -59,6 +59,7 @@ class _CommunityContentViewState extends State<CommunityContentView> {
             sort: sort,
             page: page,
             limit: pageSize,
+            type: widget.isFish ? 'fish' : 'forum'
           );
 
     if (!isInit) {

@@ -29,6 +29,7 @@ abstract class CommunityDomain {
     required String sort,
     required int page,
     required int limit,
+    required String type,
   });
 
   /// 社区列表排序

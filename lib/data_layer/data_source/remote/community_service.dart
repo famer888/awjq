@@ -25,13 +25,14 @@ class CommunityService extends BaseService {
     required String sort,
     required int page,
     required int limit,
+    required String type,
   }) =>
       post('/construct', data: {
         'id': id,
         'sort': sort,
         'page': page,
         'limit': limit,
-        'type': '',
+        'type': type,
       });
 
   /// 社区排序列表
