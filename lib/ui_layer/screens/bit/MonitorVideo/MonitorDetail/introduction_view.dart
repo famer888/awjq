@@ -1,11 +1,10 @@
 
 import '../../../../../domain/model/monitor_model.dart';
 import '../../../../../domain/model/monitor_video_detail_model.dart';
-import '../../../../../domain/remote_domain/domains/live.dart';
 import '../../../../../domain/remote_domain/domains/monitor.dart';
+import '../../../../const.dart';
 import '../../../../router/routes.dart';
 import '../../../common_widgets/Monitor/monitor_card.dart';
-import '../../../common_widgets/feed/feed_card.dart';
 import '../../../common_widgets/general_banner.dart';
 import '../../../common_widgets/my_image.dart';
 import '../../../common_widgets/my_list_view.dart';
@@ -57,7 +56,7 @@ class _MonitorVideoDetailIntroductionViewState extends State<MonitorVideoDetailI
   Widget build(BuildContext context) {
     final videoInfo = widget.data;
     return MyListView.grid(
-      childAspectRatio: FeedCard.videoRatio,
+      childAspectRatio: UILayerConst.videoRatio,
       crossAxisSpacing: 8.w,
       header: _HeaderView(data: videoInfo),
       padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding ,vertical: MyTheme.pagePadding),

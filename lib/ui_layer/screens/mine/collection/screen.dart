@@ -11,9 +11,9 @@ import '../../../../domain/model/post_model.dart';
 import '../../../../domain/remote_domain/domains/live.dart';
 import '../../../../domain/remote_domain/domains/monitor.dart';
 import '../../../../domain/result.dart';
+import '../../../const.dart';
 import '../../common_widgets/Live/live_video_card.dart';
 import '../../common_widgets/Monitor/monitor_card.dart';
-import '../../common_widgets/feed/feed_card.dart';
 import '../../common_widgets/keep_alive_wrapper.dart';
 import '../../common_widgets/my_app_bar.dart';
 import '../../common_widgets/my_list_view.dart';
@@ -200,7 +200,7 @@ class _LiveViewState extends State<_LiveView> {
   @override
   Widget build(BuildContext context) {
     return MyListView.grid(
-      childAspectRatio: FeedCard.videoRatio,
+      childAspectRatio: UILayerConst.videoRatio,
       contentPadding: 15.w,
       padding: EdgeInsets.symmetric(vertical: MyTheme.pagePadding, horizontal: MyTheme.pagePadding),
       itemBuilder: (context, item, index) => LiveVideoCard(data: item),
@@ -234,7 +234,7 @@ class _MonitorViewState extends State<_MonitorView> {
   @override
   Widget build(BuildContext context) {
     return MyListView.grid(
-      childAspectRatio: FeedCard.videoRatio,
+      childAspectRatio: UILayerConst.videoRatio,
       contentPadding: 15.w,
       padding: EdgeInsets.symmetric(vertical: MyTheme.pagePadding, horizontal: MyTheme.pagePadding),
       itemBuilder: (context, item, index) {

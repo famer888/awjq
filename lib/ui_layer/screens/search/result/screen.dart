@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
+import '../../../const.dart';
 import '../../common_widgets/Live/live_video_card.dart';
 import '../../common_widgets/Monitor/monitor_card.dart';
 import '../../../../domain/domain.dart';
@@ -128,7 +129,7 @@ class _LiveVideoViewState extends State<_LiveVideoView> {
   Widget build(BuildContext context) {
     return MyListView.grid(
       padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
-      childAspectRatio: FeedCard.videoRatio,
+      childAspectRatio: UILayerConst.videoRatio,
       crossAxisSpacing: 8.w,
       itemBuilder: (_, item, __) => LiveVideoCard(data: item),
       onFetchingMore: (currentPage, pageSize) => _getData(
@@ -163,7 +164,7 @@ class _MonitorVideoViewState extends State<_MonitorVideoView> {
   Widget build(BuildContext context) {
     return MyListView.grid(
       padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
-      childAspectRatio: FeedCard.videoRatio,
+      childAspectRatio: UILayerConst.videoRatio,
       crossAxisSpacing: 8.w,
       itemBuilder: (_, item, __) => MonitorCard(data: item),
       onFetchingMore: (currentPage, pageSize) => _getData(

@@ -2,8 +2,8 @@ import '../../../../domain/model/banner_model.dart';
 import '../../../../domain/model/bit_nav_model.dart';
 import '../../../../domain/model/live_model.dart';
 import '../../../../domain/remote_domain/domains/live.dart';
+import '../../../const.dart';
 import '../../common_widgets/Live/live_video_card.dart';
-import '../../common_widgets/feed/feed_card.dart';
 import '../../common_widgets/general_banner.dart';
 import '../../common_widgets/marquee_widget.dart';
 import '../../common_widgets/my_image.dart';
@@ -62,7 +62,7 @@ class _LiveVideoViewState extends State<LiveVideoView> {
   @override
   Widget build(BuildContext context) {
     return MyListView.grid(
-      childAspectRatio: FeedCard.videoRatio,
+      childAspectRatio: UILayerConst.videoRatio,
       header: _Header(bannersNotifier: _bannersNotifier, tipsNotifier: _tipsNotifier),
       contentPadding: 15.w,
       padding: EdgeInsets.symmetric(vertical: MyTheme.pagePadding, horizontal: MyTheme.pagePadding),

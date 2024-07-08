@@ -1,12 +1,11 @@
 import 'dart:math';
 
-import '../../../../../domain/domain.dart';
 import '../../../../../domain/model/live_model.dart';
 import '../../../../../domain/model/live_video_detail_model.dart';
 import '../../../../../domain/remote_domain/domains/live.dart';
+import '../../../../const.dart';
 import '../../../../router/routes.dart';
 import '../../../common_widgets/Live/live_video_card.dart';
-import '../../../common_widgets/feed/feed_card.dart';
 import '../../../common_widgets/general_banner.dart';
 import '../../../common_widgets/my_image.dart';
 import '../../../common_widgets/my_list_view.dart';
@@ -17,7 +16,6 @@ import '../../../../utils/my_toast.dart';
 import '../../../../../domain/api_validator.dart';
 
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -59,7 +57,7 @@ class _LiveVideoDetailIntroductionViewState extends State<LiveVideoDetailIntrodu
   Widget build(BuildContext context) {
     final videoInfo = widget.data;
     return MyListView.grid(
-      childAspectRatio: FeedCard.videoRatio,
+      childAspectRatio: UILayerConst.videoRatio,
       crossAxisSpacing: 8.w,
       header: _HeaderView(data: videoInfo),
       padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding ,vertical: MyTheme.pagePadding),

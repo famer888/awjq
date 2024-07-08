@@ -8,11 +8,11 @@ import '../../../domain/model/banner_model.dart';
 import '../../../domain/model/navigator_model.dart';
 import '../../../domain/model/post_model.dart';
 import '../../../domain/model/topic_model.dart';
+import '../../const.dart';
 import '../../notifiers/user_notifier.dart';
 import '../../router/routes.dart';
 import '../../utils/my_toast.dart';
 import '../common_widgets/Fish/fish_card.dart';
-import '../common_widgets/feed/feed_card.dart';
 import '../common_widgets/my_image.dart';
 import '../common_widgets/my_tab_bar.dart';
 import '../../notifiers/home_config_notifier.dart';
@@ -111,7 +111,7 @@ class _CommunityContentViewState extends State<CommunityContentView> {
                 views: [
                   for (final NavigatorModel nav in _titles)
                     widget.isFish ? MyListView.grid(
-                      childAspectRatio: FeedCard.fishRatio,
+                      childAspectRatio: UILayerConst.fishRatio,
                       crossAxisSpacing: 8.w,
                       padding: EdgeInsets.symmetric(vertical: MyTheme.pagePadding),
                       itemBuilder: (context, item, index) => FishCard(data: item),

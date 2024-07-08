@@ -7,8 +7,6 @@ import 'card/video_card.dart';
 class FeedCard extends StatelessWidget {
   const FeedCard({super.key, required this.feed});
   static const aspectRatio = 163 / 158;
-  static const videoRatio = 170 / 94;
-  static const fishRatio = 170 / 294;
 
   final FeedModel feed;
   @override
