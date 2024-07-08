@@ -46,6 +46,7 @@ class TopicDetail {
   final UserModel? user;
   final TopicModel? topic;
   final List<MediaModel>? medias;
+  final String? type;
 
   TopicDetail({
     this.aff,
@@ -91,6 +92,7 @@ class TopicDetail {
     this.user,
     this.topic,
     this.medias,
+    this.type
   });
 
   factory TopicDetail.fromJson(Map<String, dynamic> json) => TopicDetail(
@@ -140,5 +142,6 @@ class TopicDetail {
         medias: json['medias'] != null
             ? List.from(json['medias'].map((e) => MediaModel.fromJson(e)))
             : null,
-      );
+        type: json['type'],
+  );
 }
