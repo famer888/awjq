@@ -89,7 +89,7 @@ class PostCenterCard extends StatelessWidget {
                         GestureDetector(
                           behavior: HitTestBehavior.translucent,
                           onTap: () =>
-                              CommunityTagDetailRoute('${data.topic?.id}')
+                              CommunityTagDetailRoute('${data.topic?.id}', false)
                                   .push(context),
                           child: Text(
                             '#${data.topic?.name ?? ''}',

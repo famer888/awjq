@@ -16,4 +16,4 @@ For help getting started with Flutter development, view the
 samples, guidance on mobile development, and a full API reference.
 
 
-# 生成.g.dart文件：flutter pub run build_runner build 或者  flutter pub run build_runner watch
+# 生成.g.dart文件：fvm flutter pub run build_runner build 或者  fvm flutter pub run build_runner watch

@@ -982,7 +982,7 @@ extension $OriginalEnterRouteExtension on OriginalEnterRoute {
 }
 
 RouteBase get $communityTagDetailRoute => GoRouteData.$route(
-      path: '/communityTagDetail/:id',
+      path: '/communityTagDetail/:id/:isFish',
       parentNavigatorKey: CommunityTagDetailRoute.$parentNavigatorKey,
       factory: $CommunityTagDetailRouteExtension._fromState,
     );
@@ -991,10 +991,11 @@ extension $CommunityTagDetailRouteExtension on CommunityTagDetailRoute {
   static CommunityTagDetailRoute _fromState(GoRouterState state) =>
       CommunityTagDetailRoute(
         state.pathParameters['id']!,
+        _$boolConverter(state.pathParameters['isFish']!),
       );
 
   String get location => GoRouteData.$location(
-        '/communityTagDetail/${Uri.encodeComponent(id)}',
+        '/communityTagDetail/${Uri.encodeComponent(id)}/${Uri.encodeComponent(isFish.toString())}',
       );
 
   void go(BuildContext context) => context.go(location);

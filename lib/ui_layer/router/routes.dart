@@ -580,16 +580,17 @@ class CommunityTagDetailRoute extends GoRouteData {
   static final GlobalKey<NavigatorState> $parentNavigatorKey =
       AppRouter.rootNavigatorKey;
 
-  const CommunityTagDetailRoute(this.id);
+  const CommunityTagDetailRoute(this.id, this.isFish);
 
   final String id;
+  final bool isFish;
 
   Future<T?> push<T>(BuildContext context) =>
       context.removeDuplicatePush(location);
 
   @override
   Widget build(BuildContext context, GoRouterState state) {
-    return CommunityTagDetailScreen(id: id);
+    return CommunityTagDetailScreen(id: id, isFish: isFish);
   }
 }
 

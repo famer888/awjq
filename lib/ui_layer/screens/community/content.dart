@@ -98,6 +98,7 @@ class _CommunityContentViewState extends State<CommunityContentView> {
           child: _Header(
             bannersNotifier: _bannersNotifier,
             topicsNotifier: topicsNotifier,
+            isFish: widget.isFish,
           ),
         ),
       ],
@@ -142,10 +143,11 @@ class _Header extends StatelessWidget {
   const _Header({
     required this.bannersNotifier,
     required this.topicsNotifier,
+    required this.isFish,
   });
   final ValueNotifier<List<BannerModel>> bannersNotifier;
   final ValueNotifier<List<TopicModel>> topicsNotifier;
-
+  final bool isFish;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -201,7 +203,7 @@ class _Header extends StatelessWidget {
                           GestureDetector(
                             behavior: HitTestBehavior.translucent,
                             onTap: () {
-                              CommunityTagDetailRoute('${topic.id}')
+                              CommunityTagDetailRoute('${topic.id}', isFish)
                                   .push(context);
                             },
                             child: Column(

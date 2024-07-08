@@ -34,7 +34,7 @@ class AppRouterPaths {
   static const searchResult = '/searchResult/:title';
 
   /// 社区标签
-  static const communityTagDetail = '/communityTagDetail/:id';
+  static const communityTagDetail = '/communityTagDetail/:id/:isFish';
 
   /// 社区帖子详情
   static const communityTieztDetail = '/communityTieztDetail/:id';

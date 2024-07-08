@@ -10,9 +10,11 @@ import '../../../../domain/model/navigator_model.dart';
 import '../../../../domain/model/post_model.dart';
 import '../../../../domain/model/topic_model.dart';
 import '../../../../domain/type_def.dart';
+import '../../../const.dart';
 import '../../../notifiers/home_config_notifier.dart';
 import '../../../utils/common_utils.dart';
 import '../../../utils/my_toast.dart';
+import '../../common_widgets/Fish/fish_card.dart';
 import '../../common_widgets/follow_button.dart';
 import '../../common_widgets/my_app_bar.dart';
 import '../../common_widgets/my_image.dart';
@@ -25,8 +27,11 @@ import '../../common_widgets/status/network_error.dart';
 import '../../theme.dart';
 
 class CommunityTagDetailScreen extends StatefulWidget {
-  const CommunityTagDetailScreen({super.key, required this.id});
+  const CommunityTagDetailScreen({super.key, required this.id, this.isFish});
   final String id;
+
+  final bool? isFish;
+
   @override
   State<CommunityTagDetailScreen> createState() =>
       _CommunityTagDetailScreenState();
@@ -116,7 +121,16 @@ class _CommunityTagDetailScreenState extends State<CommunityTagDetailScreen> {
                 titles: [for (final title in _titles) title.title],
                 views: [
                   for (final NavigatorModel nav in _titles)
-                    MyListView.list(
+                    (widget.isFish ?? false) ? MyListView.grid(
+                      childAspectRatio: UILayerConst.fishRatio,
+                      crossAxisSpacing: 8.w,
+                      padding: EdgeInsets.symmetric(vertical: MyTheme.pagePadding),
+                      itemBuilder: (context, item, index) => FishCard(data: item),
+                      onFetchingMore: (currentPage, pageSize) => _getData(
+                          page: currentPage,
+                          pageSize: pageSize,
+                          cate: nav.type,
+                    )) : MyListView.list(
                       contentPadding: 15.w,
                       padding:
                           EdgeInsets.symmetric(vertical: MyTheme.pagePadding),

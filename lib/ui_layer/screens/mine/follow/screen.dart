@@ -214,7 +214,7 @@ class _FollowingTopicState extends State<FollowingTopic> {
           GestureDetector(
             behavior: HitTestBehavior.translucent,
             onTap: () {
-              CommunityTagDetailRoute('${data.id}').push(context);
+              CommunityTagDetailRoute('${data.id}', false).push(context);
             },
             child: SizedBox(
               height: w / 170 * 85,

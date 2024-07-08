@@ -13,7 +13,7 @@ class CardHashTag extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => CommunityTagDetailRoute(id).push(context),
+      onTap: () => CommunityTagDetailRoute(id, false).push(context),
       child: Container(
         height: 24.w,
         decoration: ShapeDecoration(
