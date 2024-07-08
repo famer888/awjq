@@ -1053,6 +1053,13 @@ class MyTheme {
       overflow: TextOverflow.ellipsis,
       decoration: TextDecoration.none);
 
+  static final TextStyle white25508_16_M = TextStyle(
+      color: const Color.fromRGBO(255, 255, 255, 0.8),
+      fontSize: 16.sp,
+      fontWeight: FontWeight.w500,
+      overflow: TextOverflow.ellipsis,
+      decoration: TextDecoration.none);
+
   static final TextStyle white244_16 = TextStyle(
       color: const Color.fromRGBO(255, 255, 255, 1),
       fontSize: 16.sp,

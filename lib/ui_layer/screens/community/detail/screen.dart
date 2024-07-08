@@ -1,14 +1,22 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:photo_view/photo_view.dart';
+import 'package:photo_view/photo_view_gallery.dart';
 import 'package:provider/provider.dart';
 import '../../../../domain/api_validator.dart';
 import '../../../../domain/domain.dart';
+import '../../../../domain/model/media_model.dart';
+import '../../../../domain/model/member_model.dart';
+import '../../../../domain/model/video_detail_model.dart';
 import '../../../../domain/type_def.dart';
 import '../../../router/routes.dart';
+import '../../../utils/common_utils.dart';
 import '../../common_widgets/my_app_bar.dart';
+import '../../common_widgets/video_player/shortv_mv_player.dart';
 import '../../image_paths.dart';
 
 import '../../../../domain/async_value.dart';
@@ -27,6 +35,7 @@ import '../../common_widgets/post/replies_sheet_view.dart';
 import '../../common_widgets/screen_background.dart';
 import '../../common_widgets/status/loading.dart';
 import '../../common_widgets/status/network_error.dart';
+import '../../media_viewer/screen.dart';
 import '../../theme.dart';
 import 'content.dart';
 
@@ -34,6 +43,7 @@ class CommunityPostDetailScreen extends StatefulWidget {
   const CommunityPostDetailScreen({super.key, required this.id});
 
   final String id;
+
   @override
   State<CommunityPostDetailScreen> createState() =>
       _CommunityPostDetailScreenState();
@@ -56,6 +66,8 @@ class _CommunityPostDetailScreenState extends State<CommunityPostDetailScreen>
   ReviewData? currentReply;
 
   double _viewBottom = 0;
+
+  bool isFish = false;
 
   @override
   void initState() {
@@ -102,6 +114,8 @@ class _CommunityPostDetailScreenState extends State<CommunityPostDetailScreen>
     });
 
     final result = await _domain.communityTopicDetail(id: widget.id);
+
+    isFish = result.data?.type == 'fish';
 
     setState(() {
       if (result.data case final data?) {
@@ -194,65 +208,22 @@ class _CommunityPostDetailScreenState extends State<CommunityPostDetailScreen>
         data: (data) {
           return ScreenBackground(
               child: Scaffold(
-            appBar: MyAppBar(
-              leftWidget: _AvatarWithNickName(user: data.user),
-              rightWidget: Selector<UserNotifier, bool>(
-                selector: (_, notifier) =>
-                    notifier.userFollowingStatus.contains('${data.user?.aff}'),
-                builder: (_, isFollowed, __) => FollowButton(
-                  isFollowed: isFollowed,
-                  onTap: () => context
-                      .read<UserNotifier>()
-                      .changeUserFollow('${data.user?.aff}'),
-                ),
-              ),
-            ),
-            body: GestureDetector(
-              onTap: () {
-                unfocus();
-              },
-              child: Column(
-                children: [
-                  Expanded(
-                    child: MyListView.list(
-                      header: CommunityDetailContentView(data: data),
-                      padding: EdgeInsets.symmetric(
-                        vertical: 5.w,
-                        horizontal: MyTheme.pagePadding,
-                      ),
-                      itemBuilder: (context, item, index) {
-                        return PostCommentView(
-                          commentData: item,
-                          onReply: () {
-                            currentReply = item;
-                            hintNotifier.value =
-                                '${'hf'.tr()}@${item.user?.nickname ?? ""}';
-                            inputFocusNode.requestFocus();
-                          },
-                          onMoreCommentTap: () => _showMoreReview(item),
-                          changeLike: () => _changeCommentLike('${item.id}'),
-                        );
-                      },
-                      onFetchingMore: (currentPage, pageSize) => getReviewData(
-                        currentPage: currentPage,
-                        pageSize: pageSize,
+            appBar: isFish
+                ? null
+                : MyAppBar(
+                    leftWidget: _AvatarWithNickName(user: data.user),
+                    rightWidget: Selector<UserNotifier, bool>(
+                      selector: (_, notifier) => notifier.userFollowingStatus
+                          .contains('${data.user?.aff}'),
+                      builder: (_, isFollowed, __) => FollowButton(
+                        isFollowed: isFollowed,
+                        onTap: () => context
+                            .read<UserNotifier>()
+                            .changeUserFollow('${data.user?.aff}'),
                       ),
                     ),
                   ),
-                  CommentInput(
-                    controller: textEditingController,
-                    focusNode: inputFocusNode,
-                    hintNotifier: hintNotifier,
-                    onSubmitted: () async {
-                      await _sendComment(
-                          target: currentReply,
-                          text: textEditingController.text);
-                      resetInput();
-                    },
-                  ),
-                ],
-              ),
-            ),
+            body: isFish ? _fishBody(data) : _body(data),
           ));
         },
         error: (error, __) => NetworkErrorView(
@@ -266,11 +237,107 @@ class _CommunityPostDetailScreenState extends State<CommunityPostDetailScreen>
               ),
             ));
   }
+
+  Widget _fishBody(TopicDetail data) {
+    final topViewHeight = 210.w;
+    final topViewWidth = ScreenUtil().screenWidth;
+    return GestureDetector(
+      onTap: () {
+        unfocus();
+      },
+      child: SizedBox(
+        width: ScreenUtil().screenWidth,
+        height: ScreenUtil().screenHeight,
+        child: Stack(children: [
+          Positioned(
+            child: Container(
+              width: topViewWidth,
+              height: topViewHeight,
+              color: Colors.black,
+              child: _TopView(pramas: {'resources': data.medias, 'index': 0}),
+            ),
+          ),
+          Positioned(
+              top: MediaQuery.of(context).padding.top + 10.w,
+              left: MyTheme.pagePadding,
+              child: GestureDetector(
+                onTap: () {
+                  FocusManager.instance.primaryFocus?.unfocus();
+                  context.pop();
+                },
+                child: MyImage.asset(
+                  MyImagePaths.appBackIcon,
+                  width: 20.w,
+                  height: 20.w,
+                  fit: BoxFit.contain,
+                ),
+              )),
+          Positioned(
+            top: topViewHeight,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: _body(data),
+          ),
+        ]),
+      ),
+    );
+  }
+
+  Widget _body(TopicDetail data) {
+    return GestureDetector(
+      onTap: () {
+        unfocus();
+      },
+      child: Column(
+        children: [
+          Expanded(
+            child: MyListView.list(
+              header: CommunityDetailContentView(data: data),
+              padding: EdgeInsets.symmetric(
+                vertical: 5.w,
+                horizontal: MyTheme.pagePadding,
+              ),
+              itemBuilder: (context, item, index) {
+                return PostCommentView(
+                  commentData: item,
+                  onReply: () {
+                    currentReply = item;
+                    hintNotifier.value =
+                        '${'hf'.tr()}@${item.user?.nickname ?? ""}';
+                    inputFocusNode.requestFocus();
+                  },
+                  onMoreCommentTap: () => _showMoreReview(item),
+                  changeLike: () => _changeCommentLike('${item.id}'),
+                );
+              },
+              onFetchingMore: (currentPage, pageSize) => getReviewData(
+                currentPage: currentPage,
+                pageSize: pageSize,
+              ),
+            ),
+          ),
+          CommentInput(
+            controller: textEditingController,
+            focusNode: inputFocusNode,
+            hintNotifier: hintNotifier,
+            onSubmitted: () async {
+              await _sendComment(
+                  target: currentReply, text: textEditingController.text);
+              resetInput();
+            },
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _AvatarWithNickName extends StatelessWidget {
   const _AvatarWithNickName({this.user});
+
   final UserModel? user;
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -322,5 +389,107 @@ class _AvatarWithNickName extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+class _TopView extends StatefulWidget {
+  const _TopView({super.key, required this.pramas});
+
+  final Map pramas;
+
+  @override
+  State<_TopView> createState() => _TopViewState();
+}
+
+class _TopViewState extends State<_TopView> {
+  PhotoViewScaleState scaleState = PhotoViewScaleState.initial;
+  bool hasPop = false;
+  int currentIndex = 0;
+  late PageController _controller;
+  List<GlobalKey> keyList = [];
+  List<TransformationController> transformationControllerList = [];
+  int _selectedIndex = 0;
+
+  void setupData() {
+    widget.pramas['resources'].forEach((item) {
+      GlobalKey key = GlobalKey();
+      TransformationController transformationController =
+          TransformationController();
+      transformationControllerList.add(transformationController);
+      keyList.add(key);
+    });
+    _controller = PageController(initialPage: widget.pramas['index']);
+    _selectedIndex = currentIndex = widget.pramas['index'];
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setupData();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: PhotoViewGallery.builder(
+            scrollPhysics: const BouncingScrollPhysics(),
+            pageController: _controller,
+            itemCount: widget.pramas['resources'].length,
+            onPageChanged: (index) {
+              _selectedIndex = index;
+              setState(() {});
+            },
+            scaleStateChangedCallback: (value) {
+              scaleState = value;
+            },
+            builder: (context, index) {
+              var e = widget.pramas['resources'][index] as MediaModel;
+              return PhotoViewGalleryPageOptions.customChild(
+                initialScale: 1.0,
+                minScale: 1.0,
+                maxScale: 10.0,
+                child: e.type == MyMediaType.video
+                    ? ShortVPlayer(data: e)
+                    : GestureDetector(
+                        onTap: () {
+                          _goPictureView(widget.pramas['resources'], index);
+                        },
+                        child: MyImage.network(
+                          CommonUtils.getThumb(e.toJson()),
+                          fit: BoxFit.contain,
+                        ),
+                      ),
+              );
+            },
+          ),
+        ),
+        Positioned(
+            bottom: 10.w,
+            right: 10.w,
+            child: Container(
+              alignment: Alignment.center,
+              height: 30.w,
+              decoration: BoxDecoration(
+                color: MyTheme.blackColor25505,
+                borderRadius: BorderRadius.all(Radius.circular(15.w)),
+              ),
+              padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 3.w),
+              child: Text(
+                '${_selectedIndex + 1} / ${widget.pramas['resources'].length}',
+                style: TextStyle(color: Colors.white, fontSize: 16.sp),
+                maxLines: 1,
+              ),
+            ))
+      ],
+    );
+  }
+
+  void _goPictureView(List<MediaModel> medias, int index) {
+    if (medias.isNotEmpty) {
+      MediaViewerRoute({'resources': medias, 'index': index}).push(context);
+    }
   }
 }

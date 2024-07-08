@@ -5,7 +5,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import '../../../../domain/api_validator.dart';
+import '../../../notifiers/user_notifier.dart';
 import '../../../router/routes.dart';
+import '../../common_widgets/follow_button.dart';
+import '../../common_widgets/my_image.dart';
 import '../../common_widgets/post/content/like_collect_share_area.dart';
 
 import '../../../../domain/domain.dart';
@@ -21,10 +24,109 @@ import '../../theme.dart';
 
 class CommunityDetailContentView extends StatelessWidget {
   const CommunityDetailContentView({super.key, required this.data});
+
   final TopicDetail data;
+
+  bool get isFish {
+    return data.type == 'fish';
+  }
 
   @override
   Widget build(BuildContext context) {
+    return isFish ? _fishContenWidgets(context, data) : _contenWidgets();
+  }
+
+  Widget _fishContenWidgets(BuildContext context, TopicDetail data) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _userContenWidget(context, data),
+          PostTitleView(
+            topicTitle: data.title,
+            viewCount: data.viewNum,
+            createdAt: data.createdAt,
+          ),
+          PostContentView(
+            content: data.content,
+          ),
+          SizedBox(height: 10.w),
+          _ContactView(
+            data: data,
+          ),
+          _LikeCollectShareArea(
+            data: data,
+          ),
+          Divider(
+            height: 1,
+            thickness: 0.5.w,
+            color: const Color(0xFF2a2a33),
+          ),
+          SizedBox(height: 20.w),
+          PostCommentCountView(commentCount: data.commentNum ?? 0),
+        ],
+      ),
+    );
+  }
+
+  Widget _userContenWidget(BuildContext context, TopicDetail data) {
+    return Padding(
+      padding: EdgeInsets.only(top: 10.w),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: () {
+              UserCenterRoute('${data.user?.aff}').push(context);
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  height: 50.w,
+                  width: 50.w,
+                  child: MyImage.network(
+                    data.user?.thumb ?? '',
+                    borderRadius: 25.w,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+                SizedBox(width: 10.w),
+                Text(
+                  data.user?.nickname ?? '',
+                  style: MyTheme.white25508_16_M,
+                ),
+                SizedBox(width: 2.w),
+                if (data.user?.agent == 1)
+                  Icon(Icons.verified_sharp,
+                      size: 14.w, color: const Color.fromRGBO(247, 208, 93, 1))
+              ],
+            ),
+          ),
+          const Spacer(),
+          SizedBox(
+                width: 65.w,
+                height: 25.w,
+              child: Selector<UserNotifier, bool>(
+                selector: (_, notifier) =>
+                    notifier.userFollowingStatus.contains('${data.user?.aff}'),
+                builder: (_, isFollowed, __) => FollowButton(
+                    isFollowed: isFollowed,
+                    onTap: () => context
+                        .read<UserNotifier>()
+                        .changeUserFollow('${data.user?.aff}'),
+                  ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _contenWidgets() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
       child: Column(
@@ -65,6 +167,7 @@ class CommunityDetailContentView extends StatelessWidget {
 
 class _ContactView extends StatefulWidget {
   const _ContactView({required this.data});
+
   final TopicDetail data;
 
   @override
@@ -181,6 +284,7 @@ class _ContactViewState extends State<_ContactView> {
 
 class _LikeCollectShareArea extends StatefulWidget {
   const _LikeCollectShareArea({required this.data});
+
   final TopicDetail data;
 
   @override
