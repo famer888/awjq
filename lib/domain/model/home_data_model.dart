@@ -156,6 +156,8 @@ class Config {
     required this.wdaiStr,
     required this.vipLevelAwqStr,
     required this.vipNameAwqStr,
+    this.faceCoins,
+    this.stripCoins
   });
 
   final String? dayPrice;
@@ -199,18 +201,17 @@ class Config {
   final List<BitNavModel> liveTopNav;
   final List<BitNavModel> monitorTopNav;
   final List<BitNavModel> faceTopNav;
-
   final int payAi;
   final int? showApp;
-
   final String potatoGroup;
   final String tgGroup;
-
   final String seedVipTip;
   final String seedCoinsTip;
   final String wdaiStr;
   final List<String> vipLevelAwqStr;
   final String vipNameAwqStr;
+  final int? faceCoins;
+  final int? stripCoins;
 
   factory Config.fromJson(Map<String, dynamic> json) => Config(
         dayPrice: json['day_price'],
@@ -278,7 +279,10 @@ class Config {
         vipLevelAwqStr:
             List<String>.from(json['vip_level_awq_str']?.map((x) => x) ?? []),
         vipNameAwqStr: json['vip_name_awq_str'] ?? '',
-      );
+        faceCoins: json['face_coins'],
+        stripCoins: json['strip_coins'],
+
+  );
 
   Map<String, dynamic> toJson() => {
         'day_price': dayPrice,
@@ -328,7 +332,10 @@ class Config {
         'tg_group': tgGroup,
         'seed_vip_tip': seedVipTip,
         'seed_coins_tip': seedCoinsTip,
-      };
+        'strip_coins': stripCoins,
+        'face_coins': faceCoins,
+
+  };
 }
 
 class Notice {

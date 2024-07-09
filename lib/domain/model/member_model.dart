@@ -79,7 +79,9 @@ class Member {
       this.isFollow,
       this.postCount,
       this.fansCount,
-      this.chat});
+      this.chat,
+      this.stripCt,
+      this.faceCt});
 
   final int? isFollow;
   final int? postCount;
@@ -154,6 +156,8 @@ class Member {
   final int? shortMvFreeTime;
   final int? longMvFreeTime;
   final IMChatModel? chat;
+  final int? stripCt;
+  final int? faceCt;
 
   factory Member.fromJson(Map<String, dynamic> json) => Member(
       postCount: json['post_count'] ?? 0,
@@ -234,7 +238,10 @@ class Member {
       isSetPassword: json['is_set_password'],
       level: json['level'],
       ads: json['ads'] == null ? null : AdModel.fromJson(json['ads']),
-      chat: json['chat'] == null ? null : IMChatModel.fromJson(json['chat']));
+      chat: json['chat'] == null ? null : IMChatModel.fromJson(json['chat']),
+      stripCt: json['strip_ct'] ?? 0,
+      faceCt: json['face_ct'] ?? 0,
+  );
 
   Map<String, dynamic> toJson() => {
         'post_count': postCount ?? 0,
@@ -309,8 +316,10 @@ class Member {
         'is_set_password': isSetPassword,
         'level': level,
         'ads': ads?.toJson(),
-        'chat': chat?.toJson()
-      };
+        'chat': chat?.toJson(),
+        'strip_ct': stripCt ?? 0,
+        'face_ct': faceCt ?? 0
+  };
 
   Member copyWith({
     int? isFollow,
@@ -386,6 +395,8 @@ class Member {
     int? shortMvFreeTime,
     int? longMvFreeTime,
     IMChatModel? chat,
+    int? stripCt,
+    int? faceCt,
   }) =>
       Member(
         isFollow: isFollow ?? this.isFollow,
@@ -461,6 +472,8 @@ class Member {
         shortMvFreeTime: shortMvFreeTime ?? this.shortMvFreeTime,
         longMvFreeTime: longMvFreeTime ?? this.longMvFreeTime,
         chat: chat ?? this.chat,
+        stripCt: stripCt ?? this.stripCt,
+        faceCt: faceCt ?? this.faceCt,
       );
 }
 

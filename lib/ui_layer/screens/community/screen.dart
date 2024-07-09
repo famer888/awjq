@@ -10,6 +10,7 @@ import '../../../domain/model/bit_nav_model.dart';
 import '../../notifiers/home_config_notifier.dart';
 import '../../notifiers/user_notifier.dart';
 import '../../router/routes.dart';
+import '../AI/strip_off/screen.dart';
 import '../image_paths.dart';
 
 import '../../../domain/async_value.dart';
@@ -200,7 +201,10 @@ class _BodyState extends State<_Body> {
       data: (data) => TabBarWithView.line(
         titles: data.map((e) => e.title).toList(),
         views: data.map((e) {
-          if (e.id == 10000 || e.id == 10001) {//如果是AI相关界面
+          if (e.id == 10000) {//如果是AI脱衣界面
+            return const StripOffScreen();
+          }
+          if (e.id == 10001) {//如果是AI换脸界面
             return Container();
           }
           if (e.mask == 1) {

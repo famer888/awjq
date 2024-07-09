@@ -4,7 +4,7 @@ class FaceSwapScreen extends StatefulWidget {
   const FaceSwapScreen({super.key});
 
   @override
-  _FaceSwapScreenState createState() => _FaceSwapScreenState();
+  State<FaceSwapScreen> createState() => _FaceSwapScreenState();
 }
 
 class _FaceSwapScreenState extends State<FaceSwapScreen> {

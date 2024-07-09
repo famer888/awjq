@@ -341,6 +341,15 @@ class CommonUtils {
     }
     return false;
   }
+
+  static Future<bool> pngLimit2MSize(XFile file) async {
+    int length = await file.length();
+    if (length / 1024 > 2000) {
+      MyToast.showText(text: tr("qxzb2mkbp"),);
+      return true;
+    }
+    return false;
+  }
 }
 
 class RelativeDateFormat {

@@ -704,6 +704,12 @@ class MyTheme {
       overflow: TextOverflow.ellipsis,
       decoration: TextDecoration.none);
 
+  static final TextStyle orange247_15 = TextStyle(
+      color: orange24718713,
+      fontSize: 15.sp,
+      overflow: TextOverflow.ellipsis,
+      decoration: TextDecoration.none);
+
   static final TextStyle gray203_13_T = TextStyle(
       color: const Color.fromRGBO(203, 202, 200, 1),
       fontSize: 13.sp,
@@ -2206,9 +2212,22 @@ class MyTheme {
       overflow: TextOverflow.ellipsis,
       decoration: TextDecoration.none);
 
+  static final TextStyle white08_14_M = TextStyle(
+      color: white08Color,
+      fontSize: 14.sp,
+      overflow: TextOverflow.ellipsis,
+      fontWeight: FontWeight.w500,
+      decoration: TextDecoration.none);
+
   static final TextStyle white06_12 = TextStyle(
       color: white06Color,
       fontSize: 12.sp,
+      overflow: TextOverflow.ellipsis,
+      decoration: TextDecoration.none);
+
+  static final TextStyle white06_10 = TextStyle(
+      color: white06Color,
+      fontSize: 10.sp,
       overflow: TextOverflow.ellipsis,
       decoration: TextDecoration.none);
 

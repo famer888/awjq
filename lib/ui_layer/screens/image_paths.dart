@@ -138,4 +138,8 @@ class MyImagePaths {
   static const appMute = './assets/images/app_mute.png';
   static const appZanNormal = './assets/images/app_zan_n.png';
   static const appzanSlect = './assets/images/app_zan_s.png';
+  static const appCoinsOrange = './assets/images/app_coins_orange.png';
+  static const appStripOff = './assets/images/app_strip_off.png';
+  static const appUploadImg = './assets/images/app_upload_img.png';
+
 }
