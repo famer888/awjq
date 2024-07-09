@@ -213,7 +213,7 @@ class _ContactViewState extends State<_ContactView> {
                         color: MyTheme.cyanColor00edfd,
                         strokeWidth: 1.w),
                     alignment: Alignment.center,
-                    child: Text(tr('nrycjsck'), style: MyTheme.blue80_14_M),
+                    child: Text(tr('nrycjsck'), style: MyTheme.blue80_14_M),//内容已隐藏，解锁后查看
                   ),
                   SizedBox(height: 10.w),
                   GestureDetector(
@@ -227,7 +227,7 @@ class _ContactViewState extends State<_ContactView> {
                         borderRadius: BorderRadius.circular(4.w),
                       ),
                       child: Text(
-                        '$unlockCoins${tr('jbkqawjy')}',
+                        '$unlockCoins${tr('jbkqawjy')}',//金币开启暗网交易，点击支付金币解锁
                         style: MyTheme.white14Medium,
                       ),
                     ),
@@ -242,7 +242,7 @@ class _ContactViewState extends State<_ContactView> {
                       Clipboard.setData(ClipboardData(
                         text: contact,
                       ));
-                      MyToast.showText(text: tr('fzcglx'));
+                      MyToast.showText(text: tr('fzcglx'));//复制成功,快去联系吧
                     },
                     child: RichText(
                       text: TextSpan(
@@ -250,7 +250,7 @@ class _ContactViewState extends State<_ContactView> {
                           TextSpan(
                             children: [
                               TextSpan(
-                                text: tr('sjlxfs'),
+                                text: tr('sjlxfs'),//楼主联系方式：
                                 style: TextStyle(
                                   color: Colors.white70,
                                   fontSize: 14.sp,
@@ -264,7 +264,7 @@ class _ContactViewState extends State<_ContactView> {
                                 ),
                               ),
                               TextSpan(
-                                text: "【${tr('dwfz')}】",
+                                text: "【${tr('dwfz')}】",//点我复製
                                 style: TextStyle(
                                   color: Colors.red,
                                   fontSize: 14.sp,
