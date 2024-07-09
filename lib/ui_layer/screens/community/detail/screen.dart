@@ -452,7 +452,28 @@ class _TopViewState extends State<_TopView> {
                 minScale: 1.0,
                 maxScale: 10.0,
                 child: e.type == MyMediaType.video
-                    ? ShortVPlayer(data: e)
+                    ? GestureDetector(
+                        behavior: HitTestBehavior.translucent,
+                        onTap: () =>
+                            _goPictureView(widget.pramas['resources'], index),
+                        child: Stack(
+                          children: [
+                            Positioned.fill(
+                              child: MyImage.network(
+                                e.cover,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                            const Center(
+                              child: MyImage.asset(
+                                MyImagePaths.appVPlayN,
+                                width: 40,
+                                height: 40,
+                              ),
+                            )
+                          ],
+                        ),
+                      )
                     : GestureDetector(
                         onTap: () {
                           _goPictureView(widget.pramas['resources'], index);
@@ -488,6 +509,7 @@ class _TopViewState extends State<_TopView> {
   }
 
   void _goPictureView(List<MediaModel> medias, int index) {
+    FocusManager.instance.primaryFocus?.unfocus();
     if (medias.isNotEmpty) {
       MediaViewerRoute({'resources': medias, 'index': index}).push(context);
     }
