@@ -32,6 +32,7 @@ abstract class CacheDomain
 
   Future<bool> readIsBarrage();
 
+  ///获取直播弹幕开关，默认true：开
   Future<void> upsertIsBarrage(bool isBarrage);
 
   /// 获取官网链结缓存

@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../../domain/domain.dart';
+import '../../../domain/model/bit_nav_model.dart';
 import '../../notifiers/home_config_notifier.dart';
 import '../../notifiers/user_notifier.dart';
 import '../../router/routes.dart';
@@ -179,6 +180,11 @@ class _BodyState extends State<_Body> {
     final result =
         await _appDomain.reqGetPostNav(type: widget.isFish ? 'fish' : '');
 
+    if (widget.isFish) {
+      result.data?.add(CommunityNavModel(id: 10000, title: 'AI脱衣', mask: 0));
+      result.data?.add(CommunityNavModel(id: 10001, title: 'AI换脸', mask: 0));
+    }
+
     setState(() {
       if (result.data case final data?) {
         _asyncValue = AsyncData(data);
@@ -194,6 +200,9 @@ class _BodyState extends State<_Body> {
       data: (data) => TabBarWithView.line(
         titles: data.map((e) => e.title).toList(),
         views: data.map((e) {
+          if (e.id == 10000 || e.id == 10001) {//如果是AI相关界面
+            return Container();
+          }
           if (e.mask == 1) {
             return Stack(
               fit: StackFit.expand,

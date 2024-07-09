@@ -149,6 +149,11 @@ class MyImage extends StatelessWidget {
                         );
                       }
                     },
+              errorBuilder: (BuildContext context,
+                  Object error,
+                  StackTrace? stackTrace) {
+                return Container();//todo: 图片请求出错时可在此设置异常图片显示
+              },
             );
           }
 
