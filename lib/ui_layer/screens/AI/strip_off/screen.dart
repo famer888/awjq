@@ -55,9 +55,12 @@ class _StripOffScreenState extends State<StripOffScreen> {
     final topHeight = 125.w;
     final contentW = 110.w;
 
-    String imgUrl = imgMap['url'];
-    imgUrl = imgUrl.substring(1);//删除第一个字符/
-    imgUrl = homeConfigNotifier.config.imgBase + imgUrl;
+    String imgUrl = '';
+    if (imgMap.isNotEmpty) {
+      imgUrl = imgMap['url'];
+      imgUrl = imgUrl.substring(1);//删除第一个字符/
+      imgUrl = homeConfigNotifier.config.imgBase + imgUrl;
+    }
 
     return Container(
       margin: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
@@ -276,6 +279,12 @@ class _StripOffScreenState extends State<StripOffScreen> {
         userNotifier.setStripCt(stripCt: stripCt - 1);
       } else {
         userNotifier.setMoney(money: userNotifier.member.money - needCoins);//更新用户的金币数量
+      }
+
+      if (mounted) {
+        setState(() {
+          imgMap = {};//清空图片数据，可重新选择上传图片
+        });
       }
       _showSuccesDialog();
     } else {
