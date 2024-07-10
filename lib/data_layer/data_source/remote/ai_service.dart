@@ -10,12 +10,10 @@ class AIService extends BaseService {
 
   AsyncJson aIListFaceMaterial({
     required int id, // home/config中face_top_nav中的ID
-    required String type,// home/config中face_sort_nav中的value
-    required String sort,// asc正序 desc倒序
     required int page,
     required int limit,
   }) =>
-      post('/list_face_material', data: {'id': id, 'type': type, 'sort': sort, 'page': page, 'limit': limit});
+      post('/list_face_material', data: {'id': id, 'page': page, 'limit': limit});
 
 
   AsyncJson aIMyFace({

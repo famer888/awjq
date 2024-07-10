@@ -5,15 +5,11 @@ mixin _AI on _BaseAppRepo implements AIDomain {
   @override
   AsyncResult<AIWithBannersModel> aIListFaceMaterial({
     required int id,
-    required String type,
-    required String sort,
     required int page,
     required int limit,
   }) =>
       _aiService.aIListFaceMaterial(
         id: id,
-        type: type,
-        sort:  sort,
         page: page,
         limit: limit,
       ).deserializeJsonBy(AIWithBannersModel.fromJson).guard;

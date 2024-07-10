@@ -6,15 +6,12 @@ import '../../../../domain/model/ai_model.dart';
 import '../../../../domain/model/banner_model.dart';
 import '../../../../domain/model/bit_nav_model.dart';
 import '../../../../domain/remote_domain/domains/ai.dart';
-import '../../../const.dart';
 import '../../../notifiers/home_config_notifier.dart';
 import '../../../utils/my_toast.dart';
-import '../../common_widgets/Live/live_video_card.dart';
 import '../../common_widgets/general_banner.dart';
-import '../../common_widgets/my_list_view.dart';
 import '../../common_widgets/my_tab_bar.dart';
 import '../../theme.dart';
-import '../card/material_card.dart';
+import 'content.dart';
 
 class FaceSwapScreen extends StatefulWidget {
   const FaceSwapScreen({super.key});
@@ -28,22 +25,20 @@ class _FaceSwapScreenState extends State<FaceSwapScreen> {
   late final _aimain = context.read<AIDomain>();
   final ValueNotifier<List<BannerModel>> _bannersNotifier = ValueNotifier([]);
   late final homeConfigNotifier = context.read<HomeConfigNotifier>();
-  List<BitNavModel> navs = [];
+  List<BitNavModel> faceTopNavs = [];
   List<String> titles = [];
 
 
   @override
   void initState() {
     super.initState();
-    navs = homeConfigNotifier.config.faceTopNav;
+    faceTopNavs = homeConfigNotifier.config.faceTopNav;
     _getData();
   }
 
   Future<List<AIModel>?> _getData() async {
     final result = await _aimain.aIListFaceMaterial(
-      id: homeConfigNotifier.config.faceTopNav.first.id,
-      sort: 'asc',
-      type: homeConfigNotifier.config.faceSortNav.first.value ?? '',
+      id: faceTopNavs.first.id,
       page: 1,
       limit: 0,//只为拿banners数据此参数设置为0节约流量
     );
@@ -56,7 +51,7 @@ class _FaceSwapScreenState extends State<FaceSwapScreen> {
       if (result.data?.banners case final data?
       when data.isNotEmpty && _bannersNotifier.value.isEmpty) {
         _bannersNotifier.value = data;
-        titles = navs.map((model) => model.name).toList();
+        titles = faceTopNavs.map((model) => model.name).toList();
       }
       return result.data?.materials;
     } else {
@@ -82,8 +77,8 @@ class _FaceSwapScreenState extends State<FaceSwapScreen> {
         unselectedLabelStyle: MyTheme.whiteOpacity615w400,
         titles: titles,
         views: [
-          for (final BitNavModel nav in navs)
-            Container()
+          for (final BitNavModel topNav in faceTopNavs)
+            FaceSwapView(faceTopNav: topNav)
         ],
       ),
     );

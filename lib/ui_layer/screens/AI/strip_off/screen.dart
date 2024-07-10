@@ -10,7 +10,6 @@ import 'package:provider/provider.dart';
 
 import '../../../../domain/api_validator.dart';
 import '../../../../domain/model/member_model.dart';
-import '../../../../domain/model/user_model.dart';
 import '../../../../domain/remote_domain/domains/ai.dart';
 import '../../../notifiers/home_config_notifier.dart';
 import '../../../notifiers/user_notifier.dart';

@@ -147,7 +147,6 @@ class Config {
       required this.liveTopNav,
       required this.monitorTopNav,
       required this.faceTopNav,
-      required this.faceSortNav,
       this.showApp,
       required this.potatoGroup,
       required this.tgGroup,
@@ -201,8 +200,6 @@ class Config {
   final List<BitNavModel> liveTopNav;
   final List<BitNavModel> monitorTopNav;
   final List<BitNavModel> faceTopNav;
-  final List<BitNavModel> faceSortNav;
-
   final int payAi;
   final int? showApp;
   final String potatoGroup;
@@ -268,8 +265,6 @@ class Config {
             json['monitor_top_nav']?.map((x) => BitNavModel.fromJson(x)) ?? []),
         faceTopNav: List<BitNavModel>.from(
             json['face_top_nav']?.map((x) => BitNavModel.fromJson(x)) ?? []),
-        faceSortNav: List<BitNavModel>.from(
-            json['face_sort_nav']?.map((x) => BitNavModel.fromJson(x)) ?? []),
         payAi: json['pay_ai'] ?? 0,
         showApp: json['show_app'],
         potatoGroup: json['potato_group'] ?? '',
@@ -326,7 +321,6 @@ class Config {
         'monitor_top_nav': monitorTopNav.map((e) => e).toList(),
         'face_top_nav': faceTopNav.map((e) => e).toList(),
         'seed_sort_nav': seedSortNav?.map((e) => e).toList() ?? [],
-        'face_sort_nav': faceSortNav.map((e) => e).toList(),
         'pay_ai': payAi,
         'show_app': showApp,
         'potato_group': potatoGroup,

@@ -6,8 +6,6 @@ abstract class AIDomain {
   ///换脸素材列表
   AsyncResult<AIWithBannersModel?> aIListFaceMaterial({
     required int id, // home/config中face_top_nav中的ID
-    required String type,// home/config中face_sort_nav中的value
-    required String sort,// asc正序 desc倒序
     required int page,
     required int limit,
   });
