@@ -54,4 +54,11 @@ abstract class AIDomain {
     required int id,
   });
 
+  ///脱衣
+  AsyncResult aIStrip({
+    required String thumb,
+    required int thumbW,
+    required int thumbH,
+  });
+
 }

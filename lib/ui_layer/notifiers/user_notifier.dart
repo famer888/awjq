@@ -97,6 +97,11 @@ class UserNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setStripCt({required int stripCt}) {
+    _member = _member.copyWith(stripCt: stripCt);
+    notifyListeners();
+  }
+
   void setExp(int? newExp) {
     _member = _member.copyWith(exp: newExp);
     notifyListeners();

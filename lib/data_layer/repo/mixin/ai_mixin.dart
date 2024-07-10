@@ -81,4 +81,14 @@ mixin _AI on _BaseAppRepo implements AIDomain {
       _aiService.aIDelStrip(
           id: id).deserialize().guard;
 
+  @override
+  AsyncResult aIStrip({
+    required String thumb,
+    required int thumbW,
+    required int thumbH}) =>
+      _aiService.aIStrip(
+          thumb: thumb,
+          thumbW: thumbW,
+          thumbH: thumbH).deserialize().guard;
+
 }

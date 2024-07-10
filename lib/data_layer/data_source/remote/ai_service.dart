@@ -57,4 +57,10 @@ class AIService extends BaseService {
     required int id,
   }) => post('/del_strip', data: {'id': id});
 
+  AsyncJson aIStrip({
+    required String thumb,
+    required int thumbW,
+    required int thumbH,
+  }) => post('/strip', data: {'thumb': thumb, 'thumb_w': thumbW, 'thumb_h': thumbH});
+
 }

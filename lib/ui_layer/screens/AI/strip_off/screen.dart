@@ -8,8 +8,10 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../domain/api_validator.dart';
 import '../../../../domain/model/member_model.dart';
 import '../../../../domain/model/user_model.dart';
+import '../../../../domain/remote_domain/domains/ai.dart';
 import '../../../notifiers/home_config_notifier.dart';
 import '../../../notifiers/user_notifier.dart';
 import '../../../router/routes.dart';
@@ -19,6 +21,7 @@ import '../../common_widgets/dialog/widgets/regular_dialog.dart';
 import '../../common_widgets/my_image.dart';
 import '../../image_paths.dart';
 import '../../theme.dart';
+import 'dart:developer' as developer;
 
 class StripOffScreen extends StatefulWidget {
   const StripOffScreen({super.key});
@@ -51,6 +54,11 @@ class _StripOffScreenState extends State<StripOffScreen> {
     final coins = homeConfigNotifier.config.stripCoins ?? 0;
     final topHeight = 125.w;
     final contentW = 110.w;
+
+    String imgUrl = imgMap['url'];
+    imgUrl = imgUrl.substring(1);//删除第一个字符/
+    imgUrl = homeConfigNotifier.config.imgBase + imgUrl;
+
     return Container(
       margin: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
       child: SingleChildScrollView(
@@ -106,7 +114,7 @@ class _StripOffScreenState extends State<StripOffScreen> {
                         width: contentW,
                         height: topHeight,
                         child: MyImage.network(
-                          imgMap['url'],
+                          imgUrl,
                           borderRadius: 7.w,
                         ),
                       ),
@@ -129,7 +137,7 @@ class _StripOffScreenState extends State<StripOffScreen> {
                           borderRadius: BorderRadius.circular(25.w)),
                       child: Center(
                         child: Builder(builder: (context) {
-                          return _postStripOffBtnWidget();//提交按钮组件
+                          return _postStripOffBtnWidget(); //提交按钮组件
                         }),
                       ),
                     ),
@@ -178,7 +186,7 @@ class _StripOffScreenState extends State<StripOffScreen> {
 
   Widget _postStripOffBtnWidget() {
     final stripCt = userNotifier.member.stripCt ?? 0;
-    String text = tr('ljsc');//立即生成
+    String text = tr('ljsc'); //立即生成
     if (stripCt > 0) {
       text += '(${tr('aijrsy')}$stripCt${tr('ci')})';
     }
@@ -209,18 +217,20 @@ class _StripOffScreenState extends State<StripOffScreen> {
     }
 
     Member? user = userNotifier.member;
-    final userCoins = user.money;//用户剩余金币
-    final stripCt = user.stripCt ?? 0;//当日剩余次数
-    final needCoins = homeConfigNotifier.config.stripCoins ?? 0;//处理一张图片所需金币
+    final userCoins = user.money; //用户剩余金币
+    final stripCt = user.stripCt ?? 0; //当日剩余次数
+    final needCoins = homeConfigNotifier.config.stripCoins ?? 0; //处理一张图片所需金币
 
     if (stripCt > 0) {
       //有剩余次数-直接生成
-      _showSuccesDialog();
+      _stripOffOptonal(0, stripCt);
     } else {
       //直接使用金币
-      if (userCoins >= needCoins) {//余额充足-直接生成
-        _showSuccesDialog();
-      } else {//余额不足，提示金币不足
+      if (userCoins >= needCoins) {
+        //余额充足-直接生成
+        _stripOffOptonal(needCoins, stripCt);
+      } else {
+        //余额不足，提示金币不足
         CommonUtils.showDialog(
           context: context,
           builder: (context) => RegularDialog(
@@ -252,7 +262,25 @@ class _StripOffScreenState extends State<StripOffScreen> {
         );
       }
     }
+  }
 
+  //脱衣接口操作
+  Future<void> _stripOffOptonal(int needCoins, int stripCt) async {
+    MyToast.showLoading(text: tr('aiscz'));
+    final aiDomain = context.read<AIDomain>();
+    final res = await aiDomain.aIStrip(
+        thumb: imgMap['url'], thumbH: imgMap['thumb_height'], thumbW: imgMap['thumb_width']);
+    MyToast.closeAllLoading();
+    if (res.isValid) {
+      if (needCoins == 0) {//使用剩余次数不需要金币时更新用户剩余次数
+        userNotifier.setStripCt(stripCt: stripCt - 1);
+      } else {
+        userNotifier.setMoney(money: userNotifier.member.money - needCoins);//更新用户的金币数量
+      }
+      _showSuccesDialog();
+    } else {
+      MyToast.showText(text: res.msg ?? '');
+    }
   }
 
   void _showSuccesDialog() {
@@ -260,7 +288,7 @@ class _StripOffScreenState extends State<StripOffScreen> {
       context: context,
       builder: (context) => RegularDialog(
         buttonText: 'gb'.tr(),
-        title: 'zfcg'.tr(),
+        title: 'ts'.tr(),
         content: Text(
           textAlign: TextAlign.center,
           tr('tjcgck'),
@@ -292,7 +320,7 @@ class _StripOffScreenState extends State<StripOffScreen> {
     MyToast.showLoading(text: 'scz'.tr());
     final result = await homeConfigNotifier.uploadImage(xFile);
 
-    print('AI图片上传返回数据：$result');
+    developer.log('AI图片上传返回数据：$result');
 
     if (result != null && result['code'] == 1) {
       final url = "${result['msg']}";
@@ -300,8 +328,7 @@ class _StripOffScreenState extends State<StripOffScreen> {
       final image = await decodeImageFromList(await xFile.readAsBytes());
 
       imgMap = {
-        'media_url': url,
-        'url': homeConfigNotifier.config.imgBase + url,
+        'url': url,
         'thumb_width': image.width,
         'thumb_height': image.height,
       };
