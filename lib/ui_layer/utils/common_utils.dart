@@ -350,6 +350,7 @@ class CommonUtils {
     }
     return false;
   }
+
 }
 
 class RelativeDateFormat {

@@ -27,8 +27,6 @@ class _LiveVideoViewState extends State<LiveVideoView> {
   final ValueNotifier<List<BannerModel>> _bannersNotifier = ValueNotifier([]);
   final ValueNotifier<List<TipModel>> _tipsNotifier = ValueNotifier([]);
 
-  bool isInit = false;
-
   Future<List<LiveModel>?> _getData(
       {required int page, required int pageSize}) async {
     final result = await _domain.getLiveIndex(
@@ -36,9 +34,8 @@ class _LiveVideoViewState extends State<LiveVideoView> {
       page: page,
       limit: pageSize,
     );
-    if (!isInit) {
+    if (mounted) {
       setState(() {
-        isInit = true;
       });
     }
 

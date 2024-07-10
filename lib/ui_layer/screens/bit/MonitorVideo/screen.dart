@@ -28,8 +28,6 @@ class _MonitorVideoViewState extends State<MonitorVideoView> {
   final ValueNotifier<List<BannerModel>> _bannersNotifier = ValueNotifier([]);
   final ValueNotifier<List<TipModel>> _tipsNotifier = ValueNotifier([]);
 
-  bool isInit = false;
-
   Future<List<MonitorModel>?> _getData(
       {required int page, required int pageSize}) async {
     final result = await _domain.getMonitorIndex(
@@ -37,9 +35,8 @@ class _MonitorVideoViewState extends State<MonitorVideoView> {
       page: page,
       limit: pageSize,
     );
-    if (!isInit) {
+    if (mounted) {
       setState(() {
-        isInit = true;
       });
     }
 
