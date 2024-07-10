@@ -189,7 +189,7 @@ class MyTabBarTheme extends TabBarTheme {
         labelStyle: labelStyle ?? MyTheme.green85_15,
         labelPadding: tabAlignment == null
             ? EdgeInsets.zero
-            : EdgeInsets.only(right: 16.w),
+            : EdgeInsets.only(right: 16.w, top: 2.w),
         unselectedLabelStyle: unselectedLabelStyle ?? MyTheme.gray232_15,
         overlayColor: WidgetStateProperty.resolveWith<Color>(
           (_) => Colors.transparent,

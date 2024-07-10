@@ -13,6 +13,21 @@ class MyTheme {
       fontWeight: FontWeight.w400,
       overflow: TextOverflow.visible,
       decoration: TextDecoration.none);
+
+  static final TextStyle whiteOpacity615w400 = TextStyle(
+      color: Colors.white.withOpacity(0.6),
+      fontSize: 15.sp,
+      fontWeight: FontWeight.w400,
+      overflow: TextOverflow.visible,
+      decoration: TextDecoration.none);
+
+  static final TextStyle whiteOpacity616w400 = TextStyle(
+      color: Colors.white.withOpacity(0.6),
+      fontSize: 16.sp,
+      fontWeight: FontWeight.w400,
+      overflow: TextOverflow.visible,
+      decoration: TextDecoration.none);
+
   static final TextStyle white14w400 = TextStyle(
       color: Colors.white,
       fontSize: 14.sp,
@@ -2350,7 +2365,6 @@ class MyTheme {
   static final TextStyle white16medium = TextStyle(
       color: const Color.fromRGBO(255, 255, 255, 1),
       fontSize: 16.sp,
-      fontWeight: FontWeight.w600,
       overflow: TextOverflow.ellipsis,
       decoration: TextDecoration.none);
 

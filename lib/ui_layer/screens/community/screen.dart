@@ -10,6 +10,7 @@ import '../../../domain/model/bit_nav_model.dart';
 import '../../notifiers/home_config_notifier.dart';
 import '../../notifiers/user_notifier.dart';
 import '../../router/routes.dart';
+import '../AI/face_swap/screen.dart';
 import '../AI/strip_off/screen.dart';
 import '../image_paths.dart';
 
@@ -205,7 +206,7 @@ class _BodyState extends State<_Body> {
             return const StripOffScreen();
           }
           if (e.id == 10001) {//如果是AI换脸界面
-            return Container();
+            return const FaceSwapScreen();
           }
           if (e.mask == 1) {
             return Stack(
