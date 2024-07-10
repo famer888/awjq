@@ -141,5 +141,8 @@ class MyImagePaths {
   static const appCoinsOrange = './assets/images/app_coins_orange.png';
   static const appStripOff = './assets/images/app_strip_off.png';
   static const appUploadImg = './assets/images/app_upload_img.png';
-
+  static const appAIFaceSampleCorrect = './assets/images/app_ai_face_sample_correct.png';
+  static const appAIFaceSampleGlasses = './assets/images/app_ai_face_sample_glasses.png';
+  static const appAIFaceSampleMask = './assets/images/app_ai_face_sample_mask.png';
+  static const appCircleSlose = './assets/images/app_circle_close.png';
 }

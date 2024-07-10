@@ -2240,6 +2240,12 @@ class MyTheme {
       overflow: TextOverflow.ellipsis,
       decoration: TextDecoration.none);
 
+  static final TextStyle white06_13 = TextStyle(
+      color: white06Color,
+      fontSize: 13.sp,
+      overflow: TextOverflow.ellipsis,
+      decoration: TextDecoration.none);
+
   static final TextStyle white06_10 = TextStyle(
       color: white06Color,
       fontSize: 10.sp,

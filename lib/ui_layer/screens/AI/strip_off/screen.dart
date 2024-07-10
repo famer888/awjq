@@ -328,7 +328,7 @@ class _StripOffScreenState extends State<StripOffScreen> {
     MyToast.showLoading(text: 'scz'.tr());
     final result = await homeConfigNotifier.uploadImage(xFile);
 
-    developer.log('AI图片上传返回数据：$result');
+    developer.log('AI-脱衣：图片上传返回数据：$result');
 
     if (result != null && result['code'] == 1) {
       final url = "${result['msg']}";

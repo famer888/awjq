@@ -1,17 +1,9 @@
 import '../../../../domain/model/ai_model.dart';
-import '../../../../domain/model/banner_model.dart';
 import '../../../../domain/model/bit_nav_model.dart';
-import '../../../../domain/model/live_model.dart';
 import '../../../../domain/remote_domain/domains/ai.dart';
-import '../../../../domain/remote_domain/domains/live.dart';
 import '../../../const.dart';
 import '../../../notifiers/home_config_notifier.dart';
-import '../../common_widgets/Live/live_video_card.dart';
-import '../../common_widgets/general_banner.dart';
-import '../../common_widgets/marquee_widget.dart';
-import '../../common_widgets/my_image.dart';
 import '../../common_widgets/my_list_view.dart';
-import '../../image_paths.dart';
 import '../../theme.dart';
 import '../../../utils/my_toast.dart';
 import 'package:flutter/material.dart';
