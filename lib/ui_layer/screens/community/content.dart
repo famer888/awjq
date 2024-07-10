@@ -49,12 +49,7 @@ class _CommunityContentViewState extends State<CommunityContentView> {
     required int pageSize,
     required String sort,
   }) async {
-    final result = widget.id == 100
-        ? await _domain.communityAiList(
-            page: page,
-            limit: pageSize,
-          )
-        : await _domain.communitySortList(
+    final result = await _domain.communitySortList(
             id: widget.id,
             sort: sort,
             page: page,

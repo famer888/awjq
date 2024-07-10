@@ -105,60 +105,60 @@ class AdModel {
 }
 
 class Config {
-  Config({
-    required this.imgBase,
-    required this.imgUploadUrl,
-    this.mp4UploadUrl,
-    this.mobileMp4UploadUrl,
-    required this.uploadImgKey,
-    this.uploadMp4Key,
-    this.uuid,
-    this.github,
-    this.officeSite,
-    this.officialGroup,
-    this.line,
-    this.m3u8Encrypt,
-    this.videoEncryptApi,
-    this.videoEncryptReferer,
-    this.videoEncryptM3u8,
-    required this.vipLevelStr,
-    required this.vipNameStr,
-    required this.navId,
-    this.lqNavid,
-    this.dmNavid,
-    this.mhNavid,
-    this.awNavid,
-    this.githubUrl,
-    this.linesUrl,
-    this.tipsShareText,
-    this.girlCommentOption,
-    this.shortSite,
-    this.proxyJoinNum,
-    this.solution,
-    this.personAds,
-    this.dayPrice,
-    this.coverIds,
-    this.coverVipStr,
-    this.coverTips,
-    this.sortNav,
-    this.forumNav,
-    this.seedSortNav,
-    required this.seedTopNav,
-    required this.liveTopNav,
-    required this.monitorTopNav,
-    required this.faceTopNav,
-    this.showApp,
-    required this.potatoGroup,
-    required this.tgGroup,
-    required this.payAi,
-    required this.seedVipTip,
-    required this.seedCoinsTip,
-    required this.wdaiStr,
-    required this.vipLevelAwqStr,
-    required this.vipNameAwqStr,
-    this.faceCoins,
-    this.stripCoins
-  });
+  Config(
+      {required this.imgBase,
+      required this.imgUploadUrl,
+      this.mp4UploadUrl,
+      this.mobileMp4UploadUrl,
+      required this.uploadImgKey,
+      this.uploadMp4Key,
+      this.uuid,
+      this.github,
+      this.officeSite,
+      this.officialGroup,
+      this.line,
+      this.m3u8Encrypt,
+      this.videoEncryptApi,
+      this.videoEncryptReferer,
+      this.videoEncryptM3u8,
+      required this.vipLevelStr,
+      required this.vipNameStr,
+      required this.navId,
+      this.lqNavid,
+      this.dmNavid,
+      this.mhNavid,
+      this.awNavid,
+      this.githubUrl,
+      this.linesUrl,
+      this.tipsShareText,
+      this.girlCommentOption,
+      this.shortSite,
+      this.proxyJoinNum,
+      this.solution,
+      this.personAds,
+      this.dayPrice,
+      this.coverIds,
+      this.coverVipStr,
+      this.coverTips,
+      this.sortNav,
+      this.forumNav,
+      this.seedSortNav,
+      required this.seedTopNav,
+      required this.liveTopNav,
+      required this.monitorTopNav,
+      required this.faceTopNav,
+      required this.faceSortNav,
+      this.showApp,
+      required this.potatoGroup,
+      required this.tgGroup,
+      required this.payAi,
+      required this.seedVipTip,
+      required this.seedCoinsTip,
+      required this.wdaiStr,
+      required this.vipLevelAwqStr,
+      required this.vipNameAwqStr,
+      this.faceCoins,
+      this.stripCoins});
 
   final String? dayPrice;
   final dynamic personAds;
@@ -201,6 +201,8 @@ class Config {
   final List<BitNavModel> liveTopNav;
   final List<BitNavModel> monitorTopNav;
   final List<BitNavModel> faceTopNav;
+  final List<BitNavModel> faceSortNav;
+
   final int payAi;
   final int? showApp;
   final String potatoGroup;
@@ -261,14 +263,13 @@ class Config {
             json['seed_top_nav']?.map((x) => BitSeedNavModel.fromJson(x)) ??
                 []),
         liveTopNav: List<BitNavModel>.from(
-            json['live_top_nav']?.map((x) => BitNavModel.fromJson(x)) ??
-                []),
+            json['live_top_nav']?.map((x) => BitNavModel.fromJson(x)) ?? []),
         monitorTopNav: List<BitNavModel>.from(
-            json['monitor_top_nav']?.map((x) => BitNavModel.fromJson(x)) ??
-                []),
+            json['monitor_top_nav']?.map((x) => BitNavModel.fromJson(x)) ?? []),
         faceTopNav: List<BitNavModel>.from(
-            json['face_top_nav']?.map((x) => BitNavModel.fromJson(x)) ??
-                []),
+            json['face_top_nav']?.map((x) => BitNavModel.fromJson(x)) ?? []),
+        faceSortNav: List<BitNavModel>.from(
+            json['face_sort_nav']?.map((x) => BitNavModel.fromJson(x)) ?? []),
         payAi: json['pay_ai'] ?? 0,
         showApp: json['show_app'],
         potatoGroup: json['potato_group'] ?? '',
@@ -281,8 +282,7 @@ class Config {
         vipNameAwqStr: json['vip_name_awq_str'] ?? '',
         faceCoins: json['face_coins'],
         stripCoins: json['strip_coins'],
-
-  );
+      );
 
   Map<String, dynamic> toJson() => {
         'day_price': dayPrice,
@@ -326,6 +326,7 @@ class Config {
         'monitor_top_nav': monitorTopNav.map((e) => e).toList(),
         'face_top_nav': faceTopNav.map((e) => e).toList(),
         'seed_sort_nav': seedSortNav?.map((e) => e).toList() ?? [],
+        'face_sort_nav': faceSortNav.map((e) => e).toList(),
         'pay_ai': payAi,
         'show_app': showApp,
         'potato_group': potatoGroup,
@@ -334,8 +335,7 @@ class Config {
         'seed_coins_tip': seedCoinsTip,
         'strip_coins': stripCoins,
         'face_coins': faceCoins,
-
-  };
+      };
 }
 
 class Notice {
@@ -451,6 +451,7 @@ class Help {
     required this.type,
     required this.name,
   });
+
   final List<HelpItem> items;
   final int type;
   final String name;
@@ -472,6 +473,7 @@ class HelpItem {
       required this.views,
       required this.createdAt,
       required this.updatedAt});
+
   final int id;
   final String question;
   final String answer;

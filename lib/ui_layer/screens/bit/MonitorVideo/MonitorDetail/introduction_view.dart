@@ -37,7 +37,7 @@ class _MonitorVideoDetailIntroductionViewState extends State<MonitorVideoDetailI
     final res = await monitorDomain.getMonitorRecommend(
         id: int.parse(widget.id),
         page: page,
-        limit: pageSize
+        limit: 16
     );
     if (res.data case final data?) {
       return data;
@@ -58,6 +58,7 @@ class _MonitorVideoDetailIntroductionViewState extends State<MonitorVideoDetailI
     return MyListView.grid(
       childAspectRatio: UILayerConst.videoRatio,
       crossAxisSpacing: 8.w,
+      isNeedMore: false,
       header: _HeaderView(data: videoInfo),
       padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding ,vertical: MyTheme.pagePadding),
       itemBuilder: (context, item, index) => MonitorCard(data: item),

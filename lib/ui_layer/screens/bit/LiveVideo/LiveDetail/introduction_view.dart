@@ -38,7 +38,7 @@ class _LiveVideoDetailIntroductionViewState extends State<LiveVideoDetailIntrodu
     final res = await liveDomain.getLiveRecommend(
         id: int.parse(widget.id),
         page: page,
-        limit: pageSize
+        limit: 16
     );
     if (res.data case final data?) {
       return data;
@@ -60,6 +60,7 @@ class _LiveVideoDetailIntroductionViewState extends State<LiveVideoDetailIntrodu
       childAspectRatio: UILayerConst.videoRatio,
       crossAxisSpacing: 8.w,
       header: _HeaderView(data: videoInfo),
+      isNeedMore: false,
       padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding ,vertical: MyTheme.pagePadding),
       itemBuilder: (context, item, index) => LiveVideoCard(data: item),
       onFetchingMore: (currentPage, pageSize) => _getData(
