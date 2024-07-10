@@ -1,3 +1,4 @@
+import 'package:dotted_decoration/dotted_decoration.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -28,7 +29,6 @@ class _FaceSwapSheetViewState extends State<FaceSwapSheetView> {
   String _aiRule = ''; //换脸规则
 
   Map imgMap = {};
-  Map faceImgMap = {};
 
   final ImagePicker _picker = ImagePicker();
   late final homeConfigNotifier = context.read<HomeConfigNotifier>();
@@ -109,31 +109,36 @@ class _FaceSwapSheetViewState extends State<FaceSwapSheetView> {
                             child: Container(
                               width: double.infinity,
                               height: 200.w,
-                              // padding: EdgeInsets.symmetric(vertical: 20.w)
-                              clipBehavior: Clip.hardEdge,
-                              decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(0.05),
-                                  borderRadius: BorderRadius.circular(7.w)),
-                              child: faceImgMap.isNotEmpty
-                                  ? MyImage.network(faceImgMap['url'])
+                              decoration: imgMap.isEmpty
+                                  ? DottedDecoration(
+                                  borderRadius: BorderRadius.all(Radius.circular(7.w)),
+                                  shape: Shape.box,
+                                  color: MyTheme.cyanColor00edfd,
+                                  strokeWidth: 1.w)
+                                  : null,
+                              alignment: Alignment.center,
+                              child: imgMap.isNotEmpty
+                                  ? MyImage.network(imgMap['url'])
                                   : Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        MyImage.asset(
-                                          MyImagePaths.appUploadImg,
-                                          width: 35.w,
-                                          height: 35.w,
-                                        ),
-                                        SizedBox(
-                                          height: 10.w,
-                                        ),
-                                        Text(
-                                          tr('djsctp'),
-                                          style: MyTheme.white08_12,
-                                        )
-                                      ],
-                                    ),
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  MyImage.asset(
+                                    MyImagePaths.appUploadImg,
+                                    width: 35.w,
+                                    height: 35.w,
+                                  ),
+                                  SizedBox(height: 5.w),
+                                  Text(
+                                    tr('sclbtp'), //上传脸部图片
+                                    style: MyTheme.white08_12,
+                                  ),
+                                  SizedBox(height: 5.w),
+                                  Text(
+                                    tr('tpdxbcg2mb'), //图片大小不超过2MB
+                                    style: MyTheme.white06_10,
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         ],
