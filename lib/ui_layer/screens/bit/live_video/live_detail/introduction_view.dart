@@ -6,7 +6,6 @@ import '../../../../../domain/remote_domain/domains/live.dart';
 import '../../../../const.dart';
 import '../../../../router/routes.dart';
 import '../../../common_widgets/general_banner.dart';
-import '../../../common_widgets/live_card/live_video_card.dart';
 import '../../../common_widgets/my_image.dart';
 import '../../../common_widgets/my_list_view.dart';
 import '../../../image_paths.dart';
@@ -19,6 +18,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+
+import '../live_card/live_video_card.dart';
 
 class LiveVideoDetailIntroductionView extends StatefulWidget {
   const LiveVideoDetailIntroductionView({super.key, required this.id, required this.data});

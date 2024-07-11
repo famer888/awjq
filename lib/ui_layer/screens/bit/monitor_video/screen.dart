@@ -6,7 +6,6 @@ import '../../../../domain/remote_domain/domains/monitor.dart';
 import '../../../const.dart';
 import '../../common_widgets/general_banner.dart';
 import '../../common_widgets/marquee_widget.dart';
-import '../../common_widgets/monitor_card/monitor_card.dart';
 import '../../common_widgets/my_image.dart';
 import '../../common_widgets/my_list_view.dart';
 import '../../image_paths.dart';
@@ -15,6 +14,8 @@ import '../../../utils/my_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+
+import 'monitor_card/monitor_card.dart';
 
 class MonitorVideoView extends StatefulWidget {
   const MonitorVideoView({super.key, required this.nav});

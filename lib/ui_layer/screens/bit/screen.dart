@@ -11,9 +11,9 @@ import '../common_widgets/screen_background.dart';
 import '../common_widgets/status/loading.dart';
 import '../common_widgets/status/network_error.dart';
 import '../theme.dart';
-import 'LiveVideo/screen.dart';
-import 'MonitorVideo/screen.dart';
 import 'content.dart';
+import 'live_video/screen.dart';
+import 'monitor_video/screen.dart';
 
 class BitScreen extends StatefulWidget {
   const BitScreen({super.key});

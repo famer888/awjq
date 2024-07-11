@@ -4,7 +4,6 @@ import '../../../../domain/model/live_model.dart';
 import '../../../../domain/remote_domain/domains/live.dart';
 import '../../../const.dart';
 import '../../common_widgets/general_banner.dart';
-import '../../common_widgets/live_card/live_video_card.dart';
 import '../../common_widgets/marquee_widget.dart';
 import '../../common_widgets/my_image.dart';
 import '../../common_widgets/my_list_view.dart';
@@ -14,6 +13,8 @@ import '../../../utils/my_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+
+import 'live_card/live_video_card.dart';
 
 class LiveVideoView extends StatefulWidget {
   const LiveVideoView({super.key, required this.nav});

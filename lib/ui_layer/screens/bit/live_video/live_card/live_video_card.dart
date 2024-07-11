@@ -1,12 +1,14 @@
-import '../../../../domain/model/live_model.dart';
-import '../../image_paths.dart';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../router/routes.dart';
-import '../../../utils/common_utils.dart';
-import '../../theme.dart';
-import '../my_image.dart';
+
+import '../../../../../domain/model/live_model.dart';
+import '../../../../router/routes.dart';
+import '../../../../utils/common_utils.dart';
+import '../../../common_widgets/my_image.dart';
+import '../../../image_paths.dart';
+import '../../../theme.dart';
 
 class LiveVideoCard extends StatelessWidget {
   const LiveVideoCard({super.key, required this.data});

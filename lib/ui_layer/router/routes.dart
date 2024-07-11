@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../domain/model/video_detail_model.dart';
-import '../screens/bit/LiveVideo/LiveDetail/screen.dart';
-import '../screens/bit/MonitorVideo/MonitorDetail/screen.dart';
+import '../screens/bit/live_video/live_detail/screen.dart';
+import '../screens/bit/monitor_video/monitor_detail/screen.dart';
 import '../screens/community/module/screen.dart';
 import '../screens/bit/screen.dart';
 import '../screens/bit/detail/screen.dart';
