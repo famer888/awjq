@@ -453,7 +453,11 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                     ),
                     child: Text(
                         '${CommonUtils.renderEnFixedNumber(widget.info?.viewFct ?? 0)}${'gk'.tr()}',
-                        style: MyTheme.white09_10),
+                        style: const TextStyle(
+                            color: MyTheme.white09Color,
+                            fontSize: 10,
+                            overflow: TextOverflow.ellipsis,
+                            decoration: TextDecoration.none)),
                   ),
                   const MyImage.asset(
                     MyImagePaths.appHots,
@@ -825,7 +829,11 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
               width: 60,
               height: 28,
               child: TextField(
-                style: MyTheme.white08_12,
+                style: const TextStyle(
+                    color: MyTheme.white08Color,
+                    fontSize: 12,
+                    overflow: TextOverflow.ellipsis,
+                    decoration: TextDecoration.none),
                 controller: _textFieldController,
                 focusNode: _focusNode,
                 decoration: InputDecoration(
@@ -855,7 +863,11 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                   ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Text(tr('fas'), style: MyTheme.white08_12),
+                    child: Text(tr('fas'), style: const TextStyle(
+                        color: MyTheme.white08Color,
+                        fontSize: 12,
+                        overflow: TextOverflow.ellipsis,
+                        decoration: TextDecoration.none)),
                   ),
                 ),
                 onTap: () {
@@ -917,11 +929,11 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
         Ink(
           child: InkWell(
             onTap: () {
+              isShowChangeLine = !isShowChangeLine;
               if (_chanelIndex == index) {
                 return;
               }
               _chanelIndex = index;
-              isShowChangeLine = !isShowChangeLine;
               widget.changeLine?.call(_chanelIndex); //回传播放器组件中取播放相应链接
               if (mounted) setState(() {});
             },
