@@ -325,6 +325,10 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
   bool isShowChangeLine = false; //是否显示切换线路弹窗
   int _chanelIndex = 0; //播放线路
 
+  final GlobalKey _globalKey = GlobalKey();//通过全局key，获取切换线路位置及尺寸，方便线路弹窗定位
+  Offset _offset = Offset.zero;
+  Size _size = Size.zero;
+
   void _hideKeyboard(BuildContext context) {
     isShowChangeLine = false;
     _textFieldController.text = '';
@@ -338,6 +342,19 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
     super.initState();
     _chanelIndex = widget.chanelIndex ?? 0;
     initializeData();
+
+    _getWidgetInfo();
+
+  }
+
+  void _getWidgetInfo() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Future.delayed(const Duration(milliseconds: 50), () {//延迟获取，防止全屏时无法获取正确位置
+        final RenderBox? renderBox = _globalKey.currentContext?.findRenderObject() as RenderBox?;
+        _offset = renderBox?.localToGlobal(Offset.zero) ?? Offset.zero;
+        _size = renderBox?.size ?? Size.zero;
+      });
+    });
   }
 
   Future<void> initializeData() async {
@@ -498,11 +515,11 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
         ),
         Positioned(
             bottom: widget.isBack ? 10 : 20,
-            left: widget.isBack ? 156 : 196,
+            left: _offset.dx - 25,
             child: isShowChangeLine
                 ? FlickAutoHideChild(
                     child: Container(
-                      width: 80,
+                      width: _size.width + 35,
                       height: (widget.info?.hls?.length ?? 0) * 25 + 30,
                       decoration: BoxDecoration(
                         color: Colors.black45,
@@ -511,7 +528,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                       child: Padding(
                         padding: const EdgeInsets.all(5),
                         child: Column(
-                          children: _buildChangeLineListWidget(),
+                          children: _buildChangeLineListWidget(_size.width + 35),
                         ),
                       ),
                     ),
@@ -863,7 +880,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
             children: [
               const MyImage.asset(MyImagePaths.appChangeLine,
                   width: 25, height: 25, fit: BoxFit.contain),
-              Text(tr('qhxl'), style: MyTheme.white08_12)
+              Text(key:_globalKey ,tr('qhxl'), style: MyTheme.white08_12)
             ],
           )),
     ]);
@@ -893,7 +910,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
     );
   }
 
-  List<Widget> _buildChangeLineListWidget() {
+  List<Widget> _buildChangeLineListWidget(double width) {
     List<Widget> columnChild = [];
     widget.info?.hls?.asMap().forEach((index, e) {
       columnChild.add(
@@ -913,7 +930,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
               children: [
                 Container(
                   alignment: Alignment.centerLeft,
-                  width: 50,
+                  width: width - 35,
                   height: 25,
                   child: Text(
                     e.label,
@@ -930,7 +947,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
         ),
       );
       columnChild.add(Container(
-        width: 70,
+        width: width - 10,
         height: 0.5,
         color: Colors.white10,
       ));
