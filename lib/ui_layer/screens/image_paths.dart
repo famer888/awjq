@@ -145,4 +145,6 @@ class MyImagePaths {
   static const appAIFaceSampleGlasses = './assets/images/app_ai_face_sample_glasses.png';
   static const appAIFaceSampleMask = './assets/images/app_ai_face_sample_mask.png';
   static const appCircleSlose = './assets/images/app_circle_close.png';
+  static const appChangeLine = './assets/images/app_change_line.png';
+
 }

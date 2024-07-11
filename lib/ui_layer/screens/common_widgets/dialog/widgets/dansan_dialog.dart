@@ -54,7 +54,7 @@ class DanSanDialog extends StatelessWidget {
                     GestureDetector(
                       onTap: () => context.pop(),
                       child: MyImage.asset(
-                        MyImagePaths.appDialogClose,
+                        MyImagePaths.appCircleSlose,
                         width: 30.w,
                       ),
                     ),

@@ -38,7 +38,7 @@ class _MonitorVideoDetailIntroductionViewState extends State<MonitorVideoDetailI
     final res = await monitorDomain.getMonitorRecommend(
         id: int.parse(widget.id),
         page: page,
-        limit: 16
+        limit: 20//推荐监控视频只显示20个
     );
     if (res.data case final data?) {
       return data;

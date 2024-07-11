@@ -39,7 +39,7 @@ class _LiveVideoDetailIntroductionViewState extends State<LiveVideoDetailIntrodu
     final res = await liveDomain.getLiveRecommend(
         id: int.parse(widget.id),
         page: page,
-        limit: 16
+        limit: 20//推荐直播视频只显示20个
     );
     if (res.data case final data?) {
       return data;

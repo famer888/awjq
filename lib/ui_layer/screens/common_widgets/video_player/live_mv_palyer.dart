@@ -1,3 +1,4 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/foundation.dart';
@@ -742,18 +743,36 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const MyImage.asset(MyImagePaths.appCommentWhite,
-                width: 25, height: 25),
+            SizedBox(width: 5.w),
+            GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              child: isbarrage
+                  ? const MyImage.asset(MyImagePaths.appOnDanmu,
+                      width: 25, height: 25, fit: BoxFit.contain)
+                  : const MyImage.asset(MyImagePaths.appOffDanmu,
+                      width: 25, height: 25, fit: BoxFit.contain),
+              onTap: () {
+                //弹幕开关
+                final cacheDomain = context.read<CacheDomain>();
+                if (isbarrage) {
+                  cacheDomain.upsertIsBarrage(false);
+                  isbarrage = false;
+                } else {
+                  cacheDomain.upsertIsBarrage(true);
+                  isbarrage = true;
+                }
+                _showDMTipsToast(isbarrage);
+
+                if (mounted) setState(() {});
+              },
+            ),
+            SizedBox(width: 3.w),
             Container(
               alignment: Alignment.center,
               width: 60,
               height: 28,
               child: TextField(
-                style: const TextStyle(
-                    color: MyTheme.white08Color,
-                    fontSize: 12,
-                    overflow: TextOverflow.ellipsis,
-                    decoration: TextDecoration.none),
+                style: MyTheme.white08_12,
                 controller: _textFieldController,
                 focusNode: _focusNode,
                 decoration: InputDecoration(
@@ -796,30 +815,41 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
           ],
         ),
       ),
-      const SizedBox(width: 10),
+      SizedBox(width: 10.w),
       GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        child: isbarrage
-            ? const MyImage.asset(MyImagePaths.appOnDanmu,
-                width: 25, height: 25, fit: BoxFit.contain)
-            : const MyImage.asset(MyImagePaths.appOffDanmu,
-                width: 25, height: 25, fit: BoxFit.contain),
-        onTap: () {
-          //弹幕开关
-          final cacheDomain = context.read<CacheDomain>();
-          if (isbarrage) {
-            cacheDomain.upsertIsBarrage(false);
-            isbarrage = false;
-          } else {
-            cacheDomain.upsertIsBarrage(true);
-            isbarrage = true;
-          }
-          if (mounted) setState(() {});
-        },
-      ),
-      const SizedBox(width: 3),
-      Text(tr('dmkg'), style: MyTheme.white12),
+          behavior: HitTestBehavior.translucent,
+          onTap: () {
+            //切换路线
+            if (mounted) setState(() {});
+          },
+          child: Row(
+            children: [
+              const MyImage.asset(MyImagePaths.appChangeLine,
+                  width: 25, height: 25, fit: BoxFit.contain),
+              Text(tr('qhxl'), style: MyTheme.white08_12)
+            ],
+          )),
     ]);
+  }
+
+  void _showDMTipsToast(bool isOpen) {
+    BotToast.showCustomText(
+      toastBuilder: (_) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        decoration: BoxDecoration(
+          color: Colors.black45, // 背景颜色
+          borderRadius: BorderRadius.circular(15), // 圆角
+        ),
+        width: 90,
+        height: 30,
+        alignment: Alignment.center,
+        child: Text(isOpen ? tr('dmydk') : tr('dmygb'), style: MyTheme.white12,
+          textAlign: TextAlign.center,
+        ),
+      ),
+      duration: const Duration(seconds: 2), // 显示时长
+      align: Alignment(0.0, widget.isBack ? -0.8 : -0.2), // 位置
+    );
   }
 
   Widget _conditionWidget(BuildContext context) {
