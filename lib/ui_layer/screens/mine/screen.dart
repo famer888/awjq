@@ -180,7 +180,7 @@ class _HeaderInfo extends StatelessWidget {
                       member.nickname,
                       style: MyTheme.white18bold,
                     ),
-                    SizedBox(height: 2.w),
+                    SizedBox(width: 3.w),
                     if (member.agent == 1)
                       Icon(
                         Icons.verified_sharp,

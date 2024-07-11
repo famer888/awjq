@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:bot_toast/bot_toast.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flick_video_player/flick_video_player.dart';
@@ -59,7 +61,7 @@ class LiveMvPlayer extends StatefulWidget {
 class _LiveMvPlayerState extends State<LiveMvPlayer> with NVideoURLMinxin {
   FlickManager? flickManager;
   String playerStr = '';
-  int chanelIndex = 0;//播放线路
+  int chanelIndex = 0; //播放线路
   @override
   void initState() {
     super.initState();
@@ -77,7 +79,7 @@ class _LiveMvPlayerState extends State<LiveMvPlayer> with NVideoURLMinxin {
       if (widget.info.hls?.isNotEmpty ?? false) {
         playerStr = widget.info.hls?.last.url ?? '';
         final hlsLeght = widget.info.hls?.length ?? 0;
-        chanelIndex = hlsLeght - 1;//记录播放的是哪条线路
+        chanelIndex = hlsLeght - 1; //记录播放的是哪条线路
       }
     }
 
@@ -297,7 +299,7 @@ class _SinkPortraitLandWidget extends StatefulWidget {
   final Function? nowByKb; //钻石购买
   final Function(int)? changeLine; //切换线路
   final bool noBack;
-  final int? chanelIndex;//播放线路
+  final int? chanelIndex; //播放线路
 
   /// 显示全屏按钮是否判断视频长宽比
   final bool needCheckAspectRatio;
@@ -320,9 +322,8 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
 
   final _barrageKey = GlobalKey<BarrageState>();
 
-  bool isShowChangeLine = false;//是否显示切换线路弹窗
-  int _chanelIndex = 0;//播放线路
-
+  bool isShowChangeLine = false; //是否显示切换线路弹窗
+  int _chanelIndex = 0; //播放线路
 
   void _hideKeyboard(BuildContext context) {
     isShowChangeLine = false;
@@ -498,22 +499,24 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
         Positioned(
             bottom: widget.isBack ? 10 : 20,
             left: widget.isBack ? 156 : 196,
-            child: isShowChangeLine ? FlickAutoHideChild(
-              child: Container(
-                width: 80,
-                height: (widget.info?.hls?.length ?? 0) * 25 + 30,
-                decoration: BoxDecoration(
-                  color: Colors.black45,
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(5),
-                  child: Column(
-                    children: _buildChangeLineListWidget(),
-                  ),
-                ),
-              ),
-            ) : const SizedBox.shrink()),
+            child: isShowChangeLine
+                ? FlickAutoHideChild(
+                    child: Container(
+                      width: 80,
+                      height: (widget.info?.hls?.length ?? 0) * 25 + 30,
+                      decoration: BoxDecoration(
+                        color: Colors.black45,
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(5),
+                        child: Column(
+                          children: _buildChangeLineListWidget(),
+                        ),
+                      ),
+                    ),
+                  )
+                : const SizedBox.shrink()),
         Positioned(
           bottom: 10.w,
           left: 13.w,
@@ -879,7 +882,9 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
         width: 90,
         height: 30,
         alignment: Alignment.center,
-        child: Text(isOpen ? tr('dmydk') : tr('dmygb'), style: MyTheme.white12,
+        child: Text(
+          isOpen ? tr('dmydk') : tr('dmygb'),
+          style: MyTheme.white12,
           textAlign: TextAlign.center,
         ),
       ),
@@ -900,7 +905,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
               }
               _chanelIndex = index;
               isShowChangeLine = !isShowChangeLine;
-              widget.changeLine?.call(_chanelIndex);//回传播放器组件中取播放相应链接
+              widget.changeLine?.call(_chanelIndex); //回传播放器组件中取播放相应链接
               if (mounted) setState(() {});
             },
             child: Row(
@@ -910,24 +915,25 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                   alignment: Alignment.centerLeft,
                   width: 50,
                   height: 25,
-                  child: Text(e.label, style: MyTheme.white12,
+                  child: Text(
+                    e.label,
+                    style: MyTheme.white12,
                   ),
                 ),
-                (index == _chanelIndex) ? const MyImage.asset(MyImagePaths.appGouXWhite,
-                    width: 20,
-                    height: 20) : const SizedBox.shrink()
+                (index == _chanelIndex)
+                    ? const MyImage.asset(MyImagePaths.appGouXWhite,
+                        width: 20, height: 20)
+                    : const SizedBox.shrink()
               ],
             ),
           ),
         ),
       );
-      columnChild.add(
-        Container(
-            width: 70,
-            height: 0.5,
-            color: Colors.white10,
-          )
-      );
+      columnChild.add(Container(
+        width: 70,
+        height: 0.5,
+        color: Colors.white10,
+      ));
     });
     if (columnChild.isNotEmpty) {
       columnChild.removeAt(columnChild.length - 1);
@@ -942,7 +948,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
     Member user = context.read<UserNotifier>().member;
     if (user.vipLevel < 1 && widget.info?.type == 1) {
       //需要VIP
-      dgt = Text(tr('kvbw'),
+      dgt = Text(widget.info?.payTip ?? tr('kvbw'),
           style: MyTheme.white255_14_M, maxLines: 2); //开通VIP或做任务获取VIP解锁精彩完整版！
       vflag = false;
     } else if (widget.info?.type == 2) {
@@ -959,113 +965,131 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
       );
       vflag = true;
     }
-    return Container(
-      color: Colors.black87,
-      child: Column(children: [
-        Padding(
-          padding: EdgeInsets.all(8.w),
-          child: Container(
-            alignment: Alignment.centerLeft,
-            height: 22,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  width: 22,
-                  height: 22,
-                  decoration: const BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                          color: Color.fromRGBO(0, 0, 0, 0.2),
-                          offset: Offset(0, 0),
-                          blurRadius: 11)
-                    ],
-                  ),
-                  alignment: Alignment.center,
-                  child: GestureDetector(
-                    behavior: HitTestBehavior.translucent,
-                    child: const MyImage.asset(
-                      MyImagePaths.appNavBackWN,
-                      width: 18,
-                      height: 18,
-                      fit: BoxFit.contain,
-                    ),
-                    onTap: () {
-                      context.pop();
-                    },
-                  ),
-                ),
-              ],
+    return Stack(
+      children: [
+        Positioned(child: MyImage.network(widget.info?.cover ?? '')),
+        // 毛玻璃效果
+        Positioned.fill(
+          child: ClipRect(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+              child: Container(
+                color: Colors.black.withOpacity(0.1),
+              ),
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(
-            top: 20,
-            left: 50,
-            right: 50,
-          ),
-          child: Column(
-            children: [
-              // Text(widget.info?.payTip ?? '', style: MyTheme.white255_14_M),
-              const SizedBox(height: 15),
-              dgt,
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(
-            top: 16,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              GestureDetector(
-                behavior: HitTestBehavior.translucent,
-                onTap: () {
-                  if (vflag) {
-                    widget.nowByKb?.call();
-                  } else {
-                    widget.nowToVp?.call();
-                  }
-                },
-                child: Container(
-                  height: 32.w,
-                  width: 110.w,
-                  decoration: const BoxDecoration(
-                    gradient: MyTheme.gradient_90_114,
-                    borderRadius: BorderRadius.all(Radius.circular(3)),
-                  ),
-                  child: Center(
-                    child:
-                        Text(vflag ? tr('gmgk') : tr('ljkv'), //立即购买 - 立即开通VIP
-                            style: MyTheme.white13),
-                  ),
+        Positioned.fill(
+            child: Container(
+          color: Colors.transparent,
+          child: Column(children: [
+            Padding(
+              padding: EdgeInsets.all(8.w),
+              child: Container(
+                alignment: Alignment.centerLeft,
+                height: 22,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 22,
+                      height: 22,
+                      decoration: const BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                              color: Color.fromRGBO(0, 0, 0, 0.2),
+                              offset: Offset(0, 0),
+                              blurRadius: 11)
+                        ],
+                      ),
+                      alignment: Alignment.center,
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.translucent,
+                        child: const MyImage.asset(
+                          MyImagePaths.appNavBackWN,
+                          width: 18,
+                          height: 18,
+                          fit: BoxFit.contain,
+                        ),
+                        onTap: () {
+                          context.pop();
+                        },
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(width: 37),
-              GestureDetector(
-                behavior: HitTestBehavior.translucent,
-                onTap: () {
-                  widget.shareVp?.call();
-                },
-                child: Container(
-                  height: 32,
-                  width: 110,
-                  decoration: const BoxDecoration(
-                    gradient: MyTheme.gradient_90_114,
-                    borderRadius: BorderRadius.all(Radius.circular(3)),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 20,
+                left: 50,
+                right: 50,
+              ),
+              child: Column(
+                children: [
+                  // Text(widget.info?.payTip ?? '', style: MyTheme.white255_14_M),
+                  const SizedBox(height: 15),
+                  dgt,
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(
+                top: 16,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  GestureDetector(
+                    behavior: HitTestBehavior.translucent,
+                    onTap: () {
+                      if (vflag) {
+                        widget.nowByKb?.call();
+                      } else {
+                        widget.nowToVp?.call();
+                      }
+                    },
+                    child: Container(
+                      height: 32.w,
+                      width: 110.w,
+                      decoration: const BoxDecoration(
+                        gradient: MyTheme.gradient_90_114,
+                        borderRadius: BorderRadius.all(Radius.circular(3)),
+                      ),
+                      child: Center(
+                        child: Text(vflag ? tr('gmgk') : tr('ljkv'),
+                            //立即购买 - 立即开通VIP
+                            style: MyTheme.white13),
+                      ),
+                    ),
                   ),
-                  child: Center(
-                    child: Text(tr('fxdv'), style: MyTheme.white13), // 做任务得VIP
-                  ),
-                ),
-              )
-            ],
-          ),
-        )
-      ]),
+                  const SizedBox(width: 37),
+                  GestureDetector(
+                    behavior: HitTestBehavior.translucent,
+                    onTap: () {
+                      widget.shareVp?.call();
+                    },
+                    child: Container(
+                      height: 32,
+                      width: 110,
+                      decoration: const BoxDecoration(
+                        gradient: MyTheme.gradient_90_114,
+                        borderRadius: BorderRadius.all(Radius.circular(3)),
+                      ),
+                      child: Center(
+                        child:
+                            Text(tr('fxdv'), style: MyTheme.white13), // 做任务得VIP
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            )
+          ]),
+        ))
+      ],
     );
   }
 
