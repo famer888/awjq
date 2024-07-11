@@ -833,6 +833,8 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
   }
 
   void _showDMTipsToast(bool isOpen) {
+    _hideKeyboard(context);
+    BotToast.cleanAll();
     BotToast.showCustomText(
       toastBuilder: (_) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
