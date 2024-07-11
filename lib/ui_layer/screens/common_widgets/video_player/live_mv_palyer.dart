@@ -59,36 +59,26 @@ class LiveMvPlayer extends StatefulWidget {
 class _LiveMvPlayerState extends State<LiveMvPlayer> with NVideoURLMinxin {
   FlickManager? flickManager;
   String playerStr = '';
-
+  int chanelIndex = 0;//播放线路
   @override
   void initState() {
     super.initState();
     initURL();
   }
 
-  initURL() async {
+  initURL({bool isChangeLine = false}) async {
     if (widget.info.show != 'public') {
       //show的值 != “public” 直接显示已下线
       widget.info.hls = []; //防止以下线用户存有播放链接导致继续播放
     }
 
-    //筛选出高分辨率播放链接播放
-    if (widget.info.hls?.isNotEmpty ?? false) {
-      // 遍历视频列表，将每个视频信息按优先级存入 Map
-      for (HlsModel hls in widget.info.hls!) {
-        String label = hls.label;
-        if (label.contains('720')) {
-          widget.info.hls = [hls];
-          break;
-        } else if (label.contains('480')) {
-          widget.info.hls = [hls];
-          break;
-        } else if (label.contains('240')) {
-          widget.info.hls = [hls];
-          break;
-        }
+    //筛选出低分辨率播放链接优化播放；如果是切换线路重新构建播放器则无需下面处理
+    if (!isChangeLine) {
+      if (widget.info.hls?.isNotEmpty ?? false) {
+        playerStr = widget.info.hls?.last.url ?? '';
+        final hlsLeght = widget.info.hls?.length ?? 0;
+        chanelIndex = hlsLeght - 1;//记录播放的是哪条线路
       }
-      playerStr = widget.info.hls?.first.url ?? '';
     }
 
     VideoPlayerController? cr =
@@ -142,6 +132,7 @@ class _LiveMvPlayerState extends State<LiveMvPlayer> with NVideoURLMinxin {
                   info: widget.info,
                   noBack: widget.noBack,
                   needCheckAspectRatio: widget.needCheckAspectRatio,
+                  chanelIndex: chanelIndex,
                   shareVp: () {
                     const MineWelfareRoute(index: 1).push(context);
                   },
@@ -151,6 +142,12 @@ class _LiveMvPlayerState extends State<LiveMvPlayer> with NVideoURLMinxin {
                   nowByKb: () {
                     showAlertVp(goby: true);
                   },
+                  changeLine: (index) {
+                    chanelIndex = index;
+                    final hls = widget.info.hls?[index];
+                    playerStr = hls?.url ?? '';
+                    initURL(isChangeLine: true);
+                  },
                 ),
               ),
               flickVideoWithControlsFullscreen: FlickVideoWithControls(
@@ -159,6 +156,13 @@ class _LiveMvPlayerState extends State<LiveMvPlayer> with NVideoURLMinxin {
                 controls: _SinkPortraitLandWidget(
                   info: widget.info,
                   noBack: false,
+                  chanelIndex: chanelIndex,
+                  changeLine: (index) {
+                    chanelIndex = index;
+                    final hls = widget.info.hls?[index];
+                    playerStr = hls?.url ?? '';
+                    initURL(isChangeLine: true);
+                  },
                 ),
               ),
             ),
@@ -280,8 +284,10 @@ class _SinkPortraitLandWidget extends StatefulWidget {
     this.shareVp,
     this.nowToVp,
     this.nowByKb,
+    this.changeLine,
     this.needCheckAspectRatio = false,
     required this.noBack,
+    required this.chanelIndex,
   });
 
   final bool isBack;
@@ -289,7 +295,9 @@ class _SinkPortraitLandWidget extends StatefulWidget {
   final Function? shareVp; //分享得VIP
   final Function? nowToVp; //立即开通
   final Function? nowByKb; //钻石购买
+  final Function(int)? changeLine; //切换线路
   final bool noBack;
+  final int? chanelIndex;//播放线路
 
   /// 显示全屏按钮是否判断视频长宽比
   final bool needCheckAspectRatio;
@@ -312,7 +320,12 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
 
   final _barrageKey = GlobalKey<BarrageState>();
 
+  bool isShowChangeLine = false;//是否显示切换线路弹窗
+  int _chanelIndex = 0;//播放线路
+
+
   void _hideKeyboard(BuildContext context) {
+    isShowChangeLine = false;
     _textFieldController.text = '';
     _focusNode.unfocus();
     _dsTextFieldController.text = '';
@@ -322,6 +335,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
   @override
   void initState() {
     super.initState();
+    _chanelIndex = widget.chanelIndex ?? 0;
     initializeData();
   }
 
@@ -481,6 +495,25 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
             );
           }),
         ),
+        Positioned(
+            bottom: widget.isBack ? 10 : 20,
+            left: widget.isBack ? 156 : 196,
+            child: isShowChangeLine ? FlickAutoHideChild(
+              child: Container(
+                width: 80,
+                height: (widget.info?.hls?.length ?? 0) * 25 + 30,
+                decoration: BoxDecoration(
+                  color: Colors.black45,
+                  borderRadius: BorderRadius.circular(5),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(5),
+                  child: Column(
+                    children: _buildChangeLineListWidget(),
+                  ),
+                ),
+              ),
+            ) : const SizedBox.shrink()),
         Positioned(
           bottom: 10.w,
           left: 13.w,
@@ -820,6 +853,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
           behavior: HitTestBehavior.translucent,
           onTap: () {
             //切换路线
+            isShowChangeLine = !isShowChangeLine;
             if (mounted) setState(() {});
           },
           child: Row(
@@ -852,6 +886,54 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
       duration: const Duration(seconds: 2), // 显示时长
       align: Alignment(0.0, widget.isBack ? -0.8 : -0.2), // 位置
     );
+  }
+
+  List<Widget> _buildChangeLineListWidget() {
+    List<Widget> columnChild = [];
+    widget.info?.hls?.asMap().forEach((index, e) {
+      columnChild.add(
+        Ink(
+          child: InkWell(
+            onTap: () {
+              if (_chanelIndex == index) {
+                return;
+              }
+              _chanelIndex = index;
+              isShowChangeLine = !isShowChangeLine;
+              widget.changeLine?.call(_chanelIndex);//回传播放器组件中取播放相应链接
+              if (mounted) setState(() {});
+            },
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  alignment: Alignment.centerLeft,
+                  width: 50,
+                  height: 25,
+                  child: Text(e.label, style: MyTheme.white12,
+                  ),
+                ),
+                (index == _chanelIndex) ? const MyImage.asset(MyImagePaths.appGouXWhite,
+                    width: 20,
+                    height: 20) : const SizedBox.shrink()
+              ],
+            ),
+          ),
+        ),
+      );
+      columnChild.add(
+        Container(
+            width: 70,
+            height: 0.5,
+            color: Colors.white10,
+          )
+      );
+    });
+    if (columnChild.isNotEmpty) {
+      columnChild.removeAt(columnChild.length - 1);
+      columnChild.add(const SizedBox(height: 15));
+    }
+    return columnChild;
   }
 
   Widget _conditionWidget(BuildContext context) {
