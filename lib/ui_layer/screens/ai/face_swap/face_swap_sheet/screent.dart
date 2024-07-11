@@ -6,11 +6,16 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../../domain/api_validator.dart';
 import '../../../../../domain/model/ai_model.dart';
+import '../../../../../domain/model/member_model.dart';
+import '../../../../../domain/remote_domain/domains/ai.dart';
 import '../../../../notifiers/home_config_notifier.dart';
 import '../../../../notifiers/user_notifier.dart';
+import '../../../../router/routes.dart';
 import '../../../../utils/common_utils.dart';
 import '../../../../utils/my_toast.dart';
+import '../../../common_widgets/dialog/widgets/regular_dialog.dart';
 import '../../../common_widgets/my_image.dart';
 import '../../../image_paths.dart';
 import '../../../theme.dart';
@@ -49,6 +54,14 @@ class _FaceSwapSheetViewState extends State<FaceSwapSheetView> {
   @override
   Widget build(BuildContext context) {
     final sheetHeight = ScreenUtil().screenHeight * 0.7;
+
+    String imgUrl = '';
+    if (imgMap.isNotEmpty) {
+      imgUrl = imgMap['url'];
+      imgUrl = imgUrl.substring(1); //删除第一个字符/
+      imgUrl = homeConfigNotifier.config.imgBase + imgUrl;
+    }
+
     return Container(
       padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
       color: MyTheme.bgColor,
@@ -103,42 +116,43 @@ class _FaceSwapSheetViewState extends State<FaceSwapSheetView> {
                           GestureDetector(
                             behavior: HitTestBehavior.translucent,
                             onTap: () {
-                              // _isChooseFaceImage = true;//todo:
-                              // showImagePicker();
+                              _showImagePicker();
                             },
                             child: Container(
                               width: double.infinity,
                               height: 200.w,
                               decoration: imgMap.isEmpty
                                   ? DottedDecoration(
-                                  borderRadius: BorderRadius.all(Radius.circular(7.w)),
-                                  shape: Shape.box,
-                                  color: MyTheme.cyanColor00edfd,
-                                  strokeWidth: 1.w)
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(7.w)),
+                                      shape: Shape.box,
+                                      color: MyTheme.cyanColor00edfd,
+                                      strokeWidth: 1.w)
                                   : null,
                               alignment: Alignment.center,
                               child: imgMap.isNotEmpty
-                                  ? MyImage.network(imgMap['url'])
+                                  ? MyImage.network(imgUrl)
                                   : Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  MyImage.asset(
-                                    MyImagePaths.appUploadImg,
-                                    width: 35.w,
-                                    height: 35.w,
-                                  ),
-                                  SizedBox(height: 5.w),
-                                  Text(
-                                    tr('sclbtp'), //上传脸部图片
-                                    style: MyTheme.white08_12,
-                                  ),
-                                  SizedBox(height: 5.w),
-                                  Text(
-                                    tr('tpdxbcg2mb'), //图片大小不超过2MB
-                                    style: MyTheme.white06_10,
-                                  )
-                                ],
-                              ),
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        MyImage.asset(
+                                          MyImagePaths.appUploadImg,
+                                          width: 35.w,
+                                          height: 35.w,
+                                        ),
+                                        SizedBox(height: 5.w),
+                                        Text(
+                                          tr('sclbtp'), //上传脸部图片
+                                          style: MyTheme.white08_12,
+                                        ),
+                                        SizedBox(height: 5.w),
+                                        Text(
+                                          tr('tpdxbcg2mb'), //图片大小不超过2MB
+                                          style: MyTheme.white06_10,
+                                        )
+                                      ],
+                                    ),
                             ),
                           ),
                         ],
@@ -208,18 +222,26 @@ class _FaceSwapSheetViewState extends State<FaceSwapSheetView> {
                 SizedBox(height: 30.w),
                 GestureDetector(
                   behavior: HitTestBehavior.translucent,
-                  // onTap: _postSwapFace,//todo:
+                  onTap: _postTakeOff,
                   child: Container(
-                    margin: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
+                    margin:
+                        EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
                     height: 50.w,
                     decoration: BoxDecoration(
-                      // color: StyleTheme.red220Color,
                         gradient: MyTheme.gradient_90_114,
                         borderRadius: BorderRadius.circular(25.w)),
                     child: Center(
                       child: Builder(builder: (context) {
-                        String text = tr('tjdd');
-                        //todo:
+                        final faceCt = userNotifier.member.faceCt ?? 0;
+                        final faceCoins =
+                            homeConfigNotifier.config.faceCoins ?? 0;
+                        String text = tr('tjdd'); //提交订单
+                        if (faceCt > 0) {
+                          //有剩余免费次数
+                          text += '(${tr('aijrsy')}$faceCt${tr('ci')})';
+                        } else {
+                          text += '($faceCoins${tr('jb')}/${tr('ci')})';
+                        }
                         return Text(
                           text,
                           style: MyTheme.white16medium,
@@ -231,7 +253,8 @@ class _FaceSwapSheetViewState extends State<FaceSwapSheetView> {
               ],
             ),
           ),
-          Positioned(//关闭按钮
+          Positioned(
+              //关闭按钮
               top: 13.w,
               right: 0.w,
               child: GestureDetector(
@@ -249,6 +272,127 @@ class _FaceSwapSheetViewState extends State<FaceSwapSheetView> {
         ],
       ),
     );
+  }
+
+  //提交订单
+  _postTakeOff() {
+    if (imgMap.isEmpty) {
+      CommonUtils.showDialog(
+        context: context,
+        builder: (context) => RegularDialog(
+          buttonText: 'qd'.tr(),
+          title: 'ts'.tr(),
+          content: Text(
+            'qxztp'.tr(),
+            style: MyTheme.white255_15,
+          ),
+          confirmOnTap: () {
+            context.pop();
+          },
+        ),
+      );
+      return;
+    }
+
+    Member? user = userNotifier.member;
+    final userCoins = user.money; //用户剩余金币
+    final faceCt = user.faceCt ?? 0; //当日剩余次数
+    final needCoins = homeConfigNotifier.config.faceCoins ?? 0; //处理一张图片所需金币
+
+    if (faceCt > 0) {
+      //有剩余次数-直接提交订单
+      _faceSwapOptonal(0, faceCt);
+    } else {
+      //直接使用金币
+      if (userCoins >= needCoins) {
+        //余额充足-直接提交订单
+        _faceSwapOptonal(needCoins, faceCt);
+      } else {
+        //余额不足，提示金币不足
+        CommonUtils.showDialog(
+          context: context,
+          builder: (context) => RegularDialog(
+            buttonText: 'qwcz'.tr(),
+            cancelText: 'qx'.tr(),
+            title: 'ts'.tr(),
+            content: RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(children: [
+                  TextSpan(
+                    text: '${tr('ndyebz')}\n${tr('syjb')}',
+                    style: MyTheme.white255_15,
+                  ),
+                  TextSpan(
+                    text: '$userCoins',
+                    style: MyTheme.orange247_15,
+                  )
+                ])),
+            confirmOnTap: () {
+              //前往充值
+              context.pop();
+              const MineWelfareRoute(index: 1).push(context);
+            },
+            cancelOnTap: () {
+              //取消
+              context.pop();
+            },
+          ),
+        );
+      }
+    }
+  }
+
+  //素材换脸接口操作
+  Future<void> _faceSwapOptonal(int needCoins, int stripCt) async {
+    MyToast.showLoading(text: tr('aiscz'));
+    final aiDomain = context.read<AIDomain>();
+    final res = await aiDomain.aIChangeFace(
+        id: widget.data.id ?? 0,
+        thumb: imgMap['url'],
+        thumbH: imgMap['thumb_height'],
+        thumbW: imgMap['thumb_width']);
+    MyToast.closeAllLoading();
+    if (res.isValid) {
+      if (needCoins == 0) {
+        //使用剩余次数不需要金币时更新用户剩余次数
+        userNotifier.setStripCt(stripCt: stripCt - 1);
+      } else {
+        userNotifier.setMoney(
+            money: userNotifier.member.money - needCoins); //更新用户的金币数量
+      }
+
+      if (mounted) {
+        setState(() {
+          imgMap = {}; //清空图片数据，可重新选择上传图片
+        });
+      }
+      _showSuccesDialog();
+    } else {
+      MyToast.showText(text: res.msg ?? '');
+    }
+  }
+
+  void _showSuccesDialog() {
+    CommonUtils.showDialog(
+      context: context,
+      builder: (context) => RegularDialog(
+        buttonText: 'gb'.tr(),
+        title: 'ts'.tr(),
+        content: Text(
+          textAlign: TextAlign.center,
+          tr('tjcgck'),
+          style: MyTheme.white255_15,
+          maxLines: 6,
+        ),
+        confirmOnTap: () {
+          context.pop();
+        },
+      ),
+    );
+  }
+
+  void _showImagePicker() {
+    _imagePickerAssets();
   }
 
   Future<void> _imagePickerAssets() async {
