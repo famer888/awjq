@@ -14,7 +14,7 @@ import '../../../const.dart';
 import '../../../notifiers/home_config_notifier.dart';
 import '../../../utils/common_utils.dart';
 import '../../../utils/my_toast.dart';
-import '../../common_widgets/Fish/fish_card.dart';
+import '../../common_widgets/fish_card/fish_card.dart';
 import '../../common_widgets/follow_button.dart';
 import '../../common_widgets/my_app_bar.dart';
 import '../../common_widgets/my_image.dart';

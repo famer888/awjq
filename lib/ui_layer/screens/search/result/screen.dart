@@ -5,8 +5,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 import '../../../const.dart';
-import '../../common_widgets/Live/live_video_card.dart';
-import '../../common_widgets/Monitor/monitor_card.dart';
 import '../../../../domain/domain.dart';
 import '../../../../domain/model/feed/feed_model.dart';
 import '../../../../domain/model/live_model.dart';
@@ -16,6 +14,8 @@ import '../../../../domain/remote_domain/domains/live.dart';
 import '../../../../domain/remote_domain/domains/monitor.dart';
 import '../../common_widgets/feed/feed_card.dart';
 import '../../common_widgets/keep_alive_wrapper.dart';
+import '../../common_widgets/live_card/live_video_card.dart';
+import '../../common_widgets/monitor_card/monitor_card.dart';
 import '../../common_widgets/my_app_bar.dart';
 import '../../common_widgets/my_list_view.dart';
 import '../../common_widgets/my_tab_bar.dart';

@@ -12,7 +12,7 @@ import '../../const.dart';
 import '../../notifiers/user_notifier.dart';
 import '../../router/routes.dart';
 import '../../utils/my_toast.dart';
-import '../common_widgets/Fish/fish_card.dart';
+import '../common_widgets/fish_card/fish_card.dart';
 import '../common_widgets/my_image.dart';
 import '../common_widgets/my_tab_bar.dart';
 import '../../notifiers/home_config_notifier.dart';
