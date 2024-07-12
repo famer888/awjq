@@ -10,6 +10,8 @@ import '../../../common_widgets/my_image.dart';
 import '../../../theme.dart';
 import 'dart:ui' as ui;
 
+import '../picture_record_preview/screen.dart';
+
 enum AIRecordType {
   StripOff,
   FaceSwap;
@@ -44,7 +46,9 @@ class _AIRecordCardState extends State<AIRecordCard> {
       child: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () {
-          if (widget.data.status == 2) {}
+          if (widget.data.status == 2) {
+              _showSheetView(context);
+          }
         },
         child: Stack(
           children: [
@@ -168,4 +172,18 @@ class _AIRecordCardState extends State<AIRecordCard> {
     }
     return '';
   }
+
+  Future<void> _showSheetView(BuildContext context) {
+    String imgStr = widget.type == AIRecordType.StripOff
+        ? (widget.data.stripThumb ?? '')
+        : (widget.data.faceThumb ?? '');
+
+    return showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      context: context,
+      builder: (context) => PictureRecordPreviewScreen(url: imgStr),
+    );
+  }
+
 }
