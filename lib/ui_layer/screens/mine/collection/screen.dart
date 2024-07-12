@@ -51,7 +51,7 @@ class _MineCollectionScreenState extends State<MineCollectionScreen> {
             decoration: TextDecoration.none,
           ),
           tabBarHeight: 40.w,
-          isScrollable: true,
+          isScrollable: false,
           titles: [
             'sping'.tr(context: context),
             'tiezt'.tr(context: context),

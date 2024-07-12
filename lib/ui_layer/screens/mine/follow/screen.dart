@@ -48,7 +48,7 @@ class _MineFollowingScreenState extends State<MineFollowingScreen> {
             decoration: TextDecoration.none,
           ),
           tabBarHeight: 40.w,
-          isScrollable: true,
+          isScrollable: false,
           titles: [
             'yhu'.tr(context: context),
             'htt'.tr(context: context),
