@@ -27,6 +27,9 @@ class AIModel {
   final String? stripThumb;
   final int? stripThumbW;
   final int? stripThumbH;
+  final String? faceThumb;
+  final int? faceThumbW;
+  final int? faceThumbH;
   final int? status;
   final String? reason;
   final String? createdAt;
@@ -41,6 +44,9 @@ class AIModel {
     this.stripThumb,
     this.stripThumbW,
     this.stripThumbH,
+    this.faceThumb,
+    this.faceThumbW,
+    this.faceThumbH,
     this.status,
     this.reason,
     this.createdAt,
@@ -56,6 +62,9 @@ class AIModel {
     stripThumb: json['strip_thumb'],
     stripThumbW: json['strip_thumb_w'],
     stripThumbH: json['strip_thumb_h'],
+    faceThumb: json['face_thumb'],
+    faceThumbW: json['face_thumb_w'],
+    faceThumbH: json['face_thumb_h'],
     status: json['status'],
     reason: json['reason'],
     createdAt: json['created_at'],
@@ -71,6 +80,9 @@ class AIModel {
     'strip_thumb': stripThumb,
     'strip_thumb_w': stripThumbW,
     'strip_thumb_h': stripThumbH,
+    'face_thumb': faceThumb,
+    'face_thumb_w': faceThumbW,
+    'face_thumb_h': faceThumbH,
     'status': status,
     'reason': reason,
     'created_at': createdAt,
