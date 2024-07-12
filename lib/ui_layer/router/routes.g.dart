@@ -40,6 +40,7 @@ List<RouteBase> get $appRoutes => [
       $originalEnterRoute,
       $communityTagDetailRoute,
       $mineBuyRoute,
+      $mineAIRecordRoute,
       $videoDetailRoute,
       $liveVideoDetailRoute,
       $monitorVideoDetailRoute,
@@ -1019,6 +1020,30 @@ extension $MineBuyRouteExtension on MineBuyRoute {
 
   String get location => GoRouteData.$location(
         '/mineBuy',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $mineAIRecordRoute => GoRouteData.$route(
+      path: '/minAIRecord',
+      parentNavigatorKey: MineAIRecordRoute.$parentNavigatorKey,
+      factory: $MineAIRecordRouteExtension._fromState,
+    );
+
+extension $MineAIRecordRouteExtension on MineAIRecordRoute {
+  static MineAIRecordRoute _fromState(GoRouterState state) =>
+      const MineAIRecordRoute();
+
+  String get location => GoRouteData.$location(
+        '/minAIRecord',
       );
 
   void go(BuildContext context) => context.go(location);

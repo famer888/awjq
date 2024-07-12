@@ -129,7 +129,6 @@ class MyTheme {
   static const Color white02Color = Color.fromRGBO(255, 255, 255, 0.2);
   static const Color white08Color = Color.fromRGBO(255, 255, 255, 0.8);
   static const Color white09Color = Color.fromRGBO(255, 255, 255, 0.9);
-
   static const Color white06Color = Color.fromRGBO(255, 255, 255, 0.6);
   static const Color blackColor18 = Color.fromRGBO(18, 18, 18, 1);
   static const Color blackColor25 = Color.fromRGBO(25, 25, 25, 1);
@@ -2238,6 +2237,12 @@ class MyTheme {
   static final TextStyle white06_12 = TextStyle(
       color: white06Color,
       fontSize: 12.sp,
+      overflow: TextOverflow.ellipsis,
+      decoration: TextDecoration.none);
+
+  static final TextStyle white06_18 = TextStyle(
+      color: white06Color,
+      fontSize: 18.sp,
       overflow: TextOverflow.ellipsis,
       decoration: TextDecoration.none);
 

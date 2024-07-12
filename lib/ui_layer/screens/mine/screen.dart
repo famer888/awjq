@@ -16,6 +16,7 @@ import '../common_widgets/my_list_view.dart';
 import '../common_widgets/screen_background.dart';
 import '../image_paths.dart';
 import '../theme.dart';
+import 'ai_record/screen.dart';
 
 class MineScreen extends StatefulWidget {
   const MineScreen({super.key});
@@ -533,7 +534,7 @@ class _ThirdMenu extends StatelessWidget {
       (
       title: 'tyhl'.tr(context: context),
       iconName: MyImagePaths.appMineAI,
-      onTap: () => null,
+      onTap: () => const MineAIRecordRoute().push(context),
       ),
       (
         title: 'wdgm'.tr(context: context),

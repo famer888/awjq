@@ -19,6 +19,7 @@ import '../screens/media_viewer/screen.dart';
 import '../screens/mine/agent/profit/screen.dart';
 import '../screens/mine/agent/promote_data/screen.dart';
 import '../screens/mine/agent/screen.dart';
+import '../screens/mine/ai_record/screen.dart';
 import '../screens/mine/buy/screen.dart';
 import '../screens/mine/coin_recharge/coin_detail/screen.dart';
 import '../screens/mine/coin_recharge/screen.dart';
@@ -604,6 +605,19 @@ class MineBuyRoute extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const MineBuyScreen();
+  }
+}
+
+@TypedGoRoute<MineAIRecordRoute>(path: AppRouterPaths.mineAIRecord)
+class MineAIRecordRoute extends GoRouteData {
+  static final GlobalKey<NavigatorState> $parentNavigatorKey =
+      AppRouter.rootNavigatorKey;
+
+  const MineAIRecordRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const MineAIRecordScreen();
   }
 }
 

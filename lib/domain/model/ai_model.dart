@@ -29,6 +29,7 @@ class AIModel {
   final int? stripThumbH;
   final int? status;
   final String? reason;
+  final String? createdAt;
 
   AIModel({
     this.id,
@@ -42,6 +43,7 @@ class AIModel {
     this.stripThumbH,
     this.status,
     this.reason,
+    this.createdAt,
   });
 
   factory AIModel.fromJson(Map<String, dynamic> json) => AIModel(
@@ -56,6 +58,7 @@ class AIModel {
     stripThumbH: json['strip_thumb_h'],
     status: json['status'],
     reason: json['reason'],
+    createdAt: json['created_at'],
   );
 
   Map<String, dynamic> toJson() => {
@@ -70,5 +73,6 @@ class AIModel {
     'strip_thumb_h': stripThumbH,
     'status': status,
     'reason': reason,
+    'created_at': createdAt,
   };
 }
