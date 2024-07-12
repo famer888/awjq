@@ -147,6 +147,7 @@ class MyImagePaths {
   static const appCircleSlose = './assets/images/app_circle_close.png';
   static const appChangeLine = './assets/images/app_change_line.png';
   static const appGouXWhite = './assets/images/app_gou_white.png';
+  static const appMineAI = './assets/images/app_mine_ai.png';
 
 
 }

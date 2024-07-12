@@ -445,8 +445,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                 children: [
                   Container(
                     margin: const EdgeInsets.only(left: 7, top: 0.5),
-                    padding:
-                        const EdgeInsets.only(left: 15, right: 6),
+                    padding: const EdgeInsets.only(left: 15, right: 6),
                     height: 18,
                     decoration: const BoxDecoration(
                       color: MyTheme.blackColor25505,
@@ -454,13 +453,15 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                     ),
                     child: SizedBox(
                       height: 18,
-                      child: Text(
-                          '${CommonUtils.renderEnFixedNumber(widget.info?.viewFct ?? 0)}${'gk'.tr()}',
-                          style: const TextStyle(
-                              color: MyTheme.white09Color,
-                              fontSize: 10,
-                              overflow: TextOverflow.ellipsis,
-                              decoration: TextDecoration.none)),
+                      child: Center(
+                        child: Text(
+                            '${CommonUtils.renderEnFixedNumber(widget.info?.viewFct ?? 0)}${'gk'.tr()}',
+                            style: const TextStyle(
+                                color: MyTheme.white09Color,
+                                fontSize: 10,
+                                overflow: TextOverflow.ellipsis,
+                                decoration: TextDecoration.none)),
+                      ),
                     ),
                   ),
                   const MyImage.asset(
