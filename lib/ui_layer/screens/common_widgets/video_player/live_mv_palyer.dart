@@ -325,7 +325,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
   bool isShowChangeLine = false; //是否显示切换线路弹窗
   int _chanelIndex = 0; //播放线路
 
-  final GlobalKey _globalKey = GlobalKey();//通过全局key，获取切换线路位置及尺寸，方便线路弹窗定位
+  final GlobalKey _globalKey = GlobalKey(); //通过全局key，获取切换线路位置及尺寸，方便线路弹窗定位
   Offset _offset = Offset.zero;
   Size _size = Size.zero;
 
@@ -344,13 +344,14 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
     initializeData();
 
     _getWidgetInfo();
-
   }
 
   void _getWidgetInfo() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Future.delayed(const Duration(milliseconds: 50), () {//延迟获取，防止全屏时无法获取正确位置
-        final RenderBox? renderBox = _globalKey.currentContext?.findRenderObject() as RenderBox?;
+      Future.delayed(const Duration(milliseconds: 50), () {
+        //延迟获取，防止全屏时无法获取正确位置
+        final RenderBox? renderBox =
+            _globalKey.currentContext?.findRenderObject() as RenderBox?;
         _offset = renderBox?.localToGlobal(Offset.zero) ?? Offset.zero;
         _size = renderBox?.size ?? Size.zero;
       });
@@ -445,19 +446,22 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                   Container(
                     margin: const EdgeInsets.only(left: 7, top: 0.5),
                     padding:
-                        const EdgeInsets.only(top: 2.5, left: 16, right: 6),
+                        const EdgeInsets.only(left: 15, right: 6),
                     height: 18,
                     decoration: const BoxDecoration(
                       color: MyTheme.blackColor25505,
                       borderRadius: BorderRadius.all(Radius.circular(9)),
                     ),
-                    child: Text(
-                        '${CommonUtils.renderEnFixedNumber(widget.info?.viewFct ?? 0)}${'gk'.tr()}',
-                        style: const TextStyle(
-                            color: MyTheme.white09Color,
-                            fontSize: 10,
-                            overflow: TextOverflow.ellipsis,
-                            decoration: TextDecoration.none)),
+                    child: SizedBox(
+                      height: 18,
+                      child: Text(
+                          '${CommonUtils.renderEnFixedNumber(widget.info?.viewFct ?? 0)}${'gk'.tr()}',
+                          style: const TextStyle(
+                              color: MyTheme.white09Color,
+                              fontSize: 10,
+                              overflow: TextOverflow.ellipsis,
+                              decoration: TextDecoration.none)),
+                    ),
                   ),
                   const MyImage.asset(
                     MyImagePaths.appHots,
@@ -532,7 +536,8 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                       child: Padding(
                         padding: const EdgeInsets.all(5),
                         child: Column(
-                          children: _buildChangeLineListWidget(_size.width + 35),
+                          children:
+                              _buildChangeLineListWidget(_size.width + 35),
                         ),
                       ),
                     ),
@@ -863,11 +868,12 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                   ),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Text(tr('fas'), style: const TextStyle(
-                        color: MyTheme.white08Color,
-                        fontSize: 12,
-                        overflow: TextOverflow.ellipsis,
-                        decoration: TextDecoration.none)),
+                    child: Text(tr('fas'),
+                        style: const TextStyle(
+                            color: MyTheme.white08Color,
+                            fontSize: 12,
+                            overflow: TextOverflow.ellipsis,
+                            decoration: TextDecoration.none)),
                   ),
                 ),
                 onTap: () {
@@ -892,7 +898,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
             children: [
               const MyImage.asset(MyImagePaths.appChangeLine,
                   width: 25, height: 25, fit: BoxFit.contain),
-              Text(key:_globalKey ,tr('qhxl'), style: MyTheme.white08_12)
+              Text(key: _globalKey, tr('qhxl'), style: MyTheme.white08_12)
             ],
           )),
     ]);
@@ -913,7 +919,11 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
         alignment: Alignment.center,
         child: Text(
           isOpen ? tr('dmydk') : tr('dmygb'),
-          style: MyTheme.white12,
+          style: const TextStyle(
+              color: Color.fromRGBO(255, 255, 255, 1),
+              fontSize: 12,
+              overflow: TextOverflow.ellipsis,
+              decoration: TextDecoration.none),
           textAlign: TextAlign.center,
         ),
       ),
@@ -996,7 +1006,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
     }
     return Stack(
       children: [
-        Positioned(child: MyImage.network(widget.info?.cover ?? '')),
+        Positioned.fill(child: MyImage.network(widget.info?.cover ?? '')),
         // 毛玻璃效果
         Positioned.fill(
           child: ClipRect(

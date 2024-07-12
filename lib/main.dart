@@ -146,6 +146,7 @@ class _MyAppState extends State<MyApp> {
           },
         ),
       ),
+      debugShowCheckedModeBanner: false, // 设置为 false 来移除右上角的 DEBUG 横幅
       builder: (context, widget) {
         widget = botToastBuilder(context, widget!);
         widget = MediaQuery(

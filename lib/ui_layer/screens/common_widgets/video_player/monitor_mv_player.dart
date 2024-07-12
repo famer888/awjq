@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/foundation.dart';
@@ -503,112 +505,130 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
       );
       vflag = true;
     }
-    return Container(
-      color: Colors.black87,
-      child: Column(children: [
-        Padding(
-          padding: EdgeInsets.all(8.w),
-          child: Container(
-            alignment: Alignment.centerLeft,
-            height: 22,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  width: 22,
-                  height: 22,
-                  decoration: const BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                          color: Color.fromRGBO(0, 0, 0, 0.2),
-                          offset: Offset(0, 0),
-                          blurRadius: 11)
-                    ],
-                  ),
-                  alignment: Alignment.center,
-                  child: GestureDetector(
-                    behavior: HitTestBehavior.translucent,
-                    child: const MyImage.asset(
-                      MyImagePaths.appNavBackWN,
-                      width: 18,
-                      height: 18,
-                      fit: BoxFit.contain,
-                    ),
-                    onTap: () {
-                      context.pop();
-                    },
-                  ),
-                ),
-              ],
+    return Stack(
+      children: [
+        Positioned.fill(child: MyImage.network(widget.info?.cover ?? '')),
+        // 毛玻璃效果
+        Positioned.fill(
+          child: ClipRect(
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+              child: Container(
+                color: Colors.black.withOpacity(0.1),
+              ),
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(
-            top: 20,
-            left: 50,
-            right: 50,
-          ),
-          child: Column(
-            children: [
-              // Text(widget.info?.payTip ?? '', style: MyTheme.white255_14_M),
-              const SizedBox(height: 15),
-              dgt,
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(
-            top: 16,
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              GestureDetector(
-                behavior: HitTestBehavior.translucent,
-                onTap: () {
-                  if (vflag) {
-                    widget.nowByKb?.call();
-                  } else {
-                    widget.nowToVp?.call();
-                  }
-                },
+        Positioned.fill(
+          child: Container(
+            color: Colors.transparent,
+            child: Column(children: [
+              Padding(
+                padding: EdgeInsets.all(8.w),
                 child: Container(
-                  height: 32.w,
-                  width: 110.w,
-                  decoration: const BoxDecoration(
-                    gradient: MyTheme.gradient_90_114,
-                    borderRadius: BorderRadius.all(Radius.circular(3)),
-                  ),
-                  child: Center(
-                    child: Text(vflag ? tr('gmgk') : tr('ljkv'),//立即购买 - 立即开通VIP
-                        style: MyTheme.white13),
+                  alignment: Alignment.centerLeft,
+                  height: 22,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: 22,
+                        height: 22,
+                        decoration: const BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                                color: Color.fromRGBO(0, 0, 0, 0.2),
+                                offset: Offset(0, 0),
+                                blurRadius: 11)
+                          ],
+                        ),
+                        alignment: Alignment.center,
+                        child: GestureDetector(
+                          behavior: HitTestBehavior.translucent,
+                          child: const MyImage.asset(
+                            MyImagePaths.appNavBackWN,
+                            width: 18,
+                            height: 18,
+                            fit: BoxFit.contain,
+                          ),
+                          onTap: () {
+                            context.pop();
+                          },
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
-              const SizedBox(width: 37),
-              GestureDetector(
-                behavior: HitTestBehavior.translucent,
-                onTap: () {
-                  widget.shareVp?.call();
-                },
-                child: Container(
-                  height: 32,
-                  width: 110,
-                  decoration: const BoxDecoration(
-                    gradient: MyTheme.gradient_90_114,
-                    borderRadius: BorderRadius.all(Radius.circular(3)),
-                  ),
-                  child: Center(
-                    child: Text(tr('fxdv'), style: MyTheme.white13),// 做任务得VIP
-                  ),
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 20,
+                  left: 50,
+                  right: 50,
+                ),
+                child: Column(
+                  children: [
+                    // Text(widget.info?.payTip ?? '', style: MyTheme.white255_14_M),
+                    const SizedBox(height: 15),
+                    dgt,
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 16,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      onTap: () {
+                        if (vflag) {
+                          widget.nowByKb?.call();
+                        } else {
+                          widget.nowToVp?.call();
+                        }
+                      },
+                      child: Container(
+                        height: 32.w,
+                        width: 110.w,
+                        decoration: const BoxDecoration(
+                          gradient: MyTheme.gradient_90_114,
+                          borderRadius: BorderRadius.all(Radius.circular(3)),
+                        ),
+                        child: Center(
+                          child: Text(vflag ? tr('gmgk') : tr('ljkv'),//立即购买 - 立即开通VIP
+                              style: MyTheme.white13),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 37),
+                    GestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      onTap: () {
+                        widget.shareVp?.call();
+                      },
+                      child: Container(
+                        height: 32,
+                        width: 110,
+                        decoration: const BoxDecoration(
+                          gradient: MyTheme.gradient_90_114,
+                          borderRadius: BorderRadius.all(Radius.circular(3)),
+                        ),
+                        child: Center(
+                          child: Text(tr('fxdv'), style: MyTheme.white13),// 做任务得VIP
+                        ),
+                      ),
+                    )
+                  ],
                 ),
               )
-            ],
+            ]),
           ),
-        )
-      ]),
+        ),
+      ],
     );
   }
 
