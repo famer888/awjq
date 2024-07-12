@@ -1,0 +1,171 @@
+import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../../../../domain/model/ai_model.dart';
+import '../../../../utils/common_utils.dart';
+import '../../../../utils/my_toast.dart';
+import '../../../common_widgets/my_image.dart';
+import '../../../theme.dart';
+import 'dart:ui' as ui;
+
+enum AIRecordType {
+  StripOff,
+  FaceSwap;
+}
+
+class AIRecordCard extends StatefulWidget {
+  const AIRecordCard(
+      {super.key,
+      required this.data,
+      this.type = AIRecordType.StripOff,
+      this.status});
+
+  final int? status; // 0-待处理 1-处理中 2-已成功 3-已失败
+  final AIModel data;
+  final AIRecordType? type;
+
+  @override
+  State<AIRecordCard> createState() => _AIRecordCardState();
+}
+
+class _AIRecordCardState extends State<AIRecordCard> {
+  final GlobalKey _globalKey = GlobalKey();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      clipBehavior: Clip.hardEdge,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(6.w),
+        // color: MyTheme.white08Color,
+      ),
+      child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () {
+          if (widget.data.status == 2) {}
+        },
+        child: Stack(
+          children: [
+            widget.data.status == 2
+                ? Positioned.fill(
+                    child: Row(
+                    children: [
+                      Expanded(child: MyImage.network(widget.data.thumb ?? '')),
+                      Expanded(
+                          child: RepaintBoundary(
+                        key: _globalKey,
+                        child: MyImage.network(
+                            widget.type == AIRecordType.StripOff
+                                ? (widget.data.stripThumb ?? '')
+                                : (widget.data.faceThumb ?? '')),
+                      )),
+                    ],
+                  ))
+                : Positioned.fill(
+                    child: MyImage.network(widget.data.thumb ?? '')),
+            (widget.data.status ?? 0) <= 1 //毛玻璃效果
+                ? Positioned(
+                    top: -5,
+                    bottom: -5,
+                    left: -5,
+                    right: -5,
+                    child: CommonUtils.blurCover())
+                : Container(),
+            widget.data.status == 2 //保存按钮
+                ? Positioned.fill(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Container(
+                            margin: EdgeInsets.only(bottom: 13.w),
+                            child: GestureDetector(
+                              behavior: HitTestBehavior.translucent,
+                              onTap: () {
+                                _saveImage(context);
+                              },
+                              child: Container(
+                                margin: EdgeInsets.symmetric(horizontal: 20.w),
+                                height: 30.w,
+                                decoration: BoxDecoration(
+                                    gradient: MyTheme.gradient_90_114,
+                                    borderRadius: BorderRadius.circular(5.w)),
+                                child: Center(
+                                  child: Text(
+                                    tr('bc'),
+                                    style: MyTheme.white16medium,
+                                  ),
+                                ),
+                              ),
+                            )),
+                      ],
+                    ),
+                  )
+                : Container(),
+            Positioned(
+                child: IgnorePointer(
+              child: Container(
+                height: 40.w,
+                padding: EdgeInsets.symmetric(horizontal: 10.w),
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Color.fromRGBO(0, 0, 0, 0.4),
+                      Color.fromRGBO(0, 0, 0, 0.0),
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                ),
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        _getDayTimerStr(widget.data.createdAt ?? ''),
+                        style: MyTheme.white06_12,
+                      ),
+                      Text(
+                        _getSecondTimerStr(widget.data.createdAt ?? ''),
+                        style: MyTheme.white06_12,
+                      )
+                    ]),
+              ),
+            ))
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _saveImage(BuildContext context) async {
+    try {
+      RenderRepaintBoundary boundary = _globalKey.currentContext!
+          .findRenderObject() as RenderRepaintBoundary;
+      ui.Image image = await boundary.toImage(pixelRatio: 3.0);
+      if (await image.toByteData(format: ui.ImageByteFormat.png)
+      case final byteData?) {
+        final imageBytes = byteData.buffer.asUint8List();
+        CommonUtils.localStorageImage(context, imageBytes);
+      } else {
+        MyToast.showText(text: tr('tpbcsb'));
+      }
+    } catch (e) {
+      MyToast.showText(text: tr('tpbcsb'));
+    }
+  }
+
+  String _getDayTimerStr(String createdAt) {
+    if (createdAt.isNotEmpty && createdAt.length >= 10) {
+      return (widget.data.createdAt ?? '').substring(0, 10);
+    }
+    return '';
+  }
+
+  String _getSecondTimerStr(String createdAt) {
+    if (createdAt.isNotEmpty && createdAt.length >= 16) {
+      return (widget.data.createdAt ?? '').substring(10, 16);
+    }
+    return '';
+  }
+}

@@ -10,6 +10,7 @@ import '../../../common_widgets/keep_alive_wrapper.dart';
 import '../../../common_widgets/my_list_view.dart';
 import '../../../common_widgets/my_tab_bar.dart';
 import '../../../theme.dart';
+import '../card/ai_record_card.dart';
 
 
 class MineStrpOffRecordScreen extends StatefulWidget {
@@ -97,7 +98,7 @@ class _ContentStripOffRecordScreenState extends State<_ContentStripOffRecordScre
   Widget build(BuildContext context) {
     return MyListView.grid(
       childAspectRatio: 170 / 250,
-      itemBuilder: (_, item, __) => Container(color: Colors.black87),
+      itemBuilder: (_, item, __) => AIRecordCard(data: item, type: AIRecordType.StripOff),
       onFetchingMore: (currentPage, pageSize) => _getData(
         page: currentPage,
         pageSize: pageSize,

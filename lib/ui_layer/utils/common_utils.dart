@@ -1,10 +1,13 @@
 import 'dart:io';
+import 'dart:math';
+import 'dart:ui';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart' as url_launcher;
@@ -13,7 +16,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../app_config.dart';
 import '../../logger.dart';
 import 'my_toast.dart';
-
+import 'package:universal_html/html.dart' as html;
 import '../../domain/domain.dart';
 import '../router/routes.dart';
 
@@ -345,10 +348,149 @@ class CommonUtils {
   static Future<bool> pngLimit2MSize(XFile file) async {
     int length = await file.length();
     if (length / 1024 > 2000) {
-      MyToast.showText(text: tr("qxzb2mkbp"),);
+      MyToast.showText(text: tr('qxzb2mkbp'),);
       return true;
     }
     return false;
+  }
+
+  static Widget blurCover({Function? onTap}) {
+    return ClipPath(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: () {
+              onTap?.call();
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+            ),
+          ),
+        ));
+  }
+
+  static void localStorageImage(BuildContext context, Uint8List imageBytes) async {
+    if (kIsWeb) {
+    } else {
+      PermissionStatus storageStatus = await Permission.camera.status;
+      if (storageStatus == PermissionStatus.denied) {
+        storageStatus = await Permission.camera.request();
+        if (storageStatus == PermissionStatus.denied ||
+            storageStatus == PermissionStatus.permanentlyDenied) {
+          MyToast.showText(text: tr('qdkqx'));
+          return;
+        } else {}
+      } else if (storageStatus == PermissionStatus.permanentlyDenied) {
+        MyToast.showText(text: tr('wfbc'));
+        return;
+      }
+    }
+
+    MyToast.showLoading(text: tr('bctpz'));
+
+    if (kIsWeb) {
+      Uint8List bytes = imageBytes;
+      dynamic blob = html.Blob([bytes]);
+      String url = html.Url.createObjectUrlFromBlob(blob);
+      html.AnchorElement anchor =
+      html.document.createElement('a') as html.AnchorElement
+        ..href = url
+        ..style.display = 'none'
+        ..download = '${CommonUtils.randomId(16)}.jpg';
+      html.document.body?.children.add(anchor);
+// download
+      anchor.click();
+// cleanup
+      html.document.body?.children.remove(anchor);
+      html.Url.revokeObjectUrl(url);
+    } else {
+      final result =
+      await ImageGallerySaver.saveImage(imageBytes); //这个是核心的保存图片的插件
+      if (result['isSuccess']) {
+        MyToast.showText(text: tr('tpybc'));
+      } else if (Platform.isAndroid) {
+        if (result.length > 0) {
+          MyToast.showText(text: tr('tpybc'));
+        }
+      }
+    }
+
+    MyToast.closeAllLoading();
+  }
+
+  //随机字符串
+  static String randomId(int range) {
+    String str = '';
+    List<String> arr = [
+      '0',
+      '1',
+      '2',
+      '3',
+      '4',
+      '5',
+      '6',
+      '7',
+      '8',
+      '9',
+      'a',
+      'b',
+      'c',
+      'd',
+      'e',
+      'f',
+      'g',
+      'h',
+      'i',
+      'j',
+      'k',
+      'l',
+      'm',
+      'n',
+      'o',
+      'p',
+      'q',
+      'r',
+      's',
+      't',
+      'u',
+      'v',
+      'w',
+      'x',
+      'y',
+      'z',
+      'A',
+      'B',
+      'C',
+      'D',
+      'E',
+      'F',
+      'G',
+      'H',
+      'I',
+      'J',
+      'K',
+      'L',
+      'M',
+      'N',
+      'O',
+      'P',
+      'Q',
+      'R',
+      'S',
+      'T',
+      'U',
+      'V',
+      'W',
+      'X',
+      'Y',
+      'Z'
+    ];
+    for (int i = 0; i < range; i++) {
+      int pos = Random().nextInt(arr.length - 1);
+      str += arr[pos];
+    }
+    return str;
   }
 
 }

@@ -5,11 +5,11 @@ import 'package:provider/provider.dart';
 
 import '../../../../../domain/model/ai_model.dart';
 import '../../../../../domain/remote_domain/domains/ai.dart';
-import '../../../../../domain/result.dart';
 import '../../../common_widgets/keep_alive_wrapper.dart';
 import '../../../common_widgets/my_list_view.dart';
 import '../../../common_widgets/my_tab_bar.dart';
 import '../../../theme.dart';
+import '../card/ai_record_card.dart';
 
 
 class MineFaceSwapRecordScreen extends StatefulWidget {
@@ -97,7 +97,7 @@ class _ContentFaceSwapRecordScreenState extends State<_ContentFaceSwapRecordScre
   Widget build(BuildContext context) {
     return MyListView.grid(
       childAspectRatio: 170 / 250,
-      itemBuilder: (_, item, __) => Container(color: Colors.black87),
+      itemBuilder: (_, item, __) => AIRecordCard(data: item, type: AIRecordType.FaceSwap),
       onFetchingMore: (currentPage, pageSize) => _getData(
         page: currentPage,
         pageSize: pageSize,

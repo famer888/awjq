@@ -162,4 +162,6 @@ class AppRouterPaths {
   /// 监控视频详情页
   static const monitorVideoDetail = '/monitorVideoDetail';
 
+  static const aiPictureRecordPreView = '/aiPictureRecordPreView/:url';
+
 }
