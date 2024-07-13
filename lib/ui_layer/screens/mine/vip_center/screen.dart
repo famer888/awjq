@@ -143,40 +143,46 @@ class _BodyState extends State<_Body> {
             ],
           ),
         ),
+      ],
+    );
+  }
+
+  Widget _openVipContent() {
+    return Column(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                _TitleHintText(
+                  title: 'ktvpxs'.tr(context: context),
+                  subTitle: 'zmzxs'.tr(context: context),
+                ),
+                SizedBox(height: 13.w),
+                _ProductCardArea(
+                  products: widget.productOfVIP.products,
+                  selectedNotifier: productSelectedNotifier,
+                ),
+                SizedBox(height: 20.w),
+                _DescriptionArea(
+                  notifier: productSelectedNotifier,
+                  products: widget.productOfVIP.products,
+                ),
+                _RightArea(
+                  notifier: productSelectedNotifier,
+                  products: widget.productOfVIP.products,
+                ),
+                SizedBox(height: 25.w),
+              ],
+            ),
+          ),
+        ),
         FixedBuyButton(
           notifier: productSelectedNotifier,
           products: widget.productOfVIP.products,
           vipText: widget.productOfVIP.vipText,
         ),
       ],
-    );
-  }
-
-  Widget _openVipContent() {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          _TitleHintText(
-            title: 'ktvpxs'.tr(context: context),
-            subTitle: 'zmzxs'.tr(context: context),
-          ),
-          SizedBox(height: 13.w),
-          _ProductCardArea(
-            products: widget.productOfVIP.products,
-            selectedNotifier: productSelectedNotifier,
-          ),
-          SizedBox(height: 20.w),
-          _DescriptionArea(
-            notifier: productSelectedNotifier,
-            products: widget.productOfVIP.products,
-          ),
-          _RightArea(
-            notifier: productSelectedNotifier,
-            products: widget.productOfVIP.products,
-          ),
-          SizedBox(height: 25.w),
-        ],
-      ),
     );
   }
 
