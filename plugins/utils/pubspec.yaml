@@ -17,6 +17,7 @@ dependencies:
   hive_flutter: ^1.1.0
   webcrypto: 0.5.3
   crypto: 3.0.3
+  web: ^0.5.1
 
 dev_dependencies:
   flutter_test:

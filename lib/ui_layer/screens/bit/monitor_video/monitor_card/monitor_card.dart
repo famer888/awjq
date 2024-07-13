@@ -26,10 +26,12 @@ class MonitorCard extends StatelessWidget {
         height: 94.w,
         child: Stack(
           children: [
-            MyImage.network(
-              imageUrl,
-              borderRadius: 5,
-              backgroundColor: MyTheme.imageBgColor,
+            Positioned.fill(
+              child: MyImage.network(
+                imageUrl,
+                borderRadius: 5,
+                backgroundColor: MyTheme.imageBgColor,
+              ),
             ),
             Positioned(
               bottom: 0,
