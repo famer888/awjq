@@ -82,7 +82,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'jcxlsd'.tr(context: context),
+              'jcxlsd'.tr(context: context),//线路检测中，请稍等^_^若一直进不去请使用VPN翻墙软件观看！
               style: MyTheme.gray14,
               textAlign: TextAlign.center,
             ),
@@ -93,7 +93,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   CommonUtils.launchUrl(officialWebUrl!);
                 },
                 child: Text(
-                  '${'gwdzdz'.tr(context: context)}:\n$officialWebUrl',
+                  '${'gwdzdz'.tr(context: context)}:\n$officialWebUrl',//若进不去点我重新安装
                   style: MyTheme.red14,
                   maxLines: 3,
                   textAlign: TextAlign.center,
@@ -101,7 +101,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
               ),
             if (isLineError)
               NetworkErrorView(
-                text: 'wfljqsz'.tr(context: context),
+                text: 'wfljqsz'.tr(context: context),//请检查手机网络设置或点击重试！
                 onTap: _checkLineAndFetchBeforeEnterHome,
               ),
           ],
@@ -184,7 +184,7 @@ class _AdViewState extends State<AdView> {
                 child: ValueListenableBuilder(
                   valueListenable: countDownNotifier,
                   builder: (context, count, _) => Text(
-                    '${count > 0 ? count : 'adtg'.tr(context: context)}',
+                    '${count > 0 ? count : 'adtg'.tr(context: context)}',//跳过
                     style: MyTheme.white15semibold,
                   ),
                 ),

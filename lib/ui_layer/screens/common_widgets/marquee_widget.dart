@@ -69,13 +69,12 @@ class _MarqueeWidgetState extends State<MarqueeWidget>
         continue;
       }
       _controller.jumpTo(0);
-      // 两个方向: Curves.easeIn 和 Curves.easeOut 。
       await _controller.animateTo(_controller.position.maxScrollExtent,
           duration: Duration(
               seconds:
                   (_controller.position.maxScrollExtent / widget.scrollSpeed)
                       .floor()),
-          curve: Curves.easeIn);
+          curve: Curves.linear);
     }
   }
 }
