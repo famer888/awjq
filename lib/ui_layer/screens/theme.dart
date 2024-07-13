@@ -2240,6 +2240,13 @@ class MyTheme {
       overflow: TextOverflow.ellipsis,
       decoration: TextDecoration.none);
 
+  static final TextStyle white06_15_Blod = TextStyle(
+      color: white06Color,
+      fontSize: 15.sp,
+      overflow: TextOverflow.ellipsis,
+      fontWeight: FontWeight.w600,
+      decoration: TextDecoration.none);
+
   static final TextStyle white06_18 = TextStyle(
       color: white06Color,
       fontSize: 18.sp,
@@ -2254,6 +2261,12 @@ class MyTheme {
 
   static final TextStyle white06_10 = TextStyle(
       color: white06Color,
+      fontSize: 10.sp,
+      overflow: TextOverflow.ellipsis,
+      decoration: TextDecoration.none);
+
+  static final TextStyle white04_10 = TextStyle(
+      color: const Color.fromRGBO(255, 255, 255, 0.4),
       fontSize: 10.sp,
       overflow: TextOverflow.ellipsis,
       decoration: TextDecoration.none);

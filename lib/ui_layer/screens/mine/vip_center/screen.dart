@@ -16,10 +16,12 @@ import '../../../notifiers/user_notifier.dart';
 import '../../../router/routes.dart';
 import '../../../utils/my_toast.dart';
 import '../../common_widgets/fixed_buy_button.dart';
+import '../../common_widgets/keep_alive_wrapper.dart';
 import '../../common_widgets/member_vip.dart';
 import '../../common_widgets/my_app_bar.dart';
 import '../../common_widgets/my_avatar.dart';
 import '../../common_widgets/my_image.dart';
+import '../../common_widgets/my_tab_bar.dart';
 import '../../common_widgets/screen_background.dart';
 import '../../common_widgets/status/loading.dart';
 import '../../common_widgets/status/network_error.dart';
@@ -116,44 +118,29 @@ class _BodyState extends State<_Body> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
+        const _UserInfoArea(),
         Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                const _UserInfoArea(),
-                SizedBox(height: 20.w),
-                _TitleHintText(
-                  title: 'ktvpxs'.tr(context: context),
-                  subTitle: 'zmzxs'.tr(context: context),
-                ),
-                SizedBox(height: 13.w),
-                _ProductCardArea(
-                  products: widget.productOfVIP.products,
-                  selectedNotifier: productSelectedNotifier,
-                ),
-                SizedBox(height: 20.w),
-                _DescriptionArea(
-                  notifier: productSelectedNotifier,
-                  products: widget.productOfVIP.products,
-                ),
-                _RightArea(
-                  notifier: productSelectedNotifier,
-                  products: widget.productOfVIP.products,
-                ),
-                SizedBox(height: 25.w),
-                Selector<UserNotifier, int>(
-                  selector: (_, userNotifier) => userNotifier.member.exp ?? 0,
-                  builder: (BuildContext context, value, Widget? child) =>
-                      _TitleHintText(
-                    title: 'jfdh'.tr(context: context),
-                    subTitle: 'dqjf'.tr(context: context) + value.toString(),
-                  ),
-                ),
-                SizedBox(height: 13.w),
-                _ExpArea(expOfVipList: widget.expOfVIP.list),
-                SizedBox(height: 25.w),
-              ],
+          child: TabBarWithView.line(
+            tabBarPadding: EdgeInsets.symmetric(
+              vertical: MyTheme.pagePadding.w,
+              horizontal: MyTheme.pagePadding,
             ),
+            labelStyle: MyTheme.white16medium,
+            unselectedLabelStyle: MyTheme.white25508_16_M,
+            tabBarHeight: 40.w,
+            isScrollable: false,
+            titles: [
+              'khy'.tr(context: context),
+              'jfdhvip'.tr(context: context),
+            ],
+            views: [
+              KeepAliveWrapper(
+                child: _openVipContent(),
+              ),
+              KeepAliveWrapper(
+                child: _pointExchangeContent(),
+              ),
+            ],
           ),
         ),
         FixedBuyButton(
@@ -161,6 +148,51 @@ class _BodyState extends State<_Body> {
           products: widget.productOfVIP.products,
           vipText: widget.productOfVIP.vipText,
         ),
+      ],
+    );
+  }
+
+  Widget _openVipContent() {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          _TitleHintText(
+            title: 'ktvpxs'.tr(context: context),
+            subTitle: 'zmzxs'.tr(context: context),
+          ),
+          SizedBox(height: 13.w),
+          _ProductCardArea(
+            products: widget.productOfVIP.products,
+            selectedNotifier: productSelectedNotifier,
+          ),
+          SizedBox(height: 20.w),
+          _DescriptionArea(
+            notifier: productSelectedNotifier,
+            products: widget.productOfVIP.products,
+          ),
+          _RightArea(
+            notifier: productSelectedNotifier,
+            products: widget.productOfVIP.products,
+          ),
+          SizedBox(height: 25.w),
+        ],
+      ),
+    );
+  }
+
+  Widget _pointExchangeContent() {
+    return Column(
+      children: [
+        Selector<UserNotifier, int>(
+          selector: (_, userNotifier) => userNotifier.member.exp ?? 0,
+          builder: (BuildContext context, value, Widget? child) =>
+              _TitleHintText(
+            title: 'jfdh'.tr(context: context),
+            subTitle: 'dqjf'.tr(context: context) + value.toString(),
+          ),
+        ),
+        SizedBox(height: 13.w),
+        Expanded(child: _ExpArea(expOfVipList: widget.expOfVIP.list)),
       ],
     );
   }
@@ -231,6 +263,7 @@ class _TitleHintText extends StatelessWidget {
 
   final String title;
   final String subTitle;
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -292,6 +325,7 @@ class _ProductCardArea extends StatelessWidget {
 class _ProductItem extends StatelessWidget {
   final Product product;
   final bool isSelected;
+
   const _ProductItem({
     required this.product,
     required this.isSelected,
@@ -411,8 +445,10 @@ class _ProductItem extends StatelessWidget {
 
 class _DescriptionArea extends StatelessWidget {
   const _DescriptionArea({required this.notifier, required this.products});
+
   final ValueNotifier<int> notifier;
   final List<Product> products;
+
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
@@ -426,7 +462,7 @@ class _DescriptionArea extends StatelessWidget {
                   child: Column(
                     children: description
                         .map((e) => Center(
-                              child: Text(e, style: MyTheme.white14Medium),
+                              child: Text(e, style: MyTheme.white08_14_M),
                             ))
                         .toList(),
                   ),
@@ -454,8 +490,8 @@ class _RightArea extends StatelessWidget {
             shrinkWrap: true,
             itemCount: products[selectedIndex].rights.length,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 4,
-              childAspectRatio: 0.65,
+              crossAxisCount: 2,
+              childAspectRatio: 166 / 70,
               crossAxisSpacing: 10.w,
               mainAxisSpacing: 10.w,
             ),
@@ -476,14 +512,14 @@ class _RightItem extends StatelessWidget {
     required this.subTitle,
     required this.logo,
   });
+
   final String title;
   final String subTitle;
   final String logo;
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      crossAxisAlignment: CrossAxisAlignment.center,
+    return Row(
       children: [
         SizedBox(
             width: 50.w,
@@ -492,32 +528,30 @@ class _RightItem extends StatelessWidget {
               logo,
               fit: BoxFit.fitHeight,
             )),
-        SizedBox(height: 6.5.w),
-        SizedBox(
-          height: 20.sp,
-          child: Text(
-            title,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 13.sp,
-              fontWeight: FontWeight.w500,
-            ),
-            maxLines: 1,
-            textAlign: TextAlign.center,
-          ),
-        ),
-        SizedBox(height: 7.w),
-        SizedBox(
-          height: 35.w,
-          child: Text(
-            subTitle,
-            style: TextStyle(
-              color: const Color(0xFFadadad),
-              fontSize: 12.sp,
-            ),
-            maxLines: 2,
-            textAlign: TextAlign.center,
-          ),
+        SizedBox(width: 6.5.w),
+        Expanded(
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  child: Text(
+                    title,
+                    style: MyTheme.white06_15_Blod,
+                    maxLines: 1,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                SizedBox(height: 3.w),
+                SizedBox(
+                  child: Text(
+                    subTitle,
+                    style: MyTheme.white04_10,
+                    maxLines: 2,
+                    textAlign: TextAlign.center,
+                  ),
+                )
+              ]),
         )
       ],
     );
@@ -539,7 +573,7 @@ class _ExpArea extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
         separatorBuilder: (_, __) => SizedBox(width: 15.w),
         physics: const BouncingScrollPhysics(),
-        scrollDirection: Axis.horizontal,
+        scrollDirection: Axis.vertical,
         itemCount: expOfVipList.length,
         itemBuilder: (context, index) => _ExpItem(exp: expOfVipList[index]),
       ),
@@ -549,6 +583,7 @@ class _ExpArea extends StatelessWidget {
 
 class _ExpItem extends StatefulWidget {
   final ExpOfVIP exp;
+
   const _ExpItem({
     required this.exp,
   });
@@ -582,65 +617,62 @@ class _ExpItemState extends State<_ExpItem> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Column(
-          children: [
-            Container(
-              width: 114.w,
-              height: 120.w,
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [
-                    Color(0xFFffefdc),
-                    Color(0xFFf5e4d4),
-                    Color(0xFFf7dcbc)
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(7.w),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    widget.exp.vipStr,
-                    style: TextStyle(
-                      color: const Color(0xFF48170e),
-                      fontSize: 15.sp,
-                    ),
-                  ),
-                  SizedBox(height: 10.w),
-                  Text(
-                    widget.exp.expStr,
-                    style: TextStyle(
-                      color: const Color(0xFF7f3b29),
-                      fontSize: 20.sp,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
+        Positioned.fill(
+          child: Container(
+            margin: EdgeInsets.only(bottom: MyTheme.pagePadding),
+            decoration: BoxDecoration(
+              color: const Color.fromRGBO(35, 35, 35, 1),
+              borderRadius: BorderRadius.circular(5.w),
             ),
-            SizedBox(height: 10.w),
-            GestureDetector(
-              behavior: HitTestBehavior.translucent,
-              onTap: _sendExpCoverVIP,
-              child: Container(
-                height: 24.w,
-                width: 114.w,
-                decoration: BoxDecoration(
-                  color: const Color(0xFF3d4255),
-                  borderRadius: BorderRadius.all(Radius.circular(12.w)),
+          ),
+        ),
+        Container(
+          padding: EdgeInsets.only(left: MyTheme.pagePadding, top: MyTheme.pagePadding, right: MyTheme.pagePadding, bottom: MyTheme.pagePadding * 2),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+                Column(
+                  // mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.exp.vipStr,
+                      style: TextStyle(
+                        color: const Color.fromRGBO(232, 197, 174, 1),
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Text(
+                      widget.exp.expStr,
+                      style: TextStyle(
+                        color: const Color.fromRGBO(232, 197, 174, 1),
+                        fontSize: 16.sp,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
                 ),
-                child: Center(
-                  child: RichText(
-                      text: TextSpan(
-                          text: 'dh'.tr(context: context),
-                          style: MyTheme.white255_12)),
+              GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: _sendExpCoverVIP,
+                child: Container(
+                  height: 34.w,
+                  width: 92.w,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF3d4255),
+                    borderRadius: BorderRadius.all(Radius.circular(17.w)),
+                  ),
+                  child: Center(
+                    child: RichText(
+                        text: TextSpan(
+                            text: 'dh'.tr(context: context),
+                            style: MyTheme.white255_12)),
+                  ),
                 ),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ],
     );
