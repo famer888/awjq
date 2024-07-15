@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../domain/domain.dart';
@@ -10,6 +11,7 @@ import '../../../domain/model/post_model.dart';
 import '../../../domain/model/topic_model.dart';
 import '../../const.dart';
 import '../../notifiers/user_notifier.dart';
+import '../../router/router.dart';
 import '../../router/routes.dart';
 import '../../utils/my_toast.dart';
 import '../common_widgets/fish_card/fish_card.dart';
@@ -19,10 +21,14 @@ import '../../notifiers/home_config_notifier.dart';
 import '../common_widgets/general_banner.dart';
 import '../common_widgets/my_list_view.dart';
 import '../common_widgets/post/card/card.dart';
+import '../image_paths.dart';
 import '../theme.dart';
+import 'issue/screen.dart';
 
 class CommunityContentView extends StatefulWidget {
-  const CommunityContentView({super.key, required this.id, required this.isFish});
+  const CommunityContentView(
+      {super.key, required this.id, required this.isFish});
+
   final int id;
 
   final bool isFish;
@@ -50,12 +56,11 @@ class _CommunityContentViewState extends State<CommunityContentView> {
     required String sort,
   }) async {
     final result = await _domain.communitySortList(
-            id: widget.id,
-            sort: sort,
-            page: page,
-            limit: pageSize,
-            type: widget.isFish ? 'fish' : 'forum'
-          );
+        id: widget.id,
+        sort: sort,
+        page: page,
+        limit: pageSize,
+        type: widget.isFish ? 'fish' : 'forum');
 
     if (!isInit) {
       setState(() {
@@ -88,51 +93,167 @@ class _CommunityContentViewState extends State<CommunityContentView> {
 
   @override
   Widget build(BuildContext context) {
-    return NestedScrollView(
-      headerSliverBuilder: (_, __) => [
-        SliverToBoxAdapter(
-          child: _Header(
-            bannersNotifier: _bannersNotifier,
-            topicsNotifier: topicsNotifier,
-            isFish: widget.isFish,
+    return Stack(
+      children: [
+        NestedScrollView(
+          headerSliverBuilder: (_, __) => [
+            SliverToBoxAdapter(
+              child: _Header(
+                bannersNotifier: _bannersNotifier,
+                topicsNotifier: topicsNotifier,
+                isFish: widget.isFish,
+              ),
+            ),
+          ],
+          body: Padding(
+            padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
+            child: TabBarWithView.fillColor(
+              tabBarPadding: EdgeInsets.symmetric(vertical: 6.w),
+              tabBarHeight: 32.w,
+              titles: isInit ? [for (final title in _titles) title.title] : [],
+              views: [
+                for (final NavigatorModel nav in _titles)
+                  widget.isFish
+                      ? MyListView.grid(
+                          childAspectRatio: UILayerConst.fishRatio,
+                          crossAxisSpacing: 8.w,
+                          padding: EdgeInsets.symmetric(
+                              vertical: MyTheme.pagePadding),
+                          itemBuilder: (context, item, index) =>
+                              FishCard(data: item),
+                          onFetchingMore: (currentPage, pageSize) => _getData(
+                              page: currentPage,
+                              pageSize: pageSize,
+                              sort: nav.type),
+                        )
+                      : MyListView.list(
+                          contentPadding: 15.w,
+                          padding: EdgeInsets.symmetric(
+                              vertical: MyTheme.pagePadding),
+                          itemBuilder: (context, item, index) =>
+                              PostCard.community(
+                            data: item,
+                          ),
+                          onFetchingMore: (currentPage, pageSize) => _getData(
+                              page: currentPage,
+                              pageSize: pageSize,
+                              sort: nav.type),
+                        )
+              ],
+            ),
           ),
         ),
+        Positioned(
+            right: 15.w,
+            bottom: 15.w,
+            child: GestureDetector(
+              onTap: widget.isFish
+                  ? () => const XianYuIssueRoute().push(context)
+                  : _showIssueAlert,
+              behavior: HitTestBehavior.translucent,
+              child: MyImage.asset(
+                MyImagePaths.appIssueIcon,
+                width: 65.w,
+                height: 65.w,
+              ),
+            ))
       ],
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
-        child: TabBarWithView.fillColor(
-                tabBarPadding: EdgeInsets.symmetric(vertical: 6.w),
-                tabBarHeight: 32.w,
-                titles:
-                    isInit ? [for (final title in _titles) title.title] : [],
-                views: [
-                  for (final NavigatorModel nav in _titles)
-                    widget.isFish ? MyListView.grid(
-                      childAspectRatio: UILayerConst.fishRatio,
-                      crossAxisSpacing: 8.w,
-                      padding: EdgeInsets.symmetric(vertical: MyTheme.pagePadding),
-                      itemBuilder: (context, item, index) => FishCard(data: item),
-                      onFetchingMore: (currentPage, pageSize) => _getData(
-                          page: currentPage,
-                          pageSize: pageSize,
-                          sort: nav.type),
-                    ) : MyListView.list(
-                      contentPadding: 15.w,
-                      padding:
-                          EdgeInsets.symmetric(vertical: MyTheme.pagePadding),
-                      itemBuilder: (context, item, index) => PostCard.community(
-                        data: item,
+    );
+  }
+
+  Future<void> _showIssueAlert() {
+    final issues = [
+      (
+      title: 'tp'.tr(context: context),
+      iconName: MyImagePaths.appFabuPicture,
+      type: CommunityIssueType.image,
+      ),
+      (
+      title: 'spingzb'.tr(context: context),
+      iconName: MyImagePaths.appFabuVideo,
+      type: CommunityIssueType.video,
+      ),
+      (
+      title: 'twen'.tr(context: context),
+      iconName: MyImagePaths.appFabuText,
+      type: CommunityIssueType.imageAndText,
+      ),
+    ];
+    return showModalBottomSheet(
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      context: AppRouter.rootNavigatorKey.currentContext ?? context,
+      builder: (context) => DecoratedBox(
+        decoration: BoxDecoration(
+          color: const Color(0xFF23262f),
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(10.w),
+            topRight: Radius.circular(10.w),
+          ),
+        ),
+        child: SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 13.w),
+                width: double.infinity,
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const SizedBox.shrink(),
+                    Text(
+                      'xzfblx'.tr(),
+                      style: MyTheme.white16bold,
+                    ),
+                    GestureDetector(
+                      onTap: () => context.pop(),
+                      child: MyImage.asset(
+                        MyImagePaths.appIssueClose,
+                        width: 11.w,
+                        height: 11.w,
                       ),
-                      onFetchingMore: (currentPage, pageSize) => _getData(
-                          page: currentPage,
-                          pageSize: pageSize,
-                          sort: nav.type),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 30.w),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  for (final issue in issues)
+                    GestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      onTap: () {
+                        context.pop();
+                        CommunityIssueRoute(issue.type).push(context);
+                      },
+                      child: Column(
+                        children: [
+                          MyImage.asset(
+                            issue.iconName,
+                            width: 50.w,
+                            height: 52.7.w,
+                          ),
+                          SizedBox(height: 4.w),
+                          Text(
+                            issue.title,
+                            style: MyTheme.white16medium,
+                          )
+                        ],
+                      ),
                     )
                 ],
               ),
+              SizedBox(height: 42.5.w)
+            ],
+          ),
+        ),
       ),
     );
   }
+
 }
 
 class _Header extends StatelessWidget {
@@ -141,9 +262,11 @@ class _Header extends StatelessWidget {
     required this.topicsNotifier,
     required this.isFish,
   });
+
   final ValueNotifier<List<BannerModel>> bannersNotifier;
   final ValueNotifier<List<TopicModel>> topicsNotifier;
   final bool isFish;
+
   @override
   Widget build(BuildContext context) {
     return Column(
