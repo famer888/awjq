@@ -76,7 +76,7 @@ dev_dependencies:
   go_router_builder: ^2.4.0
   analyzer: ^6.4.1
   flutter_native_splash: ^2.4.0
-
+  cupertino_icons: ^1.0.0
 
 flutter:
   uses-material-design: true
