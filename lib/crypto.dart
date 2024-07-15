@@ -36,16 +36,18 @@ class PlatformAwareCrypto {
   }
 
   static dynamic decryptResData(dynamic data) async {
-    // final encrypter = Encrypter(AES(key, mode: AESMode.cbc));
-    // final encrypted = Encrypted.fromBase64(data['data']);
-    // final decrypted = encrypter.decrypt(encrypted, iv: iv);
 
-    final k = await AesCbcSecretKey.importRawKey(utf8.encode(BuildConfig.key));
+    // final k = await AesCbcSecretKey.importRawKey(utf8.encode(BuildConfig.key));
+    //
+    // final raw = await k.decryptBytes(
+    //     base64Decode(data['data']), utf8.encode(BuildConfig.iv));
+    //
+    // return jsonDecode(utf8.decode(raw));
 
-    final raw = await k.decryptBytes(
-        base64Decode(data['data']), utf8.encode(BuildConfig.iv));
-
-    return jsonDecode(utf8.decode(raw));
+    Encrypter encrypter = Encrypter(AES(key, mode: AESMode.cbc));
+    Encrypted encrypted = Encrypted.fromBase64(data['data']);
+    List<int> decrypted = encrypter.decryptBytes(encrypted, iv: iv);
+    return jsonDecode(utf8.decode(decrypted));
   }
 
   //获取小说
