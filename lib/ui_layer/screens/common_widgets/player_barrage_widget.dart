@@ -386,7 +386,7 @@ class _BarrageTransitionItem extends StatelessWidget {
 ///
 class BarrageStyle {
   static Widget normal(String text) {
-    return Text(text, style: const TextStyle(color: Colors.white));
+    return Text(text, style: const TextStyle(color: Colors.white, fontSize: 16));
   }
 
   static Widget level_1(String text) {

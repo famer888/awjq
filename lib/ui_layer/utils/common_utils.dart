@@ -15,6 +15,7 @@ import 'package:html_unescape/html_unescape.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../app_config.dart';
 import '../../logger.dart';
+import '../screens/theme.dart';
 import 'my_toast.dart';
 import 'package:universal_html/html.dart' as html;
 import '../../domain/domain.dart';
@@ -24,12 +25,14 @@ class CommonUtils {
   static setStatusBar({bool isLight = false}) {
     if (kIsWeb) {
       return SystemChrome.setSystemUIOverlayStyle(
-          isLight ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark);
+          SystemUiOverlayStyle(
+            statusBarColor: MyTheme.bgColor, // 设置状态栏背景色
+            statusBarIconBrightness: isLight ? Brightness.light : Brightness.dark));
     } else if (Platform.isAndroid) {
       SystemUiOverlayStyle systemUiOverlayStyle = SystemUiOverlayStyle(
           statusBarColor: Colors.transparent, //全局设置透明
           statusBarIconBrightness: isLight ? Brightness.light : Brightness.dark,
-          systemNavigationBarColor: Colors.black);
+          systemNavigationBarColor: MyTheme.bgColor);
       SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
     } else if (Platform.isIOS) {
       //导航栏状态栏文字颜色

@@ -19,8 +19,20 @@ import 'ui_layer/router/router.dart';
 import 'ui_layer/screens/theme.dart';
 import 'ui_layer/utils/common_utils.dart';
 import 'ui_layer/utils/download_utils.dart';
+// import 'dart:html' as html;//运行web平台需要，非web平台需注释
+
+//防止键盘弹出时web界面被放大,运行web平台需要，非web平台需注释
+// void disableZoomOnWeb() {
+//   html.document.documentElement?.style.overflow = 'hidden';
+//   html.document.documentElement?.style.touchAction = 'manipulation';
+//   html.document.documentElement?.style.setProperty('user-select', 'none');
+//   html.document.documentElement?.style.setProperty('overscroll-behavior', 'contain');
+// }
 
 void main() async {
+
+  // disableZoomOnWeb();//运行web平台需要，非web平台需注释
+
   /// 初始化仓库，必须放在最前面
   final appRepo = AppRepo();
   await appRepo.init();
