@@ -115,7 +115,8 @@ class _CommunityPostDetailScreenState extends State<CommunityPostDetailScreen>
 
     final result = await _domain.communityTopicDetail(id: widget.id);
 
-    isFish = result.data?.type == 'fish';
+    //暂时隐藏，产品目前需要咸鱼和帖子详情UI显示一致
+    // isFish = result.data?.type == 'fish';
 
     setState(() {
       if (result.data case final data?) {
