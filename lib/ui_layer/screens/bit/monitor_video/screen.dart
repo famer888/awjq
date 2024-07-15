@@ -61,7 +61,7 @@ class _MonitorVideoViewState extends State<MonitorVideoView> {
   @override
   Widget build(BuildContext context) {
     return MyListView.grid(
-      childAspectRatio: UILayerConst.videoRatio,
+      childAspectRatio: UILayerConst.videoRatio2,
       header: _Header(bannersNotifier: _bannersNotifier, tipsNotifier: _tipsNotifier),
       contentPadding: 15.w,
       padding: EdgeInsets.symmetric(vertical: MyTheme.pagePadding, horizontal: MyTheme.pagePadding),

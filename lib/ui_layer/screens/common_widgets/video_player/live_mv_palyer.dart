@@ -444,8 +444,8 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
               child: Stack(
                 children: [
                   Container(
-                    margin: const EdgeInsets.only(left: 7, top: 0.5),
-                    padding: const EdgeInsets.only(left: 15, right: 6),
+                    margin: const EdgeInsets.only(left: 0, top: 0.5),
+                    padding: const EdgeInsets.only(left: 18, right: 6),
                     height: 18,
                     decoration: const BoxDecoration(
                       color: MyTheme.blackColor25505,

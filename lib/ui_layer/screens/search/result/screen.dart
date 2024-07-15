@@ -164,7 +164,7 @@ class _MonitorVideoViewState extends State<_MonitorVideoView> {
   Widget build(BuildContext context) {
     return MyListView.grid(
       padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
-      childAspectRatio: UILayerConst.videoRatio,
+      childAspectRatio: UILayerConst.videoRatio2,
       crossAxisSpacing: 8.w,
       itemBuilder: (_, item, __) => MonitorCard(data: item),
       onFetchingMore: (currentPage, pageSize) => _getData(

@@ -25,7 +25,7 @@ class LiveVideoCard extends StatelessWidget {
         LiveVideoDetailRoute('${data.id}').push(context);
       },
       child: SizedBox(
-        height: 94.w,
+        height: 170.w,
         child: Stack(
           children: [
             Positioned.fill(
@@ -42,8 +42,8 @@ class LiveVideoCard extends StatelessWidget {
                 child: Stack(
                   children: [
                     Container(
-                      margin: EdgeInsets.only(left: 5.w, top: 0.5.w),
-                      padding: EdgeInsets.only(top: 1.7.w, left: 16.w, right: 6.w),
+                      margin: EdgeInsets.only(left: 0.w, top: 0.5.w),
+                      padding: EdgeInsets.only(top: 1.7.w, left: 18.w, right: 6.w),
                       height: 18.w,
                       decoration: BoxDecoration(
                         color: MyTheme.blackColor25505,

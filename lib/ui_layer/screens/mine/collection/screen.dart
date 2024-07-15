@@ -234,7 +234,7 @@ class _MonitorViewState extends State<_MonitorView> {
   @override
   Widget build(BuildContext context) {
     return MyListView.grid(
-      childAspectRatio: UILayerConst.videoRatio,
+      childAspectRatio: UILayerConst.videoRatio2,
       contentPadding: 15.w,
       padding: EdgeInsets.symmetric(vertical: MyTheme.pagePadding, horizontal: MyTheme.pagePadding),
       itemBuilder: (context, item, index) {

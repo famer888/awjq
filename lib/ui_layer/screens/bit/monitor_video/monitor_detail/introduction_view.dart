@@ -57,7 +57,7 @@ class _MonitorVideoDetailIntroductionViewState extends State<MonitorVideoDetailI
   Widget build(BuildContext context) {
     final videoInfo = widget.data;
     return MyListView.grid(
-      childAspectRatio: UILayerConst.videoRatio,
+      childAspectRatio: UILayerConst.videoRatio2,
       crossAxisSpacing: 8.w,
       isNeedMore: false,
       header: _HeaderView(data: videoInfo),
