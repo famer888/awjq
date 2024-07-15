@@ -157,7 +157,8 @@ class Config {
       required this.vipLevelAwqStr,
       required this.vipNameAwqStr,
       this.faceCoins,
-      this.stripCoins});
+      this.stripCoins,
+      this.openLive});
 
   final String? dayPrice;
   final dynamic personAds;
@@ -211,6 +212,7 @@ class Config {
   final String vipNameAwqStr;
   final int? faceCoins;
   final int? stripCoins;
+  final int? openLive;
 
   factory Config.fromJson(Map<String, dynamic> json) => Config(
         dayPrice: json['day_price'],
@@ -277,6 +279,7 @@ class Config {
         vipNameAwqStr: json['vip_name_awq_str'] ?? '',
         faceCoins: json['face_coins'],
         stripCoins: json['strip_coins'],
+        openLive: json['open_live'],
       );
 
   Map<String, dynamic> toJson() => {
@@ -329,6 +332,7 @@ class Config {
         'seed_coins_tip': seedCoinsTip,
         'strip_coins': stripCoins,
         'face_coins': faceCoins,
+        'open_live': openLive,
       };
 }
 

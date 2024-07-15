@@ -81,6 +81,11 @@ class _LiveMvPlayerState extends State<LiveMvPlayer> with NVideoURLMinxin {
         final hlsLeght = widget.info.hls?.length ?? 0;
         chanelIndex = hlsLeght - 1; //记录播放的是哪条线路
       }
+    } else {
+      flickManager?.handleChangeVideo(
+        VideoPlayerController.network(playerStr),
+      );
+      return;
     }
 
     VideoPlayerController? cr =
@@ -585,25 +590,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                     fit: BoxFit.contain,
                   ),
                   toggleFullscreen: () {
-                    _hideKeyboard(context);
-                    if (kIsWeb) {
-                      List<html.VideoElement> elements =
-                          html.document.querySelectorAll('video');
-                      if (elements.isEmpty) return;
-
-                      html.VideoElement video = elements.last;
-                      video.muted = false;
-                      video.volume = 1;
-                      video.setAttribute('playsinline', 'true');
-                      video.setAttribute('autoplay', 'true');
-                      if (html.document.fullscreenElement == null) {
-                        video.enterFullscreen();
-                      } else {
-                        html.document.exitFullscreen();
-                      }
-                    } else {
-                      controlManager.toggleFullscreen();
-                    }
+                    _changeFullScreen(controlManager);
                   },
                 ),
               ],
@@ -622,6 +609,28 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
         ))
       ],
     );
+  }
+
+  void _changeFullScreen(FlickControlManager controlManager){
+    _hideKeyboard(context);
+    if (kIsWeb) {
+      List<html.VideoElement> elements =
+      html.document.querySelectorAll('video');
+      if (elements.isEmpty) return;
+
+      html.VideoElement video = elements.last;
+      video.muted = false;
+      video.volume = 1;
+      video.setAttribute('playsinline', 'true');
+      video.setAttribute('autoplay', 'true');
+      if (html.document.fullscreenElement == null) {
+        video.enterFullscreen();
+      } else {
+        html.document.exitFullscreen();
+      }
+    } else {
+      controlManager.toggleFullscreen();
+    }
   }
 
   //打赏

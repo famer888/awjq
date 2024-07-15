@@ -36,6 +36,8 @@ class LiveModel {
         int? isFavorite;
   final String? payTip;
   final String? intro;
+  final String? thumb;
+
   LiveModel({
     this.id,
     this.cover,
@@ -49,7 +51,8 @@ class LiveModel {
     this.coins,
     this.isFavorite,
     this.payTip,
-    this.intro
+    this.intro,
+    this.thumb
   });
 
   factory LiveModel.fromJson(Map<String, dynamic> json) => LiveModel(
@@ -68,6 +71,7 @@ class LiveModel {
         isFavorite: json['is_favorite'] ?? 0,
         payTip: json['pay_tip'],
         intro: json['intro'],
+        thumb: json['thumb'],
       );
 
   Map<String, dynamic> toJson() => {
@@ -84,6 +88,7 @@ class LiveModel {
         'is_favorite': isFavorite,
         'pay_tip': payTip,
         'intro': intro,
+        'thumb': thumb,
   };
 }
 

@@ -14,15 +14,15 @@ class MyToast {
     return BotToast.showText(
       text: text,
       contentColor: Colors.white,
-      textStyle: TextStyle(
+      textStyle: const TextStyle(
           color: Colors.black,
-          fontSize: 13.sp,
+          fontSize: 14,
           decoration: TextDecoration.none),
       align: const Alignment(0, 0),
       duration: Duration(seconds: time ?? 2),
-      contentPadding: EdgeInsets.symmetric(
-        horizontal: 45.w,
-        vertical: 23.w,
+      contentPadding: const EdgeInsets.symmetric(
+        horizontal: 45,
+        vertical: 23,
       ),
       onClose: onClose,
     );
@@ -49,7 +49,11 @@ class MyToast {
               ),
             ),
             SizedBox(height: 10.w),
-            Text(text, style: MyTheme.white255_14)
+            Text(text, style: const TextStyle(
+                color: Color.fromRGBO(255, 255, 255, 1),
+                fontSize: 14,
+                overflow: TextOverflow.ellipsis,
+                decoration: TextDecoration.none))
           ],
         ),
       );

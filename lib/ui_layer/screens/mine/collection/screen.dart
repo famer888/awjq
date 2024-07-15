@@ -12,6 +12,7 @@ import '../../../../domain/remote_domain/domains/live.dart';
 import '../../../../domain/remote_domain/domains/monitor.dart';
 import '../../../../domain/result.dart';
 import '../../../const.dart';
+import '../../../notifiers/home_config_notifier.dart';
 import '../../bit/live_video/live_card/live_video_card.dart';
 import '../../bit/monitor_video/monitor_card/monitor_card.dart';
 import '../../common_widgets/keep_alive_wrapper.dart';
@@ -31,8 +32,14 @@ class MineCollectionScreen extends StatefulWidget {
 }
 
 class _MineCollectionScreenState extends State<MineCollectionScreen> {
+
+  late final homeConfigNotifier = context.read<HomeConfigNotifier>();
+
   @override
   Widget build(BuildContext context) {
+
+    final openLive = homeConfigNotifier.config.openLive == 1 ? true : false;
+
     return ScreenBackground(
       child: Scaffold(
         appBar: MyAppBar(
@@ -52,14 +59,19 @@ class _MineCollectionScreenState extends State<MineCollectionScreen> {
           ),
           tabBarHeight: 40.w,
           isScrollable: false,
-          titles: [
+          titles: openLive ? [
             'sping'.tr(context: context),
             'tiezt'.tr(context: context),
             'pojie'.tr(context: context),
             'zhibo'.tr(context: context),
             'jiankong'.tr(context: context),
+          ] : [
+            'sping'.tr(context: context),
+            'tiezt'.tr(context: context),
+            'pojie'.tr(context: context),
+            'jiankong'.tr(context: context),
           ],
-          views: const [
+          views: openLive ? const [
             KeepAliveWrapper(
               child: _VideoView(),
             ),
@@ -71,6 +83,19 @@ class _MineCollectionScreenState extends State<MineCollectionScreen> {
             ),
             KeepAliveWrapper(
               child: _LiveView(),
+            ),
+            KeepAliveWrapper(
+              child: _MonitorView(),
+            ),
+          ] : const [
+            KeepAliveWrapper(
+              child: _VideoView(),
+            ),
+            KeepAliveWrapper(
+              child: _TieztView(type: _TieztType.community),
+            ),
+            KeepAliveWrapper(
+              child: _TieztView(type: _TieztType.bit),
             ),
             KeepAliveWrapper(
               child: _MonitorView(),

@@ -12,6 +12,7 @@ import '../../../../domain/model/monitor_model.dart';
 import '../../../../domain/model/post_model.dart';
 import '../../../../domain/remote_domain/domains/live.dart';
 import '../../../../domain/remote_domain/domains/monitor.dart';
+import '../../../notifiers/home_config_notifier.dart';
 import '../../bit/live_video/live_card/live_video_card.dart';
 import '../../bit/monitor_video/monitor_card/monitor_card.dart';
 import '../../common_widgets/feed/feed_card.dart';
@@ -32,8 +33,14 @@ class SearchResultScreen extends StatefulWidget {
 }
 
 class _SearchResultScreenState extends State<SearchResultScreen> {
+
+  late final homeConfigNotifier = context.read<HomeConfigNotifier>();
+
   @override
   Widget build(BuildContext context) {
+
+    final openLive = homeConfigNotifier.config.openLive == 1 ? true : false;
+
     return ScreenBackground(
       child: Scaffold(
         appBar: MyAppBar(
@@ -45,18 +52,32 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
             horizontal: MyTheme.pagePadding,
           ),
           tabBarHeight: 32.w,
-          titles: [
+          titles: openLive ? [
             'sping'.tr(context: context),
             'zhibo'.tr(context: context),
             'jiankong'.tr(context: context),
             'tiezt'.tr(context: context),
+          ] : [
+            'sping'.tr(context: context),
+            'jiankong'.tr(context: context),
+            'tiezt'.tr(context: context),
           ],
-          views: [
+          views: openLive ?  [
             KeepAliveWrapper(
               child: _VideoView(word: widget.title),
             ),
             KeepAliveWrapper(
               child: _LiveVideoView(word: widget.title),
+            ),
+            KeepAliveWrapper(
+              child: _MonitorVideoView(word: widget.title),
+            ),
+            KeepAliveWrapper(
+              child: _TieztView(word: widget.title),
+            ),
+          ] : [
+            KeepAliveWrapper(
+              child: _VideoView(word: widget.title),
             ),
             KeepAliveWrapper(
               child: _MonitorVideoView(word: widget.title),
