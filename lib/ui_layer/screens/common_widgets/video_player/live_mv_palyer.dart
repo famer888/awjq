@@ -611,11 +611,11 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
     );
   }
 
-  void _changeFullScreen(FlickControlManager controlManager){
+  void _changeFullScreen(FlickControlManager controlManager) {
     _hideKeyboard(context);
     if (kIsWeb) {
       List<html.VideoElement> elements =
-      html.document.querySelectorAll('video');
+          html.document.querySelectorAll('video');
       if (elements.isEmpty) return;
 
       html.VideoElement video = elements.last;
@@ -1145,9 +1145,31 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
   @override
   Widget build(BuildContext context) {
     if (widget.info?.show != 'public') {
-      return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 15.w),
-        child: Center(child: Text(tr('yhyxx'), style: MyTheme.white255_14_M)),
+      return Stack(
+        children: [
+          Positioned.fill(child: MyImage.network(widget.info?.cover ?? '')),
+          Positioned.fill(child: CommonUtils.blurCover()),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 15.w),
+            child:
+                Center(child: Text(tr('yhyxx'), style: MyTheme.white09_15_M)),
+          ),
+          Positioned(
+              top: 10.w,
+              left: 10.w,
+              child: GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                child: const MyImage.asset(
+                  MyImagePaths.appNavBackWN,
+                  width: 22,
+                  height: 22,
+                  fit: BoxFit.contain,
+                ),
+                onTap: () {
+                  context.pop();
+                },
+              ))
+        ],
       );
     }
 
