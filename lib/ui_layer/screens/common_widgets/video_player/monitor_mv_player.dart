@@ -53,10 +53,12 @@ class MonitorMvPlayer extends StatefulWidget {
 
 class _MonitorMvPlayerState extends State<MonitorMvPlayer> with NVideoURLMinxin {
   FlickManager? flickManager;
+  bool _isPlayback = false;
 
   @override
   void initState() {
     super.initState();
+    _isPlayback = widget.info.streamType == 1 ? false : true;
     initURL();
   }
 
@@ -112,6 +114,7 @@ class _MonitorMvPlayerState extends State<MonitorMvPlayer> with NVideoURLMinxin 
             info: widget.info,
             noBack: widget.noBack,
             needCheckAspectRatio: widget.needCheckAspectRatio,
+            isPlayback: _isPlayback,
             shareVp: () {
               const MineWelfareRoute(index: 1).push(context);
             },
@@ -129,6 +132,7 @@ class _MonitorMvPlayerState extends State<MonitorMvPlayer> with NVideoURLMinxin 
           controls: _SinkPortraitLandWidget(
             info: widget.info,
             noBack: false,
+            isPlayback: _isPlayback,
           ),
         ),
       ),
@@ -242,6 +246,7 @@ class _SinkPortraitLandWidget extends StatefulWidget {
     this.nowByKb,
     this.needCheckAspectRatio = false,
     required this.noBack,
+    this.isPlayback = false,
   });
   final bool isBack;
   final MonitorModel? info;
@@ -249,6 +254,7 @@ class _SinkPortraitLandWidget extends StatefulWidget {
   final Function? nowToVp; //立即开通
   final Function? nowByKb; //钻石购买
   final bool noBack;
+  final bool isPlayback;
 
   /// 显示全屏按钮是否判断视频长宽比
   final bool needCheckAspectRatio;
@@ -291,7 +297,26 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                       strokeWidth: 1.5,
                     ),
                   ),
-                ) : Container()
+                ) : const FlickAutoHideChild(
+                  showIfVideoNotInitialized: false,
+                  child: FlickPlayToggle(
+                    replayChild:  MyImage.asset(
+                      MyImagePaths.appVReplayN,
+                      width: 40,
+                      height: 40,
+                    ),
+                    playChild:  MyImage.asset(
+                      MyImagePaths.appVPlayN,
+                      width: 40,
+                      height: 40,
+                    ),
+                    pauseChild:  MyImage.asset(
+                      MyImagePaths.appVPauseN,
+                      width: 40,
+                      height: 40,
+                    ),
+                  ),
+                ),
               ),
             ),
           ),
@@ -372,7 +397,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
           bottom: 10,
           left: 10,
           child: FlickAutoHideChild(
-            child: Row(
+            child: widget.isPlayback ? const SizedBox.shrink() : Row(
               children: [
                 ChinaTimeWidget(textStyle: MyTheme.white11),
                 const SizedBox(width: 5),
@@ -407,28 +432,6 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
           child: FlickAutoHideChild(
             child: Column(
               children: [
-                // GestureDetector(
-                //   behavior: HitTestBehavior.translucent,
-                //   child: widget.info?.isFavorite == 1 ? const MyImage.asset(
-                //       MyImagePaths.appzanSlect,
-                //       width: 25,
-                //       height: 25,
-                //       fit: BoxFit.contain) : const MyImage.asset(
-                //     MyImagePaths.appZanNormal,
-                //     width: 25,
-                //     height: 25,
-                //     fit: BoxFit.contain,
-                //   ),
-                //   onTap: () {
-                //     if (widget.info?.isFavorite == 1) {
-                //       widget.info?.isFavorite == 0;
-                //     } else {
-                //       widget.info?.isFavorite == 1;
-                //     }
-                //     if (mounted) setState(() {});
-                //   },
-                // ),
-                // SizedBox(height: 35.w),
                 FlickFullScreenToggle(
                   enterFullScreenChild: const MyImage.asset(
                     MyImagePaths.appFullScreen,
@@ -467,7 +470,30 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
               ],
             ),
           ),
-        )
+        ),
+        Positioned(
+          right: 55,
+          left: 10,
+          bottom: widget.isBack ? 10 : 15,
+          child: FlickAutoHideChild(
+            child: !widget.isPlayback ? const SizedBox.shrink() : FlickVideoProgressBar(
+              flickProgressBarSettings:
+              FlickProgressBarSettings(
+                padding: const EdgeInsets.only(top: 10),
+                height: 3,
+                handleRadius: 6,
+                curveRadius: 4,
+                backgroundColor: Colors.white24,
+                bufferedColor:
+                const Color.fromRGBO(90, 75, 235, 0.38),
+                playedColor:
+                const Color.fromRGBO(90, 75, 235, 1),
+                handleColor:
+                const Color.fromRGBO(90, 75, 235, 1),
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }

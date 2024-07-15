@@ -38,6 +38,7 @@ class MonitorModel {
   final int? viewFct;
   final int? commentCt;
         int? favoriteFct;
+  final int? streamType;
 
   MonitorModel({
     this.id,
@@ -54,6 +55,7 @@ class MonitorModel {
     this.viewFct,
     this.favoriteFct,
     this.commentCt,
+    this.streamType,
   });
 
   factory MonitorModel.fromJson(Map<String, dynamic> json) => MonitorModel(
@@ -70,6 +72,7 @@ class MonitorModel {
     viewFct: json['view_fct'],
     favoriteFct: json['favorite_fct'] ?? 0,
     commentCt: json['comment_ct'],
+    streamType: json['stream_type'],
   );
 
   Map<String, dynamic> toJson() => {
@@ -86,5 +89,6 @@ class MonitorModel {
     'view_fct': viewFct,
     'comment_ct': commentCt,
     'favorite_fct': favoriteFct,
+    'stream_type': streamType,
   };
 }
