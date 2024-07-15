@@ -2526,6 +2526,12 @@ class MyTheme {
       overflow: TextOverflow.visible,
       decoration: TextDecoration.none);
 
+  static final TextStyle jellyCyan_17 = TextStyle(
+      color: jellyCyanColor103224185,
+      fontSize: 17.sp,
+      overflow: TextOverflow.visible,
+      decoration: TextDecoration.none);
+
   static final TextStyle jellyCyan_18_M = TextStyle(
       color: jellyCyanColor103224185,
       fontSize: 18.sp,

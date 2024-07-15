@@ -33,7 +33,8 @@ class CommunityDetailContentView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return isFish ? _fishContenWidgets(context, data) : _contenWidgets();
+    // return isFish ? _fishContenWidgets(context, data) : _contenWidgets();//暂时隐藏，产品目前需要咸鱼和帖子详情UI显示一致
+    return _contenWidgets();
   }
 
   Widget _fishContenWidgets(BuildContext context, TopicDetail data) {

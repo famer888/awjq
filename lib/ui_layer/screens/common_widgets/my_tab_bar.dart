@@ -161,12 +161,12 @@ class MyTabBarTheme extends TabBarTheme {
     TextStyle? unselectedLabelStyle,
   }) =>
       MyTabBarTheme(
-        labelStyle: labelStyle ?? MyTheme.jellyCyan_18,
+        labelStyle: labelStyle ?? MyTheme.jellyCyan_17,
         labelPadding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
         unselectedLabelStyle: unselectedLabelStyle ??
             TextStyle(
-              color: const Color.fromRGBO(255, 255, 255, 1),
-              fontSize: 18.sp,
+              color: const Color.fromRGBO(255, 255, 255, 0.6),
+              fontSize: 17.sp,
               overflow: TextOverflow.visible,
               decoration: TextDecoration.none,
             ),

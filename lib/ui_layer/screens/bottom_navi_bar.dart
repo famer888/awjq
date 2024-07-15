@@ -299,7 +299,7 @@ class _BottomNaviBarState extends State<BottomNaviBar> {
                 BottomNavigationBarItem(
                   icon: const _Icon(MyImagePaths.appTabZyN),
                   activeIcon: const _Icon(MyImagePaths.appTabZyS),
-                  label: 'zyuan'.tr(context: context),
+                  label: 'pojie'.tr(context: context),
                 ),
                 BottomNavigationBarItem(
                   icon: const _Icon(MyImagePaths.appTabXyN),

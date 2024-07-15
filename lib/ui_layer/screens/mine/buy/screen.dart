@@ -53,7 +53,7 @@ class _MineBuyScreenState extends State<MineBuyScreen> {
           titles: [
             'sping'.tr(context: context),
             'tiezt'.tr(context: context),
-            'zyuan'.tr(context: context),
+            'pojie'.tr(context: context),
             'zhibo'.tr(context: context),
             'jiankong'.tr(context: context),
           ],

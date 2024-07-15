@@ -75,14 +75,14 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
           labelPadding: const EdgeInsets.symmetric(horizontal: 10),
           tabAlignment: TabAlignment.center,
           isScrollable: true,
-          labelStyle: MyTheme.white255_13,
-          unselectedLabelStyle: MyTheme.gray163_13,
+          labelStyle: MyTheme.white255_18,
+          unselectedLabelStyle: MyTheme.white06_18,
           overlayColor: WidgetStateProperty.resolveWith<Color>(
             (_) => Colors.transparent,
           ),
           indicatorColor: Colors.transparent,
           indicator: BoxDecoration(
-            gradient: MyTheme.gradient_90_114,
+            color: Colors.transparent,
             borderRadius: BorderRadius.circular(30.w),
           ),
           dividerColor: Colors.transparent,
