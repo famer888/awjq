@@ -16,6 +16,7 @@ class LiveVideoCard extends StatelessWidget {
   final LiveModel data;
 
   String get imageUrl => CommonUtils.getThumb(data.toJson());
+  bool get isOnline => data.show == 'public';
 
   @override
   Widget build(BuildContext context) {
@@ -35,11 +36,19 @@ class LiveVideoCard extends StatelessWidget {
                 backgroundColor: MyTheme.imageBgColor,
               ),
             ),
+            Positioned.fill(child: !isOnline ? CommonUtils.blurCover() : const SizedBox.shrink()),
+            Positioned.fill(child: !isOnline ? Center(
+              child: MyImage.asset(
+                MyImagePaths.appFigureN,
+                width: 70.w,
+                height: 70.w,
+              ),
+            ) : const SizedBox.shrink()),
             Positioned(
                 top: 5.w,
                 left: 5.w,
                 right: 5.w,
-                child: Stack(
+                child: isOnline ? Stack(
                   children: [
                     Container(
                       margin: EdgeInsets.only(left: 0.w, top: 0.5.w),
@@ -57,7 +66,7 @@ class LiveVideoCard extends StatelessWidget {
                       width: 19.w,
                     )
                   ],
-                )),
+                ) : const SizedBox.shrink()),
             Positioned(
               bottom: 0,
               left: 0,
@@ -85,6 +94,22 @@ class LiveVideoCard extends StatelessWidget {
                 ),
               ),
             ),
+            Positioned(
+              top: 5.w,
+                right: 5.w,
+                child: Row(children: [
+                  MyImage.asset(
+                    isOnline ? MyImagePaths.appOnline : MyImagePaths.appOffline,
+                    height: 11.w,
+                    width: 11.w,
+                  ),
+                  SizedBox(width: 3.w),
+                  Text(
+                    isOnline ? tr('zbz') : tr('yixx'),
+                    style: MyTheme.white10,
+                    maxLines: 1,
+                  ),
+            ]))
           ],
         ),
       ),
