@@ -637,8 +637,8 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                         widget.shareVp?.call();
                       },
                       child: Container(
-                        height: 32,
-                        width: 110,
+                        height: 32.w,
+                        width: 110.w,
                         decoration: const BoxDecoration(
                           gradient: MyTheme.gradient_90_114,
                           borderRadius: BorderRadius.all(Radius.circular(3)),
