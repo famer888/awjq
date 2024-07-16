@@ -95,7 +95,7 @@ class LiveVideoCard extends StatelessWidget {
               ),
             ),
             Positioned(
-              top: 5.w,
+                top: 7.w,
                 right: 5.w,
                 child: Row(children: [
                   MyImage.asset(

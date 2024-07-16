@@ -297,7 +297,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                       strokeWidth: 1.5,
                     ),
                   ),
-                ) : const FlickAutoHideChild(
+                ) : !widget.isPlayback ? const SizedBox.shrink() : const FlickAutoHideChild(
                   showIfVideoNotInitialized: false,
                   child: FlickPlayToggle(
                     replayChild:  MyImage.asset(
