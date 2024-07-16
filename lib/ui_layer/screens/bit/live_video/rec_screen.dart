@@ -15,42 +15,44 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
 import 'live_card/live_video_card.dart';
+import 'live_card/rec_live_video_card.dart';
 
-class LiveVideoView extends StatefulWidget {
-  const LiveVideoView({super.key, required this.nav});
+class RecLiveVideoView extends StatefulWidget {
+  const RecLiveVideoView({super.key, required this.nav, required this.moreClickCallBack});
+
   final BitNavModel nav;
+  final Function(int index) moreClickCallBack;
+
   @override
-  State<LiveVideoView> createState() => _LiveVideoViewState();
+  State<RecLiveVideoView> createState() => _RecLiveVideoViewState();
 }
 
-class _LiveVideoViewState extends State<LiveVideoView> {
+class _RecLiveVideoViewState extends State<RecLiveVideoView> {
   late final _domain = context.read<LiveDomain>();
   final ValueNotifier<List<BannerModel>> _bannersNotifier = ValueNotifier([]);
   final ValueNotifier<List<TipModel>> _tipsNotifier = ValueNotifier([]);
 
-  Future<List<LiveModel>?> _getData(
+  Future<List<ThemesModel>?> _getData(
       {required int page, required int pageSize}) async {
-    final result = await _domain.getLiveIndex(
-      id: widget.nav.id,
+    final result = await _domain.getLiveRecListComment(
       page: page,
       limit: pageSize,
     );
     if (mounted) {
-      setState(() {
-      });
+      setState(() {});
     }
 
     if (result.status == 1) {
       if (result.data?.banners case final data?
-      when data.isNotEmpty && _bannersNotifier.value.isEmpty) {
+          when data.isNotEmpty && _bannersNotifier.value.isEmpty) {
         _bannersNotifier.value = data;
       }
       if (result.data?.tips case final data?
-      when data.isNotEmpty && _tipsNotifier.value.isEmpty) {
+          when data.isNotEmpty && _tipsNotifier.value.isEmpty) {
         _tipsNotifier.value = data;
       }
 
-      return result.data?.lives;
+      return result.data?.themes;
     } else {
       MyToast.showText(text: result.msg ?? '');
     }
@@ -59,14 +61,18 @@ class _LiveVideoViewState extends State<LiveVideoView> {
 
   @override
   Widget build(BuildContext context) {
-    return MyListView.grid(
-      childAspectRatio: UILayerConst.videoRatio,
-      header: _Header(bannersNotifier: _bannersNotifier, tipsNotifier: _tipsNotifier),
-      contentPadding: 10.w,
-      padding: EdgeInsets.symmetric(vertical: MyTheme.pagePadding, horizontal: MyTheme.pagePadding),
-      itemBuilder: (context, item, index) => LiveVideoCard(data: item),
-      onFetchingMore: (currentPage, pageSize) => _getData(
-          page: currentPage, pageSize: pageSize),
+    return MyListView.list(
+      header: _Header(
+          bannersNotifier: _bannersNotifier, tipsNotifier: _tipsNotifier),
+      contentPadding: 5.w,
+      padding: EdgeInsets.symmetric(
+          vertical: MyTheme.pagePadding, horizontal: MyTheme.pagePadding),
+      itemBuilder: (context, item, index) =>
+          RecLiveVideoCard(model: item, moreClickCallBack: () {
+            widget.moreClickCallBack.call(index);
+          }),
+      onFetchingMore: (currentPage, pageSize) =>
+          _getData(page: currentPage, pageSize: pageSize),
     );
   }
 }
@@ -99,6 +105,7 @@ Widget _buildNotifyWidget(String marquee) {
 
 class _Header extends StatelessWidget {
   const _Header({required this.bannersNotifier, required this.tipsNotifier});
+
   final ValueNotifier<List<BannerModel>> bannersNotifier;
   final ValueNotifier<List<TipModel>> tipsNotifier;
 

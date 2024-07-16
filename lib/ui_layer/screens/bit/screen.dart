@@ -12,6 +12,7 @@ import '../common_widgets/status/loading.dart';
 import '../common_widgets/status/network_error.dart';
 import '../theme.dart';
 import 'content.dart';
+import 'live_video/rec_screen.dart';
 import 'live_video/screen.dart';
 import 'monitor_video/screen.dart';
 
@@ -40,7 +41,7 @@ class _BitScreenState extends State<BitScreen> with TickerProviderStateMixin {
           controller: tabController,
           children: navList.map((e) {
             if (e.title == '直播') {
-              return _OnlinVideoView(id: e.value);
+              return _LiveVideoView(id: e.value);
             } else if (e.title == '监控') {
               return _MonitorVideoView(id: e.value);
             } else {
@@ -155,24 +156,25 @@ class _BitViewState extends State<_BitView> {
   }
 }
 
-class _OnlinVideoView extends StatefulWidget {
-  const _OnlinVideoView({required this.id});
+class _LiveVideoView extends StatefulWidget {
+  const _LiveVideoView({required this.id});
   final int id;
   @override
-  State<_OnlinVideoView> createState() => _OnlinVideoViewState();
+  State<_LiveVideoView> createState() => _LiveVideoViewState();
 }
 
-class _OnlinVideoViewState extends State<_OnlinVideoView> {
-  late final _appDomain = context.read<SeedDomain>();
+class _LiveVideoViewState extends State<_LiveVideoView> with TickerProviderStateMixin {
   late final config = context.read<HomeConfigNotifier>().config;
   late final navList = config.liveTopNav;
   AsyncValue<List<BitNavModel>> _asyncValue = const AsyncInit();
+  late final TabController _tabController;
 
   @override
   void initState() {
     super.initState();
     if (navList.isNotEmpty) {
       _asyncValue = AsyncData(navList);
+      _tabController = TabController(length: navList.length, vsync: this);
     } else {
       _asyncValue = const AsyncError();
     }
@@ -182,8 +184,18 @@ class _OnlinVideoViewState extends State<_OnlinVideoView> {
   Widget build(BuildContext context) {
     return _asyncValue.maybeWhen(
       data: (data) => TabBarWithView.line(
+        tabController: _tabController,
         titles: navList.map((e) => e.name).toList(),
-        views: navList.map((e) => LiveVideoView(nav: e)).toList(),
+        views: navList.map((e) {
+          if (e.uiType == 0) {
+            return RecLiveVideoView(nav: e, moreClickCallBack: (index) {
+              //点击更多，滑动到对应栏目
+              _tabController.index = index + 1;
+            });
+          } else {
+            return LiveVideoView(nav: e);
+          }
+        }).toList(),
       ),
       orElse: () => const LoadingView(),
     );
