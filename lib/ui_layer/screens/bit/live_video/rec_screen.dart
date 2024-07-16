@@ -21,7 +21,7 @@ class RecLiveVideoView extends StatefulWidget {
   const RecLiveVideoView({super.key, required this.nav, required this.moreClickCallBack});
 
   final BitNavModel nav;
-  final Function(int index) moreClickCallBack;
+  final Function(String title) moreClickCallBack;
 
   @override
   State<RecLiveVideoView> createState() => _RecLiveVideoViewState();
@@ -69,7 +69,7 @@ class _RecLiveVideoViewState extends State<RecLiveVideoView> {
           vertical: MyTheme.pagePadding, horizontal: MyTheme.pagePadding),
       itemBuilder: (context, item, index) =>
           RecLiveVideoCard(model: item, moreClickCallBack: () {
-            widget.moreClickCallBack.call(index);
+            widget.moreClickCallBack.call(item.name ?? '');
           }),
       onFetchingMore: (currentPage, pageSize) =>
           _getData(page: currentPage, pageSize: pageSize),

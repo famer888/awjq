@@ -188,9 +188,10 @@ class _LiveVideoViewState extends State<_LiveVideoView> with TickerProviderState
         titles: navList.map((e) => e.name).toList(),
         views: navList.map((e) {
           if (e.uiType == 0) {
-            return RecLiveVideoView(nav: e, moreClickCallBack: (index) {
+            return RecLiveVideoView(nav: e, moreClickCallBack: (title) {
               //点击更多，滑动到对应栏目
-              _tabController.index = index + 1;
+              int index = navList.indexWhere((element) => element.name == title);
+              _tabController.index = index;
             });
           } else {
             return LiveVideoView(nav: e);
