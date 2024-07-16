@@ -99,6 +99,15 @@
       document.getElementById("splash-branding")?.remove();
       document.body.style.background = "transparent";
     }
+    function setStatusBarColor(color) {
+      var metaTag = document.querySelector('meta[name="theme-color"]');
+      if (!metaTag) {
+        metaTag = document.createElement('meta');
+        metaTag.name = "theme-color";
+        document.getElementsByTagName('head')[0].appendChild(metaTag);
+      }
+      metaTag.content = color;
+    }
   </script>
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
 
