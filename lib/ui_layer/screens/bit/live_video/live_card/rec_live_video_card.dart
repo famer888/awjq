@@ -38,8 +38,9 @@ class RecLiveVideoCard extends StatelessWidget {
                   moreClickCallBack.call();
                 },
                 child: Container(
-                    alignment: Alignment.center,
-                    height: 40,
+                    alignment: Alignment.centerRight,
+                    width: 60.w,
+                    height: 22.w,
                     child: Text('更多',
                       style: MyTheme.white08_12,
                       textAlign: TextAlign.right,
@@ -48,7 +49,7 @@ class RecLiveVideoCard extends StatelessWidget {
               )
         ]),
         GridView.builder(
-          padding: EdgeInsets.only(top: 5.w, bottom: 0),
+          padding: EdgeInsets.only(top: 10.w, bottom: 10.w),
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2, // 每行的网格数
             crossAxisSpacing: 8.w, // 网格之间的水平间距
