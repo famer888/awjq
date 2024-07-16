@@ -71,4 +71,11 @@ class LiveService extends BaseService {
   AsyncJson getLiveReward({required int id, required int coins}) =>
       post('/reward', data: {'id': id, 'coins': coins});
 
+  /// 直播热门推荐列表
+  AsyncJson getLiveRecListComment({
+    required int page,
+    required int limit}) =>
+      post('/rec', data: {'page': page, 'limit': limit});
+
+
 }

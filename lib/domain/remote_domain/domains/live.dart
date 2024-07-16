@@ -59,4 +59,9 @@ abstract class LiveDomain {
 
   /// 直播点赞
   AsyncResult getLiveReward({required int id, required int coins});
+
+  /// 直播热门推荐列表
+  AsyncResult<RecLiveWithBannersModel?> getLiveRecListComment({
+    required int page,
+    required int limit});
 }

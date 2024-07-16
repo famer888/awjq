@@ -473,7 +473,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
         ),
         Positioned(
           right: 55,
-          left: 10,
+          left: 20,
           bottom: widget.isBack ? 10 : 15,
           child: FlickAutoHideChild(
             child: !widget.isPlayback ? const SizedBox.shrink() : FlickVideoProgressBar(

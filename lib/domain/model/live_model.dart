@@ -146,3 +146,52 @@ class TipModel {
         'redirect_type': redirectType,
       };
 }
+
+//热门推荐model数据
+class RecLiveWithBannersModel {
+  List<ThemesModel>? themes;
+  List<BannerModel>? banners;
+  List<TipModel>? tips;
+
+  RecLiveWithBannersModel({this.themes, this.banners, this.tips});
+
+  factory RecLiveWithBannersModel.fromJson(Map<String, dynamic> json) =>
+      RecLiveWithBannersModel(
+        themes: List<ThemesModel>.from(
+            json['themes'].map((e) => ThemesModel.fromJson(e))),
+        banners: List<BannerModel>.from(
+            json['banners'].map((e) => BannerModel.fromJson(e))),
+        tips:
+        List<TipModel>.from(json['tips'].map((e) => TipModel.fromJson(e))),
+      );
+
+  Map<String, dynamic> toJson() =>
+      {'themes': themes, 'banners': banners, 'tips': tips};
+}
+
+class ThemesModel {
+  final int? id;
+  final String? name;
+  List<LiveModel>? lives;
+
+  ThemesModel({
+    this.id,
+    this.name,
+    this.lives});
+
+  factory ThemesModel.fromJson(Map<String, dynamic> json) =>
+      ThemesModel(
+        id: json['id'],
+        name: json['name'],
+        lives: List<LiveModel>.from(
+            json['lives'].map((e) => LiveModel.fromJson(e))),
+
+      );
+
+  Map<String, dynamic> toJson() =>
+      {
+        'id': id,
+        'name': name,
+        'lives': lives
+      };
+}

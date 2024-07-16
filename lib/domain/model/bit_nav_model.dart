@@ -1,17 +1,19 @@
 class BitNavModel {
   final int id;
   final String name;
-
   final int? type;
   final String? title;
   final String? value;
+  final int? uiType;// 0: UI热门推荐布局  1: UI主题布局
 
   BitNavModel({
     required this.id,
     required this.name,
     this.type,
     this.title,
-    this.value});
+    this.value,
+    this.uiType,
+  });
 
   factory BitNavModel.fromJson(Map<String, dynamic> json) =>
       BitNavModel(
@@ -20,6 +22,7 @@ class BitNavModel {
         type: json['type'],
         title: json['title'],
         value: json['value'],
+        uiType: json['ui_type'],
       );
 
 }

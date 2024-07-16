@@ -91,4 +91,15 @@ mixin _Live on _BaseAppRepo implements LiveDomain {
   @override
   AsyncResult getLiveReward({required int id, required int coins}) =>
       _liveService.getLiveReward(id: id, coins: coins).deserialize().guard;
+
+  @override
+  AsyncResult<RecLiveWithBannersModel?> getLiveRecListComment({
+    required int page,
+    required int limit,
+  }) => _liveService.getLiveRecListComment(
+    page: page,
+    limit: limit,
+  ).deserializeJsonBy(RecLiveWithBannersModel.fromJson).guard;
+
+
 }
