@@ -11,7 +11,6 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:universal_html/html.dart' as html;
 import 'package:video_player/video_player.dart';
-import 'package:visibility_detector/visibility_detector.dart';
 import '../../../../domain/api_validator.dart';
 import '../../../../domain/domain.dart';
 import '../../../../domain/model/live_model.dart';
@@ -31,6 +30,8 @@ import '../dialog/widgets/regular_dialog.dart';
 import '../my_image.dart';
 import '../player_barrage_widget.dart';
 import 'utils/nvideourl_minxin.dart';
+import 'dart:js' as js;
+
 
 //先判断show的值 != “public” 直接显示已下线
 //判断hls.length > 0 直接播放
@@ -110,16 +111,7 @@ class _LiveMvPlayerState extends State<LiveMvPlayer> with NVideoURLMinxin {
   Widget build(BuildContext context) {
     return flickManager == null
         ? Container()
-        : VisibilityDetector(
-            key: ObjectKey(flickManager),
-            onVisibilityChanged: (visibility) {
-              if (visibility.visibleFraction == 0 && mounted) {
-                flickManager?.flickControlManager?.autoPause();
-              } else if (visibility.visibleFraction == 1) {
-                flickManager?.flickControlManager?.autoResume();
-              }
-            },
-            child: FlickVideoPlayer(
+        : FlickVideoPlayer(
               flickManager: flickManager!,
               flickVideoWithControls: FlickVideoWithControls(
                 videoFit: BoxFit.contain,
@@ -172,7 +164,6 @@ class _LiveMvPlayerState extends State<LiveMvPlayer> with NVideoURLMinxin {
                   },
                 ),
               ),
-            ),
           );
   }
 
@@ -621,12 +612,17 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
       html.VideoElement video = elements.last;
       video.muted = false;
       video.volume = 1;
-      video.setAttribute('playsinline', 'true');
+      // video.setAttribute('playsinline', 'true');
       video.setAttribute('autoplay', 'true');
+
       if (html.document.fullscreenElement == null) {
+        // Enter full screen
         video.enterFullscreen();
+        video.controls = false; // hidden native controls
       } else {
-        html.document.exitFullscreen();
+        // Exit full screen
+        video.exitFullscreen();
+        video.controls = false; // hidden native controls
       }
     } else {
       controlManager.toggleFullscreen();

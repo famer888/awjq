@@ -85,16 +85,7 @@ class _MonitorMvPlayerState extends State<MonitorMvPlayer> with NVideoURLMinxin 
     return
       flickManager == null
         ? Container()
-        : VisibilityDetector(
-      key: ObjectKey(flickManager),
-      onVisibilityChanged: (visibility) {
-        if (visibility.visibleFraction == 0 && mounted) {
-          flickManager?.flickControlManager?.autoPause();
-        } else if (visibility.visibleFraction == 1) {
-          flickManager?.flickControlManager?.autoResume();
-        }
-      },
-      child: FlickVideoPlayer(
+        : FlickVideoPlayer(
         flickManager: flickManager!,
         flickVideoWithControls: FlickVideoWithControls(
           videoFit: BoxFit.contain,
@@ -135,7 +126,6 @@ class _MonitorMvPlayerState extends State<MonitorMvPlayer> with NVideoURLMinxin 
             isPlayback: _isPlayback,
           ),
         ),
-      ),
     );
   }
 
