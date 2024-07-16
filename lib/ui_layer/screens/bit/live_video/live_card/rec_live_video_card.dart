@@ -41,7 +41,7 @@ class RecLiveVideoCard extends StatelessWidget {
                     alignment: Alignment.centerRight,
                     width: 60.w,
                     height: 22.w,
-                    child: Text('更多',
+                    child: Text(tr('gd'),
                       style: MyTheme.white08_12,
                       textAlign: TextAlign.right,
                     )

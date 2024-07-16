@@ -27,7 +27,7 @@ dependencies:
   url_launcher: ^6.2.4
   universal_html: ^2.2.4
   app_installer: ^1.1.0
-  permission_handler: ^11.3.0
+  permission_handler: ^11.3.1
   path_provider: ^2.1.2
   web_socket_channel: ^2.4.0
   flutter_swiper_null_safety_flutter3: ^4.0.3
