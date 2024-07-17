@@ -60,16 +60,7 @@ class _PictureRecordPreviewScreenState
 
   Future<void> _saveImage(BuildContext context) async {
     try {
-      RenderRepaintBoundary boundary = _globalKey.currentContext!
-          .findRenderObject() as RenderRepaintBoundary;
-      ui.Image image = await boundary.toImage(pixelRatio: 3.0);
-      if (await image.toByteData(format: ui.ImageByteFormat.png)
-      case final byteData?) {
-        final imageBytes = byteData.buffer.asUint8List();
-        CommonUtils.localStorageImage(context, imageBytes);
-      } else {
-        MyToast.showText(text: tr('tpbcsb'));
-      }
+      CommonUtils.localStorageImage(widget.url);
     } catch (e) {
       MyToast.showText(text: tr('tpbcsb'));
     }

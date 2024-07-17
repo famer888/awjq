@@ -37,6 +37,11 @@ class _AIRecordCardState extends State<AIRecordCard> {
 
   @override
   Widget build(BuildContext context) {
+
+    String imgStr = widget.type == AIRecordType.StripOff
+        ? (widget.data.stripThumb ?? '')
+        : (widget.data.faceThumb ?? '');
+
     return Container(
       clipBehavior: Clip.hardEdge,
       decoration: BoxDecoration(
@@ -47,7 +52,7 @@ class _AIRecordCardState extends State<AIRecordCard> {
         behavior: HitTestBehavior.translucent,
         onTap: () {
           if (widget.data.status == 2) {
-              _showSheetView(context);
+              _showSheetView(imgStr);
           }
         },
         child: Stack(
@@ -87,7 +92,7 @@ class _AIRecordCardState extends State<AIRecordCard> {
                             child: GestureDetector(
                               behavior: HitTestBehavior.translucent,
                               onTap: () {
-                                _saveImage(context);
+                                _saveImage(imgStr);
                               },
                               child: Container(
                                 margin: EdgeInsets.symmetric(horizontal: 20.w),
@@ -142,18 +147,9 @@ class _AIRecordCardState extends State<AIRecordCard> {
     );
   }
 
-  Future<void> _saveImage(BuildContext context) async {
+  Future<void> _saveImage(String imgUrl) async {
     try {
-      RenderRepaintBoundary boundary = _globalKey.currentContext!
-          .findRenderObject() as RenderRepaintBoundary;
-      ui.Image image = await boundary.toImage(pixelRatio: 3.0);
-      if (await image.toByteData(format: ui.ImageByteFormat.png)
-      case final byteData?) {
-        final imageBytes = byteData.buffer.asUint8List();
-        CommonUtils.localStorageImage(context, imageBytes);
-      } else {
-        MyToast.showText(text: tr('tpbcsb'));
-      }
+      CommonUtils.localStorageImage(imgUrl);
     } catch (e) {
       MyToast.showText(text: tr('tpbcsb'));
     }
@@ -173,11 +169,7 @@ class _AIRecordCardState extends State<AIRecordCard> {
     return '';
   }
 
-  Future<void> _showSheetView(BuildContext context) {
-    String imgStr = widget.type == AIRecordType.StripOff
-        ? (widget.data.stripThumb ?? '')
-        : (widget.data.faceThumb ?? '');
-
+  Future<void> _showSheetView(String imgStr) {
     return showModalBottomSheet(
       backgroundColor: Colors.transparent,
       isScrollControlled: true,

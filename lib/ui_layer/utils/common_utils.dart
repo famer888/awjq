@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
+import 'dart:typed_data';
 import 'dart:ui';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
@@ -14,6 +16,7 @@ import 'package:url_launcher/url_launcher.dart' as url_launcher;
 import 'package:html_unescape/html_unescape.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../app_config.dart';
+import '../../crypto.dart';
 import '../../logger.dart';
 import '../screens/theme.dart';
 import 'my_toast.dart';
@@ -379,7 +382,7 @@ class CommonUtils {
         ));
   }
 
-  static void localStorageImage(BuildContext context, Uint8List imageBytes) async {
+  static void localStorageImage(String imgUrl) async {
     if (kIsWeb) {
     } else {
       PermissionStatus storageStatus = await Permission.camera.status;
@@ -397,9 +400,13 @@ class CommonUtils {
     }
 
     MyToast.showLoading(text: tr('bctpz'));
+    final Uint8List? bytes = await CommonUtils.isolatedImage(imgUrl);
+    if (bytes?.lengthInBytes == 0 || bytes == null) {
+      MyToast.showText(text: tr('tpybc'));
+      return;
+    }
 
     if (kIsWeb) {
-      Uint8List bytes = imageBytes;
       dynamic blob = html.Blob([bytes]);
       String url = html.Url.createObjectUrlFromBlob(blob);
       html.AnchorElement anchor =
@@ -415,7 +422,7 @@ class CommonUtils {
       html.Url.revokeObjectUrl(url);
     } else {
       final result =
-      await ImageGallerySaver.saveImage(imageBytes); //这个是核心的保存图片的插件
+      await ImageGallerySaver.saveImage(bytes); //这个是核心的保存图片的插件
       if (result['isSuccess']) {
         MyToast.showText(text: tr('tpybc'));
       } else if (Platform.isAndroid) {
@@ -426,6 +433,34 @@ class CommonUtils {
     }
 
     MyToast.closeAllLoading();
+  }
+
+  static Future<Uint8List?> isolatedImage(String url) async {
+    Uint8List? bytes;
+    if (kIsWeb) {
+      html.HttpRequest xhr =
+      await html.HttpRequest.request(method: 'GET', url, responseType: 'arraybuffer');
+      if (xhr.response != null) {
+        ByteBuffer bb = xhr.response;
+        bytes = bb.asUint8List();
+      }
+    } else {
+      final Uri resolved = Uri.base.resolve(url);
+      final HttpClient httpClient = HttpClient()..autoUncompress = false;
+      final HttpClientRequest request = await httpClient.getUrl(resolved);
+      final HttpClientResponse response = await request.close();
+      if (response.statusCode != HttpStatus.ok) {
+        return null;
+      }
+      bytes = await consolidateHttpClientResponseBytes(response);
+    }
+    if (bytes?.lengthInBytes == 0 || bytes == null) {
+      return null;
+    }
+    //解密后的图片
+    Uint8List? bys;
+    bys = await PlatformAwareCrypto.imageDecrypt(bytes);
+    return bys;
   }
 
   //随机字符串
