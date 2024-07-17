@@ -25,6 +25,7 @@ import '../../image_paths.dart';
 import '../../theme.dart';
 import '../dialog/my_dialog.dart';
 import '../dialog/widgets/dansan_dialog.dart';
+import '../dialog/widgets/dasan_h_dialog.dart';
 import '../dialog/widgets/png_dialog.dart';
 import '../dialog/widgets/regular_dialog.dart';
 import '../my_image.dart';
@@ -324,6 +325,8 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
   Offset _offset = Offset.zero;
   Size _size = Size.zero;
 
+  OverlayEntry? _overlayEntry;
+
   void _hideKeyboard(BuildContext context) {
     isShowChangeLine = false;
     _textFieldController.text = '';
@@ -553,8 +556,9 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
           child: FlickAutoHideChild(
             child: Row(
               children: [
-                isPortrait
-                    ? GestureDetector(
+                // isPortrait
+                //     ?
+                GestureDetector(
                         behavior: HitTestBehavior.translucent,
                         child: const MyImage.asset(MyImagePaths.appDaSan,
                             width: 60, height: 25, fit: BoxFit.contain),
@@ -563,11 +567,12 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                           if (widget.isBack) {
                             showDaSanDialog();
                           } else {
-                            //横屏时适配有问题，暂时不做处理
+                            //横屏时适配有问题，分开布局处理
+                            showFullScreenDialog(context, controlManager);
                           }
                         },
-                      )
-                    : Container(),
+                      ),
+                    // : Container(),
                 SizedBox(width: 10.w),
                 FlickFullScreenToggle(
                   enterFullScreenChild: const MyImage.asset(
@@ -631,8 +636,125 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
     }
   }
 
+  //横屏时打赏弹窗布局
+  void showFullScreenDialog(BuildContext wcontext, FlickControlManager controlManager) {
+    Member member = wcontext.read<UserNotifier>().member;
+
+    final overlay = Overlay.of(context);
+    _overlayEntry = OverlayEntry(
+      builder: (context) => SingleChildScrollView(
+        child: DanSanHDialog(
+                title: tr('das'),
+                closeCall: () {
+                  _overlayEntry?.remove();
+                  _overlayEntry = null;
+                },
+                content: Column(
+                  children: [
+                    Text(tr('dxds'), style: const TextStyle(
+                        color: Color.fromRGBO(190, 189, 194, 1),
+                        fontSize: 16,
+                        overflow: TextOverflow.ellipsis,
+                        decoration: TextDecoration.none)), //多谢金主爸爸的打赏哦～
+                    const SizedBox(height: 15),
+                    //输入框
+                    Container(
+                      height: 46,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(23.w),
+                        border: Border.all(
+                          color: MyTheme.grayColor180, // 设置边框颜色
+                          width: 0.5, // 设置边框宽度
+                        ),
+                      ),
+                      child: Row(children: [
+                        const SizedBox(width: 20),
+                        Expanded(
+                          child: TextField(
+                            keyboardType: TextInputType.number,
+                            inputFormatters: <TextInputFormatter>[
+                              FilteringTextInputFormatter.digitsOnly,
+                            ],
+                            style: const TextStyle(
+                                color: MyTheme.white08Color,
+                                fontSize: 16,
+                                overflow: TextOverflow.ellipsis,
+                                decoration: TextDecoration.none),
+                            controller: _dsTextFieldController,
+                            focusNode: _dsFocusNode,
+                            decoration: InputDecoration(
+                              isCollapsed: true,
+                              hintText: tr('srdsje'),
+                              hintStyle: const TextStyle(
+                                  color: MyTheme.grayColor180,
+                                  fontSize: 16,
+                                  overflow: TextOverflow.ellipsis,
+                                  decoration: TextDecoration.none),
+                              contentPadding: EdgeInsets.zero,
+                              // 确保内容填充足够
+                              border: InputBorder.none,
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            //立即打赏
+                            var payMoney =
+                                int.parse(_dsTextFieldController.text) ?? 0;
+                            bool isSufficient = member.money > payMoney;
+                            if (isSufficient) {
+                              //足够余额打赏
+                              dasanOptional(payMoney);
+                            } else {
+                              MyToast.showText(text: tr('ybzcz'));
+                            }
+                          },
+                          child: Container(
+                              width: 95,
+                              height: 46,
+                              alignment: Alignment.center,
+                              decoration: const BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(23), // 右上角圆角
+                                    bottomRight: Radius.circular(23), // 右下角圆角
+                                  ),
+                                  color: MyTheme.jellyCyanColor103224185),
+                              child:
+                              Text(tr('ljds'), style: const TextStyle(
+                                  color: Color.fromRGBO(255, 255, 255, 1),
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                  overflow: TextOverflow.ellipsis,
+                                  decoration: TextDecoration.none))),
+                        )
+                      ]),
+                    ),
+                    const SizedBox(height: 30),
+                    Row(
+                      children: [
+                        Text('${tr('dqye')}: ', style: const TextStyle(
+                            color: Color.fromRGBO(190, 189, 194, 1),
+                            fontSize: 13,
+                            overflow: TextOverflow.ellipsis,
+                            decoration: TextDecoration.none)), //当前余额
+                        Text("${member.money}${tr('jb')}",
+                            style: const TextStyle(
+                                color: MyTheme.orange24718713,
+                                fontSize: 13,
+                                overflow: TextOverflow.ellipsis,
+                                decoration: TextDecoration.none)), //金币
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+      ),
+    );
+    overlay.insert(_overlayEntry!);
+  }
+
   //打赏
-  showDaSanDialog({bool goby = false}) {
+  showDaSanDialog() {
     Member member = context.read<UserNotifier>().member;
     MyDialog.showDialog(
         context: context,
@@ -796,6 +918,8 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
     if (res.isValid) {
       userNotifier.setMoney(money: userNotifier.member.money - money);
       MyToast.showText(text: res.msg ?? '');
+      _overlayEntry?.remove();
+      _overlayEntry = null;
     } else {
       MyToast.showText(text: res.msg ?? '');
     }
