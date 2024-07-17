@@ -66,9 +66,6 @@ class _MonitorVideoViewState extends State<MonitorVideoView> {
       contentPadding: 15.w,
       padding: EdgeInsets.symmetric(vertical: MyTheme.pagePadding, horizontal: MyTheme.pagePadding),
       itemBuilder: (context, item, index) {
-        if (widget.nav.id == 1) {
-          item.online = true;//只有实时监控才会是在线状态
-        }
         return MonitorCard(data: item);
       },
       onFetchingMore: (currentPage, pageSize) => _getData(

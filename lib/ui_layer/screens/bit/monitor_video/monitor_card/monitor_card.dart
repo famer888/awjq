@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../domain/model/monitor_model.dart';
@@ -7,13 +8,14 @@ import '../../../common_widgets/my_image.dart';
 import '../../../image_paths.dart';
 import '../../../theme.dart';
 
-
 class MonitorCard extends StatelessWidget {
   const MonitorCard({super.key, required this.data});
 
   final MonitorModel data;
 
   String get imageUrl => CommonUtils.getThumb(data.toJson());
+
+  bool get isOnline => data.streamType == 1;
 
   @override
   Widget build(BuildContext context) {
@@ -57,20 +59,22 @@ class MonitorCard extends StatelessWidget {
                       ),
                     ),
                     //实时监控才显示在线
-                    (data.online ?? false) ?
                     Row(children: [
-                      MyImage.asset(
-                        MyImagePaths.appOnline,
-                        height: 12.w,
-                        width: 12.w,
-                      ),
-                      SizedBox(width: 3.w),
-                      Text(
-                        '在线',
-                        style: MyTheme.white10medium,
-                        maxLines: 1,
-                      )
-                    ]) : const SizedBox.shrink()],
+                            MyImage.asset(
+                              isOnline
+                                  ? MyImagePaths.appOnline : MyImagePaths.appOffline,
+                              height: 12.w,
+                              width: 12.w,
+                            ),
+                            SizedBox(width: 3.w),
+                            Text(
+                              isOnline
+                                  ? tr('zxi') : tr('lxi'),
+                              style: MyTheme.white10medium,
+                              maxLines: 1,
+                            )
+                          ])
+                  ],
                 ),
               ),
             ),

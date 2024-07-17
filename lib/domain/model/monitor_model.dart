@@ -27,7 +27,6 @@ class MonitorModel {
   final int? id;
   final String? title;
   final String? cover;
-        bool? online;//自定义字段：只有实时监控才会是在线状态
         String? hls;
   final String? show;
         int? type;
@@ -44,7 +43,6 @@ class MonitorModel {
     this.id,
     this.title,
     this.cover,
-    this.online = false,
     this.hls,
     this.show,
     this.type,
