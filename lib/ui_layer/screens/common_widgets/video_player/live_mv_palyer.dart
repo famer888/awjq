@@ -699,8 +699,12 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                         InkWell(
                           onTap: () {
                             //立即打赏
+                            if (_dsTextFieldController.text.isEmpty) {
+                              MyToast.showText(text: tr('srdsje'));
+                              return;
+                            }
                             var payMoney =
-                                int.parse(_dsTextFieldController.text) ?? 0;
+                                int.parse(_dsTextFieldController.text);
                             bool isSufficient = member.money > payMoney;
                             if (isSufficient) {
                               //足够余额打赏
@@ -806,6 +810,10 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                   InkWell(
                     onTap: () {
                       //立即打赏
+                      if (_dsTextFieldController.text.isEmpty) {
+                        MyToast.showText(text: tr('srdsje'));
+                        return;
+                      }
                       context.pop();
                       var payMoney =
                           int.parse(_dsTextFieldController.text) ?? 0;
