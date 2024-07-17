@@ -79,11 +79,11 @@ class _CommunityPostDetailScreenState extends State<CommunityPostDetailScreen>
 
   @override
   void didChangeMetrics() {
-    final newBottom = View.of(context).viewInsets.bottom;
-    if (newBottom == 0 && newBottom < _viewBottom) {
-      unfocus();
-    }
-    _viewBottom = newBottom;
+    // final newBottom = View.of(context).viewInsets.bottom;
+    // if (newBottom == 0 && newBottom < _viewBottom) {
+    //   unfocus();
+    // }
+    // _viewBottom = newBottom;
 
     super.didChangeMetrics();
   }
