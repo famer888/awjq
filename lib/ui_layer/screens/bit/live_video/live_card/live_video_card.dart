@@ -1,5 +1,6 @@
 
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -51,20 +52,25 @@ class LiveVideoCard extends StatelessWidget {
                 child: isOnline ? Stack(
                   children: [
                     Container(
-                      margin: EdgeInsets.only(left: 0.w, top: 0.5.w),
-                      padding: EdgeInsets.only(top: 1.7.w, left: 18.w, right: 6.w),
+                      padding: EdgeInsets.only(left: 3.w, right: 6.w),
                       height: 18.w,
                       decoration: BoxDecoration(
                         color: MyTheme.blackColor25505,
                         borderRadius: BorderRadius.all(Radius.circular(9.w)),
                       ),
-                      child: Text('${CommonUtils.renderEnFixedNumber(data.viewFct ?? 0)}${'gk'.tr()}', style: MyTheme.white09_10),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          MyImage.asset(
+                            MyImagePaths.appHots,
+                            height: 18.w,
+                            width: 18.w,
+                          ),
+                          Text('${CommonUtils.renderEnFixedNumber(data.viewFct ?? 0)}${'gk'.tr()}', style: MyTheme.white09_10),
+                        ],
+                      ),
                     ),
-                    MyImage.asset(
-                      MyImagePaths.appHots,
-                      height: 19.w,
-                      width: 19.w,
-                    )
+
                   ],
                 ) : const SizedBox.shrink()),
             Positioned(

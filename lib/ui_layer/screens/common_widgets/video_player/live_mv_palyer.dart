@@ -30,7 +30,6 @@ import '../dialog/widgets/regular_dialog.dart';
 import '../my_image.dart';
 import '../player_barrage_widget.dart';
 import 'utils/nvideourl_minxin.dart';
-import 'dart:js' as js;
 
 
 //先判断show的值 != “public” 直接显示已下线
@@ -440,8 +439,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
               child: Stack(
                 children: [
                   Container(
-                    margin: const EdgeInsets.only(left: 0, top: 0.5),
-                    padding: const EdgeInsets.only(left: 18, right: 6),
+                    padding: const EdgeInsets.only(left: 3, right: 6),
                     height: 18,
                     decoration: const BoxDecoration(
                       color: MyTheme.blackColor25505,
@@ -450,21 +448,25 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                     child: SizedBox(
                       height: 18,
                       child: Center(
-                        child: Text(
-                            '${CommonUtils.renderEnFixedNumber(widget.info?.viewFct ?? 0)}${'gk'.tr()}',
-                            style: const TextStyle(
-                                color: MyTheme.white09Color,
-                                fontSize: 10,
-                                overflow: TextOverflow.ellipsis,
-                                decoration: TextDecoration.none)),
+                        child: Row(
+                          children: [
+                            const MyImage.asset(
+                              MyImagePaths.appHots,
+                              height: 18,
+                              width: 18,
+                            ),
+                            Text(
+                                '${CommonUtils.renderEnFixedNumber(widget.info?.viewFct ?? 0)}${'gk'.tr()}',
+                                style: const TextStyle(
+                                    color: MyTheme.white09Color,
+                                    fontSize: 10,
+                                    overflow: TextOverflow.ellipsis,
+                                    decoration: TextDecoration.none)),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                  const MyImage.asset(
-                    MyImagePaths.appHots,
-                    height: 19,
-                    width: 19,
-                  )
                 ],
               ),
             )),
