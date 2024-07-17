@@ -556,8 +556,6 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
           child: FlickAutoHideChild(
             child: Row(
               children: [
-                // isPortrait
-                //     ?
                 GestureDetector(
                         behavior: HitTestBehavior.translucent,
                         child: const MyImage.asset(MyImagePaths.appDaSan,
@@ -572,25 +570,27 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                           }
                         },
                       ),
-                    // : Container(),
-                SizedBox(width: 10.w),
-                FlickFullScreenToggle(
-                  enterFullScreenChild: const MyImage.asset(
-                    MyImagePaths.appFullScreen,
-                    width: 25,
-                    height: 25,
-                    fit: BoxFit.contain,
-                  ),
-                  exitFullScreenChild: const MyImage.asset(
-                    MyImagePaths.appFullScreen,
-                    width: 25,
-                    height: 25,
-                    fit: BoxFit.contain,
-                  ),
-                  toggleFullscreen: () {
-                    _changeFullScreen(controlManager);
-                  },
-                ),
+                kIsWeb ? Container() :
+                Row(children: [
+                  SizedBox(width: 10.w),
+                  FlickFullScreenToggle(
+                    enterFullScreenChild: const MyImage.asset(
+                      MyImagePaths.appFullScreen,
+                      width: 25,
+                      height: 25,
+                      fit: BoxFit.contain,
+                    ),
+                    exitFullScreenChild: const MyImage.asset(
+                      MyImagePaths.appFullScreen,
+                      width: 25,
+                      height: 25,
+                      fit: BoxFit.contain,
+                    ),
+                    toggleFullscreen: () {
+                      _changeFullScreen(controlManager);
+                    },
+                  )
+                ]),
               ],
             ),
           ),

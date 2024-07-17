@@ -422,6 +422,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
           child: FlickAutoHideChild(
             child: Column(
               children: [
+                (kIsWeb && !widget.isPlayback) ? Container() :
                 FlickFullScreenToggle(
                   enterFullScreenChild: const MyImage.asset(
                     MyImagePaths.appFullScreen,
