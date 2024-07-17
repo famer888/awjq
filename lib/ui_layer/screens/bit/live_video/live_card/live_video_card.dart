@@ -66,7 +66,7 @@ class LiveVideoCard extends StatelessWidget {
                             height: 18.w,
                             width: 18.w,
                           ),
-                          Text('${CommonUtils.renderEnFixedNumber(data.viewFct ?? 0)}${'gk'.tr()}', style: MyTheme.white09_10),
+                          Text('${CommonUtils.renderEnFixedNumber(data.viewFct ?? 0)}${'gzong'.tr()}', style: MyTheme.white09_10),
                         ],
                       ),
                     ),

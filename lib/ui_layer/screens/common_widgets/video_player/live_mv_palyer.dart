@@ -459,7 +459,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                               width: 18,
                             ),
                             Text(
-                                '${CommonUtils.renderEnFixedNumber(widget.info?.viewFct ?? 0)}${'gk'.tr()}',
+                                '${CommonUtils.renderEnFixedNumber(widget.info?.viewFct ?? 0)}${'gzong'.tr()}',
                                 style: const TextStyle(
                                     color: MyTheme.white09Color,
                                     fontSize: 10,
