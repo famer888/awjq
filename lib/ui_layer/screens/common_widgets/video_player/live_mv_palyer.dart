@@ -495,8 +495,8 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
               ),
             )),
         Positioned(
-          top: 0,
-          left: 2.w,
+          top: MediaQuery.of(context).padding.top + 5.w,
+          left: 10,
           child: Builder(builder: (context) {
             if (widget.noBack) {
               return const SizedBox.shrink();
@@ -506,28 +506,12 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                 children: [
                   GestureDetector(
                     behavior: HitTestBehavior.translucent,
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Color.fromRGBO(0, 0, 0, 0.1),
-                            offset: Offset(0, 0),
-                            spreadRadius: 5,
-                            blurRadius: 5,
-                          )
-                        ],
-                      ),
-                      alignment: Alignment.center,
-                      child: const MyImage.asset(
+                    child: const MyImage.asset(
                         MyImagePaths.appNavBackWN,
-                        width: 18,
-                        height: 18,
+                        width: 20,
+                        height: 20,
                         fit: BoxFit.contain,
                       ),
-                    ),
                     onTap: () {
                       _hideKeyboard(context);
                       if (widget.isBack) {
@@ -545,7 +529,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
           }),
         ),
         Positioned(
-            bottom: widget.isBack ? 10 : 20,
+            bottom: widget.isBack ? 10 : (rate < 1 ? 10 : 20),//rate < 1: 全屏如果还是竖屏时位置调整
             left: _offset.dx - 25,
             child: isShowChangeLine
                 ? FlickAutoHideChild(
