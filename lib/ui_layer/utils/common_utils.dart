@@ -21,22 +21,16 @@ import '../../logger.dart';
 import '../screens/theme.dart';
 import 'my_toast.dart';
 import 'package:universal_html/html.dart' as html;
+import 'package:universal_html/js_util.dart' as js_util;
 import '../../domain/domain.dart';
 import '../router/routes.dart';
-// import 'dart:js' as js;//运行web平台需要，非web平台需注释
 
 class CommonUtils {
   static setStatusBar({bool isLight = false}) {
     if (kIsWeb) {
-      // return SystemChrome.setSystemUIOverlayStyle(
-      //     SystemUiOverlayStyle(
-      //       statusBarColor: MyTheme.bgColor, // 设置状态栏背景色
-      //       statusBarIconBrightness: isLight ? Brightness.light : Brightness.dark));
-
-      //运行web平台需要，非web平台需注释
-      // String hexColor = '#${MyTheme.bgColor.value.toRadixString(16).substring(2).toUpperCase()}';
-      // js.context.callMethod('setStatusBarColor', [hexColor]);
-
+      //web平台顶部状态栏颜色设置
+      String hexColor = '#${MyTheme.bgColor.value.toRadixString(16).substring(2).toUpperCase()}';
+      js_util.callMethod(html.window, 'setStatusBarColor', [hexColor]);
     } else if (Platform.isAndroid) {
       SystemUiOverlayStyle systemUiOverlayStyle = SystemUiOverlayStyle(
           statusBarColor: Colors.transparent, //全局设置透明
