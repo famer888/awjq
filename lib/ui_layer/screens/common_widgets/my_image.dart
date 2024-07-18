@@ -162,8 +162,8 @@ class MyImage extends StatelessWidget {
             height: height,
             image: url,
             fit: fit,
-            fadeOutDuration: const Duration(milliseconds: 300),
-            fadeInDuration: const Duration(milliseconds: 500),
+            fadeOutDuration: const Duration(milliseconds: 100),
+            fadeInDuration: const Duration(milliseconds: 100),
             placeholder: kTransparentImage,
             imageErrorBuilder: (context, error, stackTrace) {
               return Container();//todo: 图片请求出错时可在此设置异常图片显示

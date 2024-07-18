@@ -170,7 +170,6 @@ class _SourceAreaState extends State<_SourceArea> {
                   GestureDetector(
                     behavior: HitTestBehavior.translucent,
                     onTap: () {
-                      if (showSecret) return;
                       Clipboard.setData(ClipboardData(text: secret));
                       MyToast.showText(text: 'fzcg'.tr(context: context));
                     },

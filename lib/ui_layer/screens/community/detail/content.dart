@@ -265,7 +265,7 @@ class _ContactViewState extends State<_ContactView> {
                                 ),
                               ),
                               TextSpan(
-                                text: "【${tr('dwfz')}】",//点我复製
+                                text: "【${tr('dwfz')}】",//点我复制
                                 style: TextStyle(
                                   color: Colors.red,
                                   fontSize: 14.sp,
