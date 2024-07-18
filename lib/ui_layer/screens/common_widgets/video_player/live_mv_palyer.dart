@@ -99,6 +99,27 @@ class _LiveMvPlayerState extends State<LiveMvPlayer> with NVideoURLMinxin {
           if (mounted) setState(() {});
         });
     if (mounted) setState(() {});
+
+    _openWebVioce();
+
+  }
+
+  //禁止web播放时默认静音
+  void _openWebVioce() {
+    if (kIsWeb) {
+      flickManager?.flickVideoManager?.videoPlayerController?.addListener(() {
+        if (flickManager?.flickVideoManager?.videoPlayerController?.value.isInitialized ?? false) {
+          // 视频初始化完成后取消静音
+          List<html.VideoElement> elements = html.document.getElementsByTagName('video').cast<html.VideoElement>();
+          if (elements.isNotEmpty) {
+            html.VideoElement videoElement = elements.first;
+            videoElement.muted = false;
+            videoElement.volume = 1.0;
+          }
+          if (mounted) setState(() {});
+        }
+      });
+    }
   }
 
   @override
