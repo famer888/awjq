@@ -467,21 +467,43 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
           left: 20,
           bottom: widget.isBack ? 10 : 15,
           child: FlickAutoHideChild(
-            child: !widget.isPlayback ? const SizedBox.shrink() : FlickVideoProgressBar(
-              flickProgressBarSettings:
-              FlickProgressBarSettings(
-                padding: const EdgeInsets.only(top: 10),
-                height: 3,
-                handleRadius: 6,
-                curveRadius: 4,
-                backgroundColor: Colors.white24,
-                bufferedColor:
-                const Color.fromRGBO(90, 75, 235, 0.38),
-                playedColor:
-                const Color.fromRGBO(90, 75, 235, 1),
-                handleColor:
-                const Color.fromRGBO(90, 75, 235, 1),
-              ),
+            child: !widget.isPlayback ? const SizedBox.shrink() :
+            Column(
+              children: [
+                const Row(
+                  children: [
+                    FlickCurrentPosition(
+                      color: Colors.white,
+                      fontSize: 12,
+                    ),
+                    Text(
+                      ' / ',
+                      style: TextStyle(
+                          color: Colors.white, fontSize: 12),
+                    ),
+                    FlickTotalDuration(
+                      color: Colors.white,
+                      fontSize: 12,
+                    )
+                  ],
+                ),
+                FlickVideoProgressBar(
+                  flickProgressBarSettings:
+                  FlickProgressBarSettings(
+                    padding: const EdgeInsets.only(top: 10),
+                    height: 3,
+                    handleRadius: 6,
+                    curveRadius: 4,
+                    backgroundColor: Colors.white24,
+                    bufferedColor:
+                    const Color.fromRGBO(90, 75, 235, 0.38),
+                    playedColor:
+                    const Color.fromRGBO(90, 75, 235, 1),
+                    handleColor:
+                    const Color.fromRGBO(90, 75, 235, 1),
+                  ),
+                ),
+              ],
             ),
           ),
         ),
