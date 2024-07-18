@@ -322,12 +322,13 @@ abstract class _BaseAppRepo implements AppDomain {
     /// use backup line
     targetLine ??= await _backupLine();
 
+    if (errorLines.isNotEmpty) {
+      _reportErrorLine(errorLines);
+    }
+    
     if (targetLine != null) {
       _apiDio.options.baseUrl = targetLine;
       _reportSucessLine([{'url': targetLine, 'code': '1'}]);
-      if (errorLines.isNotEmpty) {
-        _reportErrorLine(errorLines);
-      }
       return true;
     }
     return false;
