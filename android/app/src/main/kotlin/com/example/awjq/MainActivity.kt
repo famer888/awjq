@@ -1,4 +1,4 @@
-package com.example.awjq
+package com.ccw.awjq
 
 import io.flutter.embedding.android.FlutterActivity
 
