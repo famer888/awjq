@@ -1,0 +1,241 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
+import '../../../domain/api_validator.dart';
+import '../../../domain/async_value.dart';
+import '../../../domain/domain.dart';
+import '../../../domain/model/bit_nav_model.dart';
+import '../../notifiers/home_config_notifier.dart';
+import '../common_widgets/my_tab_bar.dart';
+import '../common_widgets/screen_background.dart';
+import '../common_widgets/status/loading.dart';
+import '../common_widgets/status/network_error.dart';
+import '../theme.dart';
+import 'content.dart';
+import 'live_video/rec_screen.dart';
+import 'live_video/screen.dart';
+import 'monitor_video/screen.dart';
+
+class BitScreen extends StatefulWidget {
+  const BitScreen({super.key});
+
+  @override
+  State<BitScreen> createState() => _BitScreenState();
+}
+
+class _BitScreenState extends State<BitScreen> with TickerProviderStateMixin {
+  late final config = context.read<HomeConfigNotifier>().config;
+  late final navList = config.seedTopNav;
+  late final tabController = TabController(length: navList.length, vsync: this);
+
+  @override
+  Widget build(BuildContext context) {
+
+    return ScreenBackground(
+      child: Scaffold(
+        appBar: _AppBar(
+          tabController: tabController,
+          titles: navList.map((e) => e.title).toList(),
+        ),
+        body: TabBarView(
+          controller: tabController,
+          children: navList.map((e) {
+            if (e.title == '直播') {
+              return _LiveVideoView(id: e.value);
+            } else if (e.title == '监控') {
+              return _MonitorVideoView(id: e.value);
+            } else {
+              return _BitView(id: e.value);
+            }
+          }).toList(),
+        ),
+      ),
+    );
+  }
+}
+
+class _AppBar extends StatelessWidget implements PreferredSizeWidget {
+  const _AppBar({required this.tabController, required this.titles});
+
+  final TabController tabController;
+  final List<String> titles;
+
+  @override
+  final Size preferredSize = const Size.fromHeight(44);
+
+  @override
+  Widget build(BuildContext context) {
+    return AppBar(
+      centerTitle: true,
+      backgroundColor: Colors.transparent,
+      title: SizedBox(
+        height: 30.w,
+        child: TabBar(
+          padding: EdgeInsets.zero,
+          controller: tabController,
+          labelPadding: const EdgeInsets.symmetric(horizontal: 10),
+          tabAlignment: TabAlignment.center,
+          isScrollable: true,
+          labelStyle: MyTheme.white255_18,
+          unselectedLabelStyle: MyTheme.white06_18,
+          overlayColor: WidgetStateProperty.resolveWith<Color>(
+            (_) => Colors.transparent,
+          ),
+          indicatorColor: Colors.transparent,
+          indicator: BoxDecoration(
+            color: Colors.transparent,
+            borderRadius: BorderRadius.circular(30.w),
+          ),
+          dividerColor: Colors.transparent,
+          dividerHeight: 0,
+          tabs: titles.map((e) {
+            return Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15.w),
+              child: Tab(
+                iconMargin: EdgeInsets.zero,
+                height: MyTheme.navbarHegiht,
+                child: Center(
+                  child: Text(e),
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+      ),
+    );
+  }
+}
+
+class _BitView extends StatefulWidget {
+  const _BitView({required this.id});
+  final int id;
+  @override
+  State<_BitView> createState() => _BitViewState();
+}
+
+class _BitViewState extends State<_BitView> {
+  late final _appDomain = context.read<SeedDomain>();
+
+  AsyncValue<List<BitNavModel>> _asyncValue = const AsyncInit();
+
+  @override
+  void initState() {
+    _init();
+    super.initState();
+  }
+
+  Future<void> _init() async {
+    if (_asyncValue.isLoading) return;
+    setState(() {
+      _asyncValue = const AsyncLoading();
+    });
+
+    final result = await _appDomain.reqGetPostBit(id: widget.id);
+
+    if (result.data case final data? when result.isValid) {
+      _asyncValue = AsyncData(data);
+    } else {
+      _asyncValue = const AsyncError();
+    }
+
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _asyncValue.maybeWhen(
+      data: (data) => TabBarWithView.line(
+        titles: data.map((e) => e.name).toList(),
+        views: data.map((e) => BitContentView(nav: e)).toList(),
+      ),
+      error: (_, __) => NetworkErrorView(onTap: _init),
+      orElse: () => const LoadingView(),
+    );
+  }
+}
+
+class _LiveVideoView extends StatefulWidget {
+  const _LiveVideoView({required this.id});
+  final int id;
+  @override
+  State<_LiveVideoView> createState() => _LiveVideoViewState();
+}
+
+class _LiveVideoViewState extends State<_LiveVideoView> with TickerProviderStateMixin {
+  late final config = context.read<HomeConfigNotifier>().config;
+  late final navList = config.liveTopNav;
+  AsyncValue<List<BitNavModel>> _asyncValue = const AsyncInit();
+  late final TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    if (navList.isNotEmpty) {
+      _asyncValue = AsyncData(navList);
+      _tabController = TabController(length: navList.length, vsync: this);
+    } else {
+      _asyncValue = const AsyncError();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _asyncValue.maybeWhen(
+      data: (data) => TabBarWithView.line(
+        tabController: _tabController,
+        titles: navList.map((e) => e.name).toList(),
+        views: navList.map((e) {
+          if (e.uiType == 0) {
+            return RecLiveVideoView(nav: e, moreClickCallBack: (title) {
+              //点击更多，滑动到对应栏目
+              int index = navList.indexWhere((element) => element.name == title);
+              _tabController.index = index;
+            });
+          } else {
+            return LiveVideoView(nav: e);
+          }
+        }).toList(),
+      ),
+      orElse: () => const LoadingView(),
+    );
+  }
+}
+
+class _MonitorVideoView extends StatefulWidget {
+  const _MonitorVideoView({required this.id});
+  final int id;
+  @override
+  State<_MonitorVideoView> createState() => ___MonitorVideoViewState();
+}
+
+class ___MonitorVideoViewState extends State<_MonitorVideoView> {
+  late final _appDomain = context.read<SeedDomain>();
+  late final config = context.read<HomeConfigNotifier>().config;
+  late final navList = config.monitorTopNav;
+  AsyncValue<List<BitNavModel>> _asyncValue = const AsyncInit();
+
+  @override
+  void initState() {
+    super.initState();
+    if (navList.isNotEmpty) {
+      _asyncValue = AsyncData(navList);
+    } else {
+      _asyncValue = const AsyncError();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _asyncValue.maybeWhen(
+      data: (data) => TabBarWithView.line(
+        isScrollable: false,
+        titles: data.map((e) => e.name).toList(),
+        views: data.map((e) => MonitorVideoView(nav: e)).toList(),
+      ),
+      orElse: () => const LoadingView(),
+    );
+  }
+}
+
