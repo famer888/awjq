@@ -1132,7 +1132,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
     Widget dgt = Container();
     var vflag = false;
     Member user = context.read<UserNotifier>().member;
-    if (user.vipLevel < 1 && widget.info?.type == 1) {
+    if (widget.info?.type == 1) {
       //需要VIP
       dgt = Text(widget.info?.payTip ?? tr('kvbw'),
           style: MyTheme.white255_14_M, maxLines: 2); //开通VIP或做任务获取VIP解锁精彩完整版！
