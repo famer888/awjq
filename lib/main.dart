@@ -26,12 +26,12 @@ void disableZoomOnWeb() {
   html.document.documentElement?.style.overflow = 'hidden';
   html.document.documentElement?.style.touchAction = 'manipulation';
   html.document.documentElement?.style.setProperty('user-select', 'none');
-  html.document.documentElement?.style.setProperty('overscroll-behavior', 'contain');
+  html.document.documentElement?.style
+      .setProperty('overscroll-behavior', 'contain');
 }
 
 void main() async {
-
-  disableZoomOnWeb();
+  if (kIsWeb) disableZoomOnWeb();
 
   /// 初始化仓库，必须放在最前面
   final appRepo = AppRepo();

@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
@@ -29,7 +28,8 @@ class CommonUtils {
   static setStatusBar({bool isLight = false}) {
     if (kIsWeb) {
       //web平台顶部状态栏颜色设置
-      String hexColor = '#${MyTheme.bgColor.value.toRadixString(16).substring(2).toUpperCase()}';
+      String hexColor =
+          '#${MyTheme.bgColor.value.toRadixString(16).substring(2).toUpperCase()}';
       js_util.callMethod(html.window, 'setStatusBarColor', [hexColor]);
     } else if (Platform.isAndroid) {
       SystemUiOverlayStyle systemUiOverlayStyle = SystemUiOverlayStyle(
@@ -238,7 +238,8 @@ class CommonUtils {
           }
 
           String path = urlList.first ?? '';
-          if (path == 'vip') {//如果是VIP直接进入VIP中心界面
+          if (path == 'vip') {
+            //如果是VIP直接进入VIP中心界面
             path = 'mineVipCenter';
           }
           context.push('/${path}$paramsStr');
@@ -354,7 +355,9 @@ class CommonUtils {
   static Future<bool> pngLimit2MSize(XFile file) async {
     int length = await file.length();
     if (length / 1024 > 2000) {
-      MyToast.showText(text: tr('qxzb2mkbp'),);
+      MyToast.showText(
+        text: tr('qxzb2mkbp'),
+      );
       return true;
     }
     return false;
@@ -363,17 +366,17 @@ class CommonUtils {
   static Widget blurCover({Function? onTap}) {
     return ClipPath(
         child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: GestureDetector(
-            behavior: HitTestBehavior.translucent,
-            onTap: () {
-              onTap?.call();
-            },
-            child: Container(
-              padding: EdgeInsets.symmetric(horizontal: 20.w),
-            ),
-          ),
-        ));
+      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+      child: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () {
+          onTap?.call();
+        },
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
+        ),
+      ),
+    ));
   }
 
   static void localStorageImage(String imgUrl) async {
@@ -404,10 +407,10 @@ class CommonUtils {
       dynamic blob = html.Blob([bytes]);
       String url = html.Url.createObjectUrlFromBlob(blob);
       html.AnchorElement anchor =
-      html.document.createElement('a') as html.AnchorElement
-        ..href = url
-        ..style.display = 'none'
-        ..download = '${CommonUtils.randomId(16)}.jpg';
+          html.document.createElement('a') as html.AnchorElement
+            ..href = url
+            ..style.display = 'none'
+            ..download = '${CommonUtils.randomId(16)}.jpg';
       html.document.body?.children.add(anchor);
 // download
       anchor.click();
@@ -415,8 +418,7 @@ class CommonUtils {
       html.document.body?.children.remove(anchor);
       html.Url.revokeObjectUrl(url);
     } else {
-      final result =
-      await ImageGallerySaver.saveImage(bytes); //这个是核心的保存图片的插件
+      final result = await ImageGallerySaver.saveImage(bytes); //这个是核心的保存图片的插件
       if (result['isSuccess']) {
         MyToast.showText(text: tr('tpybc'));
       } else if (Platform.isAndroid) {
@@ -432,8 +434,8 @@ class CommonUtils {
   static Future<Uint8List?> isolatedImage(String url) async {
     Uint8List? bytes;
     if (kIsWeb) {
-      html.HttpRequest xhr =
-      await html.HttpRequest.request(method: 'GET', url, responseType: 'arraybuffer');
+      html.HttpRequest xhr = await html.HttpRequest.request(
+          method: 'GET', url, responseType: 'arraybuffer');
       if (xhr.response != null) {
         ByteBuffer bb = xhr.response;
         bytes = bb.asUint8List();
@@ -530,7 +532,6 @@ class CommonUtils {
     }
     return str;
   }
-
 }
 
 class RelativeDateFormat {
