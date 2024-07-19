@@ -478,7 +478,7 @@ class _SinkPortraitLandWidgetState extends State<SinkPortraitLandWidget> {
                                       ),
                                     )
                                   : Container(),
-                              (rate > 1 || !widget.needCheckAspectRatio) ||
+                              (rate > 1 || !widget.needCheckAspectRatio) && !widget.isPreview ||
                                       kIsWeb && !widget.isPreview
                                   ? Padding(
                                       padding: const EdgeInsets.only(left: 10),
