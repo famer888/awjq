@@ -47,16 +47,39 @@ android {
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.debug
+            // Signing with the debug keys for now, so flutter run --release works.
+            signingConfig signingConfigs.debug
             ndk{
-                //noinspection ChromeOsAbiSupport
                 abiFilters "armeabi", "armeabi-v7a","arm64-v8a"
             }
         }
+        debug {
+            signingConfig signingConfigs.debug
+            ndk {
+                abiFilters "armeabi", "armeabi-v7a","arm64-v8a", "x86"
+            }
+        }
+    }
+
+    applicationVariants.all {
+            variant ->
+                variant.outputs.each { output ->
+                    if (output.name == 'release') {
+                        variant.packageApplicationProvider.get().outputDirectory = new File("../apk/output/")
+                        def fileName
+                        fileName = "output.apk"
+                        output.outputFileName = fileName
+                    }
+                }
     }
 }
 
 flutter {
     source = "../.."
+}
+
+tasks.whenTaskAdded { task ->
+    if (task.name.contains("ReleaseApkListingFileRedirect")){
+        task.enabled = false
+    }
 }
