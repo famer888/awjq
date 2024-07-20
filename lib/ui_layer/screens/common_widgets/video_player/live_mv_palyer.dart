@@ -86,6 +86,7 @@ class _LiveMvPlayerState extends State<LiveMvPlayer> with NVideoURLMinxin {
       flickManager?.handleChangeVideo(
         VideoPlayerController.network(playerStr),
       );
+      _openWebVioce();
       return;
     }
 
