@@ -1,3 +1,5 @@
+import 'package:flutter/foundation.dart';
+
 class BuildConfig {
   static const key = '2acf7e91e9864673';
   static const iv = '1c29882d3ddfcfd6';
@@ -10,10 +12,14 @@ class BuildConfig {
       'aCwhyaDuBLBNyDbBCuJVzrKTwp7ctPx0ThvoJEFhXL9C9YGtPJqOmNE9ivKMy8hw';
 
   /// 备用接口线路
-  static final apiLines = [
-    'https://d225ilsto3novd.cloudfront.net/api.php',
-    'https://bpi4.uh6vg7yu.com/api.php'
-  ];
+  static final apiLines = kIsWeb
+      ? [
+          'https://d2i7v9uktjmxdx.cloudfront.net/api.php',
+        ]
+      : [
+          'https://d225ilsto3novd.cloudfront.net/api.php',
+          'https://bpi4.uh6vg7yu.com/api.php',
+        ];
 
   /// 备用线路
   static const githubLine =
