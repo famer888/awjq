@@ -72,8 +72,7 @@ class _MineCustomerServiceScreenState extends State<MineCustomerServiceScreen> {
       MyToast.closeAllLoading();
 
       if (uploadImageRes != null && uploadImageRes['code'] == 1) {
-        final url =
-            "${_homeConfigNotifier.config.imgBase}${uploadImageRes['msg']}";
+        final url = "${uploadImageRes['msg']}";
         final sendFeedingRes = await _messageDomain.sendFeeding(
             content: url, type: 2, helpType: 0);
         if (sendFeedingRes.isValid) {
