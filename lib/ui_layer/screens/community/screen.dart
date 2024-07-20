@@ -10,8 +10,8 @@ import '../../../domain/model/bit_nav_model.dart';
 import '../../notifiers/home_config_notifier.dart';
 import '../../notifiers/user_notifier.dart';
 import '../../router/routes.dart';
-import '../AI/face_swap/screen.dart';
-import '../AI/strip_off/screen.dart';
+import '../ai/face_swap/screen.dart';
+import '../ai/strip_off/screen.dart';
 import '../image_paths.dart';
 
 import '../../../domain/async_value.dart';
