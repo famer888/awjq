@@ -80,11 +80,12 @@ class _MineCustomerServiceScreenState extends State<MineCustomerServiceScreen> {
             'messageType': 2,
             'status': 1,
             'createdAt': null,
-            'message': url,
+            'message': '${_homeConfigNotifier.config.imgBase}$url',
           });
 
-          data.insert(0, message);
-          setState(() {});
+          setState(() {
+            data.insert(0, message);
+          });
         } else {
           MyToast.showText(text: 'tpsbcs'.tr());
         }
@@ -107,8 +108,9 @@ class _MineCustomerServiceScreenState extends State<MineCustomerServiceScreen> {
           'createdAt': null,
           'message': text,
         });
-        data.insert(0, message);
-        setState(() {});
+        setState(() {
+          data.insert(0, message);
+        });
       } else {
         MyToast.showText(text: 'wlbjcs'.tr());
       }
