@@ -249,6 +249,7 @@ class _Tips extends StatelessWidget {
 
 class _UserBubble extends StatelessWidget {
   const _UserBubble({required this.item});
+
   final FeedBackData item;
 
   @override
@@ -322,6 +323,7 @@ class _UserBubble extends StatelessWidget {
 
 class _ServiceBubble extends StatelessWidget {
   const _ServiceBubble({required this.item});
+
   final FeedBackData item;
 
   @override
@@ -369,11 +371,10 @@ class _ServiceBubble extends StatelessWidget {
                                   height: 150.w,
                                   gaplessPlayback: true,
                                 )
-                              : Image.file(
-                                  File(item.message),
-                                  fit: BoxFit.contain,
+                              : SizedBox(
                                   width: 150.w,
                                   height: 150.w,
+                                  child: MyImage.network(item.message),
                                 )
                           : SizedBox(
                               width: 150.w,
@@ -395,12 +396,14 @@ class _RichMessage extends StatelessWidget {
     required this.msg,
     required this.status,
   });
+
   static final regExp = RegExp(
     r'(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?',
     multiLine: true,
   );
   final String msg;
   final int status;
+
   @override
   Widget build(BuildContext context) {
     final isPath = regExp.hasMatch(msg);
