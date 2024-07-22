@@ -86,24 +86,43 @@ import '../data_source/remote/user_service.dart';
 import '../data_source/remote/withdraw_service.dart';
 import 'http_interceptor.dart';
 import 'utils.dart';
+
 part 'cache.dart';
+
 part 'mixin/home_mixin.dart';
+
 part 'mixin/user_mixin.dart';
+
 part 'mixin/element_mixin.dart';
+
 part 'mixin/dynamic_mixin.dart';
+
 part 'mixin/community_mixin.dart';
+
 part 'mixin/seed_mixin.dart';
+
 part 'mixin/order_mixin.dart';
+
 part 'mixin/sign_mixin.dart';
+
 part 'mixin/account_mixin.dart';
+
 part 'mixin/proxy_mixin.dart';
+
 part 'mixin/withdraw_mixin.dart';
+
 part 'mixin/search_mixin.dart';
+
 part 'mixin/mv_mixin.dart';
+
 part 'mixin/message_mixin.dart';
+
 part 'mixin/privilege_mixin.dart';
+
 part 'mixin/live_mixin.dart';
+
 part 'mixin/monitor_mixin.dart';
+
 part 'mixin/ai_mixin.dart';
 
 class AppRepo extends _BaseAppRepo
@@ -325,10 +344,12 @@ abstract class _BaseAppRepo implements AppDomain {
     if (errorLines.isNotEmpty) {
       _reportErrorLine(errorLines);
     }
-    
+
     if (targetLine != null) {
       _apiDio.options.baseUrl = targetLine;
-      _reportSucessLine([{'url': targetLine, 'code': '1'}]);
+      _reportSucessLine([
+        {'url': targetLine, 'code': '1'}
+      ]);
       return true;
     }
     return false;
@@ -447,11 +468,17 @@ abstract class _BaseAppRepo implements AppDomain {
       'timestamp': timeStamp,
       'uuid': '9544f11ed4381ebcef5429b6f20e69c1',
       'sign': sign,
-      'video': await MultipartFile.fromFile(
-        xFile.path,
-        filename: xFile.name,
-        contentType: MediaType.parse('video/mp4'),
-      ),
+      'video': kIsWeb
+          ? MultipartFile.fromBytes(
+              await xFile.readAsBytes(),
+              filename: xFile.name,
+              contentType: MediaType.parse('video/mp4'),
+            )
+          : await MultipartFile.fromFile(
+              xFile.path,
+              filename: xFile.name,
+              contentType: MediaType.parse('video/mp4'),
+            ),
     });
     final response = await _dio.post(
       baseUrl,
@@ -477,6 +504,7 @@ extension _MapHelper on Map {
   void removeToken() => remove(_tokenKey);
 
   String? get token => this[_tokenKey];
+
   set token(String? value) {
     if (value == null) {
       remove(_tokenKey);
