@@ -172,7 +172,7 @@ class _IntroductionViewState extends State<IntroductionView> {
                     ),
                     if (!kIsWeb) SizedBox(width: 20.w),
                     if (!kIsWeb)
-                      GestureDetector(
+                      InkWell(
                         onTap: () async {
                           // 先判断本地有没有
                           final userNotifier = context.read<UserNotifier>();

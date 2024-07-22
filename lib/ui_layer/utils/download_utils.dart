@@ -1,3 +1,4 @@
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -151,8 +152,46 @@ class DownloadUtil {
     }
   }
 
-  // 请求权限
+
   Future<bool> getPermission() async {
+    final deviceInfo = DeviceInfoPlugin();
+    final androidInfo = await deviceInfo.androidInfo;
+    final sdkInt = androidInfo.version.sdkInt;
+
+    if (sdkInt >= 33) {
+      // Android 13 (API 33) 及以上版本
+      return await requestPermissionsForAndroid13AndAbove();
+    } else {
+      // Android 13 以下版本
+      return await getAndroid12Permission();
+    }
+  }
+
+  Future<bool> requestPermissionsForAndroid13AndAbove() async {
+    bool allPermissionsGranted = true;
+
+    var statusVideos = await Permission.videos.status;
+    if (statusVideos.isDenied) {
+      var result = await Permission.videos.request();
+      if (!result.isGranted) {
+        allPermissionsGranted = false;
+      }
+    }
+
+    var statusAudio = await Permission.audio.status;
+    if (statusAudio.isDenied) {
+      var result = await Permission.audio.request();
+      if (!result.isGranted) {
+        allPermissionsGranted = false;
+      }
+    }
+
+    return allPermissionsGranted;
+  }
+
+
+  // 请求权限
+  Future<bool> getAndroid12Permission() async {
     PermissionStatus storageStatus = await Permission.storage.status;
     if (storageStatus == PermissionStatus.denied) {
       storageStatus = await Permission.storage.request();
@@ -195,6 +234,7 @@ class DownloadUtil {
     if (havePermission) {
       creating = true;
     } else {
+      MyToast.showText(text: 'qdkqx'.tr());
       return;
     }
     try {
