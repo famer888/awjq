@@ -7,7 +7,9 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:universal_html/js_util.dart';
 
+import '../../../../../crypto.dart';
 import '../../../../../domain/api_validator.dart';
 import '../../../../../domain/async_value.dart';
 import '../../../../../domain/model/feedback_data_model.dart';
@@ -79,13 +81,12 @@ class _MineCustomerServiceScreenState extends State<MineCustomerServiceScreen> {
           final message = FeedBackData.fromJson({
             'messageType': 2,
             'status': 1,
-            'createdAt': null,
+            'createdAt': CommonUtils.getCurrentTimer(),
             'message': '${_homeConfigNotifier.config.imgBase}$url',
           });
 
-          setState(() {
-            data.insert(0, message);
-          });
+          data.insert(0, message);
+          setState(() {});
         } else {
           MyToast.showText(text: 'tpsbcs'.tr());
         }
@@ -105,12 +106,11 @@ class _MineCustomerServiceScreenState extends State<MineCustomerServiceScreen> {
         final message = FeedBackData.fromJson({
           'messageType': 1,
           'status': 1,
-          'createdAt': null,
+          'createdAt': CommonUtils.getCurrentTimer(),
           'message': text,
         });
-        setState(() {
-          data.insert(0, message);
-        });
+        data.insert(0, message);
+        setState(() {});
       } else {
         MyToast.showText(text: 'wlbjcs'.tr());
       }
@@ -267,7 +267,7 @@ class _UserBubble extends StatelessWidget {
               : const SizedBox.shrink(),
         ),
         Padding(
-          padding: EdgeInsets.symmetric(vertical: 20.w),
+          padding: EdgeInsets.only(top: 13.w, bottom: 20.w),
           child: Row(
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -294,16 +294,15 @@ class _UserBubble extends StatelessWidget {
                                   height: 150.w,
                                   gaplessPlayback: true,
                                 )
-                              : Image.file(
-                                  File(item.message),
-                                  fit: BoxFit.contain,
+                              : SizedBox(
                                   width: 150.w,
                                   height: 150.w,
+                                  child: MyImage.network(item.message, key: UniqueKey()),
                                 )
                           : SizedBox(
                               width: 150.w,
                               height: 150.w,
-                              child: MyImage.network(item.message),
+                              child: MyImage.network(item.message, key: UniqueKey()),
                             ),
                 ),
               ),
@@ -341,7 +340,7 @@ class _ServiceBubble extends StatelessWidget {
               : const SizedBox.shrink(),
         ),
         Padding(
-          padding: EdgeInsets.symmetric(vertical: 20.w),
+          padding: EdgeInsets.only(top: 13.w, bottom: 20.w),
           child: Row(
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -374,12 +373,12 @@ class _ServiceBubble extends StatelessWidget {
                               : SizedBox(
                                   width: 150.w,
                                   height: 150.w,
-                                  child: MyImage.network(item.message),
+                                  child: MyImage.network(item.message, key: UniqueKey()),
                                 )
                           : SizedBox(
                               width: 150.w,
                               height: 150.w,
-                              child: MyImage.network(item.message),
+                              child: MyImage.network(item.message, key: UniqueKey()),
                             ),
                 ),
               )

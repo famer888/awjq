@@ -289,6 +289,16 @@ class CommonUtils {
     return null;
   }
 
+  static String getCurrentTimer() {
+    // 获取当前时间
+    DateTime now = DateTime.now();
+    // 定义日期格式
+    DateFormat formatter = DateFormat('yyyy-MM-dd HH:mm:ss');
+    // 转换为指定格式
+    String formattedDate = formatter.format(now);
+    return formattedDate;
+  }
+
   ///把String分隔成4个字符一段的
   static String subStringFour(String text) {
     String str = '';
