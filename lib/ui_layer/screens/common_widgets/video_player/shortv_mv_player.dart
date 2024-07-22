@@ -369,8 +369,8 @@ class _SinkPortraitLandWidgetState extends State<SinkPortraitLandWidget> {
       children: [
         Positioned.fill(
           child: FlickShowControlsAction(
-            child: FlickSeekVideoAction(
-              // duration: const Duration(seconds: 60),
+            child: FlickSlideVideoAction(
+              fontSize: 16,
               child: Center(
                 child: flag
                     ? Center(

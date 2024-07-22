@@ -274,7 +274,42 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
       children: [
         Positioned.fill(
           child: FlickShowControlsAction(
-            child: FlickSeekVideoAction(
+            child: widget.isPlayback ? FlickSlideVideoAction(
+              fontSize: 16,
+              child: Center(
+                child: flag && (widget.info?.hls?.length ?? 0) > 0
+                    ? Center(
+                  child: SizedBox(
+                    height: 40,
+                    width: 40,
+                    child: CircularProgressIndicator(
+                      backgroundColor: Colors.grey[400],
+                      strokeWidth: 1.5,
+                    ),
+                  ),
+                ) : !widget.isPlayback ? const SizedBox.shrink() : const FlickAutoHideChild(
+                  showIfVideoNotInitialized: false,
+                  child: FlickPlayToggle(
+                    replayChild:  MyImage.asset(
+                      MyImagePaths.appVReplayN,
+                      width: 40,
+                      height: 40,
+                    ),
+                    playChild:  MyImage.asset(
+                      MyImagePaths.appVPlayN,
+                      width: 40,
+                      height: 40,
+                    ),
+                    pauseChild:  MyImage.asset(
+                      MyImagePaths.appVPauseN,
+                      width: 40,
+                      height: 40,
+                    ),
+                  ),
+                ),
+              ),
+            )
+                : FlickSeekVideoAction(
               duration: const Duration(seconds: 60),
               child: Center(
                 child: flag && (widget.info?.hls?.length ?? 0) > 0
