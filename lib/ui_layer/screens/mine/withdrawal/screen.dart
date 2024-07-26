@@ -192,7 +192,7 @@ class _MineWithdrawalScreenState extends State<MineWithdrawalScreen> {
                                               '${'ktye'.tr(context: context)}: ',
                                           style: MyTheme.hexa3a2a2_13),
                                       TextSpan(
-                                        text: '${data.proxyMoney}',
+                                        text: isAgent ? '${data.proxyMoney}' : '${data.incomeMoney}',
                                         style: MyTheme.jellyCyan_18_M,
                                       ),
                                       TextSpan(
