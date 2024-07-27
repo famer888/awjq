@@ -116,7 +116,7 @@ class _VideoView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
-      aspectRatio: 16 / 9,
+      aspectRatio: 16 / 10,
       child: LiveMvPlayer(
         info: data,
       ),
