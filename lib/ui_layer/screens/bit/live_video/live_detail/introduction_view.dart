@@ -155,10 +155,11 @@ class _HeaderViewState extends State<_HeaderView> {
                           },
                           child: _btnItem(
                             icon: isFavorite
-                                ? MyImagePaths.app2024ComScOn
-                                : MyImagePaths.app2024ComScOff,
-                            name: CommonUtils.renderFixedNumber(
-                                videoInfo.favoriteFct ?? 0),
+                                ? MyImagePaths.appLiveColloctionSel
+                                : MyImagePaths.appLiveColloctionNormal,
+                            name: tr('sc')
+                            // name: CommonUtils.renderFixedNumber(
+                            //     videoInfo.favoriteFct ?? 0),
                           ),
                         );
                       }),
@@ -168,7 +169,7 @@ class _HeaderViewState extends State<_HeaderView> {
                           const MineShareToUserRoute().push(context);
                         },
                         child: _btnItem(
-                          icon: MyImagePaths.app2024ComFenxiangOn,
+                          icon: MyImagePaths.appLiveShare,
                           name: 'fx'.tr(context: context),
                         ),
                       ),
@@ -203,17 +204,14 @@ class _HeaderViewState extends State<_HeaderView> {
       children: [
         MyImage.asset(
           icon,
-          width: 16.w,
+          width: 20.w,
+          height: 20.w,
           fit: BoxFit.fitWidth,
         ),
         SizedBox(width: 4.w),
         Text(
           name,
-          style: TextStyle(
-            color: color ?? Colors.white.withOpacity(0.6),
-            fontSize: 12.sp,
-            fontWeight: FontWeight.w400,
-          ),
+          style: MyTheme.white08_14_M,
         )
       ],
     );

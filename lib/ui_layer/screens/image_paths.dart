@@ -148,6 +148,15 @@ class MyImagePaths {
   static const appChangeLine = './assets/images/app_change_line.png';
   static const appGouXWhite = './assets/images/app_gou_white.png';
   static const appMineAI = './assets/images/app_mine_ai.png';
-
+  static const appLiveColloctionNormal = './assets/images/app_live_colloction_n.png';
+  static const appLiveColloctionSel = './assets/images/app_live_colloction_s.png';
+  static const appLiveShare = './assets/images/app_live_share.png';
+  static const appMonitorColloctionNormal = './assets/images/app_monitor_colloction_n.png';
+  static const appMonitorColloctionSel = './assets/images/app_monitor_colloction_s.png';
+  static const appMonitorOffVoice = './assets/images/app_monitor_off_voice.png';
+  static const appMonitorOnVoice = './assets/images/app_monitor_on_voice.png';
+  static const appMonitorShare = './assets/images/app_monitor_share.png';
+  static const appMonitorZanNormal = './assets/images/app_monitor_zan_n.png';
+  static const appMonitorZanSel = './assets/images/app_monitor_zan_s.png';
 
 }

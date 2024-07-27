@@ -1570,14 +1570,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
         Positioned.fill(child: MyImage.network(widget.info?.cover ?? '')),
         // 毛玻璃效果
         Positioned.fill(
-          child: ClipRect(
-            child: BackdropFilter(
-              filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-              child: Container(
-                color: Colors.black.withOpacity(0.1),
-              ),
-            ),
-          ),
+          child: CommonUtils.blurCover(),
         ),
         Positioned.fill(
             child: Container(
