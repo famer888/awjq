@@ -56,6 +56,9 @@ class _MonitorMvPlayerState extends State<MonitorMvPlayer>
   FlickManager? flickManager;
   bool _isPlayback = false;
 
+  bool _isWebListen = false;
+
+
   @override
   void initState() {
     super.initState();
@@ -141,6 +144,9 @@ class _MonitorMvPlayerState extends State<MonitorMvPlayer>
   Widget _optinalContent() {
     FlickControlManager? controlManager = flickManager?.flickControlManager;
     bool isMute = controlManager?.isMute ?? false;
+    if (kIsWeb && !_isWebListen) {
+      isMute = true;
+    }
     return Container(
       height: 40.w,
       padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
@@ -158,6 +164,7 @@ class _MonitorMvPlayerState extends State<MonitorMvPlayer>
                   fit: BoxFit.contain,
                 ),
           onTap: () {
+            _isWebListen = true;
             //声音开关
             if (isMute) {
               controlManager?.unmute();
@@ -636,7 +643,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
           child: FlickAutoHideChild(
             child: Column(
               children: [
-                (kIsWeb && !widget.isPlayback)
+                (kIsWeb || !widget.isPlayback)
                     ? Container()
                     : FlickFullScreenToggle(
                         enterFullScreenChild: const MyImage.asset(
@@ -677,7 +684,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
           ),
         ),
         Positioned(
-          right: 55,
+          right: kIsWeb ? 20 : 55,
           left: 20,
           bottom: widget.isBack ? 10 : 15,
           child: FlickAutoHideChild(
