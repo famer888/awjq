@@ -87,4 +87,8 @@ mixin _Monitor on _BaseAppRepo implements MonitorDomain {
   @override
   AsyncResult getMonitorLikeComment({required int id}) =>
       _monitorService.getMonitorLikeComment(id: id).deserialize().guard;
+
+  @override
+  AsyncResult monitorLike({required int id}) =>
+      _monitorService.monitorLike(id: id).deserialize().guard;
 }

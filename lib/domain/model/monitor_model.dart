@@ -33,6 +33,7 @@ class MonitorModel {
   final int? coins;
   final String? intro;
         int? isFavorite;
+        int? isLike;
   final String? payTip;
   final int? viewFct;
   final int? commentCt;
@@ -52,6 +53,7 @@ class MonitorModel {
     this.payTip,
     this.viewFct,
     this.favoriteFct,
+    this.isLike,
     this.commentCt,
     this.streamType,
   });
@@ -69,6 +71,7 @@ class MonitorModel {
     payTip: json['pay_tip'],
     viewFct: json['view_fct'],
     favoriteFct: json['favorite_fct'] ?? 0,
+    isLike: json['is_like'] ?? 0,
     commentCt: json['comment_ct'],
     streamType: json['stream_type'],
   );
@@ -83,6 +86,7 @@ class MonitorModel {
     'coins': coins,
     'intro': intro,
     'is_favorite': isFavorite,
+    'is_like': isLike,
     'pay_tip': payTip,
     'view_fct': viewFct,
     'comment_ct': commentCt,

@@ -9,7 +9,6 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:universal_html/html.dart' as html;
 import 'package:video_player/video_player.dart';
-import 'package:visibility_detector/visibility_detector.dart';
 import '../../../../domain/api_validator.dart';
 import '../../../../domain/model/member_model.dart';
 import '../../../../domain/model/monitor_model.dart';
@@ -40,6 +39,7 @@ class MonitorMvPlayer extends StatefulWidget {
     this.noBack = false,
     this.needCheckAspectRatio = false,
   });
+
   final MonitorModel info;
   final bool isLocal;
   final bool noBack;
@@ -51,7 +51,8 @@ class MonitorMvPlayer extends StatefulWidget {
   State<MonitorMvPlayer> createState() => _MonitorMvPlayerState();
 }
 
-class _MonitorMvPlayerState extends State<MonitorMvPlayer> with NVideoURLMinxin {
+class _MonitorMvPlayerState extends State<MonitorMvPlayer>
+    with NVideoURLMinxin {
   FlickManager? flickManager;
   bool _isPlayback = false;
 
@@ -63,7 +64,8 @@ class _MonitorMvPlayerState extends State<MonitorMvPlayer> with NVideoURLMinxin 
   }
 
   initURL() async {
-    VideoPlayerController? cr = await initController(source240: widget.info.hls ?? '', isLocal: widget.isLocal);
+    VideoPlayerController? cr = await initController(
+        source240: widget.info.hls ?? '', isLocal: widget.isLocal);
     flickManager = FlickManager(
         videoPlayerController: cr!,
         autoPlay: true,
@@ -82,51 +84,164 @@ class _MonitorMvPlayerState extends State<MonitorMvPlayer> with NVideoURLMinxin 
 
   @override
   Widget build(BuildContext context) {
-    return
-      flickManager == null
-        ? Container()
-        : FlickVideoPlayer(
-        flickManager: flickManager!,
-        flickVideoWithControls: FlickVideoWithControls(
-          videoFit: BoxFit.contain,
-          playerErrorFallback: Container(),
-          playerLoadingFallback: Stack(
-            children: [
-              Positioned.fill(
-                child: MyImage.network(
-                  widget.info.cover ?? '',
+    return Column(
+      children: [
+        Expanded(
+          child: flickManager == null
+              ? Container()
+              : FlickVideoPlayer(
+                  flickManager: flickManager!,
+                  flickVideoWithControls: FlickVideoWithControls(
+                    videoFit: BoxFit.contain,
+                    playerErrorFallback: Container(),
+                    playerLoadingFallback: Stack(
+                      children: [
+                        Positioned.fill(
+                          child: MyImage.network(
+                            widget.info.cover ?? '',
+                          ),
+                        ),
+                        Container(color: Colors.black87),
+                      ],
+                    ),
+                    controls: _SinkPortraitLandWidget(
+                      isBack: true,
+                      info: widget.info,
+                      noBack: widget.noBack,
+                      needCheckAspectRatio: widget.needCheckAspectRatio,
+                      isPlayback: _isPlayback,
+                      shareVp: () {
+                        const MineWelfareRoute(index: 1).push(context);
+                      },
+                      nowToVp: () {
+                        const VipCenterRoute().push(context);
+                      },
+                      nowByKb: () {
+                        showAlertVp(goby: true);
+                      },
+                    ),
+                  ),
+                  flickVideoWithControlsFullscreen: FlickVideoWithControls(
+                    playerErrorFallback: Container(),
+                    videoFit: BoxFit.contain,
+                    controls: _SinkPortraitLandWidget(
+                      info: widget.info,
+                      noBack: false,
+                      isPlayback: _isPlayback,
+                    ),
+                  ),
                 ),
-              ),
-              Container(color: Colors.black87),
-            ],
-          ),
-          controls: _SinkPortraitLandWidget(
-            isBack: true,
-            info: widget.info,
-            noBack: widget.noBack,
-            needCheckAspectRatio: widget.needCheckAspectRatio,
-            isPlayback: _isPlayback,
-            shareVp: () {
-              const MineWelfareRoute(index: 1).push(context);
-            },
-            nowToVp: () {
-              const VipCenterRoute().push(context);
-            },
-            nowByKb: () {
-              showAlertVp(goby: true);
-            },
-          ),
         ),
-        flickVideoWithControlsFullscreen: FlickVideoWithControls(
-          playerErrorFallback: Container(),
-          videoFit: BoxFit.contain,
-          controls: _SinkPortraitLandWidget(
-            info: widget.info,
-            noBack: false,
-            isPlayback: _isPlayback,
-          ),
-        ),
+        _optinalContent()
+      ],
     );
+  }
+
+  //播放器底部操作按钮，发声音/点赞/收藏/分享
+  Widget _optinalContent() {
+    FlickControlManager? controlManager = flickManager?.flickControlManager;
+    bool isMute = controlManager?.isMute ?? false;
+    return Container(
+      height: 40.w,
+      padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
+      color: const Color.fromRGBO(36, 36, 56, 0.8),
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          child: isMute
+              ? MyImage.asset(MyImagePaths.appMonitorOffVoice,
+                  width: 25.w, height: 25.w, fit: BoxFit.contain)
+              : MyImage.asset(
+                  MyImagePaths.appMonitorOnVoice,
+                  width: 25.w,
+                  height: 25.w,
+                  fit: BoxFit.contain,
+                ),
+          onTap: () {
+            //声音开关
+            if (isMute) {
+              controlManager?.unmute();
+            } else {
+              controlManager?.mute();
+            }
+            if (mounted) setState(() {});
+          },
+        ),
+        GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          child: widget.info.isLike == 1
+              ? MyImage.asset(MyImagePaths.appMonitorZanSel,
+                  width: 25.w, height: 25.w, fit: BoxFit.contain)
+              : MyImage.asset(
+                  MyImagePaths.appMonitorZanNormal,
+                  width: 25.w,
+                  height: 25.w,
+                  fit: BoxFit.contain,
+                ),
+          onTap: () {
+            //点赞
+            likeMonitor();
+          },
+        ),
+        GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          child: widget.info.isFavorite == 1
+              ? MyImage.asset(MyImagePaths.appMonitorColloctionSel,
+                  width: 25.w, height: 25.w, fit: BoxFit.contain)
+              : MyImage.asset(
+                  MyImagePaths.appMonitorColloctionNormal,
+                  width: 25.w,
+                  height: 25.w,
+                  fit: BoxFit.contain,
+                ),
+          onTap: () {
+            //收藏
+            colloctionMonitor();
+          },
+        ),
+        GestureDetector(
+          behavior: HitTestBehavior.translucent,
+          child: MyImage.asset(MyImagePaths.appMonitorShare,
+              width: 25.w, height: 25.w, fit: BoxFit.contain),
+          onTap: () {
+            //分享
+            const MineShareToUserRoute().push(context);
+          },
+        ),
+      ]),
+    );
+  }
+
+  //收藏监控
+  void colloctionMonitor() async {
+    final monitorDomain = context.read<MonitorDomain>();
+    final res = await monitorDomain.getMonitorFavorite(id: widget.info.id ?? 0);
+    if (res.isValid) {
+      if (res.data['is_favorite'] == 0) {
+        widget.info.isFavorite = 0;
+      } else {
+        widget.info.isFavorite = 1;
+      }
+      setState(() {});
+    } else if (res.msg case final msg?) {
+      MyToast.showText(text: msg);
+    }
+  }
+
+  //点赞监控
+  void likeMonitor() async {
+    final monitorDomain = context.read<MonitorDomain>();
+    final res = await monitorDomain.monitorLike(id: widget.info.id ?? 0);
+    if (res.isValid) {
+      if (res.data['is_like'] == 0) {
+        widget.info.isLike = 0;
+      } else {
+        widget.info.isLike = 1;
+      }
+      setState(() {});
+    } else if (res.msg case final msg?) {
+      MyToast.showText(text: msg);
+    }
   }
 
   showAlertVp({bool goby = false}) {
@@ -141,8 +256,10 @@ class _MonitorMvPlayerState extends State<MonitorMvPlayer> with NVideoURLMinxin 
           context: context,
           child: RegularDialog(
             title: tr('ts'),
-            cancelText: isInsufficient ? tr('qwcz') : tr('gmgk'),//前往充值 - 立即购买
-            buttonText: tr('fxdv'),//做任务得VIP
+            cancelText: isInsufficient ? tr('qwcz') : tr('gmgk'),
+            //前往充值 - 立即购买
+            buttonText: tr('fxdv'),
+            //做任务得VIP
             confirmOnTap: () {
               const MineWelfareRoute(index: 1).push(context);
             },
@@ -157,12 +274,13 @@ class _MonitorMvPlayerState extends State<MonitorMvPlayer> with NVideoURLMinxin 
               style: MyTheme.gray203_13,
               child: Column(
                 children: [
-                  Text(tr('gmspkwz'), style: MyTheme.gray203_13, maxLines: 3),//金币购买本视频解锁精彩完整版！
+                  Text(tr('gmspkwz'), style: MyTheme.gray203_13, maxLines: 3),
+                  //金币购买本视频解锁精彩完整版！
                   SizedBox(height: 15.w),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text('${widget.info.coins}${tr('jb')}',//金币
+                      Text('${widget.info.coins}${tr('jb')}', //金币
                           style: MyTheme.blue80_13_M),
                     ],
                   ),
@@ -170,7 +288,7 @@ class _MonitorMvPlayerState extends State<MonitorMvPlayer> with NVideoURLMinxin 
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Text("${tr('kyje')}：${member.money}${tr('jb')}",//可用金币
+                      Text("${tr('kyje')}：${member.money}${tr('jb')}", //可用金币
                           style: MyTheme.gray203_13),
                     ],
                   ),
@@ -182,9 +300,12 @@ class _MonitorMvPlayerState extends State<MonitorMvPlayer> with NVideoURLMinxin 
       MyDialog.showDialog(
           context: context,
           child: PNGDialog(
-            title: tr('ts'),//提示
-            cancelText: tr('cv'),//充值VI
-            buttonText: tr('fxdv'),//做任务得VIP
+            title: tr('ts'),
+            //提示
+            cancelText: tr('cv'),
+            //充值VI
+            buttonText: tr('fxdv'),
+            //做任务得VIP
             cancelOnTap: () {
               const VipCenterRoute().push(context);
             },
@@ -195,7 +316,8 @@ class _MonitorMvPlayerState extends State<MonitorMvPlayer> with NVideoURLMinxin 
               style: MyTheme.gray203_13,
               child: Column(
                 children: [
-                  Text(tr('gmvkwz'), style: MyTheme.gray203_13),//购买VIP或做任务获取VIP解锁精彩完整版！
+                  Text(tr('gmvkwz'), style: MyTheme.gray203_13),
+                  //购买VIP或做任务获取VIP解锁精彩完整版！
                   SizedBox(height: 15.w),
                   Text(
                     context.read<HomeConfigNotifier>().config.tipsShareText ??
@@ -238,6 +360,7 @@ class _SinkPortraitLandWidget extends StatefulWidget {
     required this.noBack,
     this.isPlayback = false,
   });
+
   final bool isBack;
   final MonitorModel? info;
   final Function? shareVp; //分享得VIP
@@ -248,102 +371,111 @@ class _SinkPortraitLandWidget extends StatefulWidget {
 
   /// 显示全屏按钮是否判断视频长宽比
   final bool needCheckAspectRatio;
+
   @override
-  State<_SinkPortraitLandWidget> createState() => _SinkPortraitLandWidgetState();
+  State<_SinkPortraitLandWidget> createState() =>
+      _SinkPortraitLandWidgetState();
 }
 
 class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
-
   Widget _noConditionWidget(context) {
     FlickVideoManager flickVideoManager =
-    Provider.of<FlickVideoManager>(context);
+        Provider.of<FlickVideoManager>(context);
     FlickControlManager controlManager =
-    Provider.of<FlickControlManager>(context);
+        Provider.of<FlickControlManager>(context);
     FlickDisplayManager flickDisplayManager =
-    Provider.of<FlickDisplayManager>(context);
+        Provider.of<FlickDisplayManager>(context);
 
     bool flag = (flickVideoManager.videoPlayerValue!.isBuffering &&
-        flickVideoManager.videoPlayerValue!.isPlaying) ||
+            flickVideoManager.videoPlayerValue!.isPlaying) ||
         !flickVideoManager.videoPlayerValue!.isInitialized;
 
     double rate = flickVideoManager.videoPlayerValue?.aspectRatio ?? 0.0;
     // 获取屏幕方向
-    final isPortrait = MediaQuery.of(context).orientation == Orientation.portrait;
+    final isPortrait =
+        MediaQuery.of(context).orientation == Orientation.portrait;
 
     return Stack(
       children: [
         Positioned.fill(
           child: FlickShowControlsAction(
-            child: widget.isPlayback ? FlickSlideVideoAction(
-              fontSize: 16,
-              child: Center(
-                child: flag && (widget.info?.hls?.length ?? 0) > 0
-                    ? Center(
-                  child: SizedBox(
-                    height: 40,
-                    width: 40,
-                    child: CircularProgressIndicator(
-                      backgroundColor: Colors.grey[400],
-                      strokeWidth: 1.5,
+            child: widget.isPlayback
+                ? FlickSlideVideoAction(
+                    fontSize: 16,
+                    child: Center(
+                      child: flag && (widget.info?.hls?.length ?? 0) > 0
+                          ? Center(
+                              child: SizedBox(
+                                height: 40,
+                                width: 40,
+                                child: CircularProgressIndicator(
+                                  backgroundColor: Colors.grey[400],
+                                  strokeWidth: 1.5,
+                                ),
+                              ),
+                            )
+                          : !widget.isPlayback
+                              ? const SizedBox.shrink()
+                              : const FlickAutoHideChild(
+                                  showIfVideoNotInitialized: false,
+                                  child: FlickPlayToggle(
+                                    replayChild: MyImage.asset(
+                                      MyImagePaths.appVReplayN,
+                                      width: 40,
+                                      height: 40,
+                                    ),
+                                    playChild: MyImage.asset(
+                                      MyImagePaths.appVPlayN,
+                                      width: 40,
+                                      height: 40,
+                                    ),
+                                    pauseChild: MyImage.asset(
+                                      MyImagePaths.appVPauseN,
+                                      width: 40,
+                                      height: 40,
+                                    ),
+                                  ),
+                                ),
                     ),
-                  ),
-                ) : !widget.isPlayback ? const SizedBox.shrink() : const FlickAutoHideChild(
-                  showIfVideoNotInitialized: false,
-                  child: FlickPlayToggle(
-                    replayChild:  MyImage.asset(
-                      MyImagePaths.appVReplayN,
-                      width: 40,
-                      height: 40,
-                    ),
-                    playChild:  MyImage.asset(
-                      MyImagePaths.appVPlayN,
-                      width: 40,
-                      height: 40,
-                    ),
-                    pauseChild:  MyImage.asset(
-                      MyImagePaths.appVPauseN,
-                      width: 40,
-                      height: 40,
-                    ),
-                  ),
-                ),
-              ),
-            )
+                  )
                 : FlickSeekVideoAction(
-              duration: const Duration(seconds: 60),
-              child: Center(
-                child: flag && (widget.info?.hls?.length ?? 0) > 0
-                    ? Center(
-                  child: SizedBox(
-                    height: 40,
-                    width: 40,
-                    child: CircularProgressIndicator(
-                      backgroundColor: Colors.grey[400],
-                      strokeWidth: 1.5,
+                    duration: const Duration(seconds: 60),
+                    child: Center(
+                      child: flag && (widget.info?.hls?.length ?? 0) > 0
+                          ? Center(
+                              child: SizedBox(
+                                height: 40,
+                                width: 40,
+                                child: CircularProgressIndicator(
+                                  backgroundColor: Colors.grey[400],
+                                  strokeWidth: 1.5,
+                                ),
+                              ),
+                            )
+                          : !widget.isPlayback
+                              ? const SizedBox.shrink()
+                              : const FlickAutoHideChild(
+                                  showIfVideoNotInitialized: false,
+                                  child: FlickPlayToggle(
+                                    replayChild: MyImage.asset(
+                                      MyImagePaths.appVReplayN,
+                                      width: 40,
+                                      height: 40,
+                                    ),
+                                    playChild: MyImage.asset(
+                                      MyImagePaths.appVPlayN,
+                                      width: 40,
+                                      height: 40,
+                                    ),
+                                    pauseChild: MyImage.asset(
+                                      MyImagePaths.appVPauseN,
+                                      width: 40,
+                                      height: 40,
+                                    ),
+                                  ),
+                                ),
                     ),
                   ),
-                ) : !widget.isPlayback ? const SizedBox.shrink() : const FlickAutoHideChild(
-                  showIfVideoNotInitialized: false,
-                  child: FlickPlayToggle(
-                    replayChild:  MyImage.asset(
-                      MyImagePaths.appVReplayN,
-                      width: 40,
-                      height: 40,
-                    ),
-                    playChild:  MyImage.asset(
-                      MyImagePaths.appVPlayN,
-                      width: 40,
-                      height: 40,
-                    ),
-                    pauseChild:  MyImage.asset(
-                      MyImagePaths.appVPauseN,
-                      width: 40,
-                      height: 40,
-                    ),
-                  ),
-                ),
-              ),
-            ),
           ),
         ),
         Positioned(
@@ -412,87 +544,134 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                       }
                     },
                   ),
-                  Text(isPortrait ? '' : (widget.info?.title ?? ''), style: MyTheme.white20medium),
+                  Text(isPortrait ? '' : (widget.info?.title ?? ''),
+                      style: MyTheme.white20medium),
                 ],
               ),
             );
           }),
         ),
         Positioned(
-          bottom: 10,
-          left: 10,
+          bottom: isPortrait ? 10 : 13,
+          left: isPortrait ? 0 : 10,
           child: FlickAutoHideChild(
-            child: widget.isPlayback ? const SizedBox.shrink() : Row(
-              children: [
-                ChinaTimeWidget(textStyle: MyTheme.white11),
-                const SizedBox(width: 5),
-                GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  child: controlManager.isMute ? const MyImage.asset(
-                    MyImagePaths.appIsMute,
-                    width: 25,
-                    height: 25,
-                    fit: BoxFit.contain) : const MyImage.asset(
-                      MyImagePaths.appMute,
-                      width: 25,
-                      height: 25,
-                      fit: BoxFit.contain,
-                    ),
-                  onTap: () {
-                    if (controlManager.isMute) {
-                      controlManager.unmute();
-                    } else {
-                      controlManager.mute();
-                    }
-                    if (mounted) setState(() {});
-                  },
-                ),
-              ],
-            ),
+            child: widget.isPlayback
+                ? const SizedBox.shrink()
+                : Row(
+                    children: [
+                      const SizedBox(
+                        width: 150,
+                        child: ChinaTimeWidget(
+                            textStyle:
+                                TextStyle(color: Colors.white, fontSize: 11)),
+                      ),
+                      const SizedBox(width: 20),
+                      widget.isBack
+                          ? Container()
+                          : Row(children: [
+                              GestureDetector(
+                                behavior: HitTestBehavior.translucent,
+                                child: controlManager.isMute
+                                    ? const MyImage.asset(
+                                        MyImagePaths.appMonitorOffVoice,
+                                        width: 25,
+                                        height: 25,
+                                        fit: BoxFit.contain)
+                                    : const MyImage.asset(
+                                        MyImagePaths.appMonitorOnVoice,
+                                        width: 25,
+                                        height: 25,
+                                        fit: BoxFit.contain,
+                                      ),
+                                onTap: () {
+                                  if (controlManager.isMute) {
+                                    controlManager.unmute();
+                                  } else {
+                                    controlManager.mute();
+                                  }
+                                  if (mounted) setState(() {});
+                                },
+                              ),
+                        const SizedBox(width: 30),
+                        GestureDetector(
+                          behavior: HitTestBehavior.translucent,
+                          child: widget.info?.isLike == 1
+                              ? const MyImage.asset(MyImagePaths.appMonitorZanSel,
+                              width: 25, height: 25, fit: BoxFit.contain)
+                              : const MyImage.asset(
+                            MyImagePaths.appMonitorZanNormal,
+                            width: 25,
+                            height: 25,
+                            fit: BoxFit.contain,
+                          ),
+                          onTap: () {
+                            //点赞
+                            likeMonitor();
+                          },
+                        ),
+                        const SizedBox(width: 30),
+                        GestureDetector(
+                          behavior: HitTestBehavior.translucent,
+                          child: widget.info?.isFavorite == 1
+                              ? const MyImage.asset(MyImagePaths.appMonitorColloctionSel,
+                              width: 25, height: 25, fit: BoxFit.contain)
+                              : const MyImage.asset(
+                            MyImagePaths.appMonitorColloctionNormal,
+                            width: 25,
+                            height: 25,
+                            fit: BoxFit.contain,
+                          ),
+                          onTap: () {
+                            //收藏
+                            colloctionMonitor();
+                          },
+                        )])
+                    ],
+                  ),
           ),
         ),
         Positioned(
-          bottom: 10,
-          right: 10,
+          bottom: isPortrait ? 10 : 13,
+          right: isPortrait ? 10 : 20,
           child: FlickAutoHideChild(
             child: Column(
               children: [
-                (kIsWeb && !widget.isPlayback) ? Container() :
-                FlickFullScreenToggle(
-                  enterFullScreenChild: const MyImage.asset(
-                    MyImagePaths.appFullScreen,
-                    width: 25,
-                    height: 25,
-                    fit: BoxFit.contain,
-                  ),
-                  exitFullScreenChild: const MyImage.asset(
-                    MyImagePaths.appFullScreen,
-                    width: 25,
-                    height: 25,
-                    fit: BoxFit.contain,
-                  ),
-                  toggleFullscreen: () {
-                    if (kIsWeb) {
-                      List<html.VideoElement> elements = html
-                          .document.querySelectorAll('video');
-                      if (elements.isEmpty) return;
+                (kIsWeb && !widget.isPlayback)
+                    ? Container()
+                    : FlickFullScreenToggle(
+                        enterFullScreenChild: const MyImage.asset(
+                          MyImagePaths.appFullScreen,
+                          width: 25,
+                          height: 25,
+                          fit: BoxFit.contain,
+                        ),
+                        exitFullScreenChild: const MyImage.asset(
+                          MyImagePaths.appFullScreen,
+                          width: 25,
+                          height: 25,
+                          fit: BoxFit.contain,
+                        ),
+                        toggleFullscreen: () {
+                          if (kIsWeb) {
+                            List<html.VideoElement> elements =
+                                html.document.querySelectorAll('video');
+                            if (elements.isEmpty) return;
 
-                      html.VideoElement video = elements.last;
-                      video.muted = false;
-                      video.volume = 1;
-                      video.setAttribute('playsinline', 'true');
-                      video.setAttribute('autoplay', 'true');
-                      if (html.document.fullscreenElement ==
-                          null) {
-                        video.enterFullscreen();
-                      } else {
-                        html.document.exitFullscreen();
-                      }
-                    } else {
-                      controlManager.toggleFullscreen();
-                    }
-                  },
-                ),
+                            html.VideoElement video = elements.last;
+                            video.muted = false;
+                            video.volume = 1;
+                            video.setAttribute('playsinline', 'true');
+                            video.setAttribute('autoplay', 'true');
+                            if (html.document.fullscreenElement == null) {
+                              video.enterFullscreen();
+                            } else {
+                              html.document.exitFullscreen();
+                            }
+                          } else {
+                            controlManager.toggleFullscreen();
+                          }
+                        },
+                      ),
               ],
             ),
           ),
@@ -502,60 +681,142 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
           left: 20,
           bottom: widget.isBack ? 10 : 15,
           child: FlickAutoHideChild(
-            child: !widget.isPlayback ? const SizedBox.shrink() :
-            Column(
-              children: [
-                const Row(
-                  children: [
-                    FlickCurrentPosition(
-                      color: Colors.white,
-                      fontSize: 12,
-                    ),
-                    Text(
-                      ' / ',
-                      style: TextStyle(
-                          color: Colors.white, fontSize: 12),
-                    ),
-                    FlickTotalDuration(
-                      color: Colors.white,
-                      fontSize: 12,
-                    )
-                  ],
-                ),
-                FlickVideoProgressBar(
-                  flickProgressBarSettings:
-                  FlickProgressBarSettings(
-                    padding: const EdgeInsets.only(top: 10),
-                    height: 3,
-                    handleRadius: 6,
-                    curveRadius: 4,
-                    backgroundColor: Colors.white24,
-                    bufferedColor:
-                    const Color.fromRGBO(90, 75, 235, 0.38),
-                    playedColor:
-                    const Color.fromRGBO(90, 75, 235, 1),
-                    handleColor:
-                    const Color.fromRGBO(90, 75, 235, 1),
+            child: !widget.isPlayback
+                ? const SizedBox.shrink()
+                : Column(
+                    children: [
+                      const Row(
+                        children: [
+                          FlickCurrentPosition(
+                            color: Colors.white,
+                            fontSize: 12,
+                          ),
+                          Text(
+                            ' / ',
+                            style: TextStyle(color: Colors.white, fontSize: 12),
+                          ),
+                          FlickTotalDuration(
+                            color: Colors.white,
+                            fontSize: 12,
+                          )
+                        ],
+                      ),
+                      FlickVideoProgressBar(
+                        flickProgressBarSettings: FlickProgressBarSettings(
+                          padding: const EdgeInsets.only(top: 10),
+                          height: 3,
+                          handleRadius: 6,
+                          curveRadius: 4,
+                          backgroundColor: Colors.white24,
+                          bufferedColor:
+                              const Color.fromRGBO(90, 75, 235, 0.38),
+                          playedColor: const Color.fromRGBO(90, 75, 235, 1),
+                          handleColor: const Color.fromRGBO(90, 75, 235, 1),
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
           ),
         ),
+        Positioned(
+            bottom: 60,
+            right: isPortrait ? 10 : 20,
+            child: (widget.isPlayback && !isPortrait) ? FlickAutoHideChild(
+                child: Column(children: [
+                  GestureDetector(
+                    behavior: HitTestBehavior.translucent,
+                    child: widget.info?.isFavorite == 1
+                        ? const MyImage.asset(MyImagePaths.appMonitorColloctionSel,
+                        width: 25, height: 25, fit: BoxFit.contain)
+                        : const MyImage.asset(
+                      MyImagePaths.appMonitorColloctionNormal,
+                      width: 25,
+                      height: 25,
+                      fit: BoxFit.contain,
+                    ),
+                    onTap: () {
+                      //收藏
+                      colloctionMonitor();
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  GestureDetector(
+                    behavior: HitTestBehavior.translucent,
+                    child: widget.info?.isLike == 1
+                        ? const MyImage.asset(MyImagePaths.appMonitorZanSel,
+                        width: 25, height: 25, fit: BoxFit.contain)
+                        : const MyImage.asset(
+                      MyImagePaths.appMonitorZanNormal,
+                      width: 25,
+                      height: 25,
+                      fit: BoxFit.contain,
+                    ),
+                    onTap: () {
+                      //点赞
+                      likeMonitor();
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  GestureDetector(
+                    behavior: HitTestBehavior.translucent,
+                    child: controlManager.isMute
+                        ? const MyImage.asset(
+                        MyImagePaths.appMonitorOffVoice,
+                        width: 25,
+                        height: 25,
+                        fit: BoxFit.contain)
+                        : const MyImage.asset(
+                      MyImagePaths.appMonitorOnVoice,
+                      width: 25,
+                      height: 25,
+                      fit: BoxFit.contain,
+                    ),
+                    onTap: () {
+                      if (controlManager.isMute) {
+                        controlManager.unmute();
+                      } else {
+                        controlManager.mute();
+                      }
+                      if (mounted) setState(() {});
+                    },
+                  ),
+                ]))
+                : Container())
       ],
     );
   }
 
-//   Future zanVideoRes(int money) async {
-//     final monitorDomain = context.read<MonitorDomain>();
-//     final res = await monitorDomain.getMonitorLikeComment(id: widget.info.id ?? 0);
-//     if (res.isValid) {
-//
-//     } else {
-//       MyToast.showText(text: res.msg ?? '');
-//     }
-//   }
-// }
+  //收藏监控
+  void colloctionMonitor() async {
+    final monitorDomain = context.read<MonitorDomain>();
+    final res = await monitorDomain.getMonitorFavorite(id: widget.info?.id ?? 0);
+    if (res.isValid) {
+      if (res.data['is_favorite'] == 0) {
+        widget.info?.isFavorite = 0;
+      } else {
+        widget.info?.isFavorite = 1;
+      }
+      setState(() {});
+    } else if (res.msg case final msg?) {
+      MyToast.showText(text: msg);
+    }
+  }
+
+  //点赞监控
+  void likeMonitor() async {
+    final monitorDomain = context.read<MonitorDomain>();
+    final res = await monitorDomain.monitorLike(id: widget.info?.id ?? 0);
+    if (res.isValid) {
+      if (res.data['is_like'] == 0) {
+        widget.info?.isLike = 0;
+      } else {
+        widget.info?.isLike = 1;
+      }
+      setState(() {});
+    } else if (res.msg case final msg?) {
+      MyToast.showText(text: msg);
+    }
+  }
 
   Widget _conditionWidget(BuildContext context) {
     Widget dgt = Container();
@@ -573,8 +834,8 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
           TextSpan(children: [
             TextSpan(
                 text: '${widget.info?.coins ?? 0}', style: MyTheme.blue80_14_M),
-            TextSpan(text: '${tr('jbjsw')}，'),//金币解锁完整版
-            TextSpan(text: '${tr('ktvpzk')}${user.money}')//剩余可用金币
+            TextSpan(text: '${tr('jbjsw')}，'), //金币解锁完整版
+            TextSpan(text: '${tr('ktvpzk')}${user.money}') //剩余可用金币
           ]),
         ),
       );
@@ -674,7 +935,8 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                           borderRadius: BorderRadius.all(Radius.circular(3)),
                         ),
                         child: Center(
-                          child: Text(vflag ? tr('gmgk') : tr('ljkv'),//立即购买 - 立即开通VIP
+                          child: Text(
+                              vflag ? tr('gmgk') : tr('ljkv'), //立即购买 - 立即开通VIP
                               style: MyTheme.white13),
                         ),
                       ),
@@ -693,7 +955,8 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                           borderRadius: BorderRadius.all(Radius.circular(3)),
                         ),
                         child: Center(
-                          child: Text(tr('fxdv'), style: MyTheme.white13),// 做任务得VIP
+                          child: Text(tr('fxdv'),
+                              style: MyTheme.white13), // 做任务得VIP
                         ),
                       ),
                     )
@@ -709,7 +972,8 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return (widget.info?.hls?.length ?? 0) > 0 ?
-    _noConditionWidget(context) : _conditionWidget(context);
+    return (widget.info?.hls?.length ?? 0) > 0
+        ? _noConditionWidget(context)
+        : _conditionWidget(context);
   }
 }

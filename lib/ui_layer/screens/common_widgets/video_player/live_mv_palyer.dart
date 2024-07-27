@@ -70,7 +70,7 @@ class _LiveMvPlayerState extends State<LiveMvPlayer> with NVideoURLMinxin {
   final TextEditingController _dsTextFieldController = TextEditingController();
   final FocusNode _dsFocusNode = FocusNode();
 
-  bool isbarrage = false;
+  bool isbarrage = true;
 
   final _barrageKey = GlobalKey<BarrageState>();
 
@@ -85,6 +85,12 @@ class _LiveMvPlayerState extends State<LiveMvPlayer> with NVideoURLMinxin {
     super.initState();
     initializeData();
     initURL();
+  }
+
+  @override
+  void didUpdateWidget(LiveMvPlayer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    initializeData();
   }
 
   Future<void> initializeData() async {
@@ -246,8 +252,8 @@ class _LiveMvPlayerState extends State<LiveMvPlayer> with NVideoURLMinxin {
         GestureDetector(
             behavior: HitTestBehavior.translucent,
             onTap: () {
-              if (widget.info.show != 'public') {
-                MyToast.showText(text: tr('yhyxx'));
+              if (widget.info.hls?.isEmpty ?? false) {
+                // MyToast.showText(text: tr('yhyxx'));
                 return;
               }
               //切换路线
@@ -489,19 +495,15 @@ class _LiveMvPlayerState extends State<LiveMvPlayer> with NVideoURLMinxin {
                   width: 25, height: 25, fit: BoxFit.contain)
                   : const MyImage.asset(MyImagePaths.appOffDanmu,
                   width: 25, height: 25, fit: BoxFit.contain),
-              onTap: () {
+              onTap: () async {
                 //弹幕开关
-                final cacheDomain = context.read<CacheDomain>();
-                if (isbarrage) {
-                  cacheDomain.upsertIsBarrage(false);
-                  isbarrage = false;
-                } else {
-                  cacheDomain.upsertIsBarrage(true);
-                  isbarrage = true;
+                if (widget.info.hls?.isEmpty ?? false) {
+                  // MyToast.showText(text: tr('yhyxx'));
+                  return;
                 }
-                _showDMTipsToast(isbarrage);
-
-                if (mounted) setState(() {});
+                await _sinkPortraitLandWidgetGlobalKey.currentState?.optionalDanMu();
+                await initializeData();
+                _hideKeyboard(context);
               },
             ),
             SizedBox(width: 16.w),
@@ -515,34 +517,6 @@ class _LiveMvPlayerState extends State<LiveMvPlayer> with NVideoURLMinxin {
               },
             ),
           ]);
-  }
-
-  void _showDMTipsToast(bool isOpen) {
-    _hideKeyboard(context);
-    BotToast.cleanAll();
-    BotToast.showCustomText(
-      toastBuilder: (_) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        decoration: BoxDecoration(
-          color: Colors.black45, // 背景颜色
-          borderRadius: BorderRadius.circular(15), // 圆角
-        ),
-        width: 90,
-        height: 30,
-        alignment: Alignment.center,
-        child: Text(
-          isOpen ? tr('dmydk') : tr('dmygb'),
-          style: const TextStyle(
-              color: Color.fromRGBO(255, 255, 255, 1),
-              fontSize: 12,
-              overflow: TextOverflow.ellipsis,
-              decoration: TextDecoration.none),
-          textAlign: TextAlign.center,
-        ),
-      ),
-      duration: const Duration(seconds: 2), // 显示时长
-      align: const Alignment(0.0, -0.8), // 位置
-    );
   }
 
   List<Widget> _buildChangeLineListWidget(double width) {
@@ -749,7 +723,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
   final TextEditingController _dsTextFieldController = TextEditingController();
   final FocusNode _dsFocusNode = FocusNode();
 
-  bool isbarrage = false;
+  bool isbarrage = true;
 
   List<CommentItemModel> commentItems = []; //弹幕数据
 
@@ -1408,18 +1382,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
             : const MyImage.asset(MyImagePaths.appOffDanmu,
             width: 25, height: 25, fit: BoxFit.contain),
         onTap: () {
-          //弹幕开关
-          final cacheDomain = context.read<CacheDomain>();
-          if (isbarrage) {
-            cacheDomain.upsertIsBarrage(false);
-            isbarrage = false;
-          } else {
-            cacheDomain.upsertIsBarrage(true);
-            isbarrage = true;
-          }
-          _showDMTipsToast(isbarrage);
-
-          if (mounted) setState(() {});
+          optionalDanMu();
         },
       ),
       const SizedBox(width: 13),
@@ -1463,6 +1426,23 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
       _offset = renderBox?.localToGlobal(Offset.zero) ?? Offset.zero;
       _size = renderBox?.size ?? Size.zero;
     });
+  }
+
+  //弹幕打开关闭操作
+  Future<void> optionalDanMu() async {
+//弹幕开关
+    isbarrage = await getIsbarrage();
+    final cacheDomain = context.read<CacheDomain>();
+    if (isbarrage) {
+      await cacheDomain.upsertIsBarrage(false);
+      isbarrage = false;
+    } else {
+      await cacheDomain.upsertIsBarrage(true);
+      isbarrage = true;
+    }
+    _showDMTipsToast(isbarrage);
+
+    if (mounted) setState(() {});
   }
 
   void _showDMTipsToast(bool isOpen) {

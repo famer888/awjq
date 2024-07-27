@@ -204,8 +204,8 @@ class _HeaderViewState extends State<_HeaderView> {
       children: [
         MyImage.asset(
           icon,
-          width: 20.w,
-          height: 20.w,
+          width: 25.w,
+          height: 25.w,
           fit: BoxFit.fitWidth,
         ),
         SizedBox(width: 4.w),

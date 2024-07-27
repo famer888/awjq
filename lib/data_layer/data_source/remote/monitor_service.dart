@@ -67,4 +67,7 @@ class MonitorService extends BaseService {
   /// 监控点赞
   AsyncJson getMonitorLikeComment({required int id}) =>
       post('/like_comment', data: {'id': id});
+
+  AsyncJson monitorLike({required int id}) =>
+      post('/like', data: {'id': id});
 }

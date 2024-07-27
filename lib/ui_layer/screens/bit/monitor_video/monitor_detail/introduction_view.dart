@@ -126,54 +126,54 @@ class _HeaderViewState extends State<_HeaderView> {
                       ),
                     ],
                   ),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      StatefulBuilder(builder: (_, setState) {
-                        final isFavorite = videoInfo.isFavorite == 1;
-
-                        return GestureDetector(
-                          onTap: () async {
-                            if (videoInfo.id case final id?) {
-                              final monitorDomain = context.read<MonitorDomain>();
-                              final res =
-                              await monitorDomain.getMonitorFavorite(id: id);
-                              if (res.isValid) {
-                                if (res.data['is_favorite'] == 0) {
-                                  videoInfo.isFavorite = 0;
-                                  videoInfo.favoriteFct = (videoInfo.favoriteFct ?? 0) - 1;
-                                  videoInfo.favoriteFct! <= 0 ? 0 : videoInfo.favoriteFct;
-                                } else {
-                                  videoInfo.isFavorite = 1;
-                                  videoInfo.favoriteFct = (videoInfo.favoriteFct ?? 0) + 1;
-                                }
-                                setState(() {});
-                              } else if (res.msg case final msg?) {
-                                MyToast.showText(text: msg);
-                              }
-                            }
-                          },
-                          child: _btnItem(
-                            icon: isFavorite
-                                ? MyImagePaths.app2024ComScOn
-                                : MyImagePaths.app2024ComScOff,
-                            name: CommonUtils.renderFixedNumber(
-                                videoInfo.favoriteFct ?? 0),
-                          ),
-                        );
-                      }),
-                      SizedBox(width: 20.w),
-                      GestureDetector(
-                        onTap: () {
-                          const MineShareToUserRoute().push(context);
-                        },
-                        child: _btnItem(
-                          icon: MyImagePaths.app2024ComFenxiangOn,
-                          name: 'fx'.tr(context: context),
-                        ),
-                      ),
-                    ],
-                  )
+                  // Row(
+                  //   mainAxisSize: MainAxisSize.min,
+                  //   children: [
+                  //     StatefulBuilder(builder: (_, setState) {
+                  //       final isFavorite = videoInfo.isFavorite == 1;
+                  //
+                  //       return GestureDetector(
+                  //         onTap: () async {
+                  //           if (videoInfo.id case final id?) {
+                  //             final monitorDomain = context.read<MonitorDomain>();
+                  //             final res =
+                  //             await monitorDomain.getMonitorFavorite(id: id);
+                  //             if (res.isValid) {
+                  //               if (res.data['is_favorite'] == 0) {
+                  //                 videoInfo.isFavorite = 0;
+                  //                 videoInfo.favoriteFct = (videoInfo.favoriteFct ?? 0) - 1;
+                  //                 videoInfo.favoriteFct! <= 0 ? 0 : videoInfo.favoriteFct;
+                  //               } else {
+                  //                 videoInfo.isFavorite = 1;
+                  //                 videoInfo.favoriteFct = (videoInfo.favoriteFct ?? 0) + 1;
+                  //               }
+                  //               setState(() {});
+                  //             } else if (res.msg case final msg?) {
+                  //               MyToast.showText(text: msg);
+                  //             }
+                  //           }
+                  //         },
+                  //         child: _btnItem(
+                  //           icon: isFavorite
+                  //               ? MyImagePaths.app2024ComScOn
+                  //               : MyImagePaths.app2024ComScOff,
+                  //           name: CommonUtils.renderFixedNumber(
+                  //               videoInfo.favoriteFct ?? 0),
+                  //         ),
+                  //       );
+                  //     }),
+                  //     SizedBox(width: 20.w),
+                  //     GestureDetector(
+                  //       onTap: () {
+                  //         const MineShareToUserRoute().push(context);
+                  //       },
+                  //       child: _btnItem(
+                  //         icon: MyImagePaths.app2024ComFenxiangOn,
+                  //         name: 'fx'.tr(context: context),
+                  //       ),
+                  //     ),
+                  //   ],
+                  // )
                 ],
               ),
               Padding(

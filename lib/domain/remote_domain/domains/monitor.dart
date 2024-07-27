@@ -54,4 +54,7 @@ abstract class MonitorDomain {
 
   /// 监控评论点赞
   AsyncResult getMonitorLikeComment({required int id});
+
+  /// 监控点赞
+  AsyncResult monitorLike({required int id});
 }
