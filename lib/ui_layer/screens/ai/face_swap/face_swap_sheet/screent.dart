@@ -330,7 +330,7 @@ class _FaceSwapSheetViewState extends State<FaceSwapSheetView> {
             confirmOnTap: () {
               //前往充值
               context.pop();
-              const MineWelfareRoute(index: 1).push(context);
+              const CoinRechargeRoute().push(context);
             },
             cancelOnTap: () {
               //取消
