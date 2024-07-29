@@ -37,7 +37,7 @@ class LiveVideoCard extends StatelessWidget {
                 backgroundColor: MyTheme.imageBgColor,
               ),
             ),
-            Positioned.fill(child: !isOnline ? CommonUtils.blurCover() : const SizedBox.shrink()),
+            Positioned.fill(child: !isOnline ? CommonUtils.blurCover(borderRadius: 5.w) : const SizedBox.shrink()),
             Positioned.fill(child: !isOnline ? Center(
               child: MyImage.asset(
                 MyImagePaths.appFigureN,

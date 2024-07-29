@@ -1603,7 +1603,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
             ),
             Padding(
               padding: const EdgeInsets.only(
-                top: 20,
+                top: 15,
                 left: 50,
                 right: 50,
               ),

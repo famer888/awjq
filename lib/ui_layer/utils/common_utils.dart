@@ -373,8 +373,9 @@ class CommonUtils {
     return false;
   }
 
-  static Widget blurCover({Function? onTap}) {
-    return ClipPath(
+  static Widget blurCover({Function? onTap, double? borderRadius}) {
+    return ClipRRect(
+        borderRadius: BorderRadius.circular(borderRadius ?? 0.w), // 圆角半径
         child: BackdropFilter(
       filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
       child: GestureDetector(

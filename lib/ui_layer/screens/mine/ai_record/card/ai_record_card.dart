@@ -80,7 +80,7 @@ class _AIRecordCardState extends State<AIRecordCard> {
                     bottom: -5,
                     left: -5,
                     right: -5,
-                    child: CommonUtils.blurCover())
+                    child: CommonUtils.blurCover(borderRadius: 5.w))
                 : Container(),
             widget.data.status == 2 //保存按钮
                 ? Positioned.fill(

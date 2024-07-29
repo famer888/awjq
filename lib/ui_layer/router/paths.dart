@@ -78,7 +78,7 @@ class AppRouterPaths {
   /// 我的 - 购买
   static const mineBuy = '/mineBuy';
 
-  /// 我的 - 购买
+  /// 我的 - AI
   static const mineAIRecord = '/minAIRecord';
 
   /// 我的 - 下载
