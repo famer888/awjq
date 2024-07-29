@@ -516,32 +516,34 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
             if (widget.noBack) {
               return const SizedBox.shrink();
             }
-            return SizedBox(
-              height: 20,
-              child: Row(
-                  children: [
-                    GestureDetector(
-                      behavior: HitTestBehavior.translucent,
-                      child: widget.isBack ? Container() : const MyImage.asset(
-                        MyImagePaths.appNavBackWN,
-                        width: 20,
-                        height: 20,
-                        fit: BoxFit.contain,
+            return SafeArea(
+              child: SizedBox(
+                height: 20,
+                child: Row(
+                    children: [
+                      GestureDetector(
+                        behavior: HitTestBehavior.translucent,
+                        child: widget.isBack ? Container() : const MyImage.asset(
+                          MyImagePaths.appNavBackWN,
+                          width: 20,
+                          height: 20,
+                          fit: BoxFit.contain,
+                        ),
+                        onTap: () {
+                          if (widget.isBack) {
+                            context.pop();
+                          } else {
+                            controlManager.toggleFullscreen();
+                          }
+                        },
                       ),
-                      onTap: () {
-                        if (widget.isBack) {
-                          context.pop();
-                        } else {
-                          controlManager.toggleFullscreen();
-                        }
-                      },
-                    ),
-                    FlickAutoHideChild(
-                      child: Text(isPortrait ? '' : (widget.info?.title ?? ''),
-                          style: MyTheme.white20medium),
-                    ),
-                  ],
-                ),
+                      FlickAutoHideChild(
+                        child: Text(isPortrait ? '' : (widget.info?.title ?? ''),
+                            style: MyTheme.white20medium),
+                      ),
+                    ],
+                  ),
+              ),
             );
           }),
         ),

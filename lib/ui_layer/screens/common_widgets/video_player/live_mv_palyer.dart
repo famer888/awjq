@@ -871,39 +871,41 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
               ),
             )),
         Positioned(
-          top: MediaQuery.of(context).padding.top + 5.w,
+          top: isPortrait ? 6 : 20,
           left: 10,
           child: Builder(builder: (context) {
             if (widget.noBack) {
               return const SizedBox.shrink();
             }
-            return SizedBox(height: 20,
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    GestureDetector(
-                      behavior: HitTestBehavior.translucent,
-                      child: const MyImage.asset(
-                          MyImagePaths.appNavBackWN,
-                          width: 20,
-                          height: 20,
-                          fit: BoxFit.contain,
-                        ),
-                      onTap: () {
-                        _hideKeyboard(context);
-                        if (widget.isBack) {
-                          context.pop();
-                        } else {
-                          controlManager.toggleFullscreen();
-                        }
-                      },
-                    ),
-                    FlickAutoHideChild(
-                      child: Text(isPortrait ? '' : (widget.info?.username ?? ''),
-                          style: MyTheme.white20medium),
-                    ),
-                  ],
-                ),
+            return SafeArea(
+              child: SizedBox(height: 20,
+                child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        behavior: HitTestBehavior.translucent,
+                        child: const MyImage.asset(
+                            MyImagePaths.appNavBackWN,
+                            width: 20,
+                            height: 20,
+                            fit: BoxFit.contain,
+                          ),
+                        onTap: () {
+                          _hideKeyboard(context);
+                          if (widget.isBack) {
+                            context.pop();
+                          } else {
+                            controlManager.toggleFullscreen();
+                          }
+                        },
+                      ),
+                      FlickAutoHideChild(
+                        child: Text(isPortrait ? '' : (widget.info?.username ?? ''),
+                              style: MyTheme.white20medium)),
+                    ],
+                  ),
+              ),
             );
           }),
         ),
