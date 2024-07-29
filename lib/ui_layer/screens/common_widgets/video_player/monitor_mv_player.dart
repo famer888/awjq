@@ -518,33 +518,34 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
             }
             return SafeArea(
               child: SizedBox(
-                height: 20,
+                height: 30,
                 child: Row(
-                    children: [
-                      GestureDetector(
-                        behavior: HitTestBehavior.translucent,
-                        child: widget.isBack ? Container() : const MyImage.asset(
-                          MyImagePaths.appNavBackWN,
-                          width: 20,
-                          height: 20,
-                          fit: BoxFit.contain,
+                      children: [
+                        GestureDetector(
+                          behavior: HitTestBehavior.translucent,
+                          child: widget.isBack ? Container() : const MyImage.asset(
+                            MyImagePaths.appNavBackWN,
+                            width: 20,
+                            height: 20,
+                            fit: BoxFit.contain,
+                          ),
+                          onTap: () {
+                            if (widget.isBack) {
+                              context.pop();
+                            } else {
+                              controlManager.toggleFullscreen();
+                            }
+                          },
                         ),
-                        onTap: () {
-                          if (widget.isBack) {
-                            context.pop();
-                          } else {
-                            controlManager.toggleFullscreen();
-                          }
-                        },
-                      ),
-                      FlickAutoHideChild(
-                        child: Text(isPortrait ? '' : (widget.info?.title ?? ''),
-                            style: MyTheme.white20medium),
-                      ),
-                    ],
-                  ),
-              ),
-            );
+                        FlickAutoHideChild(
+                          child: Text(isPortrait ? '' : (widget.info?.title ?? ''),
+                              style: const TextStyle(
+                                  color: Color.fromRGBO(255, 255, 255, 1),
+                                  fontSize: 20)),
+                        ),
+                      ],
+                    ),
+              ));
           }),
         ),
         Positioned(

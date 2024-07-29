@@ -871,14 +871,14 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
               ),
             )),
         Positioned(
-          top: isPortrait ? 6 : 20,
+          top: isPortrait ? 5 : 20,
           left: 10,
           child: Builder(builder: (context) {
             if (widget.noBack) {
               return const SizedBox.shrink();
             }
             return SafeArea(
-              child: SizedBox(height: 20,
+              child: SizedBox(height: 30,
                 child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -902,7 +902,9 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                       ),
                       FlickAutoHideChild(
                         child: Text(isPortrait ? '' : (widget.info?.username ?? ''),
-                              style: MyTheme.white20medium)),
+                              style: const TextStyle(
+                                  color: Color.fromRGBO(255, 255, 255, 1),
+                                  fontSize: 20))),
                     ],
                   ),
               ),
@@ -937,7 +939,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
           child: widget.isBack ? Container() : FlickAutoHideChild(child: _danMuWidget(context, controlManager)),//全屏才会显示弹幕相关
         ),
         Positioned(
-          bottom: 13.w,
+          bottom: 10.w,
           right: 13.w,
           child: FlickAutoHideChild(
             child: Row(
