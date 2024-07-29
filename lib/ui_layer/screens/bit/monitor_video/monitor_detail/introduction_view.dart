@@ -90,18 +90,16 @@ class _HeaderViewState extends State<_HeaderView> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 5.w),
-              Text(
-                videoInfo.title ?? '',
-                style: MyTheme.white255_18_M,
-                maxLines: 2,
-              ),
+              // SizedBox(height: 5.w),
+              // Text(
+              //   videoInfo.title ?? '',
+              //   style: MyTheme.white255_18_M,
+              //   maxLines: 2,
+              // ),
               Offstage(
                   offstage: videoInfo.intro?.isEmpty ?? false,
-                  child: Padding(
-                      padding: EdgeInsets.only(top: 15.w , bottom: 0),
-                      child: Text(videoInfo.intro ?? '',
-                          style: MyTheme.whiteOpacity614w500))),
+                  child:Text(videoInfo.intro ?? '',
+                          style: MyTheme.whiteOpacity614w500)),
               SizedBox(height: 22.w),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

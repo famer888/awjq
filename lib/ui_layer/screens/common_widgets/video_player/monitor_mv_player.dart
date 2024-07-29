@@ -522,7 +522,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                   children: [
                     GestureDetector(
                       behavior: HitTestBehavior.translucent,
-                      child: const MyImage.asset(
+                      child: widget.isBack ? Container() : const MyImage.asset(
                         MyImagePaths.appNavBackWN,
                         width: 20,
                         height: 20,
@@ -852,47 +852,47 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
           child: Container(
             color: Colors.transparent,
             child: Column(children: [
-              Padding(
-                padding: EdgeInsets.all(8.w),
-                child: Container(
-                  alignment: Alignment.centerLeft,
-                  height: 22,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 22,
-                        height: 22,
-                        decoration: const BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                                color: Color.fromRGBO(0, 0, 0, 0.2),
-                                offset: Offset(0, 0),
-                                blurRadius: 11)
-                          ],
-                        ),
-                        alignment: Alignment.center,
-                        child: GestureDetector(
-                          behavior: HitTestBehavior.translucent,
-                          child: const MyImage.asset(
-                            MyImagePaths.appNavBackWN,
-                            width: 18,
-                            height: 18,
-                            fit: BoxFit.contain,
-                          ),
-                          onTap: () {
-                            context.pop();
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+              // Padding(
+              //   padding: EdgeInsets.all(8.w),
+              //   child: Container(
+              //     alignment: Alignment.centerLeft,
+              //     height: 22,
+              //     child: Row(
+              //       mainAxisAlignment: MainAxisAlignment.start,
+              //       crossAxisAlignment: CrossAxisAlignment.center,
+              //       children: [
+              //         Container(
+              //           width: 22,
+              //           height: 22,
+              //           decoration: const BoxDecoration(
+              //             boxShadow: [
+              //               BoxShadow(
+              //                   color: Color.fromRGBO(0, 0, 0, 0.2),
+              //                   offset: Offset(0, 0),
+              //                   blurRadius: 11)
+              //             ],
+              //           ),
+              //           alignment: Alignment.center,
+              //           child: GestureDetector(
+              //             behavior: HitTestBehavior.translucent,
+              //             child: const MyImage.asset(
+              //               MyImagePaths.appNavBackWN,
+              //               width: 18,
+              //               height: 18,
+              //               fit: BoxFit.contain,
+              //             ),
+              //             onTap: () {
+              //               context.pop();
+              //             },
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // ),
               Padding(
                 padding: const EdgeInsets.only(
-                  top: 20,
+                  top: 40,
                   left: 50,
                   right: 50,
                 ),

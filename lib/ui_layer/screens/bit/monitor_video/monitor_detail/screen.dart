@@ -1,3 +1,5 @@
+import 'package:awjq/ui_layer/screens/common_widgets/my_app_bar.dart';
+
 import '../../../../../domain/async_value.dart';
 import '../../../../../domain/model/live_video_detail_model.dart';
 import '../../../../../domain/model/monitor_model.dart';
@@ -69,10 +71,10 @@ class _MonitorVideoDetailScreenState extends State<MonitorVideoDetailScreen> {
   Widget build(BuildContext context) {
     return ScreenBackground(
       child: SafeArea(
-        bottom: false,
+        // bottom: false,
         child: Scaffold(
-          extendBodyBehindAppBar: true,
-          // appBar: const MyAppBar(),
+          // extendBodyBehindAppBar: true,
+          appBar: MyAppBar(title: _asyncValue.data?.monitor.title, backgroundColor: Colors.black),
           floatingActionButton: GestureDetector(
             onTap: () {
               context.pop();
@@ -177,28 +179,28 @@ class _BodyState extends State<_Body> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildTabBar(),
-        Expanded(
-          child: TabBarView(
-            controller: tabController,
-            children: [
-              KeepAliveWrapper(
-                child: MonitorVideoDetailIntroductionView(
-                  id: widget.id,
-                  data: widget.data,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildTabBar(),
+          Expanded(
+            child: TabBarView(
+              controller: tabController,
+              children: [
+                KeepAliveWrapper(
+                  child: MonitorVideoDetailIntroductionView(
+                    id: widget.id,
+                    data: widget.data,
+                  ),
                 ),
-              ),
-              KeepAliveWrapper(
-                child: MonitorVideoCommentView(
-                  id: widget.id,
+                KeepAliveWrapper(
+                  child: MonitorVideoCommentView(
+                    id: widget.id,
+                  ),
                 ),
-              ),
-            ],
-          ),
-        )
-      ],
+              ],
+            ),
+          )
+        ],
     );
   }
 }
