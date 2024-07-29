@@ -510,64 +510,51 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
           ),
         ),
         Positioned(
-          top: isPortrait ? 0 : 5.w,
-          left: 2.w,
+          top: MediaQuery.of(context).padding.top + 5.w,
+          left: 10,
           child: Builder(builder: (context) {
             if (widget.noBack) {
               return const SizedBox.shrink();
             }
-            return FlickAutoHideChild(
+            return SizedBox(
+              height: 20,
               child: Row(
-                children: [
-                  GestureDetector(
-                    behavior: HitTestBehavior.translucent,
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Color.fromRGBO(0, 0, 0, 0.1),
-                            offset: Offset(0, 0),
-                            spreadRadius: 5,
-                            blurRadius: 5,
-                          )
-                        ],
-                      ),
-                      alignment: Alignment.center,
+                  children: [
+                    GestureDetector(
+                      behavior: HitTestBehavior.translucent,
                       child: const MyImage.asset(
                         MyImagePaths.appNavBackWN,
-                        width: 18,
-                        height: 18,
+                        width: 20,
+                        height: 20,
                         fit: BoxFit.contain,
                       ),
+                      onTap: () {
+                        if (widget.isBack) {
+                          context.pop();
+                        } else {
+                          controlManager.toggleFullscreen();
+                        }
+                      },
                     ),
-                    onTap: () {
-                      if (widget.isBack) {
-                        context.pop();
-                      } else {
-                        controlManager.toggleFullscreen();
-                      }
-                    },
-                  ),
-                  Text(isPortrait ? '' : (widget.info?.title ?? ''),
-                      style: MyTheme.white20medium),
-                ],
-              ),
+                    FlickAutoHideChild(
+                      child: Text(isPortrait ? '' : (widget.info?.title ?? ''),
+                          style: MyTheme.white20medium),
+                    ),
+                  ],
+                ),
             );
           }),
         ),
         Positioned(
           bottom: isPortrait ? 10 : 13,
-          left: isPortrait ? 0 : 10,
+          left: 5,
           child: FlickAutoHideChild(
             child: widget.isPlayback
                 ? const SizedBox.shrink()
                 : Row(
                     children: [
                       const SizedBox(
-                        width: 150,
+                        width: 130,
                         child: ChinaTimeWidget(
                             textStyle:
                                 TextStyle(color: Colors.white, fontSize: 11)),
@@ -643,8 +630,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
           child: FlickAutoHideChild(
             child: Column(
               children: [
-                (kIsWeb || !widget.isPlayback)
-                    ? Container()
+                kIsWeb ? Container()
                     : FlickFullScreenToggle(
                         enterFullScreenChild: const MyImage.asset(
                           MyImagePaths.appFullScreen,

@@ -877,30 +877,33 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
             if (widget.noBack) {
               return const SizedBox.shrink();
             }
-            return FlickAutoHideChild(
+            return SizedBox(height: 20,
               child: Row(
-                children: [
-                  GestureDetector(
-                    behavior: HitTestBehavior.translucent,
-                    child: const MyImage.asset(
-                        MyImagePaths.appNavBackWN,
-                        width: 20,
-                        height: 20,
-                        fit: BoxFit.contain,
-                      ),
-                    onTap: () {
-                      _hideKeyboard(context);
-                      if (widget.isBack) {
-                        context.pop();
-                      } else {
-                        controlManager.toggleFullscreen();
-                      }
-                    },
-                  ),
-                  Text(isPortrait ? '' : (widget.info?.username ?? ''),
-                      style: MyTheme.white20medium),
-                ],
-              ),
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      child: const MyImage.asset(
+                          MyImagePaths.appNavBackWN,
+                          width: 20,
+                          height: 20,
+                          fit: BoxFit.contain,
+                        ),
+                      onTap: () {
+                        _hideKeyboard(context);
+                        if (widget.isBack) {
+                          context.pop();
+                        } else {
+                          controlManager.toggleFullscreen();
+                        }
+                      },
+                    ),
+                    FlickAutoHideChild(
+                      child: Text(isPortrait ? '' : (widget.info?.username ?? ''),
+                          style: MyTheme.white20medium),
+                    ),
+                  ],
+                ),
             );
           }),
         ),
