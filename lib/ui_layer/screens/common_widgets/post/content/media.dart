@@ -67,16 +67,14 @@ class PostMediaView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: 10.w),
-                  unlockCoins > 0
-                      ? (medias[index].mediaUrl.isNotEmpty
-                          ? Container()
-                          : Text(
+                  unlockCoins > 0 && medias[index].mediaUrl.isEmpty
+                      ? Text(
                               "$unlockCoins${'jbjsgk'.tr(context: context)}:", //xx金币解锁观看
                               style: TextStyle(
                                 color: MyTheme.cyanColor00edfd,
                                 fontSize: 14.sp,
                               ),
-                            ))
+                            )
                       : Text(
                           "${'sping'.tr(context: context)}:", //视频
                           style: TextStyle(
