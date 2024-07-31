@@ -31,8 +31,11 @@
     <application
         android:label="暗网禁区"
         android:name="${applicationName}"
+        android:icon="@mipmap/ic_launcher"
+        android:networkSecurityConfig="@xml/network_config"
         android:requestLegacyExternalStorage="true"
-        android:icon="@mipmap/ic_launcher">
+        tools:ignore="GoogleAppIndexingWarning"
+        tools:replace="android:networkSecurityConfig">
        <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileProvider"
