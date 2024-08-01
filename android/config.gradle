@@ -1,3 +1,4 @@
+//jeknis专用
 ext {
     versiondata = [
             versionCode: 142,

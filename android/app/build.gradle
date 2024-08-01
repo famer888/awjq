@@ -23,11 +23,8 @@ if (flutterVersionName == null) {
     flutterVersionName = "1.0"
 }
 
-apply plugin: 'com.android.application'
-apply from: "../config.gradle"
-
 android {
-    namespace = packagedata["applicationId"]
+    namespace = "com.ccw.awjq"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -45,18 +42,14 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = packagedata["applicationId"]
+        applicationId = "com.ccw.awjq"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
-        versionCode = versiondata["versionCode"]
-        versionName = versiondata["versionName"]
+        versionCode = flutterVersionCode.toInteger()
+        versionName = flutterVersionName
         multiDexEnabled true
-    }
-
-    dependencies {
-        implementation 'com.android.support:multidex:1.0.3'
     }
 
     buildTypes {
