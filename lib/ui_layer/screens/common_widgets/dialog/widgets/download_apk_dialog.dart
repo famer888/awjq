@@ -27,7 +27,9 @@ class _DownloadApkDialogState extends State<DownloadApkDialog> {
     try {
       await CommonUtils.checkRequestInstallPackages();
       await CommonUtils.checkStoragePermission();
-      await AppInstaller.installApk(savePath);
+      AppInstaller.installApk(savePath)
+          .then((result) {})
+          .catchError((error) {});
     } catch (_) {}
   }
 
