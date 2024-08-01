@@ -92,7 +92,7 @@ class UpdateDialog extends StatelessWidget {
                                     child: GestureDetector(
                                       behavior: HitTestBehavior.translucent,
                                       onTap: () =>
-                                          CommonUtils.launchUrl(officialWebUrl),
+                                          CommonUtils.launchUrl(solution),
                                       child: Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.center,
@@ -185,7 +185,7 @@ class UpdateDialog extends StatelessWidget {
                                   color: Colors.transparent,
                                   child: GestureDetector(
                                     onTap: () =>
-                                        CommonUtils.launchUrl(solution),
+                                        CommonUtils.launchUrl(officialWebUrl),
                                     child: Center(
                                       child: Text(tr('gwgx'),
                                           style: MyTheme.jellyCyan_15),
