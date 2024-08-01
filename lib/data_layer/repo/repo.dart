@@ -194,6 +194,9 @@ abstract class _BaseAppRepo implements AppDomain {
   Json _appInfo = {};
 
   @override
+  Json get info => _appInfo;
+
+  @override
   CacheDomain get cache => _cacheManager;
 
   Future<void> init() async {

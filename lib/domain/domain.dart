@@ -1,3 +1,5 @@
+import 'type_def.dart';
+
 import 'remote_domain/domain.dart';
 import 'model/home_data_model.dart';
 export 'remote_domain/domains/account.dart';
@@ -20,6 +22,7 @@ abstract class AppDomain implements LocaleDomain, RemoteDomain {}
 
 abstract class LocaleDomain {
   CacheDomain get cache;
+  Json get info;
 }
 
 abstract class CacheDomain

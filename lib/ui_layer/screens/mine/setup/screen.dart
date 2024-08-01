@@ -123,6 +123,7 @@ class _MineSetupScreenState extends State<MineSetupScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final version = context.read<AppDomain>().info["version"].toString();
     return ScreenBackground(
         child: Scaffold(
             appBar: MyAppBar(
@@ -179,7 +180,7 @@ class _MineSetupScreenState extends State<MineSetupScreen> {
                       const SetupItemDivider(),
                       SetupItem(
                         title: 'bbgx'.tr(context: context),
-                        subTitle: userNotifier.member.appVersion,
+                        subTitle: version,
                       ),
                       const SetupItemDivider(),
                       const SizedBox(
