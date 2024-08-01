@@ -196,7 +196,7 @@ class _IntroductionViewState extends State<IntroductionView> {
                                       ),
                                     ),
                                     SizedBox(
-                                      height: 8.w,
+                                      height: 46.w,
                                     ),
                                     Text(
                                       'ktvkpyp'.tr(),
@@ -206,9 +206,6 @@ class _IntroductionViewState extends State<IntroductionView> {
                                         fontWeight: FontWeight.w400,
                                       ),
                                     ),
-                                    SizedBox(
-                                      height: 51.w,
-                                    )
                                   ],
                                 ),
                               ),

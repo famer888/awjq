@@ -36,7 +36,7 @@ class _OriginalEnterScreenState extends State<OriginalEnterScreen> {
             Positioned(
               left: 70.w,
               right: 70.w,
-              bottom: 200.w,
+              bottom: 220.w,
               child: Column(
                 children: [
                   Text(
