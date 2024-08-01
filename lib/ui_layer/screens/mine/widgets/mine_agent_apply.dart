@@ -23,6 +23,36 @@ class _MineAgentApplyViewState extends State<MineAgentApplyView> {
   final _controller = TextEditingController();
   late final config = context.read<HomeConfigNotifier>();
 
+  _applyAgent() async {
+    String contack = _controller?.text ?? '';
+    MyToast.showLoading();
+
+    ///代理 申请代理
+// Future<ResponseModel<dynamic>?> applyProxyWithContact(String contact) async {
+//   try {
+//     Response<dynamic> res =
+//         await NetworkHttp.post('/api/proxy/apply', data: {'contact': contact});
+
+//     return ResponseModel<dynamic>.fromJson(res.data, ((json) => json));
+//   } catch (e) {
+//     return null;
+//   }
+// }
+    // applyProxyWithContact(contack).then((value) {
+    //   if (value?.status == 1) {
+    //     Utils.showText(value?.msg ?? '', call: () {
+    //       reqUserInfo(context).then((value) => context.pop());
+    //     });
+    //   } else {
+    //     Utils.showText(value?.msg ?? '', call: () {
+    //       Future.delayed(const Duration(milliseconds: 100), () {
+    //         context.pop();
+    //       });
+    //     });
+    //   }
+    // });
+  }
+
   _askApplyAgent() {
     final text = _controller.text;
     if (text.isEmpty) {
@@ -35,7 +65,7 @@ class _MineAgentApplyViewState extends State<MineAgentApplyView> {
         child: RegularDialog(
           title: 'ts'.tr(context: context),
           buttonText: 'qd'.tr(context: context),
-          confirmOnTap: () {},
+          confirmOnTap: _applyAgent,
           cancelText: 'qx'.tr(context: context),
           content: Text(
             'sqdlm'.tr(context: context),
