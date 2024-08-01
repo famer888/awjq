@@ -149,7 +149,7 @@ class _ShortvMvPlayerState extends State<ShortvMvPlayer> with NVideoURLMinxin {
                 videoFit: BoxFit.contain,
                 controls: SinkPortraitLandWidget(
                   info: widget.info,
-                  noBack: true,
+                  noBack: false,
                   closeBarrage: (flag) {
                     opened = flag;
                     if (mounted) setState(() {});
@@ -164,7 +164,7 @@ class _ShortvMvPlayerState extends State<ShortvMvPlayer> with NVideoURLMinxin {
     Member member = context.read<UserNotifier>().member;
     bool isInsufficient = member.money < (widget.info.coins!);
     if (goby && !isInsufficient) {
-      byVideoRes(member.money - widget.info.coins!); //直接购买
+      byVideoRes(member.money - widget.info.coins!, goby); //直接购买
       return;
     }
     if (widget.info.isfree == 2) {
@@ -181,7 +181,7 @@ class _ShortvMvPlayerState extends State<ShortvMvPlayer> with NVideoURLMinxin {
               if (isInsufficient) {
                 const CoinRechargeRoute().push(context);
               } else {
-                byVideoRes(member.money - widget.info.coins!);
+                byVideoRes(member.money - widget.info.coins!, goby);
               }
             },
             content: DefaultTextStyle(
@@ -241,12 +241,15 @@ class _ShortvMvPlayerState extends State<ShortvMvPlayer> with NVideoURLMinxin {
     }
   }
 
-  Future byVideoRes(int money) async {
+  Future byVideoRes(int money, bool goby) async {
     MyToast.showLoading(text: tr('gmzz'));
     final userNotifier = context.read<UserNotifier>();
     final res =
         await context.read<MvDomain>().buyVideo(id: widget.info.id ?? 0);
     MyToast.closeAllLoading();
+    if (mounted && !goby) {
+      context.pop();
+    }
     if (res.isValid) {
       userNotifier.setMoney(money: money);
       widget.info.source240 = res.data['url'];
@@ -619,26 +622,28 @@ class _SinkPortraitLandWidgetState extends State<SinkPortraitLandWidget> {
             }
             return GestureDetector(
               behavior: HitTestBehavior.translucent,
-              child: Container(
-                width: 40,
-                height: 40,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Color.fromRGBO(0, 0, 0, 0.1),
-                      offset: Offset(0, 0),
-                      spreadRadius: 5,
-                      blurRadius: 5,
-                    )
-                  ],
-                ),
-                alignment: Alignment.center,
-                child: const MyImage.asset(
-                  MyImagePaths.appNavBackWN,
-                  width: 18,
-                  height: 18,
-                  fit: BoxFit.contain,
+              child: SafeArea(
+                child: Container(
+                  width: 40,
+                  height: 40,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color.fromRGBO(0, 0, 0, 0.1),
+                        offset: Offset(0, 0),
+                        spreadRadius: 5,
+                        blurRadius: 5,
+                      )
+                    ],
+                  ),
+                  alignment: Alignment.center,
+                  child: const MyImage.asset(
+                    MyImagePaths.appNavBackWN,
+                    width: 18,
+                    height: 18,
+                    fit: BoxFit.contain,
+                  ),
                 ),
               ),
               onTap: () {

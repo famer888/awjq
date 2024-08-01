@@ -1,8 +1,12 @@
+import 'package:awjq/ui_layer/notifiers/user_notifier.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../domain/api_validator.dart';
+import '../../../../domain/domain.dart';
 import '../../../notifiers/home_config_notifier.dart';
 import '../../../utils/my_toast.dart';
 import '../../common_widgets/dialog/my_dialog.dart';
@@ -13,6 +17,7 @@ import '../../theme.dart';
 
 class MineAgentApplyView extends StatefulWidget {
   const MineAgentApplyView({super.key, this.applySuccess});
+
   final VoidCallback? applySuccess;
 
   @override
@@ -22,35 +27,29 @@ class MineAgentApplyView extends StatefulWidget {
 class _MineAgentApplyViewState extends State<MineAgentApplyView> {
   final _controller = TextEditingController();
   late final config = context.read<HomeConfigNotifier>();
+  late final domain = context.read<ProxyDomain>();
 
   _applyAgent() async {
-    String contack = _controller?.text ?? '';
+    String contact = _controller.text ?? '';
     MyToast.showLoading();
 
     ///代理 申请代理
-// Future<ResponseModel<dynamic>?> applyProxyWithContact(String contact) async {
-//   try {
-//     Response<dynamic> res =
-//         await NetworkHttp.post('/api/proxy/apply', data: {'contact': contact});
-
-//     return ResponseModel<dynamic>.fromJson(res.data, ((json) => json));
-//   } catch (e) {
-//     return null;
-//   }
-// }
-    // applyProxyWithContact(contack).then((value) {
-    //   if (value?.status == 1) {
-    //     Utils.showText(value?.msg ?? '', call: () {
-    //       reqUserInfo(context).then((value) => context.pop());
-    //     });
-    //   } else {
-    //     Utils.showText(value?.msg ?? '', call: () {
-    //       Future.delayed(const Duration(milliseconds: 100), () {
-    //         context.pop();
-    //       });
-    //     });
-    //   }
-    // });
+    final res = await domain.proxyApply(contact: contact);
+    if (res.isValid) {
+      MyToast.showText(
+          text: res.msg ?? '',
+          onClose: () {
+            context.read<UserNotifier>().init().then((value) => context.pop());
+          });
+    } else {
+      MyToast.showText(
+          text: res.msg ?? '',
+          onClose: () {
+            Future.delayed(const Duration(milliseconds: 100), () {
+              context.pop();
+            });
+          });
+    }
   }
 
   _askApplyAgent() {
