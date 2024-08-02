@@ -1,3 +1,4 @@
+import 'package:awjq/domain/model/media_model.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -16,7 +17,8 @@ class FishCard extends StatelessWidget {
   String get imageUrl {
     var thumb = '';
     if (data.medias?.isNotEmpty ?? false) {
-      thumb = CommonUtils.getThumb(data.medias!.first.toJson());
+      MediaModel model= data.medias!.first;
+      thumb = model.cover;
     }
     return thumb;
   }
