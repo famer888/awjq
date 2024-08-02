@@ -40,14 +40,13 @@ class _MineAgentApplyViewState extends State<MineAgentApplyView> {
 
     if (res.isValid) {
 
-      context.pop();
 
+      MyToast.showText(text: res.msg ?? '');
+
+      await context.read<UserNotifier>().init();
       widget.applySuccess?.call();
-      MyToast.showText(text: res.msg ?? '', onClose: () {
-        if (mounted) {
-          context.read<UserNotifier>().init();
-        }
-      });
+
+      context.pop();
 
     } else {
       MyToast.showText(

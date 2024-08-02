@@ -36,8 +36,9 @@ class AgentView extends StatefulWidget {
 
 class _AgentViewState extends State<AgentView> {
   late final proxyDomain = context.read<ProxyDomain>();
-  late final member = context.read<UserNotifier>().member;
   late final config = context.read<HomeConfigNotifier>().config;
+
+  late Member member;
 
   AsyncValue<ProxyDetail?> _asyncValue = const AsyncInit();
 
@@ -51,6 +52,9 @@ class _AgentViewState extends State<AgentView> {
   }
 
   Future _loadUserAgentData() async {
+
+    member = context.read<UserNotifier>().member;
+
     if (_asyncValue.isLoading) return;
 
     setState(() {
@@ -75,7 +79,6 @@ class _AgentViewState extends State<AgentView> {
         _asyncValue = const AsyncError();
       }
     } else {
-      showApplyPage = false;
       _asyncValue = AsyncData(res.data);
     }
 
@@ -113,7 +116,7 @@ class _AgentViewState extends State<AgentView> {
     return showApplyPage
         ? MineAgentApplyView(
             applySuccess: () {
-              setState(() {});
+              showApplyPage = false;
               _loadUserAgentData();
             },
           )
