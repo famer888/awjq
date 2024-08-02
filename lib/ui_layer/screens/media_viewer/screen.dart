@@ -257,6 +257,7 @@ class _ShortVPlayerState extends State<ShortVPlayer> {
               info: videoInfo,
               needCheckAspectRatio: true,
               noBack: true,
+              needSlide: false,//防止滑动冲突，导致无法滑动到照片页
             );
           });
   }

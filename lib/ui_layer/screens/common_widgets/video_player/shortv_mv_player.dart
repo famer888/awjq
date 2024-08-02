@@ -34,6 +34,7 @@ class ShortvMvPlayer extends StatefulWidget {
     this.noBack = false,
     this.isLive = false,
     this.needCheckAspectRatio = false,
+    this.needSlide = true,
   });
   final VideoData info;
   final bool isLocal;
@@ -42,6 +43,7 @@ class ShortvMvPlayer extends StatefulWidget {
 
   /// 显示全屏按钮是否判断视频长宽比
   final bool needCheckAspectRatio;
+  final bool needSlide;//是否需要滑动快进，默认需要
 
   @override
   State<ShortvMvPlayer> createState() => _ShortvMvPlayerState();
@@ -126,6 +128,7 @@ class _ShortvMvPlayerState extends State<ShortvMvPlayer> with NVideoURLMinxin {
                   isPreview: isPreview,
                   noBack: widget.noBack,
                   needCheckAspectRatio: widget.needCheckAspectRatio,
+                  needSlide: widget.needSlide,
                   shareVp: () {
                     const MineWelfareRoute(index: 1).push(context);
                   },
@@ -149,6 +152,7 @@ class _ShortvMvPlayerState extends State<ShortvMvPlayer> with NVideoURLMinxin {
                 videoFit: BoxFit.contain,
                 controls: SinkPortraitLandWidget(
                   info: widget.info,
+                  needSlide: widget.needSlide,
                   noBack: false,
                   closeBarrage: (flag) {
                     opened = flag;
@@ -275,6 +279,7 @@ class SinkPortraitLandWidget extends StatefulWidget {
     this.nowByKb,
     this.closeBarrage,
     this.needCheckAspectRatio = false,
+    this.needSlide = true,
     required this.noBack,
   });
   final bool isBack;
@@ -291,6 +296,8 @@ class SinkPortraitLandWidget extends StatefulWidget {
 
   /// 显示全屏按钮是否判断视频长宽比
   final bool needCheckAspectRatio;
+  final bool needSlide;//是否需要滑动快进，默认需要
+
   @override
   State<SinkPortraitLandWidget> createState() => _SinkPortraitLandWidgetState();
 }
@@ -372,42 +379,75 @@ class _SinkPortraitLandWidgetState extends State<SinkPortraitLandWidget> {
       children: [
         Positioned.fill(
           child: FlickShowControlsAction(
-            child: FlickSlideVideoAction(
+            child: widget.needSlide ? FlickSlideVideoAction(
               fontSize: 16,
               child: Center(
                 child: flag
                     ? Center(
-                        child: SizedBox(
-                          height: 40,
-                          width: 40,
-                          child: CircularProgressIndicator(
-                            backgroundColor: Colors.grey[400],
-                            strokeWidth: 1.5,
-                          ),
-                        ),
-                      )
+                  child: SizedBox(
+                    height: 40,
+                    width: 40,
+                    child: CircularProgressIndicator(
+                      backgroundColor: Colors.grey[400],
+                      strokeWidth: 1.5,
+                    ),
+                  ),
+                )
                     : const FlickAutoHideChild(
-                        showIfVideoNotInitialized: false,
-                        child: FlickPlayToggle(
-                          replayChild: MyImage.asset(
-                            MyImagePaths.appVReplayN,
-                            width: 40,
-                            height: 40,
-                          ),
-                          playChild: MyImage.asset(
-                            MyImagePaths.appVPlayN,
-                            width: 40,
-                            height: 40,
-                          ),
-                          pauseChild: MyImage.asset(
-                            MyImagePaths.appVPauseN,
-                            width: 40,
-                            height: 40,
-                          ),
-                        ),
-                      ),
+                  showIfVideoNotInitialized: false,
+                  child: FlickPlayToggle(
+                    replayChild: MyImage.asset(
+                      MyImagePaths.appVReplayN,
+                      width: 40,
+                      height: 40,
+                    ),
+                    playChild: MyImage.asset(
+                      MyImagePaths.appVPlayN,
+                      width: 40,
+                      height: 40,
+                    ),
+                    pauseChild: MyImage.asset(
+                      MyImagePaths.appVPauseN,
+                      width: 40,
+                      height: 40,
+                    ),
+                  ),
+                ),
               ),
-            ),
+            ) :
+            FlickSeekVideoAction(child: Center(
+              child: flag
+                  ? Center(
+                child: SizedBox(
+                  height: 40,
+                  width: 40,
+                  child: CircularProgressIndicator(
+                    backgroundColor: Colors.grey[400],
+                    strokeWidth: 1.5,
+                  ),
+                ),
+              )
+                  : const FlickAutoHideChild(
+                showIfVideoNotInitialized: false,
+                child: FlickPlayToggle(
+                  replayChild: MyImage.asset(
+                    MyImagePaths.appVReplayN,
+                    width: 40,
+                    height: 40,
+                  ),
+                  playChild: MyImage.asset(
+                    MyImagePaths.appVPlayN,
+                    width: 40,
+                    height: 40,
+                  ),
+                  pauseChild: MyImage.asset(
+                    MyImagePaths.appVPauseN,
+                    width: 40,
+                    height: 40,
+                  ),
+                ),
+              ),
+            )),
           ),
         ),
         FlickAutoHideChild(
@@ -623,6 +663,7 @@ class _SinkPortraitLandWidgetState extends State<SinkPortraitLandWidget> {
             return GestureDetector(
               behavior: HitTestBehavior.translucent,
               child: SafeArea(
+                top: false,
                 child: Container(
                   width: 40,
                   height: 40,
