@@ -61,6 +61,7 @@ class _MineSetupScreenState extends State<MineSetupScreen> {
   Future<void> _clearCache() async {
     await userDomain.clearCached();
     if (kIsWeb) {
+      PaintingBinding.instance.imageCache.clear();
       MyToast.showText(text: 'qhcg'.tr());
     } else {
       await cache.clearImageCacheIfNeed(force: true);
@@ -70,6 +71,7 @@ class _MineSetupScreenState extends State<MineSetupScreen> {
 
   Future<void> _logOut() async {
     MyToast.showLoading();
+    await userDomain.clearCached();
     await userNotifier.logout();
     MyToast.closeAllLoading();
 

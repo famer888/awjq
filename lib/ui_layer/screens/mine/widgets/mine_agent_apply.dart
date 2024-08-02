@@ -35,12 +35,20 @@ class _MineAgentApplyViewState extends State<MineAgentApplyView> {
 
     ///代理 申请代理
     final res = await domain.proxyApply(contact: contact);
+
+    MyToast.closeAllLoading();
+
     if (res.isValid) {
-      MyToast.showText(
-          text: res.msg ?? '',
-          onClose: () {
-            context.read<UserNotifier>().init().then((value) => context.pop());
-          });
+
+      context.pop();
+
+      widget.applySuccess?.call();
+      MyToast.showText(text: res.msg ?? '', onClose: () {
+        if (mounted) {
+          context.read<UserNotifier>().init();
+        }
+      });
+
     } else {
       MyToast.showText(
           text: res.msg ?? '',

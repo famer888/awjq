@@ -75,6 +75,7 @@ class _AgentViewState extends State<AgentView> {
         _asyncValue = const AsyncError();
       }
     } else {
+      showApplyPage = false;
       _asyncValue = AsyncData(res.data);
     }
 
