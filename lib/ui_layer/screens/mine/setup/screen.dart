@@ -258,28 +258,30 @@ class SetupItem extends StatelessWidget {
               title,
               style: MyTheme.black64_15_M,
             ),
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                subTitle != null
-                    ? SizedBox(
-                        width: 100.w,
-                        child: Text(
-                          subTitle!,
-                          style: MyTheme.gray180_14_line,
-                          textAlign: TextAlign.right,
-                        ),
-                      )
-                    : const SizedBox.shrink(),
-                SizedBox(
-                  width: 3.5.w,
-                ),
-                MyImage.asset(
-                  MyImagePaths.appMineRightArrow,
-                  width: 25.w,
-                  height: 25.w,
-                )
-              ],
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  subTitle != null
+                      ? SizedBox(
+                          child: Text(
+                            subTitle!,
+                            style: MyTheme.gray180_14_line,
+                            textAlign: TextAlign.right,
+                          ),
+                        )
+                      : const SizedBox.shrink(),
+                  SizedBox(
+                    width: 3.5.w,
+                  ),
+                  MyImage.asset(
+                    MyImagePaths.appMineRightArrow,
+                    width: 25.w,
+                    height: 25.w,
+                  )
+                ],
+              ),
             )
           ],
         ),
