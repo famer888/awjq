@@ -123,40 +123,6 @@ class MyImage extends StatelessWidget {
           final url =
               CommonUtils.clipImageUrl(src, inputWidth: constraints.maxWidth);
 
-          if (kIsWeb) {
-            return Image.network(
-              url,
-              width: width,
-              height: height,
-              fit: fit,
-              frameBuilder: placeHolder == null
-                  ? null
-                  : (context, child, frame, bool wasSynchronouslyLoaded) {
-                      if (wasSynchronouslyLoaded) {
-                        return child;
-                      }
-                      if (frame != null) {
-                        return child;
-                      } else {
-                        final w = constraints.maxWidth / 3;
-                        final h = w / 117 * 40;
-                        return Center(
-                          child: Image.asset(
-                            placeHolder!,
-                            width: w,
-                            height: h,
-                          ),
-                        );
-                      }
-                    },
-              errorBuilder: (BuildContext context,
-                  Object error,
-                  StackTrace? stackTrace) {
-                return Container();//todo: 图片请求出错时可在此设置异常图片显示
-              },
-            );
-          }
-
           final img = FadeInImage.memoryNetwork(
             width: width,
             height: height,
@@ -195,6 +161,7 @@ class MyImage extends StatelessWidget {
           );
         }),
     };
+
     if (backgroundColor case final color?) {
       imageWidget = ColoredBox(color: color, child: imageWidget);
     }
