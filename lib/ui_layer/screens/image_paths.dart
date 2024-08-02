@@ -158,5 +158,6 @@ class MyImagePaths {
   static const appMonitorShare = './assets/images/app_monitor_share.png';
   static const appMonitorZanNormal = './assets/images/app_monitor_zan_n.png';
   static const appMonitorZanSel = './assets/images/app_monitor_zan_s.png';
+  static const appDefualBg = './assets/images/app_defual_bg.png';
 
 }

@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../domain/model/post_model.dart';
 import '../../../router/routes.dart';
 import '../../../utils/common_utils.dart';
+import '../../image_paths.dart';
 import '../../theme.dart';
 import '../my_image.dart';
 
@@ -46,6 +47,7 @@ class FishCard extends StatelessWidget {
                       fit: BoxFit.cover,
                       borderRadius: 4,
                       backgroundColor: MyTheme.imageBgColor,
+                      placeHolder: MyImagePaths.appDefualBg,
                     ),
                     (data.unlockNum ?? 0) > 0
                         ? Positioned(
