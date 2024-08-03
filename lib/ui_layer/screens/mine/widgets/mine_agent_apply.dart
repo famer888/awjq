@@ -30,7 +30,12 @@ class _MineAgentApplyViewState extends State<MineAgentApplyView> {
   late final domain = context.read<ProxyDomain>();
 
   _applyAgent() async {
-    String contact = _controller.text ?? '';
+    String contact = _controller.text;
+    if (contact.isEmpty) {
+      MyToast.showText(text: 'srnr'.tr(context: context));
+      return;
+    }
+
     MyToast.showLoading();
 
     ///代理 申请代理
