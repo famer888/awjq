@@ -2,6 +2,10 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui';
+import 'package:awjq/domain/model/live_model.dart';
+import 'package:awjq/ui_layer/screens/common_widgets/my_image.dart';
+import 'package:awjq/ui_layer/screens/common_widgets/swiper_tips.dart';
+import 'package:awjq/ui_layer/screens/image_paths.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -241,13 +245,96 @@ class CommonUtils {
           if (path == 'vip') {
             //如果是VIP直接进入VIP中心界面
             path = 'mineVipCenter';
+          } else if (path == 'coinRecharge') {
+            path = 'mineCoinRecharge';
           }
-          context.push('/${path}$paramsStr');
+          context.push('/$path$paramsStr');
         }
       } else {
         launchUrl(data['link_url'].trim());
       }
+      return;
     }
+
+    if (data['url_str'] case final url? when url.isNotEmpty) {
+      if (data['redirect_type'] == 1) {
+        final urlList = url.split('??');
+        final Map<String, dynamic> params = {};
+        if (urlList.first == BuildConfig.webViewPathName) {
+          final newUrl = urlList.last.toString().substring(4).trim();
+          if (kIsWeb) {
+            launchUrl(Uri.decodeComponent(newUrl));
+          } else {
+            WebViewRoute(newUrl).push(context);
+          }
+        } else {
+          if (urlList.length > 1 && urlList.last != '') {
+            urlList[1].split('&').forEach((item) {
+              final stringText = item.split('=');
+              params[stringText[0]] =
+              stringText.length > 1 ? stringText[1] : null;
+            });
+          }
+          String paramsStr = '';
+          if (params.values.isNotEmpty) {
+            params.forEach((key, value) {
+              paramsStr += '/${Uri.decodeComponent(value)}';
+            });
+          }
+
+          String path = urlList.first ?? '';
+          if (path == 'vip') {
+            //如果是VIP直接进入VIP中心界面
+            path = 'mineVipCenter';
+          } else if (path == 'coinRecharge') {
+            path = 'mineCoinRecharge';
+          }
+
+          context.push('/$path$paramsStr');
+        }
+      } else {
+        launchUrl(data['url_str'].trim());
+      }
+    }
+
+  }
+
+  /// 跑马灯通知
+  static Widget buildNotifyWidget(List<TipModel> tips) {
+    if (tips.isEmpty) return const SizedBox();
+    return Padding(
+      padding: EdgeInsets.only(left: MyTheme.pagePadding,
+          top: 8.w,
+          right: MyTheme.pagePadding,
+          bottom: 3.w),
+      child: Row(
+        children: [
+          MyImage.asset(MyImagePaths.appBroadcast,
+              width: 25.w, height: 25.w),
+          Expanded(
+            child: Stack(
+              children: [
+                SwiperTips(tips: tips),
+                // Container(
+                //   width: 30.w,
+                //   height: 20.w,
+                //   decoration: const BoxDecoration(
+                //     gradient: LinearGradient(
+                //       colors: [
+                //         Color.fromARGB(255, 0, 0, 1),
+                //         Color.fromARGB(0, 0, 0, 0)
+                //       ],
+                //       begin: Alignment.centerLeft,
+                //       end: Alignment.centerRight,
+                //     ),
+                //   ),
+                // )
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   /// xfile限制图片大小

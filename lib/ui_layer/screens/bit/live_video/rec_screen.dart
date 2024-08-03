@@ -1,3 +1,5 @@
+import 'package:awjq/ui_layer/utils/common_utils.dart';
+
 import '../../../../domain/model/banner_model.dart';
 import '../../../../domain/model/bit_nav_model.dart';
 import '../../../../domain/model/live_model.dart';
@@ -77,32 +79,6 @@ class _RecLiveVideoViewState extends State<RecLiveVideoView> {
   }
 }
 
-/// 跑马灯通知
-Widget _buildNotifyWidget(String marquee) {
-  if (marquee.isEmpty) return const SizedBox();
-  return Container(
-    margin: EdgeInsets.fromLTRB(12.w, 10.w, 12.w, 0),
-    height: 24.w,
-    child: Row(children: [
-      SizedBox(width: 5.w),
-      MyImage.asset(
-        MyImagePaths.appBroadcast,
-        height: 30.w,
-        width: 30.w,
-      ),
-      SizedBox(width: 5.w),
-      Expanded(
-        child: MarqueeWidget(
-          child: Text(
-            marquee,
-            style: MyTheme.white12,
-          ),
-        ),
-      ),
-    ]),
-  );
-}
-
 class _Header extends StatelessWidget {
   const _Header({required this.bannersNotifier, required this.tipsNotifier});
 
@@ -130,7 +106,7 @@ class _Header extends StatelessWidget {
           valueListenable: tipsNotifier,
           builder: (context, tips, child) {
             if (tips.isEmpty) return const SizedBox.shrink();
-            return _buildNotifyWidget(tips.first.title ?? '');
+            return CommonUtils.buildNotifyWidget(tips);
           },
         ),
       ],

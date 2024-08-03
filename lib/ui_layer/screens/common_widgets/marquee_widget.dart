@@ -4,6 +4,7 @@ class MarqueeWidget extends StatefulWidget {
   final Duration pauseDuration, forwardDuration;
   final double scrollSpeed; //滚动速度(时间单位是秒)。
   final Widget child; //子视图。
+  final Function? scrollComplete; //滚动展示完后去上层切换下一个广告数据展示
 
   /// 注: 构造函数入参的默认值必须是常量。
   const MarqueeWidget({
@@ -11,6 +12,7 @@ class MarqueeWidget extends StatefulWidget {
     this.pauseDuration = const Duration(milliseconds: 100),
     this.forwardDuration = const Duration(milliseconds: 3000),
     this.scrollSpeed = 30.0,
+    this.scrollComplete,
     required this.child,
   });
 
@@ -26,8 +28,9 @@ class _MarqueeWidgetState extends State<MarqueeWidget>
 
   @override
   void dispose() {
-    debugPrint('Track_MarqueeView_dispose');
+    // debugPrint('Track_MarqueeView_dispose');
     _validFlag = false;
+    _controller.removeListener(_onScroll); // 移除滚动监听器
     _controller.dispose();
     super.dispose();
   }
@@ -35,7 +38,18 @@ class _MarqueeWidgetState extends State<MarqueeWidget>
   @override
   void initState() {
     super.initState();
+    _controller.addListener(_onScroll);
     scroll();
+  }
+
+  void _onScroll() {
+    if (_controller.hasClients) {
+      // 检查是否滚动到了末尾
+      if (_controller.offset >= _controller.position.maxScrollExtent) {
+        // 滚动到达末尾
+        widget.scrollComplete?.call();
+      }
+    }
   }
 
   @override
@@ -63,7 +77,7 @@ class _MarqueeWidgetState extends State<MarqueeWidget>
 
   void scroll() async {
     while (_validFlag) {
-      debugPrint('Track_MarqueeView_scroll');
+      // debugPrint('Track_MarqueeView_scroll');
       await Future.delayed(widget.pauseDuration);
       if (_boxWidth <= 0) {
         continue;
