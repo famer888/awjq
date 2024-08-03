@@ -42,7 +42,7 @@ class MineShareToUserScreen extends StatefulWidget {
 
 class _MineShareToUserScreenState extends State<MineShareToUserScreen> {
   late final proxyDomain = context.read<ProxyDomain>();
-  late final member = context.read<UserNotifier>().member;
+  late Member member;
 
   AsyncValue<ProxyDetail?> _asyncValue = const AsyncInit();
 
@@ -56,6 +56,9 @@ class _MineShareToUserScreenState extends State<MineShareToUserScreen> {
   }
 
   Future _loadUserAgentData() async {
+
+    member = context.read<UserNotifier>().member;
+
     if (_asyncValue.isLoading) return;
 
     setState(() {
@@ -115,7 +118,7 @@ class _MineShareToUserScreenState extends State<MineShareToUserScreen> {
               ),
               body: MineAgentApplyView(
                 applySuccess: () {
-                  setState(() {});
+                  showApplyPage = false;
                   _loadUserAgentData();
                 },
               ),
