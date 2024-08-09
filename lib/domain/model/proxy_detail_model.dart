@@ -4,8 +4,8 @@ class ProxyDetail {
   final String money;
   final int? level;
   final String? levelStr;
-  final num levelRate;
-  final num allReward;
+  final String levelRate;
+  final String allReward;
   final int? directProxyNum;
   final int? directPayNum;
   final int? directXiaJiDaiLi;
@@ -29,11 +29,11 @@ class ProxyDetail {
     return ProxyDetail(
         today: ProxyRecord.fromJson(json['today']),
         curMonth: ProxyRecord.fromJson(json['curMonth']),
-        money: json['proxy_money'],
+        money: json['proxy_money'].toString(),
         level: json['proxy_level'],
         levelStr: json['proxy_level_str'],
-        levelRate: json['proxy_level_rate'],
-        allReward: json['all_reward'],
+        levelRate: json['proxy_level_rate'].toString(),
+        allReward: json['all_reward'].toString(),
         directProxyNum: json['direct_proxy_num'],
         directPayNum: json['direct_pay_num'],
         directXiaJiDaiLi: json['direct_xiajidaili'],
@@ -43,9 +43,9 @@ class ProxyDetail {
 }
 
 class ProxyRecord {
-  final int reward;
-  final int sell;
-  final int invitedNum;
+  final String reward;
+  final String sell;
+  final String invitedNum;
   ProxyRecord({
     required this.reward,
     required this.sell,
@@ -53,8 +53,8 @@ class ProxyRecord {
   });
   factory ProxyRecord.fromJson(Map<String, dynamic> json) {
     return ProxyRecord(
-        reward: json['reward'],
-        sell: json['sell'],
-        invitedNum: json['invited_num']);
+        reward: json['reward'].toString(),
+        sell: json['sell'].toString(),
+        invitedNum: json['invited_num'].toString());
   }
 }
