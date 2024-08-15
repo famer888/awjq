@@ -75,18 +75,18 @@ class _FixedTopArea extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(right: MyTheme.pagePadding, bottom: 11.w),
+      padding: EdgeInsets.only(right: 13, bottom: 11),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const _SystemNoticeIcon(),
-          SizedBox(width: 20.w),
+          const SizedBox(width: 20),
           GestureDetector(
             onTap: () => const MineSetupRoute().push(context),
-            child: MyImage.asset(
+            child: const MyImage.asset(
               MyImagePaths.appMineSetting,
-              width: 25.w,
+              width: 25,
               fit: BoxFit.fitWidth,
             ),
           )
@@ -111,14 +111,14 @@ class _SystemNoticeIcon extends StatelessWidget {
                   notifier.systemNotice?.feedCount != 0)),
           builder: (context, value, _) {
             return value
-                ? MyImage.asset(
+                ? const MyImage.asset(
                     MyImagePaths.appMineMessageHighlight,
-                    width: 25.w,
+                    width: 25,
                     fit: BoxFit.fitWidth,
                   )
-                : MyImage.asset(
+                : const MyImage.asset(
                     MyImagePaths.appMineMessage,
-                    width: 25.w,
+                    width: 25,
                     fit: BoxFit.fitWidth,
                   );
           }),
@@ -135,18 +135,18 @@ class _Body extends StatelessWidget {
       children: [
         const _HeaderInfo(),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
-          child: Column(
+          padding: EdgeInsets.symmetric(horizontal: 13),
+          child: const Column(
             children: [
-              SizedBox(height: 20.w),
-              const _VIPCenter(),
-              SizedBox(height: 15.w),
-              const _FirstMenu(),
-              SizedBox(height: 15.w),
-              const _SecondMenu(),
-              SizedBox(height: 15.w),
-              const _ThirdMenu(),
-              SizedBox(height: 15.w),
+              SizedBox(height: 20),
+              _VIPCenter(),
+              SizedBox(height: 15),
+              _FirstMenu(),
+              SizedBox(height: 15),
+              _SecondMenu(),
+              SizedBox(height: 15),
+              _ThirdMenu(),
+              SizedBox(height: 15),
             ],
           ),
         ),
@@ -163,15 +163,15 @@ class _HeaderInfo extends StatelessWidget {
     return Selector<UserNotifier, Member>(
       selector: (_, config) => config.member,
       builder: (context, member, child) => Padding(
-        padding: EdgeInsets.only(left: MyTheme.pagePadding),
+        padding: EdgeInsets.only(left: 13),
         child: Row(
           children: [
             MyAvatar(
               thumb: member.thumb,
               margin: 2,
-              size: 56.w,
+              size: 56,
             ),
-            SizedBox(width: 5.w),
+            const SizedBox(width: 5),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -181,21 +181,21 @@ class _HeaderInfo extends StatelessWidget {
                       member.nickname,
                       style: MyTheme.white18bold,
                     ),
-                    SizedBox(width: 3.w),
+                    const SizedBox(width: 3),
                     if (member.agent == 1)
-                      Icon(
+                      const Icon(
                         Icons.verified_sharp,
-                        size: 17.w,
-                        color: const Color.fromRGBO(247, 208, 93, 1),
+                        size: 17,
+                        color: Color.fromRGBO(247, 208, 93, 1),
                       ),
                   ],
                 ),
-                SizedBox(height: 9.5.w),
+                const SizedBox(height: 9.5),
                 Row(
                   children: [
                     if (member.vipLevel.isVip())
                       Padding(
-                        padding: EdgeInsets.only(right: 12.w),
+                        padding: const EdgeInsets.only(right: 12),
                         child: MemberVipWidget(
                           showText: member.vipStr,
                         ),
@@ -217,13 +217,13 @@ class _HeaderInfo extends StatelessWidget {
                   : GestureDetector(
                       onTap: () => const LoginRoute().push(context),
                       child: Container(
-                        width: 70.w,
-                        height: 32.w,
-                        decoration: BoxDecoration(
-                          color: const Color.fromRGBO(35, 38, 46, 1),
+                        width: 70,
+                        height: 32,
+                        decoration: const BoxDecoration(
+                          color: Color.fromRGBO(35, 38, 46, 1),
                           borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(16.w),
-                            bottomLeft: Radius.circular(16.w),
+                            topLeft: Radius.circular(16),
+                            bottomLeft: Radius.circular(16),
                           ),
                         ),
                         child: Center(
@@ -232,14 +232,14 @@ class _HeaderInfo extends StatelessWidget {
                             children: [
                               Text(
                                 tr('dl'),
-                                style: TextStyle(
-                                  color: const Color.fromRGBO(200, 198, 248, 1),
-                                  fontSize: 14.w,
+                                style: const TextStyle(
+                                  color: Color.fromRGBO(200, 198, 248, 1),
+                                  fontSize: 14,
                                 ),
                               ),
-                              Icon(
+                              const Icon(
                                 Icons.arrow_forward_ios,
-                                size: 14.w,
+                                size: 14,
                                 color: const Color.fromRGBO(200, 198, 248, 1),
                               )
                             ],
@@ -285,7 +285,7 @@ class _VIPCenterState extends State<_VIPCenter> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 65.w,
+      height: 65,
       child: GestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () => const VipCenterRoute().push(context),
@@ -299,7 +299,7 @@ class _VIPCenterState extends State<_VIPCenter> {
             ),
             Positioned.fill(
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
+                padding: EdgeInsets.symmetric(horizontal: 13),
                 child: Selector<UserNotifier, Member>(
                   selector: (_, userNotifier) => userNotifier.member,
                   builder: (context, member, child) {
@@ -314,37 +314,37 @@ class _VIPCenterState extends State<_VIPCenter> {
                         Text(
                           config.tipsShareText ??
                               'cgyqsqt'.tr(context: context),
-                          style: TextStyle(
-                            color: const Color.fromRGBO(200, 198, 248, 1),
-                            fontSize: 14.sp,
+                          style: const TextStyle(
+                            color: Color.fromRGBO(200, 198, 248, 1),
+                            fontSize: 14,
                             fontWeight: FontWeight.w600,
                           ),
                         ),
-                        SizedBox(height: 10.w),
+                        const SizedBox(height: 10),
                         Row(
                           children: [
                             Text(
                               member.vipStr,
-                              style: TextStyle(
-                                color: const Color.fromRGBO(255, 255, 255, 1.0),
-                                fontSize: 12.sp,
+                              style: const TextStyle(
+                                color: Color.fromRGBO(255, 255, 255, 1.0),
+                                fontSize: 12,
                               ),
                               maxLines: 1,
                             ),
                             Text(
                               subTitle,
-                              style: TextStyle(
-                                color: const Color.fromRGBO(255, 255, 255, 1.0),
-                                fontSize: 12.sp,
+                              style: const TextStyle(
+                                color: Color.fromRGBO(255, 255, 255, 1.0),
+                                fontSize: 12,
                               ),
                               maxLines: 1,
                             ),
-                            SizedBox(width: 5.w),
+                            const SizedBox(width: 5),
                             Text(
                               "${'syxzcs'.tr(context: context)}${member.videoDownloadValue}",
-                              style: TextStyle(
-                                color: const Color.fromRGBO(255, 255, 255, 1.0),
-                                fontSize: 12.sp,
+                              style: const TextStyle(
+                                color: Color.fromRGBO(255, 255, 255, 1.0),
+                                fontSize: 12,
                               ),
                               maxLines: 1,
                             ),
@@ -372,7 +372,7 @@ class _FirstMenu extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       crossAxisCount: 3,
-      crossAxisSpacing: 10.w,
+      crossAxisSpacing: 10,
       addAutomaticKeepAlives: false,
       addRepaintBoundaries: false,
       children: [
@@ -428,7 +428,7 @@ class _FirstMenuCard extends StatelessWidget {
             height: double.infinity,
           ),
           Positioned(
-            bottom: 10.w,
+            bottom: 10,
             left: 0,
             right: 0,
             child: Column(
@@ -437,17 +437,17 @@ class _FirstMenuCard extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: TextStyle(
-                    color: const Color.fromRGBO(200, 198, 248, 1),
-                    fontSize: 12.sp,
+                  style: const TextStyle(
+                    color: Color.fromRGBO(200, 198, 248, 1),
+                    fontSize: 12,
                   ),
                 ),
-                SizedBox(height: 5.w),
+                const SizedBox(height: 5),
                 Text(
                   subTitle,
-                  style: TextStyle(
-                    color: const Color.fromRGBO(255, 255, 255, 1.0),
-                    fontSize: 12.sp,
+                  style: const TextStyle(
+                    color: Color.fromRGBO(255, 255, 255, 1.0),
+                    fontSize: 12,
                   ),
                 ),
               ],
@@ -489,11 +489,11 @@ class _SecondMenu extends StatelessWidget {
 
     return Container(
         height: 72,
-        decoration: BoxDecoration(
-          color: const Color.fromRGBO(255, 255, 255, 0.03),
-          borderRadius: BorderRadius.all(Radius.circular(8.w)),
+        decoration: const BoxDecoration(
+          color: Color.fromRGBO(255, 255, 255, 0.03),
+          borderRadius: BorderRadius.all(Radius.circular(8)),
         ),
-        padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
+        padding: EdgeInsets.symmetric(horizontal: 13),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -506,15 +506,15 @@ class _SecondMenu extends StatelessWidget {
                   children: [
                     MyImage.asset(
                       data.iconName,
-                      width: 30.w,
-                      height: 26.w,
+                      width: 30,
+                      height: 26,
                     ),
-                    SizedBox(height: 5.w),
+                    const SizedBox(height: 5),
                     Text(
                       data.title,
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        color: const Color.fromRGBO(255, 255, 255, 1.0),
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Color.fromRGBO(255, 255, 255, 1.0),
                       ),
                     )
                   ],
@@ -570,7 +570,7 @@ class _ThirdMenu extends StatelessWidget {
       ),
     ];
     return Container(
-        padding: EdgeInsets.symmetric(horizontal: 27.5.w, vertical: 10.w),
+        padding: const EdgeInsets.symmetric(horizontal: 27.5, vertical: 10),
         decoration: BoxDecoration(
           gradient: const LinearGradient(
             colors: [
@@ -580,7 +580,7 @@ class _ThirdMenu extends StatelessWidget {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
-          borderRadius: BorderRadius.circular(5.w),
+          borderRadius: BorderRadius.circular(5),
         ),
         child: ListView(
           shrinkWrap: true,
@@ -593,7 +593,7 @@ class _ThirdMenu extends StatelessWidget {
                 behavior: HitTestBehavior.translucent,
                 onTap: data.onTap,
                 child: SizedBox(
-                  height: 44.w,
+                  height: 44,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -603,10 +603,10 @@ class _ThirdMenu extends StatelessWidget {
                         children: [
                           MyImage.asset(
                             data.iconName,
-                            width: 20.w,
-                            height: 20.w,
+                            width: 20,
+                            height: 20,
                           ),
-                          SizedBox(width: 9.5.w),
+                          const SizedBox(width: 9.5),
                           Text(
                             data.title,
                             overflow: TextOverflow.ellipsis,
@@ -614,10 +614,10 @@ class _ThirdMenu extends StatelessWidget {
                           ),
                         ],
                       ),
-                      MyImage.asset(
+                      const MyImage.asset(
                         MyImagePaths.appMineRightArrow,
-                        width: 10.w,
-                        height: 10.w,
+                        width: 10,
+                        height: 10,
                       )
                     ],
                   ),
