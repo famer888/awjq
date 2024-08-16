@@ -198,13 +198,7 @@ class _HeaderState extends State<_Header> {
                           return;
                         }
                         if (redirectType < 3) {
-                          // if (partsItem.router == 'asmr' || partsItem.router == 'torrentDownload') {
-                          //   eventBus.fire(MyEvent(partsItem.router));
-                          //   return;
-                          // } else if (partsItem.router == 'rankList') {
-                          //   const RankRoute().push(context);
-                          //   return;
-                          // }
+                          AIRoute().push(context);
                           // CommonUtils.openRoute(context, partsItem.toJson());
                         } else {
                           if (partsItem.type == '0') {

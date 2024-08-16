@@ -12,6 +12,8 @@ List<RouteBase> get $appRoutes => [
       $webViewRoute,
       $bitPostDetailRoute,
       $vipCenterRoute,
+      $liveVideoRoute,
+      $aIRoute,
       $coinRechargeRoute,
       $coinDetailRoute,
       $rechargeRecordRoute,
@@ -304,6 +306,53 @@ extension $VipCenterRouteExtension on VipCenterRoute {
 
   String get location => GoRouteData.$location(
         '/mineVipCenter',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $liveVideoRoute => GoRouteData.$route(
+      path: '/liveVideo',
+      parentNavigatorKey: LiveVideoRoute.$parentNavigatorKey,
+      factory: $LiveVideoRouteExtension._fromState,
+    );
+
+extension $LiveVideoRouteExtension on LiveVideoRoute {
+  static LiveVideoRoute _fromState(GoRouterState state) =>
+      const LiveVideoRoute();
+
+  String get location => GoRouteData.$location(
+        '/liveVideo',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $aIRoute => GoRouteData.$route(
+      path: '/ai',
+      parentNavigatorKey: AIRoute.$parentNavigatorKey,
+      factory: $AIRouteExtension._fromState,
+    );
+
+extension $AIRouteExtension on AIRoute {
+  static AIRoute _fromState(GoRouterState state) => const AIRoute();
+
+  String get location => GoRouteData.$location(
+        '/ai',
       );
 
   void go(BuildContext context) => context.go(location);
