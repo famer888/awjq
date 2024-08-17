@@ -119,7 +119,7 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                Text(widget.nickName, style: MyTheme.white18mudium)
+                Text(Uri.decodeComponent(widget.nickName), style: MyTheme.white18mudium)
               ],
             ),
           ),
