@@ -9,8 +9,8 @@ abstract class SignDomain {
   /// VIP积分兑换
   AsyncJson expConvertVIP({required int id});
 
-  /// 新人福利
-  AsyncResult<WelfareTaskModel?> signListTask();
+  /// 新人福利：type为空则返回全部任务，type != ''只返回邀请任务
+  AsyncResult<WelfareTaskModel?> signListTask({String? type});
 
   /// 新人福利 领取
   AsyncResult signListTaskAccept(Map request);

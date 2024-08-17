@@ -198,8 +198,7 @@ class _HeaderState extends State<_Header> {
                           return;
                         }
                         if (redirectType < 3) {
-                          AIRoute().push(context);
-                          // CommonUtils.openRoute(context, partsItem.toJson());
+                          CommonUtils.openRoute(context, partsItem.toJson());
                         } else {
                           if (partsItem.type == '0') {
                             widget.onLinkNavTap(linkUrl);

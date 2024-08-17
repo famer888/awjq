@@ -131,12 +131,12 @@ class _Body extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       children: [
-        const _HeaderInfo(),
+        _HeaderInfo(),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 13),
-          child: const Column(
+          child: Column(
             children: [
               SizedBox(height: 20),
               _VIPCenter(),
@@ -163,7 +163,7 @@ class _HeaderInfo extends StatelessWidget {
     return Selector<UserNotifier, Member>(
       selector: (_, config) => config.member,
       builder: (context, member, child) => Padding(
-        padding: EdgeInsets.only(left: 13),
+        padding: const EdgeInsets.only(left: 13),
         child: Row(
           children: [
             MyAvatar(

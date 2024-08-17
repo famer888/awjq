@@ -96,7 +96,7 @@ class _AgentViewState extends State<AgentView> {
   Future _getTaskData() async {
     late final userNotifier = context.read<UserNotifier>();
     late final signDomain = context.read<SignDomain>();
-    final res = await signDomain.signListTask();//todo：参数需要添加，待修改
+    final res = await signDomain.signListTask(type: 'share');
 
     if (res.data case final data?) {
       userNotifier.setExp(data.exp);

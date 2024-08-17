@@ -1,3 +1,5 @@
+import 'package:awjq/ui_layer/screens/ai/face_swap/screen.dart';
+import 'package:awjq/ui_layer/screens/ai/strip_off/screen.dart';
 import 'package:awjq/ui_layer/screens/common_widgets/my_app_bar.dart';
 import 'package:awjq/ui_layer/screens/common_widgets/screen_background.dart';
 import 'package:awjq/ui_layer/screens/image_paths.dart';
@@ -15,7 +17,7 @@ class HomeAiScreen extends StatefulWidget {
 }
 
 class _HomeAiScreenState extends State<HomeAiScreen> with TickerProviderStateMixin {
-  late final navList = ['AI脱衣', 'AI换脸'];
+  late final navList = ['aity'.tr(), 'aihl'.tr()];
   late final tabController = TabController(length: navList.length, vsync: this);
   @override
   Widget build(BuildContext context) {
@@ -28,10 +30,10 @@ class _HomeAiScreenState extends State<HomeAiScreen> with TickerProviderStateMix
         body: TabBarView(
           controller: tabController,
           children: navList.map((e) {
-            if (e == 'AI脱衣') {
-              return Container();
+            if (e == 'aity'.tr()) {
+              return const StripOffScreen();
             } else {
-              return Container();
+              return const FaceSwapScreen();
             }
           }).toList(),
         ),

@@ -676,6 +676,9 @@ class RelativeDateFormat {
         return '${(months <= 0 ? 1 : months).floor()}$oneMonthAgo';
       } else {
         num years = toYears(delta);
+        if (years > 0.9 && years < 1) {
+          return '12$oneMonthAgo';
+        }
         return '${(years <= 0 ? 1 : years).floor()} + $oneYearAgo';
       }
     }

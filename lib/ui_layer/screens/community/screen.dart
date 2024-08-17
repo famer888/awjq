@@ -183,8 +183,8 @@ class _BodyState extends State<_Body> {
         await _appDomain.reqGetPostNav(type: widget.isFish ? 'fish' : '');
 
     if (widget.isFish) {
-      result.data?.add(CommunityNavModel(id: 10000, title: 'AI脱衣', mask: 0));
-      result.data?.add(CommunityNavModel(id: 10001, title: 'AI换脸', mask: 0));
+      result.data?.add(CommunityNavModel(id: 10000, title: 'aity'.tr(), mask: 0));
+      result.data?.add(CommunityNavModel(id: 10001, title: 'aihl'.tr(), mask: 0));
     }
 
     setState(() {
