@@ -67,6 +67,10 @@ class ChatNotifier extends ChangeNotifier {
     });
   }
 
+  Future closeImWebSocket() async {
+    _imWebSocket?.closeWebSocketConnect();
+  }
+
   Future saveChats() => cache.upsertChats(chats: jsonEncode(chats));
 
   clearChats() {

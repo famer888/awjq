@@ -119,7 +119,8 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                Text(Uri.decodeComponent(widget.nickName), style: MyTheme.white18mudium)
+                Text(Uri.decodeComponent(widget.nickName),
+                    style: MyTheme.white18mudium)
               ],
             ),
           ),
@@ -200,7 +201,7 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
                                   cursorColor: MyTheme.cyanColor00edfd,
                                   textInputAction: TextInputAction.done,
                                   decoration: InputDecoration(
-                                    hintText: 'srhf'.tr(context: context),
+                                    hintText: _homeConfigNotifier.config.imTip ?? 'srhf'.tr(context: context),
                                     hintStyle: MyTheme.gray180_15_M,
                                     contentPadding: EdgeInsets.zero,
                                   ),
@@ -239,6 +240,7 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
 
 class _UserBubble extends StatelessWidget {
   const _UserBubble({required this.item});
+
   final ChatMessage item;
 
   @override
@@ -295,6 +297,7 @@ class _UserBubble extends StatelessWidget {
 
 class _TargetBubble extends StatelessWidget {
   const _TargetBubble({required this.item});
+
   final ChatMessage item;
 
   @override
@@ -354,12 +357,14 @@ class _RichMessage extends StatelessWidget {
     required this.msg,
     required this.status,
   });
+
   static final regExp = RegExp(
     r'(http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?',
     multiLine: true,
   );
   final String msg;
   final int status;
+
   @override
   Widget build(BuildContext context) {
     final isPath = regExp.hasMatch(msg);

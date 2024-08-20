@@ -134,5 +134,9 @@ mixin _User on _BaseAppRepo implements UserDomain {
       _userService.sendInvitation(affCode: affCode).deserialize().guard;
 
   @override
+  AsyncResult imSend({required String type}) =>
+      _userService.imSend(type: type).deserialize().guard;
+
+  @override
   AsyncJson clearCached() => _userService.clearCached();
 }

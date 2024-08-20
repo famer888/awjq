@@ -117,7 +117,8 @@ class _MessageCenterScreenState extends State<MessageCenterScreen> {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            e.touser?.nickname ?? '',
+                                            Uri.decodeComponent(
+                                                e.touser?.nickname ?? ''),
                                             style: MyTheme.white13medium,
                                           ),
                                           SizedBox(height: 9.w),

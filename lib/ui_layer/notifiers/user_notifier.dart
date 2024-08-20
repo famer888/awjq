@@ -102,6 +102,11 @@ class UserNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setFaceCt({required int faceCt}) {
+    _member = _member.copyWith(faceCt: faceCt);
+    notifyListeners();
+  }
+
   void setExp(int? newExp) {
     _member = _member.copyWith(exp: newExp);
     notifyListeners();

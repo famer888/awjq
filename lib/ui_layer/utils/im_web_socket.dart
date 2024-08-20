@@ -61,6 +61,15 @@ class ImWebSocket {
     }
   }
 
+  //退出登录后，主动断开长链接
+  Future closeWebSocketConnect() async {
+    _webSocketChannel?.sink.close();
+    _webSocketSubscription?.cancel();
+    _heartBeatTimer?.cancel();
+    _heartBeatTimer = null;
+    _webSocketStatus = ImWebSocketStatus.disconnected;
+  }
+
   void _onData(dynamic event) async {
     if (event == '\"pong\"') return;
 

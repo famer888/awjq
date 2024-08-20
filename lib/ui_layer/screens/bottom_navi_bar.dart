@@ -16,6 +16,7 @@ import '../../app_config.dart';
 import '../../domain/domain.dart';
 import '../../domain/enum.dart';
 import '../../domain/model/home_data_model.dart';
+import '../notifiers/chat_notifier.dart';
 import '../notifiers/home_config_notifier.dart';
 import '../notifiers/user_notifier.dart';
 import '../router/routes.dart';
@@ -44,6 +45,8 @@ class BottomNaviBar extends StatefulWidget {
 
 class _BottomNaviBarState extends State<BottomNaviBar> {
   late final _userNotifier = context.read<UserNotifier>();
+  late final _chatNotifier = context.read<ChatNotifier>();
+
   late final homeConfigNotifier = context.read<HomeConfigNotifier>();
   late final targetVersion = homeConfigNotifier.homeData.versionMsg;
   late final domain = context.read<AppDomain>();
@@ -67,6 +70,7 @@ class _BottomNaviBarState extends State<BottomNaviBar> {
       if (currentTokenStatus == MyTokenStatus.invalid) {
         MyToast.showText(text: 'dlsx'.tr());
         await _userNotifier.init();
+        await _chatNotifier.closeImWebSocket();
         if (mounted) {
           const LoginRoute().push(context);
         }
