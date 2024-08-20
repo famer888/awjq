@@ -41,9 +41,9 @@ class _BitScreenState extends State<BitScreen> with TickerProviderStateMixin {
           controller: tabController,
           children: navList.map((e) {
             if (e.title == '直播') {
-              return _LiveVideoView(id: e.value);
+              return const LiveVideoContentView();
             } else if (e.title == '监控') {
-              return _MonitorVideoView(id: e.value);
+              return const _MonitorVideoView();
             } else {
               return _BitView(id: e.value);
             }
@@ -156,14 +156,13 @@ class _BitViewState extends State<_BitView> {
   }
 }
 
-class _LiveVideoView extends StatefulWidget {
-  const _LiveVideoView({required this.id});
-  final int id;
+class LiveVideoContentView extends StatefulWidget {
+  const LiveVideoContentView({super.key});
   @override
-  State<_LiveVideoView> createState() => _LiveVideoViewState();
+  State<LiveVideoContentView> createState() => _LiveVideoContentViewState();
 }
 
-class _LiveVideoViewState extends State<_LiveVideoView> with TickerProviderStateMixin {
+class _LiveVideoContentViewState extends State<LiveVideoContentView> with TickerProviderStateMixin {
   late final config = context.read<HomeConfigNotifier>().config;
   late final navList = config.liveTopNav;
   AsyncValue<List<BitNavModel>> _asyncValue = const AsyncInit();
@@ -204,13 +203,12 @@ class _LiveVideoViewState extends State<_LiveVideoView> with TickerProviderState
 }
 
 class _MonitorVideoView extends StatefulWidget {
-  const _MonitorVideoView({required this.id});
-  final int id;
+  const _MonitorVideoView();
   @override
-  State<_MonitorVideoView> createState() => ___MonitorVideoViewState();
+  State<_MonitorVideoView> createState() => _MonitorVideoViewState();
 }
 
-class ___MonitorVideoViewState extends State<_MonitorVideoView> {
+class _MonitorVideoViewState extends State<_MonitorVideoView> {
   late final _appDomain = context.read<SeedDomain>();
   late final config = context.read<HomeConfigNotifier>().config;
   late final navList = config.monitorTopNav;

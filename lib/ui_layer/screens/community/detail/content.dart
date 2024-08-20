@@ -214,7 +214,7 @@ class _ContactViewState extends State<_ContactView> {
                         color: MyTheme.cyanColor00edfd,
                         strokeWidth: 1.w),
                     alignment: Alignment.center,
-                    child: Text(tr('nrycjsck'), style: MyTheme.blue80_14_M),//内容已隐藏，解锁后查看
+                    child: Text(tr('lxfsyyc'), style: MyTheme.blue80_14_M),//联系方式已隐藏，解锁后查看
                   ),
                   SizedBox(height: 10.w),
                   GestureDetector(
@@ -228,7 +228,7 @@ class _ContactViewState extends State<_ContactView> {
                         borderRadius: BorderRadius.circular(4.w),
                       ),
                       child: Text(
-                        '$unlockCoins${tr('jbkqawjy')}',//金币开启暗网交易，点击支付金币解锁
+                        '$unlockCoins${tr('jbjslxfs')}',//金币解锁联系方式，点击支付金币解锁
                         style: MyTheme.white14Medium,
                       ),
                     ),

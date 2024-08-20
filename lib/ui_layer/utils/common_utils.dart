@@ -228,7 +228,8 @@ class CommonUtils {
           }
         } else {
           if (urlList.length > 1 && urlList.last != '') {
-            urlList[1].split('&').forEach((item) {
+            String urlFirstStr = Uri.decodeComponent(urlList[1]);
+            urlFirstStr.split('&').forEach((item) {
               final stringText = item.split('=');
               params[stringText[0]] =
                   stringText.length > 1 ? stringText[1] : null;
@@ -269,7 +270,8 @@ class CommonUtils {
           }
         } else {
           if (urlList.length > 1 && urlList.last != '') {
-            urlList[1].split('&').forEach((item) {
+            String urlFirstStr = Uri.decodeComponent(urlList[1]);
+            urlFirstStr.split('&').forEach((item) {
               final stringText = item.split('=');
               params[stringText[0]] =
               stringText.length > 1 ? stringText[1] : null;
@@ -289,7 +291,6 @@ class CommonUtils {
           } else if (path == 'coinRecharge') {
             path = 'mineCoinRecharge';
           }
-
           context.push('/$path$paramsStr');
         }
       } else {
@@ -675,6 +676,9 @@ class RelativeDateFormat {
         return '${(months <= 0 ? 1 : months).floor()}$oneMonthAgo';
       } else {
         num years = toYears(delta);
+        if (years > 0.9 && years < 1) {
+          return '12$oneMonthAgo';
+        }
         return '${(years <= 0 ? 1 : years).floor()} + $oneYearAgo';
       }
     }

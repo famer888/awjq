@@ -1,3 +1,4 @@
+import 'package:awjq/ui_layer/router/routes.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -139,6 +140,50 @@ class _UserCenterScreenState extends State<UserCenterScreen> {
                               ],
                             ),
                             SizedBox(height: 5.w),
+                            member.uuid == data.uuid
+                                ? const SizedBox.shrink()
+                                : Center(
+                              child: GestureDetector(
+                                behavior: HitTestBehavior.translucent,
+                                onTap: () {
+                                  if ((member.username ?? '').isEmpty) {
+                                    MyToast.showText(
+                                        text: 'zcyhcz'
+                                            .tr(context: context));
+                                    return;
+                                  }
+                                  final uuid = data.uuid!;
+                                  final nick = data.nickname!;
+                                  final url =
+                                  data.thumb?.isNotEmpty == true
+                                      ? data.thumb!
+                                      : ' ';
+                                  ChatMessageRoute(
+                                    nickName: Uri.encodeComponent(nick),
+                                    thumb: Uri.encodeComponent(url),
+                                    toUuid: uuid,
+                                  ).push(context);
+                                },
+                                child: Container(
+                                  height: 24.w,
+                                  width: 80.w,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: MyTheme.cyanColor00edfd,
+                                      width: 0.5.w,
+                                    ),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(2.w),
+                                    ),
+                                  ),
+                                  child: Text(
+                                    'sxta'.tr(context: context),
+                                    style: MyTheme.blue96_13_M,
+                                  ),
+                                ),
+                              ),
+                            )
                           ],
                         )
                       ],

@@ -159,5 +159,7 @@ class MyImagePaths {
   static const appMonitorZanNormal = './assets/images/app_monitor_zan_n.png';
   static const appMonitorZanSel = './assets/images/app_monitor_zan_s.png';
   static const appDefualBg = './assets/images/app_defual_bg.png';
+  static const appGrayDown = './assets/images/app_gray_down.png';
+  static const appGrayUp = './assets/images/app_gray_up.png';
 
 }
