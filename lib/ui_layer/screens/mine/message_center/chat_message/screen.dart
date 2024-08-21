@@ -247,8 +247,7 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
             Container(
               padding: EdgeInsets.only(left: MyTheme.pagePadding),
               color: Colors.white.withOpacity(0.1),
-              child: SafeArea(
-                child: SizedBox(
+              child: SizedBox(
                   height: 50.w,
                   child: Row(
                     children: [
@@ -313,7 +312,6 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
                     ],
                   ),
                 ),
-              ),
             ),
           ],
         ),
