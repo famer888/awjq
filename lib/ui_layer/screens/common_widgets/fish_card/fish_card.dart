@@ -49,7 +49,7 @@ class FishCard extends StatelessWidget {
                       backgroundColor: MyTheme.imageBgColor,
                       placeHolder: MyImagePaths.appDefualBg,
                     ),
-                    (data.unlockNum ?? 0) > 0
+                    (data.unlockNum ?? 0) > 0 && (data.unlockCoins ?? 0) > 0
                         ? Positioned(
                             top: 11.w,
                             left: 0.w,
