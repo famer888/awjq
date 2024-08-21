@@ -1,9 +1,15 @@
+import 'package:awjq/domain/remote_domain/domains/user.dart';
+import 'package:awjq/ui_layer/notifiers/user_notifier.dart';
+import 'package:awjq/ui_layer/router/routes.dart';
+import 'package:awjq/ui_layer/screens/common_widgets/dialog/widgets/regular_dialog.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../../domain/api_validator.dart';
 import '../../../../notifiers/chat_notifier.dart';
 import '../../../../notifiers/home_config_notifier.dart';
 import '../../../../utils/common_utils.dart';
@@ -35,6 +41,9 @@ class ChatMessageScreen extends StatefulWidget {
 class _ChatMessageScreenState extends State<ChatMessageScreen> {
   bool isOnline = false;
   late final _homeConfigNotifier = context.read<HomeConfigNotifier>();
+  late final userNotifier = context.read<UserNotifier>();
+  late final chatNotifier = context.read<ChatNotifier>();
+
   final textEditingController = TextEditingController();
   final focusNode = FocusNode();
 
@@ -57,7 +66,7 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
 
   Future _imagePickerAssets() async {
     if (await CommonUtils.pickImage() case final xFile?) {
-      MyToast.showLoading(text: 'scz'.tr());
+      MyToast.showLoading(text: 'fasz'.tr());
       final uploadImageRes = await _homeConfigNotifier.uploadImage(xFile);
 
       if (uploadImageRes != null && uploadImageRes['code'] == 1) {
@@ -67,17 +76,19 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
 
         localImage.image
             .resolve(const ImageConfiguration())
-            .addListener(ImageStreamListener((info, _) {
+            .addListener(ImageStreamListener((info, _) async {
           String newUrl = '$url??${info.image.width}_${info.image.height}';
           //发送图片
-          context.read<ChatNotifier>().sendMessage(
-                ChatUser(
-                    nickname: widget.nickName,
-                    avatar: widget.thumb,
-                    uuid: widget.toUuid),
-                newUrl,
-                'photos',
-              );
+          // await context.read<ChatNotifier>().sendMessage(
+          //       ChatUser(
+          //           nickname: widget.nickName,
+          //           avatar: widget.thumb,
+          //           uuid: widget.toUuid),
+          //       newUrl,
+          //       'photos',
+          //     );
+          await imsend(newUrl, 'photos');
+
           MyToast.closeAllLoading();
         }));
       } else {
@@ -87,19 +98,92 @@ class _ChatMessageScreenState extends State<ChatMessageScreen> {
     }
   }
 
+  //发长链接消息前需要调接口消耗用户的免费IM次数/金币
+  Future<void> imsend(String content, String msgType) async {
+    final domain = context.read<UserDomain>();
+    final res = await domain.imSend(type: msgType);
+    MyToast.closeAllLoading();
+    if (res.isValid) {
+
+      final imValue = (userNotifier.member.imValue ?? 0) - 1;
+      if (imValue >= 0) {//更新用户剩余次数
+        userNotifier.setIMValue(imValue: imValue);
+      } else {//免费次数不够直接扣金币，刷新用户金币余额
+        userNotifier.setMoney(
+            money: userNotifier.member.money - (_homeConfigNotifier.config.imCoins ?? 0)); //更新用户的金币数量
+      }
+
+      await chatNotifier.sendMessage(
+        ChatUser(
+            nickname: widget.nickName,
+            avatar: widget.thumb,
+            uuid: widget.toUuid),
+        content, msgType);
+    } else {
+      if (res.msg != '您的金币不足') {
+        MyToast.showText(text: res.msg ?? '');
+        return;
+      }
+      showCoinsDialog();
+    }
+  }
+
   Future _sendMsg() async {
     final text = textEditingController.text.trim();
     textEditingController.clear();
     if (text.isNotEmpty) {
-      context.read<ChatNotifier>().sendMessage(
-            ChatUser(
-                nickname: widget.nickName,
-                avatar: widget.thumb,
-                uuid: widget.toUuid),
-            text,
-            'txt',
-          );
+      MyToast.showLoading(text: 'fasz'.tr());
+
+      // await context.read<ChatNotifier>().sendMessage(
+      //       ChatUser(
+      //           nickname: widget.nickName,
+      //           avatar: widget.thumb,
+      //           uuid: widget.toUuid),
+      //       text,
+      //       'txt',
+      //     );
+
+      await imsend(text, 'txt');
+
+      MyToast.closeAllLoading();
+
+    } else {
+      MyToast.showText(text: _homeConfigNotifier.config.imTip ?? 'runr'.tr(context: context));
     }
+  }
+
+  void showCoinsDialog() {
+    final userCoins = userNotifier.member.money;
+    //余额不足，提示金币不足
+    CommonUtils.showDialog(
+      context: context,
+      builder: (context) => RegularDialog(
+        buttonText: 'qwcz'.tr(),
+        cancelText: 'qx'.tr(),
+        title: 'ts'.tr(),
+        content: RichText(
+            textAlign: TextAlign.center,
+            text: TextSpan(children: [
+              TextSpan(
+                text:
+                '${tr('ndyebz')}\n${tr('syjb')}',
+                style: MyTheme.white255_15,
+              ),
+              TextSpan(
+                text: '$userCoins',
+                style: MyTheme.orange247_15,
+              )
+            ])),
+        confirmOnTap: () {
+          //前往充值
+          context.pop();
+          const CoinRechargeRoute().push(context);
+        },
+        cancelOnTap: () {//取消
+          context.pop();
+        },
+      ),
+    );
   }
 
   @override

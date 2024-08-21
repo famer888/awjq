@@ -107,6 +107,11 @@ class UserNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setIMValue({required int imValue}) {
+    _member = _member.copyWith(imValue: imValue);
+    notifyListeners();
+  }
+
   void setExp(int? newExp) {
     _member = _member.copyWith(exp: newExp);
     notifyListeners();

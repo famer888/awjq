@@ -150,7 +150,7 @@ class UserService extends BaseService {
   }) =>
       post('/invitation', data: {'aff_code': affCode});
 
-  /// 发送IM消息前调用，消耗免费次数/金币
+  /// 发送IM消息前调用，消耗免费IM次数/金币
   AsyncJson imSend({
     required String type, //txt : 文字 ， photos：图片
   }) =>

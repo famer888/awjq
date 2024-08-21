@@ -1,11 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:awjq/ui_layer/utils/my_toast.dart';
 import 'package:flutter/material.dart';
+import 'package:universal_html/js.dart';
 
 import '../../domain/domain.dart';
 import '../../domain/model/member_model.dart';
 import '../utils/im_web_socket.dart';
+import 'user_notifier.dart';
 
 class ChatNotifier extends ChangeNotifier {
   ChatNotifier({
@@ -68,7 +71,7 @@ class ChatNotifier extends ChangeNotifier {
   }
 
   Future closeImWebSocket() async {
-    _imWebSocket?.closeWebSocketConnect();
+    _imWebSocket?.webSocketDisconnect();
   }
 
   Future saveChats() => cache.upsertChats(chats: jsonEncode(chats));
