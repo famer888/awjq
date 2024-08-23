@@ -236,10 +236,6 @@ class _BottomNaviBarState extends State<BottomNaviBar> {
               cancelFunc();
               _showAnnouncementDialog();//app推荐下载弹窗展示完后再展示公告
             },
-            confirm: () {
-              cancelFunc();
-              _showAnnouncementDialog();//app推荐下载弹窗展示完后再展示公告
-            },
           ));
     } else {
       _showAnnouncementDialog();//app推荐为空直接展示公告

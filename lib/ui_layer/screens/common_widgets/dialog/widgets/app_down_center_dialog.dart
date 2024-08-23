@@ -13,10 +13,8 @@ class AppDownCenterDialog extends StatelessWidget {
   const AppDownCenterDialog(
       {super.key,
       required this.cancel,
-      required this.confirm
       });
   final VoidCallback cancel;
-  final VoidCallback confirm;
 
   @override
   Widget build(BuildContext context) {
@@ -66,7 +64,6 @@ class AppDownCenterDialog extends StatelessWidget {
                         return GestureDetector(
                           behavior: HitTestBehavior.translucent,
                           onTap: () {
-                            confirm.call();
                             final json = model?.toJson() ?? {};
                             CommonUtils.openRoute(context, json);
                           },
