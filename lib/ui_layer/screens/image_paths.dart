@@ -161,5 +161,6 @@ class MyImagePaths {
   static const appDefualBg = './assets/images/app_defual_bg.png';
   static const appGrayDown = './assets/images/app_gray_down.png';
   static const appGrayUp = './assets/images/app_gray_up.png';
+  static const appDownCenter = './assets/images/app_down_center.png';
 
 }

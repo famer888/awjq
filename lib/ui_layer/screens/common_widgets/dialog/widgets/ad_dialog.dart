@@ -31,10 +31,11 @@ class AdDialog extends StatelessWidget {
             GestureDetector(
               onTap: () => confirm.call(),
               child: RepaintBoundary(
-                child: Image.network(
+                child: MyImage.network(
                   adUrl,
                   width: adWidth?.w,
                   height: adHeight?.w,
+                  borderRadius: 10.w,
                 ),
               ),
             ),
