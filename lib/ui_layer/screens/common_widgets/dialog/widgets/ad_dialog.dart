@@ -21,8 +21,8 @@ class AdDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      behavior: HitTestBehavior.translucent,
-      onTap: () => cancel.call(),
+      behavior: HitTestBehavior.opaque,
+      // onTap: () => cancel.call(),
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
