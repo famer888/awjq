@@ -41,7 +41,12 @@ abstract class RemoteDomain
         LiveDomain,
         MonitorDomain {
   Stream<MyTokenStatus?> get tokenStatusStream;
-  Future<bool> initLine();
+  void initLine({
+    Function? success,
+    Function? failed,
+    Function(List<String>)? lines,
+  });
+  void setBaseURL(String url);
 
   String getOAuthId();
   String getOAuthType();

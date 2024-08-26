@@ -24,17 +24,12 @@ import '../../logger.dart';
 import '../screens/theme.dart';
 import 'my_toast.dart';
 import 'package:universal_html/html.dart' as html;
-import 'package:universal_html/js_util.dart' as js_util;
 import '../../domain/domain.dart';
 import '../router/routes.dart';
 
 class CommonUtils {
   static setStatusBar({bool isLight = false}) {
     if (kIsWeb) {
-      //web平台顶部状态栏颜色设置
-      String hexColor =
-          '#${MyTheme.bgColor.value.toRadixString(16).substring(2).toUpperCase()}';
-      js_util.callMethod(html.window, 'setStatusBarColor', [hexColor]);
     } else if (Platform.isAndroid) {
       SystemUiOverlayStyle systemUiOverlayStyle = SystemUiOverlayStyle(
           statusBarColor: Colors.transparent, //全局设置透明
@@ -274,7 +269,7 @@ class CommonUtils {
             urlFirstStr.split('&').forEach((item) {
               final stringText = item.split('=');
               params[stringText[0]] =
-              stringText.length > 1 ? stringText[1] : null;
+                  stringText.length > 1 ? stringText[1] : null;
             });
           }
           String paramsStr = '';
@@ -297,21 +292,20 @@ class CommonUtils {
         launchUrl(data['url_str'].trim());
       }
     }
-
   }
 
   /// 跑马灯通知
   static Widget buildNotifyWidget(List<TipModel> tips) {
     if (tips.isEmpty) return const SizedBox();
     return Padding(
-      padding: EdgeInsets.only(left: MyTheme.pagePadding,
+      padding: EdgeInsets.only(
+          left: MyTheme.pagePadding,
           top: 8.w,
           right: MyTheme.pagePadding,
           bottom: 3.w),
       child: Row(
         children: [
-          MyImage.asset(MyImagePaths.appBroadcast,
-              width: 25.w, height: 25.w),
+          MyImage.asset(MyImagePaths.appBroadcast, width: 25.w, height: 25.w),
           Expanded(
             child: Stack(
               children: [
@@ -465,17 +459,17 @@ class CommonUtils {
     return ClipRRect(
         borderRadius: BorderRadius.circular(borderRadius ?? 0.w), // 圆角半径
         child: BackdropFilter(
-      filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-      child: GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onTap: () {
-          onTap?.call();
-        },
-        child: Container(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-        ),
-      ),
-    ));
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: () {
+              onTap?.call();
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
+            ),
+          ),
+        ));
   }
 
   static void localStorageImage(String imgUrl) async {
