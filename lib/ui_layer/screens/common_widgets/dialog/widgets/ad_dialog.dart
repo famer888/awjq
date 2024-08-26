@@ -21,8 +21,8 @@ class AdDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      behavior: HitTestBehavior.translucent,
-      onTap: () => cancel.call(),
+      behavior: HitTestBehavior.opaque,
+      // onTap: () => cancel.call(),
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -31,10 +31,11 @@ class AdDialog extends StatelessWidget {
             GestureDetector(
               onTap: () => confirm.call(),
               child: RepaintBoundary(
-                child: Image.network(
+                child: MyImage.network(
                   adUrl,
                   width: adWidth?.w,
                   height: adHeight?.w,
+                  borderRadius: 10.w,
                 ),
               ),
             ),

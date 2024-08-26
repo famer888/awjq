@@ -87,7 +87,9 @@ class CommonUtils {
     if (Uri.tryParse(url) case final uri?) {
       try {
         await url_launcher.launchUrl(uri,
-            mode: url_launcher.LaunchMode.inAppBrowserView);
+            mode: url_launcher.LaunchMode.externalNonBrowserApplication,
+            webOnlyWindowName: '_blank',
+        );
       } catch (_) {
         await url_launcher.launchUrl(uri);
       }

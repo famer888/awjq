@@ -36,6 +36,7 @@ class InputField extends StatelessWidget {
       child: TextField(
         inputFormatters: inputFormatter,
         style: MyTheme.white15,
+        maxLines: null,
         cursorColor: const Color.fromRGBO(255, 255, 255, 1),
         textInputAction: TextInputAction.done,
         controller: controller,
