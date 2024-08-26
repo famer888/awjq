@@ -344,6 +344,7 @@ abstract class _BaseAppRepo implements AppDomain {
       failed?.call();
       return;
     }
+
     //返回所有线路 让用户直链
     var gitLine = await _backupLine();
     if (gitLine.isNotEmpty) linesTemp.add(gitLine);
