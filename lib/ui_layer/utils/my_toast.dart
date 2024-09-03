@@ -35,20 +35,20 @@ class MyToast {
           color: Color.fromRGBO(54, 54, 54, 0.8),
           borderRadius: BorderRadius.all(Radius.circular(4)),
         ),
-        height: 110.w,
-        width: 110.w,
+        height: 110,
+        width: 110,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(
-              width: 40.w,
-              height: 40.w,
+            const SizedBox(
+              width: 40,
+              height: 40,
               child: CircularProgressIndicator(
                 color: MyTheme.jellyCyanColor103224185,
-                strokeWidth: 1.w,
+                strokeWidth: 1,
               ),
             ),
-            SizedBox(height: 10.w),
+            const SizedBox(height: 10),
             Text(text, style: const TextStyle(
                 color: Color.fromRGBO(255, 255, 255, 1),
                 fontSize: 14,

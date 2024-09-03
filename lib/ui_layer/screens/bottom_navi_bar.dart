@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:awjq/ui_layer/screens/common_widgets/dialog/widgets/app_down_center_dialog.dart';
 import 'package:bot_toast/bot_toast.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
@@ -16,6 +17,7 @@ import '../../app_config.dart';
 import '../../domain/domain.dart';
 import '../../domain/enum.dart';
 import '../../domain/model/home_data_model.dart';
+import '../notifiers/chat_notifier.dart';
 import '../notifiers/home_config_notifier.dart';
 import '../notifiers/user_notifier.dart';
 import '../router/routes.dart';
@@ -44,6 +46,8 @@ class BottomNaviBar extends StatefulWidget {
 
 class _BottomNaviBarState extends State<BottomNaviBar> {
   late final _userNotifier = context.read<UserNotifier>();
+  late final _chatNotifier = context.read<ChatNotifier>();
+
   late final homeConfigNotifier = context.read<HomeConfigNotifier>();
   late final targetVersion = homeConfigNotifier.homeData.versionMsg;
   late final domain = context.read<AppDomain>();
@@ -67,6 +71,7 @@ class _BottomNaviBarState extends State<BottomNaviBar> {
       if (currentTokenStatus == MyTokenStatus.invalid) {
         MyToast.showText(text: 'dlsx'.tr());
         await _userNotifier.init();
+        await _chatNotifier.closeImWebSocket();
         if (mounted) {
           const LoginRoute().push(context);
         }
@@ -87,7 +92,8 @@ class _BottomNaviBarState extends State<BottomNaviBar> {
     //处理剪贴板内容
     _getClipboardText();
 
-    _showActivityDialog(index: 0);
+    ///弹窗优先级： 更新-》广告-》推荐APP-》公告
+    _checkUpdateAnnouncement();
 
     if (!kIsWeb) _initDownloadStatus();
   }
@@ -124,7 +130,7 @@ class _BottomNaviBarState extends State<BottomNaviBar> {
                   cancel: () {
                     cancelFunc();
                     if (isLastAd) {
-                      _checkUpdateAnnouncement();
+                      _showAppDownCenterDialog();
                     } else {
                       _showActivityDialog(index: index + 1);
                     }
@@ -132,7 +138,7 @@ class _BottomNaviBarState extends State<BottomNaviBar> {
                   confirm: () {
                     cancelFunc();
                     if (isLastAd) {
-                      _checkUpdateAnnouncement();
+                      _showAppDownCenterDialog();
                     } else {
                       _showActivityDialog(index: index + 1);
                     }
@@ -144,7 +150,7 @@ class _BottomNaviBarState extends State<BottomNaviBar> {
                 ));
       }
     } else {
-      _checkUpdateAnnouncement();
+      _showAppDownCenterDialog();
     }
   }
 
@@ -161,17 +167,20 @@ class _BottomNaviBarState extends State<BottomNaviBar> {
           (int.tryParse(currentVersion) ?? 0);
 
       if (kIsWeb) {
-        if (targetVersion!.mstatus == 1) _showAnnouncementDialog();
+        _showActivityDialog(index: 0);//web端直接去展示广告
         return;
       }
-      if (needUpdate) _showAppUpdateDialog();
+      if (needUpdate) {
+        _showAppUpdateDialog();
+        return;
+      }
 
-      // 无更新 有公告
-      if (targetVersion!.mstatus == 1) _showAnnouncementDialog();
+      _showActivityDialog(index: 0);// 无更新，展示广告
+
     }
   }
 
-  /// 更新公告弹窗
+  /// 更新弹窗
   void _showAppUpdateDialog() {
     final Config config = homeConfigNotifier.config;
 
@@ -179,7 +188,7 @@ class _BottomNaviBarState extends State<BottomNaviBar> {
         toastBuilder: (cancelFunc) => UpdateDialog(
               cancel: () {
                 cancelFunc();
-                if (targetVersion?.must == 2) _showAnnouncementDialog();
+                _showActivityDialog(index: 0);
               },
               confirm: () {
                 cancelFunc();
@@ -216,8 +225,28 @@ class _BottomNaviBarState extends State<BottomNaviBar> {
     CommonUtils.openRoute(context, json);
   }
 
+  ///推荐app下载列表弹窗
+  void _showAppDownCenterDialog() {
+    final  homeData = homeConfigNotifier.homeData;
+
+    if (homeData.noticeApps?.isNotEmpty ?? false) {
+      BotToast.showWidget(
+          toastBuilder: (cancelFunc) => AppDownCenterDialog(
+            cancel: () {
+              cancelFunc();
+              _showAnnouncementDialog();//app推荐下载弹窗展示完后再展示公告
+            },
+          ));
+    } else {
+      _showAnnouncementDialog();//app推荐为空直接展示公告
+    }
+  }
+
   /// 系统公告弹窗
   void _showAnnouncementDialog() {
+
+    if (targetVersion?.mstatus != 1) return;
+
     BotToast.showWidget(
         toastBuilder: (cancelFunc) => AnnouncementDialog(
               cancel: () {

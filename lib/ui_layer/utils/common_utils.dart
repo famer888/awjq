@@ -26,17 +26,12 @@ import '../../logger.dart';
 import '../screens/theme.dart';
 import 'my_toast.dart';
 import 'package:universal_html/html.dart' as html;
-import 'package:universal_html/js_util.dart' as js_util;
 import '../../domain/domain.dart';
 import '../router/routes.dart';
 
 class CommonUtils {
   static setStatusBar({bool isLight = false}) {
     if (kIsWeb) {
-      //web平台顶部状态栏颜色设置
-      String hexColor =
-          '#${MyTheme.bgColor.value.toRadixString(16).substring(2).toUpperCase()}';
-      js_util.callMethod(html.window, 'setStatusBarColor', [hexColor]);
     } else if (Platform.isAndroid) {
       SystemUiOverlayStyle systemUiOverlayStyle = SystemUiOverlayStyle(
           statusBarColor: Colors.transparent, //全局设置透明
@@ -165,8 +160,11 @@ class CommonUtils {
   static launchUrl(String url) async {
     if (Uri.tryParse(url) case final uri?) {
       try {
-        await url_launcher.launchUrl(uri,
-            mode: url_launcher.LaunchMode.inAppBrowserView);
+        await url_launcher.launchUrl(
+          uri,
+          mode: url_launcher.LaunchMode.externalNonBrowserApplication,
+          webOnlyWindowName: '_blank',
+        );
       } catch (_) {
         await url_launcher.launchUrl(uri);
       }
@@ -302,7 +300,8 @@ class CommonUtils {
           }
         } else {
           if (urlList.length > 1 && urlList.last != '') {
-            urlList[1].split('&').forEach((item) {
+            String urlFirstStr = Uri.decodeComponent(urlList[1]);
+            urlFirstStr.split('&').forEach((item) {
               final stringText = item.split('=');
               params[stringText[0]] =
                   stringText.length > 1 ? stringText[1] : null;
@@ -343,7 +342,8 @@ class CommonUtils {
           }
         } else {
           if (urlList.length > 1 && urlList.last != '') {
-            urlList[1].split('&').forEach((item) {
+            String urlFirstStr = Uri.decodeComponent(urlList[1]);
+            urlFirstStr.split('&').forEach((item) {
               final stringText = item.split('=');
               params[stringText[0]] =
                   stringText.length > 1 ? stringText[1] : null;
@@ -363,7 +363,6 @@ class CommonUtils {
           } else if (path == 'coinRecharge') {
             path = 'mineCoinRecharge';
           }
-
           context.push('/$path$paramsStr');
         }
       } else {
@@ -748,6 +747,9 @@ class RelativeDateFormat {
         return '${(months <= 0 ? 1 : months).floor()}$oneMonthAgo';
       } else {
         num years = toYears(delta);
+        if (years > 0.9 && years < 1) {
+          return '12$oneMonthAgo';
+        }
         return '${(years <= 0 ? 1 : years).floor()} + $oneYearAgo';
       }
     }

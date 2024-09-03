@@ -343,7 +343,7 @@ class _FaceSwapSheetViewState extends State<FaceSwapSheetView> {
   }
 
   //素材换脸接口操作
-  Future<void> _faceSwapOptonal(int needCoins, int stripCt) async {
+  Future<void> _faceSwapOptonal(int needCoins, int faceCt) async {
     MyToast.showLoading(text: tr('aiscz'));
     final aiDomain = context.read<AIDomain>();
     final res = await aiDomain.aIChangeFace(
@@ -355,7 +355,7 @@ class _FaceSwapSheetViewState extends State<FaceSwapSheetView> {
     if (res.isValid) {
       if (needCoins == 0) {
         //使用剩余次数不需要金币时更新用户剩余次数
-        userNotifier.setStripCt(stripCt: stripCt - 1);
+        userNotifier.setFaceCt(faceCt: faceCt - 1);
       } else {
         userNotifier.setMoney(
             money: userNotifier.member.money - needCoins); //更新用户的金币数量

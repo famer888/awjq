@@ -1,3 +1,5 @@
+import 'package:awjq/domain/model/welfare_task_model.dart';
+import 'package:awjq/domain/remote_domain/domains/sign.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -45,6 +47,8 @@ class _AgentViewState extends State<AgentView> {
   /// 是否显示申请页面
   bool showApplyPage = false;
 
+  WelfareTaskModel? taskModel;
+
   @override
   void initState() {
     _loadUserAgentData();
@@ -84,6 +88,27 @@ class _AgentViewState extends State<AgentView> {
 
     if (mounted) {
       setState(() {});
+      _getTaskData();
+    }
+  }
+
+  //获取分享任务
+  Future _getTaskData() async {
+    late final userNotifier = context.read<UserNotifier>();
+    late final signDomain = context.read<SignDomain>();
+    final res = await signDomain.signListTask(type: 'share');
+
+    if (res.data case final data?) {
+      userNotifier.setExp(data.exp);
+      taskModel = data;
+    } else {
+      if (res.msg case final msg?) {
+        MyToast.showText(text: msg);
+      }
+    }
+
+    if (mounted) {
+      setState(() {});
     }
   }
 
@@ -111,6 +136,55 @@ class _AgentViewState extends State<AgentView> {
           ],
         ),
       );
+
+  Widget _buildShareView() {
+    if (taskModel == null) {
+      return const SizedBox.shrink();
+    }
+    return Container(
+      padding: EdgeInsets.all(MyTheme.pagePadding),
+      child: Column(
+        children: [
+          SizedBox(height: 30.w),
+          Text('fxfl'.tr(context: context), style: MyTheme.white18mudium),
+          SizedBox(height: 13.w),
+          Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: List.generate(
+                  taskModel?.list?.length ?? 0, // Number of children
+                      (index) => Container(
+                      margin: EdgeInsets.symmetric(vertical: 5.w),
+                      padding:
+                      EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
+                      decoration: BoxDecoration(
+                          color: const Color.fromRGBO(35, 34, 57, 1),
+                          borderRadius: BorderRadius.all(Radius.circular(5.w))),
+                      height: 40.w,
+                      width: double.infinity,
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                                child: Text(taskModel?.list?[index].title ?? '',
+                                    style: MyTheme.white13)),
+                            GestureDetector(onTap: () {
+                              const MineShareToUserRoute().push(context);
+                            },
+                              child: Container(
+                                alignment: Alignment.center,
+                                width: 70.w,
+                                height: 26.w,
+                                decoration: BoxDecoration(
+                                    color: MyTheme.jellyCyanColor103224185,
+                                    borderRadius: BorderRadius.all(Radius.circular(13.w))),
+                                child: Text('ljfx'.tr(context: context), style: MyTheme.white10),
+                              ),
+                            )
+                          ])))),
+        ],
+      ),
+    );
+  }
 
   Widget _buildDataView(ProxyDetail? data) {
     return showApplyPage
@@ -224,6 +298,7 @@ class _AgentViewState extends State<AgentView> {
                     JellyShareCard(proxyDetail: data),
                     SizedBox(height: 31.w),
                     _buildActionView(),
+                    _buildShareView(),
                     SizedBox(height: 30.w),
                     Center(
                       child: Text(

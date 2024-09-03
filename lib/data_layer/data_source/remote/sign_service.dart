@@ -20,7 +20,7 @@ class SignService extends BaseService {
       );
 
   /// 新人福利
-  AsyncJson signListTask() => post('/list_task');
+  AsyncJson signListTask(String? type) => post('/list_task', data: {'type': type});
 
   /// 新人福利 领取
   AsyncJson signListTaskAccept(Map reqData) =>

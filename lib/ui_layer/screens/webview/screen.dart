@@ -18,7 +18,6 @@ class _WebViewScreenState extends State<WebViewScreen> {
   String titleText = '';
   late final controller = WebViewController()
     ..setJavaScriptMode(JavaScriptMode.unrestricted)
-    ..setBackgroundColor(const Color(0x00000000))
     ..setNavigationDelegate(
       NavigationDelegate(
         onProgress: (int progress) {

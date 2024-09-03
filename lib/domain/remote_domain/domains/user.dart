@@ -89,6 +89,8 @@ abstract class UserDomain {
   /// 填写邀请码
   AsyncResult sendInvitation({required String affCode});
 
+  AsyncResult imSend({required String type});
+
   /// 清除缓存
   AsyncJson clearCached();
 }

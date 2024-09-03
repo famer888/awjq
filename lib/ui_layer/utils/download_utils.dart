@@ -152,7 +152,6 @@ class DownloadUtil {
     }
   }
 
-
   Future<bool> getPermission() async {
     final deviceInfo = DeviceInfoPlugin();
     final androidInfo = await deviceInfo.androidInfo;
@@ -188,7 +187,6 @@ class DownloadUtil {
 
     return allPermissionsGranted;
   }
-
 
   // 请求权限
   Future<bool> getAndroid12Permission() async {

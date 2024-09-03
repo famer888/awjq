@@ -1,3 +1,5 @@
+import 'package:awjq/ui_layer/screens/home/live_screen/home_live_screen.dart';
+import 'package:awjq/ui_layer/screens/home/ai_screen/home_ai_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../domain/model/video_detail_model.dart';
@@ -205,6 +207,32 @@ class VipCenterRoute extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const VipCenterScreen();
+  }
+}
+
+@TypedGoRoute<LiveVideoRoute>(path: AppRouterPaths.liveVideo)
+class LiveVideoRoute extends GoRouteData {
+  static final GlobalKey<NavigatorState> $parentNavigatorKey =
+      AppRouter.rootNavigatorKey;
+
+  const LiveVideoRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const HomeLiveScreen();
+  }
+}
+
+@TypedGoRoute<AIRoute>(path: AppRouterPaths.ai)
+class AIRoute extends GoRouteData {
+  static final GlobalKey<NavigatorState> $parentNavigatorKey =
+      AppRouter.rootNavigatorKey;
+
+  const AIRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const HomeAiScreen();
   }
 }
 

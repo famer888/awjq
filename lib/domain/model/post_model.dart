@@ -23,6 +23,7 @@ class PostModel {
   final UserModel? user;
   final String? createdAt;
   final int? unlockNum;
+  final int? unlockCoins;
 
   PostModel(
       {required this.id,
@@ -44,7 +45,9 @@ class PostModel {
       this.isBest,
       this.user,
       this.createdAt,
-      this.unlockNum});
+      this.unlockNum,
+        this.unlockCoins
+      });
 
   factory PostModel.fromJson(Map<String, dynamic> json) => PostModel(
       id: json['id'],
@@ -70,5 +73,7 @@ class PostModel {
           ? UserModel.fromJson(json['user'] as Map<String, dynamic>)
           : null,
       createdAt: json['created_at'],
-      unlockNum: json['unlock_num'] ?? 0);
+      unlockNum: json['unlock_num'] ?? 0,
+      unlockCoins: json['unlock_coins'] ?? 0
+  );
 }

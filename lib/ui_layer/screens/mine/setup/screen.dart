@@ -1,3 +1,4 @@
+import 'package:awjq/ui_layer/notifiers/chat_notifier.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +36,7 @@ class _MineSetupScreenState extends State<MineSetupScreen> {
   late final userDomain = context.read<UserDomain>();
   late final userNotifier = context.read<UserNotifier>();
   late final homeConfigNotifier = context.read<HomeConfigNotifier>();
+  late final chatNotifier = context.read<ChatNotifier>();
 
   void _editNickName({required vipLevel}) {
     if (vipLevel < 1) {
@@ -73,6 +75,7 @@ class _MineSetupScreenState extends State<MineSetupScreen> {
     MyToast.showLoading();
     await userDomain.clearCached();
     await userNotifier.logout();
+    await chatNotifier.closeImWebSocket();
     MyToast.closeAllLoading();
 
     if (mounted) {

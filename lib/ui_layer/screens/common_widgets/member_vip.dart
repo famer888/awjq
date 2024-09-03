@@ -30,7 +30,7 @@ class MemberVipWidget extends StatelessWidget {
         child: Center(
           child: Text(
             text,
-            style: TextStyle(color: Colors.white, fontSize: fontSize),
+            style: TextStyle(color: Colors.white, fontSize: fontSize.sp),
           ),
         ),
       );

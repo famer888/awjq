@@ -297,12 +297,14 @@ class _UserBubble extends StatelessWidget {
                               : SizedBox(
                                   width: 150.w,
                                   height: 150.w,
-                                  child: MyImage.network(item.message, key: UniqueKey()),
+                                  child: MyImage.network(item.message,
+                                      key: UniqueKey()),
                                 )
                           : SizedBox(
                               width: 150.w,
                               height: 150.w,
-                              child: MyImage.network(item.message, key: UniqueKey()),
+                              child: MyImage.network(item.message,
+                                  key: UniqueKey()),
                             ),
                 ),
               ),
@@ -373,12 +375,14 @@ class _ServiceBubble extends StatelessWidget {
                               : SizedBox(
                                   width: 150.w,
                                   height: 150.w,
-                                  child: MyImage.network(item.message, key: UniqueKey()),
+                                  child: MyImage.network(item.message,
+                                      key: UniqueKey()),
                                 )
                           : SizedBox(
                               width: 150.w,
                               height: 150.w,
-                              child: MyImage.network(item.message, key: UniqueKey()),
+                              child: MyImage.network(item.message,
+                                  key: UniqueKey()),
                             ),
                 ),
               )

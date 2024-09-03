@@ -10,8 +10,8 @@ mixin _Sign on _BaseAppRepo implements SignDomain {
       _signService.expConvertVIP(id: id);
 
   @override
-  AsyncResult<WelfareTaskModel> signListTask() => _signService
-      .signListTask()
+  AsyncResult<WelfareTaskModel> signListTask({String? type}) => _signService
+      .signListTask(type)
       .deserializeJsonBy(WelfareTaskModel.fromJson)
       .guard;
 

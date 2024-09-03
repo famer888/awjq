@@ -17,15 +17,19 @@ class JellyShareCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     late final member = context.read<UserNotifier>().member;
-
+    final height = 426.w;
+    final width = 325.w;
     return SizedBox(
-      width: 325.w,
-      height: 354.w,
+      width: width,
+      height: height,
       child: Stack(
         alignment: Alignment.topCenter,
         children: [
-          const MyImage.asset(
+           MyImage.asset(
             MyImagePaths.appMineJellyShareQrBg,
+            fit: BoxFit.fill,
+            width: width,
+            height: height,
           ),
           Column(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -69,7 +73,13 @@ class JellyShareCard extends StatelessWidget {
                   ],
                 ),
               ),
-              SizedBox(height: 15.w),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: 25.w, vertical: 16.w),
+                child: Text('fxtips'.tr(context: context),
+                    style: MyTheme.gray12,
+                    maxLines: 5,
+                    textAlign: TextAlign.center),
+              )
             ],
           )
         ],
