@@ -24,20 +24,16 @@ class PictureRecordPreviewScreen extends StatefulWidget {
 class _PictureRecordPreviewScreenState
     extends State<PictureRecordPreviewScreen> {
 
-  final GlobalKey _globalKey = GlobalKey();
-
   @override
   Widget build(BuildContext context) {
     final sheetHeight = ScreenUtil().screenHeight * 0.8;
 
     return Container(
-        padding: EdgeInsets.only(left: MyTheme.pagePadding, top: MyTheme.pagePadding, right: MyTheme.pagePadding, bottom: 116.w),
+        padding: EdgeInsets.only(left: MyTheme.pagePadding, top: MyTheme.pagePadding, right: MyTheme.pagePadding, bottom: 44.w),
         color: MyTheme.bgColor,
         height: sheetHeight,
         child: Column(children: [
-          Expanded(child: Center(child: RepaintBoundary(
-            key: _globalKey,
-              child: MyImage.network(widget.url, borderRadius: 14.w)))),
+          Expanded(child: MyImage.network(widget.url, fit: BoxFit.fill, borderRadius: 14.w)),
           SizedBox(height: 30.w),
           GestureDetector(
             behavior: HitTestBehavior.translucent,
