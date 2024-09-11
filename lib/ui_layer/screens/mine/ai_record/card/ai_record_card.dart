@@ -193,7 +193,7 @@ class _AIRecordCardState extends State<AIRecordCard> {
 
   //删除换脸记录
   Future<void> deleteFace() async {
-    MyToast.showLoading(text: '删除中...');
+    MyToast.showLoading(text: 'zzscz'.tr(context: context));
     final domain = context.read<AIDomain>();
     final res = await domain.delFace(ids: '${widget.data.id}');
     MyToast.closeAllLoading();
@@ -206,7 +206,7 @@ class _AIRecordCardState extends State<AIRecordCard> {
 
   //删除脱衣记录
   Future<void> deleteStripOff() async {
-    MyToast.showLoading(text: '删除中...');
+    MyToast.showLoading(text: 'zzscz'.tr(context: context));
     final domain = context.read<AIDomain>();
     final res = await domain.delStrip(ids: '${widget.data.id}');
     MyToast.closeAllLoading();
