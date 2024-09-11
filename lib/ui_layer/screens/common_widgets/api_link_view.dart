@@ -313,7 +313,7 @@ class _HeaderState extends State<_Header> {
                       Text(isShowAllTopics ? 'ycgd'.tr(context: context) : 'zkckgd'.tr(context: context), style: MyTheme.white08_12),
                       SizedBox(width: 3.w),
                       MyImage.asset( isShowAllTopics ? MyImagePaths.appGrayUp : MyImagePaths.appGrayDown, width: 10.w, height: 10.w)
-                    ],),
+                    ]),
                 ),
               ),
         ),

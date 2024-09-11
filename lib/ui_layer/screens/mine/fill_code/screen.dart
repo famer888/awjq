@@ -34,6 +34,7 @@ class _MineFillCodeScreenState extends State<MineFillCodeScreen> {
   void onSubmit() async {
     MyToast.showLoading();
     if (myController.text.isEmpty) {
+      MyToast.closeAllLoading();
       MyToast.showText(
         text:
             '${'qing'.tr(context: context)}${'txi'.tr(context: context)}$title',
