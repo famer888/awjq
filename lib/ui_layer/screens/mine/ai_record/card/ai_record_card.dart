@@ -1,8 +1,11 @@
+import 'package:awjq/domain/remote_domain/domains/ai.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
 
+import '../../../../../domain/api_validator.dart';
 import '../../../../../domain/model/ai_model.dart';
 import '../../../../utils/common_utils.dart';
 import '../../../../utils/my_toast.dart';
@@ -21,12 +24,14 @@ class AIRecordCard extends StatefulWidget {
   const AIRecordCard(
       {super.key,
       required this.data,
+      required this.delSucess,
       this.type = AIRecordType.StripOff,
       this.status});
 
   final int? status; // 0-待处理 1-处理中 2-已成功 3-已失败
   final AIModel data;
   final AIRecordType? type;
+  final Function delSucess;
 
   @override
   State<AIRecordCard> createState() => _AIRecordCardState();
@@ -37,7 +42,6 @@ class _AIRecordCardState extends State<AIRecordCard> {
 
   @override
   Widget build(BuildContext context) {
-
     String imgStr = widget.type == AIRecordType.StripOff
         ? (widget.data.stripThumb ?? '')
         : (widget.data.faceThumb ?? '');
@@ -52,7 +56,7 @@ class _AIRecordCardState extends State<AIRecordCard> {
         behavior: HitTestBehavior.translucent,
         onTap: () {
           if (widget.data.status == 2) {
-              _showSheetView(imgStr);
+            _showSheetView(imgStr);
           }
         },
         child: Stack(
@@ -174,8 +178,42 @@ class _AIRecordCardState extends State<AIRecordCard> {
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       context: context,
-      builder: (context) => PictureRecordPreviewScreen(url: imgStr),
+      builder: (context) => PictureRecordPreviewScreen(
+          url: imgStr,
+          delTapCall: () {
+            //删除AI记录
+            if (widget.type == AIRecordType.StripOff) {
+              deleteStripOff();
+            } else {
+              deleteFace();
+            }
+          }),
     );
   }
 
+  //删除换脸记录
+  Future<void> deleteFace() async {
+    MyToast.showLoading(text: '删除中...');
+    final domain = context.read<AIDomain>();
+    final res = await domain.delFace(ids: '${widget.data.id}');
+    MyToast.closeAllLoading();
+    if (res.isValid) {
+      widget.delSucess.call();
+    } else if (res.msg case final msg?) {
+      MyToast.showText(text: msg);
+    }
+  }
+
+  //删除脱衣记录
+  Future<void> deleteStripOff() async {
+    MyToast.showLoading(text: '删除中...');
+    final domain = context.read<AIDomain>();
+    final res = await domain.delStrip(ids: '${widget.data.id}');
+    MyToast.closeAllLoading();
+    if (res.isValid) {
+      widget.delSucess.call();
+    } else if (res.msg case final msg?) {
+      MyToast.showText(text: msg);
+    }
+  }
 }

@@ -61,4 +61,12 @@ class AIService extends BaseService {
     required int thumbH,
   }) => post('/strip', data: {'thumb': thumb, 'thumb_w': thumbW, 'thumb_h': thumbH});
 
+  /// 删除我的脱衣记录
+  AsyncJson delStrip({required String ids}) =>
+      post('/del_strip', data: {'ids': ids});
+
+  /// 删除我的换脸记录
+  AsyncJson delFace({required String ids}) =>
+      post('/del_face', data: {'ids': ids});
+
 }

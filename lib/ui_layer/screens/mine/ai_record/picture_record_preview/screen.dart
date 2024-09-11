@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../utils/common_utils.dart';
 import '../../../../utils/my_toast.dart';
@@ -10,10 +11,11 @@ import '../../../theme.dart';
 import 'dart:ui' as ui;
 
 class PictureRecordPreviewScreen extends StatefulWidget {
-  const PictureRecordPreviewScreen({super.key, required this.url});
+  const PictureRecordPreviewScreen({super.key, required this.url, required this.delTapCall});
 
   final String url;
 
+  final Function delTapCall;
   @override
   State<PictureRecordPreviewScreen> createState() =>
       _PictureRecordPreviewScreenState();
@@ -50,6 +52,26 @@ class _PictureRecordPreviewScreenState
               child: Center(
                 child: Text(
                   tr('bc'),
+                  style: MyTheme.white16medium,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 15.w),
+          GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: () {
+              widget.delTapCall.call();
+              // context.pop();
+            },
+            child: Container(
+              height: 45.w,
+              decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.08),
+                  borderRadius: BorderRadius.circular(5.w)),
+              child: Center(
+                child: Text(
+                  tr('sch'),
                   style: MyTheme.white16medium,
                 ),
               ),

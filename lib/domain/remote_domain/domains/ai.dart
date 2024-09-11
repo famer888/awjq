@@ -59,4 +59,10 @@ abstract class AIDomain {
     required int thumbH,
   });
 
+  /// 删除我的脱衣记录
+  AsyncResult delStrip({required String ids});
+
+  /// 删除我的换脸记录
+  AsyncResult delFace({required String ids});
+
 }
