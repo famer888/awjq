@@ -283,7 +283,7 @@ abstract class _BaseAppRepo implements AppDomain {
     final info = kIsWeb
         ? {
             'bundleId': BuildConfig.webBundleId,
-            'version': '1.5.0',
+            'version': '1.5.1',
             'language': 'zh',
             'via': 'pwa',
           }
