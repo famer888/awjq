@@ -1,4 +1,5 @@
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -25,37 +26,41 @@ class CardContentView extends StatelessWidget {
         children: [
           if (isBest)
             WidgetSpan(
-              alignment: PlaceholderAlignment.middle,
-              child: Padding(
-                padding: EdgeInsets.only(right: 2.w),
-                child: Container(
-                  height: 17.w,
-                  padding: EdgeInsets.symmetric(horizontal: 5.w),
-                  decoration: BoxDecoration(
-                    gradient: MyTheme.gradient_90_114,
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(2.w),
-                    ),
+              // alignment: PlaceholderAlignment.middle,
+              child: Container(
+                margin: EdgeInsets.only(right: 3.w), //, bottom: 1.5.w),
+                width: 31.w,
+                height: 17.w,
+                // padding: EdgeInsets.only(left: 5.w, right: 5.w, bottom: kIsWeb ? 1.w : 0),
+                decoration: BoxDecoration(
+                  gradient: MyTheme.gradient_90_114,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(2.w),
                   ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'jhua'.tr(context: context),
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 11.sp,
-                        ),
-                        textAlign: TextAlign.center,
-                      )
-                    ],
-                  ),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'jhua'.tr(context: context),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 11.sp,
+                        height: 1
+                      ),
+                      textAlign: TextAlign.center,
+                    )
+                  ],
                 ),
               ),
             ),
           TextSpan(
             text: CommonUtils.convertEmojiAndHtml(title),
-            style: MyTheme.white255_15,
+            style: TextStyle(
+                color: Colors.white,
+                fontSize: 15.sp,
+                height: 1.2,
+             ),
           )
         ],
       ),
