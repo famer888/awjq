@@ -33,7 +33,7 @@ class _PictureRecordPreviewScreenState
         color: MyTheme.bgColor,
         height: sheetHeight,
         child: Column(children: [
-          Expanded(child: MyImage.network(widget.url, fit: BoxFit.fill, borderRadius: 14.w)),
+          Expanded(child: MyImage.network(widget.url, fit: BoxFit.contain, borderRadius: 14.w)),
           SizedBox(height: 30.w),
           GestureDetector(
             behavior: HitTestBehavior.translucent,

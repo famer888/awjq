@@ -6,14 +6,21 @@ import '../../../../utils/common_utils.dart';
 import '../../../theme.dart';
 
 class CardContentView extends StatelessWidget {
-  const CardContentView({super.key, required this.isBest, required this.title});
+  const CardContentView(
+      {super.key,
+        required this.isBest,
+    required this.title,
+    this.maxLines = 2});
 
   final bool isBest;
   final String title;
+  final int maxLines;
 
   @override
   Widget build(BuildContext context) {
     return Text.rich(
+      maxLines: maxLines,
+      overflow: TextOverflow.ellipsis,
       TextSpan(
         children: [
           if (isBest)
