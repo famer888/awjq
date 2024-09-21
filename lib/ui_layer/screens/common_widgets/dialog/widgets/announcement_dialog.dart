@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../utils/common_utils.dart';
 import '../../../image_paths.dart';
 import '../../../theme.dart';
 import '../../my_image.dart';
@@ -55,16 +56,23 @@ class AnnouncementDialog extends StatelessWidget {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 for (final text in textList)
-                                  RichText(
-                                      text: TextSpan(
-                                    text: text,
-                                    style: TextStyle(
-                                      color: const Color(0xff636363),
-                                      fontSize: 15.sp,
-                                      decoration: TextDecoration.none,
-                                      fontWeight: FontWeight.normal,
-                                    ),
-                                  ))
+                                  CommonUtils.getContentSpan(text,
+                                      style: TextStyle(
+                                        color: const Color(0xff636363),
+                                        fontSize: 15.sp,
+                                        decoration: TextDecoration.none,
+                                        fontWeight: FontWeight.normal,
+                                      ))
+                                // RichText(
+                                //     text: TextSpan(
+                                //   text: text,
+                                //   style: TextStyle(
+                                //     color: const Color(0xff636363),
+                                //     fontSize: 15.sp,
+                                //     decoration: TextDecoration.none,
+                                //     fontWeight: FontWeight.normal,
+                                //   ),
+                                // ))
                               ],
                             ),
                           )),

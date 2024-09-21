@@ -25,8 +25,11 @@ class HomeConfigNotifier extends ChangeNotifier {
       _config = _homeData.config;
       await _initSearchHistory();
       return true;
+    } else if (result.msg == 'token无效') {
+      return init();//重复调一次，防止用户在未启动app时已被挤下线后无法获取数据
+    } else {
+      return false;
     }
-    return false;
   }
 
   Future _initSearchHistory() async {

@@ -2,6 +2,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../utils/common_utils.dart';
 import '../../../../utils/my_toast.dart';
@@ -10,10 +11,11 @@ import '../../../theme.dart';
 import 'dart:ui' as ui;
 
 class PictureRecordPreviewScreen extends StatefulWidget {
-  const PictureRecordPreviewScreen({super.key, required this.url});
+  const PictureRecordPreviewScreen({super.key, required this.url, required this.delTapCall});
 
   final String url;
 
+  final Function delTapCall;
   @override
   State<PictureRecordPreviewScreen> createState() =>
       _PictureRecordPreviewScreenState();
@@ -22,20 +24,16 @@ class PictureRecordPreviewScreen extends StatefulWidget {
 class _PictureRecordPreviewScreenState
     extends State<PictureRecordPreviewScreen> {
 
-  final GlobalKey _globalKey = GlobalKey();
-
   @override
   Widget build(BuildContext context) {
     final sheetHeight = ScreenUtil().screenHeight * 0.8;
 
     return Container(
-        padding: EdgeInsets.only(left: MyTheme.pagePadding, top: MyTheme.pagePadding, right: MyTheme.pagePadding, bottom: 116.w),
+        padding: EdgeInsets.only(left: MyTheme.pagePadding, top: MyTheme.pagePadding, right: MyTheme.pagePadding, bottom: 44.w),
         color: MyTheme.bgColor,
         height: sheetHeight,
         child: Column(children: [
-          Expanded(child: Center(child: RepaintBoundary(
-            key: _globalKey,
-              child: MyImage.network(widget.url, borderRadius: 14.w)))),
+          Expanded(child: MyImage.network(widget.url, fit: BoxFit.contain, borderRadius: 14.w)),
           SizedBox(height: 30.w),
           GestureDetector(
             behavior: HitTestBehavior.translucent,
@@ -50,6 +48,26 @@ class _PictureRecordPreviewScreenState
               child: Center(
                 child: Text(
                   tr('bc'),
+                  style: MyTheme.white16medium,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: 15.w),
+          GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: () {
+              widget.delTapCall.call();
+              // context.pop();
+            },
+            child: Container(
+              height: 45.w,
+              decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.08),
+                  borderRadius: BorderRadius.circular(5.w)),
+              child: Center(
+                child: Text(
+                  tr('sch'),
                   style: MyTheme.white16medium,
                 ),
               ),

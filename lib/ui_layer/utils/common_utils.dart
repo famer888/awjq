@@ -2,12 +2,14 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui';
+import 'package:common_utils/common_utils.dart';
 import 'package:awjq/domain/model/live_model.dart';
 import 'package:awjq/ui_layer/screens/common_widgets/my_image.dart';
 import 'package:awjq/ui_layer/screens/common_widgets/swiper_tips.dart';
 import 'package:awjq/ui_layer/screens/image_paths.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -81,6 +83,78 @@ class CommonUtils {
     });
 
     return newStr;
+  }
+
+  //特殊字符处理
+  static Widget getContentSpan(
+    String text, {
+    bool isCopy = false,
+    TextStyle? style,
+    TextStyle? lightStyle,
+    InlineSpan? extraSpan,
+  }) {
+    style = style ?? MyTheme.black51_14;
+    lightStyle = lightStyle ??
+        TextStyle(
+            // fontFamily: hanyi,
+            color: const Color.fromRGBO(25, 103, 210, 1),
+            fontSize: 15.sp,
+            decoration: TextDecoration.none);
+    // StyleTheme.font(size: 14, color: const Color.fromRGBO(25, 103, 210, 1));
+    List<InlineSpan> _contentList = [];
+    RegExp exp = RegExp(
+        r'(http|ftp|https)://([\w_-]+(?:(?:\.[\w_-]+)+))([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?');
+    Iterable<RegExpMatch> matches = exp.allMatches(text);
+
+    int index = 0;
+    for (var match in matches) {
+      /// start 0  end 8
+      /// start 10 end 12
+      String c = text.substring(match.start, match.end);
+      if (match.start == index) {
+        index = match.end;
+      }
+      if (index < match.start) {
+        String a = text.substring(index, match.start);
+        index = match.end;
+        _contentList.add(
+          TextSpan(text: a, style: style),
+        );
+      }
+
+      if (RegexUtil.isURL(c)) {
+        _contentList.add(TextSpan(
+            text: c,
+            style: lightStyle,
+            recognizer: TapGestureRecognizer()
+              ..onTap = () {
+                CommonUtils.launchUrl(text.substring(match.start, match.end));
+              }));
+      } else {
+        _contentList.add(
+          TextSpan(text: c, style: style),
+        );
+      }
+    }
+    if (index < text.length) {
+      String a = text.substring(index, text.length);
+      _contentList.add(
+        TextSpan(text: a, style: style),
+      );
+    }
+    if (isCopy) {
+      return SelectableText.rich(
+        TextSpan(children: _contentList),
+        strutStyle: const StrutStyle(
+            forceStrutHeight: true, height: 1, leading: kIsWeb ? 1.1 : 0.8),
+      );
+    }
+    return RichText(
+        textAlign: TextAlign.left,
+        text: TextSpan(
+            children: _contentList..insert(0, extraSpan ?? const TextSpan())),
+        strutStyle: const StrutStyle(
+            forceStrutHeight: true, height: 1, leading: kIsWeb ? 1.1 : 0.8));
   }
 
   static launchUrl(String url) async {

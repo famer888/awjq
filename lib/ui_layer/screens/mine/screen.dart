@@ -75,7 +75,7 @@ class _FixedTopArea extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(right: 13, bottom: 11),
+      padding: EdgeInsets.only(top: 5, right: 13, bottom: 11),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.center,

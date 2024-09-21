@@ -1,8 +1,8 @@
 //jeknis专用
 ext {
     versiondata = [
-            versionCode: 150,
-            versionName: "1.5.0"
+            versionCode: 151,
+            versionName: "1.5.1"
     ]
     signdata = [
             keyAlias     : 'upload',

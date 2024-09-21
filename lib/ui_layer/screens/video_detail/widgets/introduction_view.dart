@@ -68,11 +68,11 @@ class _IntroductionViewState extends State<IntroductionView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 15.w),
+            SizedBox(height: 0.w),
             Text(
               videoInfo.title ?? '',
               style: MyTheme.white255_18_M,
-              maxLines: 2,
+              maxLines: 5,
             ),
             // if (desp?.isNotEmpty == true)
             //   Padding(

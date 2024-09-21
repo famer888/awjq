@@ -1,6 +1,7 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../../domain/model/ai_model.dart';
@@ -96,8 +97,13 @@ class _ContentFaceSwapRecordScreenState extends State<_ContentFaceSwapRecordScre
   @override
   Widget build(BuildContext context) {
     return MyListView.grid(
+      key: UniqueKey(),
       childAspectRatio: 170 / 250,
-      itemBuilder: (_, item, __) => AIRecordCard(data: item, type: AIRecordType.FaceSwap),
+      itemBuilder: (_, item, __) => AIRecordCard(data: item, type: AIRecordType.FaceSwap, delSucess: () {
+        context.pop();
+        setState(() {
+        });
+      }),
       onFetchingMore: (currentPage, pageSize) => _getData(
         page: currentPage,
         pageSize: pageSize,
