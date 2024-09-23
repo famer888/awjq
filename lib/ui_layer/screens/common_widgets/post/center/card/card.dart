@@ -10,7 +10,9 @@ import '../../card/media.dart';
 
 class PostCenterCard extends StatelessWidget {
   const PostCenterCard({super.key, required this.data});
+
   final TieztModel data;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -47,37 +49,43 @@ class PostCenterCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SizedBox(height: 10.w),
-                    Text.rich(TextSpan(children: [
-                      data.isBest == 1
-                          ? WidgetSpan(
-                              alignment: PlaceholderAlignment.middle,
-                              child: Padding(
-                                padding: EdgeInsets.only(right: 2.w),
-                                child: Container(
-                                  height: 17.w,
-                                  decoration: BoxDecoration(
-                                    gradient: MyTheme.gradient_90_114,
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(
-                                        2.w,
-                                      ),
-                                    ),
-                                  ),
-                                  padding:
-                                      EdgeInsets.symmetric(horizontal: 5.w),
-                                  child: Text(
+                    Text.rich(
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        TextSpan(children: [
+                          data.isBest == 1
+                              ? WidgetSpan(
+                            // alignment: PlaceholderAlignment.middle,
+                            child: Container(
+                              margin: EdgeInsets.only(right: 3.w), //, bottom: 1.5.w),
+                              width: 31.w,
+                              height: 17.w,
+                              // padding: EdgeInsets.only(left: 5.w, right: 5.w, bottom: kIsWeb ? 1.w : 0),
+                              decoration: BoxDecoration(
+                                gradient: MyTheme.gradient_90_114,
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(2.w),
+                                ),
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
                                     'jhua'.tr(context: context),
                                     style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 11.sp,
+                                        color: Colors.white,
+                                        fontSize: 11.sp,
+                                        height: 1
                                     ),
                                     textAlign: TextAlign.center,
-                                  ),
-                                ),
-                              ))
-                          : const TextSpan(),
-                      TextSpan(text: data.title, style: MyTheme.white255_15)
-                    ])),
+                                  )
+                                ],
+                              ),
+                            ),
+                          )
+                              : const TextSpan(),
+                          TextSpan(text: data.title, style: MyTheme.white255_15)
+                        ])),
                     CardMediaView(
                       medias: data.medias,
                     ),
@@ -88,9 +96,9 @@ class PostCenterCard extends StatelessWidget {
                       children: [
                         GestureDetector(
                           behavior: HitTestBehavior.translucent,
-                          onTap: () =>
-                              CommunityTagDetailRoute('${data.topic?.id}', false)
-                                  .push(context),
+                          onTap: () => CommunityTagDetailRoute(
+                                  '${data.topic?.id}', false)
+                              .push(context),
                           child: Text(
                             '#${data.topic?.name ?? ''}',
                             style: MyTheme.blue96_13_M,
