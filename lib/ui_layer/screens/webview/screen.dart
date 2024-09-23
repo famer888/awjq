@@ -1,11 +1,18 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import '../../router/routes.dart';
+import '../../utils/my_toast.dart';
 import '../common_widgets/screen_background.dart';
 import '../common_widgets/my_image.dart';
 import '../image_paths.dart';
 import '../theme.dart';
+
+import "package:universal_html/html.dart" as html;
+import 'fake_native_widget.dart' if (dart.library.html) 'real_web_widget.dart'
+    as ui;
 
 class WebViewScreen extends StatefulWidget {
   const WebViewScreen({super.key, required this.url});
@@ -16,33 +23,7 @@ class WebViewScreen extends StatefulWidget {
 
 class _WebViewScreenState extends State<WebViewScreen> {
   String titleText = '';
-  late final controller = WebViewController()
-    ..setJavaScriptMode(JavaScriptMode.unrestricted)
-    ..setNavigationDelegate(
-      NavigationDelegate(
-        onProgress: (int progress) {
-          // Update loading bar.
-        },
-        onPageStarted: (String url) {},
-        onPageFinished: onPageFinished,
-        onWebResourceError: (WebResourceError error) {},
-      ),
-    )
-    ..loadRequest(
-      Uri.parse(Uri.decodeComponent(widget.url)),
-    );
-
-  void onPageFinished(String url) {
-    controller.runJavaScriptReturningResult('document.title').then((result) {
-      setState(() {
-        if (result case final String title) {
-          setState(() {
-            titleText = title.replaceAll(r'"', '');
-          });
-        }
-      });
-    });
-  }
+  late WebViewController _controller;
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +34,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
             titleText,
             style: MyTheme.white255_18_B,
           ),
-          backgroundColor: Colors.transparent,
+          backgroundColor: MyTheme.bgColor,
           leading: GestureDetector(
             onTap: () {
               context.pop();
@@ -68,10 +49,70 @@ class _WebViewScreenState extends State<WebViewScreen> {
           ),
           iconTheme: const IconThemeData(color: Colors.white),
         ),
-        body: WebViewWidget(
-          controller: controller,
-        ),
+        backgroundColor: MyTheme.bgColor,
+        body: kIsWeb ? _buildHtmlWidget() : _buildNativeWidget(),
       ),
     );
+  }
+
+  Widget _buildNativeWidget() {
+    return WebView(
+      initialUrl: Uri.decodeComponent(widget.url),
+      javascriptMode: JavascriptMode.unrestricted,
+      onWebViewCreated: (WebViewController webViewController) {
+        _controller = webViewController;
+      },
+      javascriptChannels: <JavascriptChannel>{
+        JavascriptChannel(
+          name: 'FlutterChannel',
+          onMessageReceived: (JavascriptMessage js) {
+            jumpToPage(js.message.toString());
+          },
+        )
+      },
+    );
+  }
+
+  Widget _buildHtmlWidget() {
+    final html.IFrameElement element = html.IFrameElement();
+    element.src = Uri.decodeComponent(widget.url);
+    element.style.border = 'none';
+    element.style.width = '100%';
+    element.style.height = '100%';
+    html.window.addEventListener('message', (event) {
+      if (event is! html.MessageEvent) return;
+      jumpToPage(event.data.toString());
+    });
+    // ignore: undefined_prefixed_name
+    ui.platformViewRegistry.registerViewFactory(
+      'iframeElement',
+      (int viewId) => element,
+    );
+    Widget current = HtmlElementView(
+      viewType: 'iframeElement',
+      key: UniqueKey(),
+    );
+    return Stack(children: [
+      IgnorePointer(
+        ignoring: true,
+        child: Center(child: current),
+      ),
+    ]);
+  }
+
+  void jumpToPage(String msg) {
+    switch (msg) {
+      case 'openRecharge':
+        const CoinRechargeRoute().push(context);
+        break;
+      case 'openVip':
+        const VipCenterRoute().push(context);
+        break;
+      case 'toInvite':
+        const MineShareToUserRoute().push(context);
+        break;
+      default:
+        MyToast.showText(text: msg.toString());
+    }
   }
 }
