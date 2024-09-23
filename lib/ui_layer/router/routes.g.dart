@@ -246,6 +246,7 @@ extension $MineRouteExtension on MineRoute {
 
 RouteBase get $webViewRoute => GoRouteData.$route(
       path: '/ktloadwebview/:url',
+      parentNavigatorKey: WebViewRoute.$parentNavigatorKey,
       factory: $WebViewRouteExtension._fromState,
     );
 

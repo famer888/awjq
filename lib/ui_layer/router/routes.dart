@@ -173,8 +173,12 @@ class MineRoute extends GoRouteData {
 
 @TypedGoRoute<WebViewRoute>(path: AppRouterPaths.webView)
 class WebViewRoute extends GoRouteData {
+  static final GlobalKey<NavigatorState> $parentNavigatorKey =
+      AppRouter.rootNavigatorKey;
+
   const WebViewRoute(this.url);
   final String url;
+
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return WebViewScreen(url: url);
