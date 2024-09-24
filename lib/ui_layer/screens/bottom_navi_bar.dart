@@ -137,10 +137,13 @@ class _BottomNaviBarState extends State<BottomNaviBar> {
                   },
                   confirm: () {
                     cancelFunc();
-                    if (isLastAd) {
-                      _showAppDownCenterDialog();
-                    } else {
-                      _showActivityDialog(index: index + 1);
+                    if (notice?.redirect_type != 1) {
+                      //跳转内部结束继续弹窗
+                      if (isLastAd) {
+                        _showAppDownCenterDialog();
+                      } else {
+                        _showActivityDialog(index: index + 1);
+                      }
                     }
                     _adOnTap(notice: notice);
                   },
@@ -167,7 +170,7 @@ class _BottomNaviBarState extends State<BottomNaviBar> {
           (int.tryParse(currentVersion) ?? 0);
 
       if (kIsWeb) {
-        _showActivityDialog(index: 0);//web端直接去展示广告
+        _showActivityDialog(index: 0); //web端直接去展示广告
         return;
       }
       if (needUpdate) {
@@ -175,8 +178,7 @@ class _BottomNaviBarState extends State<BottomNaviBar> {
         return;
       }
 
-      _showActivityDialog(index: 0);// 无更新，展示广告
-
+      _showActivityDialog(index: 0); // 无更新，展示广告
     }
   }
 
@@ -218,33 +220,28 @@ class _BottomNaviBarState extends State<BottomNaviBar> {
   void _adOnTap({Notice? notice}) {
     if (notice == null) return;
     final json = notice.toJson();
-    json['link_url'] = json['url_str'];
-    if (json['type'] == 'route') {
-      json['redirect_type'] = '1';
-    }
     CommonUtils.openRoute(context, json);
   }
 
   ///推荐app下载列表弹窗
   void _showAppDownCenterDialog() {
-    final  homeData = homeConfigNotifier.homeData;
+    final homeData = homeConfigNotifier.homeData;
 
     if (homeData.noticeApps?.isNotEmpty ?? false) {
       BotToast.showWidget(
           toastBuilder: (cancelFunc) => AppDownCenterDialog(
-            cancel: () {
-              cancelFunc();
-              _showAnnouncementDialog();//app推荐下载弹窗展示完后再展示公告
-            },
-          ));
+                cancel: () {
+                  cancelFunc();
+                  _showAnnouncementDialog(); //app推荐下载弹窗展示完后再展示公告
+                },
+              ));
     } else {
-      _showAnnouncementDialog();//app推荐为空直接展示公告
+      _showAnnouncementDialog(); //app推荐为空直接展示公告
     }
   }
 
   /// 系统公告弹窗
   void _showAnnouncementDialog() {
-
     if (targetVersion?.mstatus != 1) return;
 
     BotToast.showWidget(

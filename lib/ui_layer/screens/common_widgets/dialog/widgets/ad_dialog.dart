@@ -5,14 +5,13 @@ import '../../../image_paths.dart';
 import '../../my_image.dart';
 
 class AdDialog extends StatefulWidget {
-
   const AdDialog(
       {super.key,
-        required this.cancel,
-        required this.confirm,
-        this.adWidth = 100,
-        this.adHeight = 100,
-        required this.adUrl});
+      required this.cancel,
+      required this.confirm,
+      this.adWidth = 100,
+      this.adHeight = 100,
+      required this.adUrl});
 
   final String adUrl;
   final VoidCallback cancel;
@@ -25,7 +24,6 @@ class AdDialog extends StatefulWidget {
 }
 
 class AdDialogState extends State<AdDialog> {
-
   DateTime? _lastClickTime;
 
   @override
@@ -70,11 +68,12 @@ class AdDialogState extends State<AdDialog> {
   void _handleCancelTap() {
     final currentTime = DateTime.now();
     // 检查上一次点击时间，如果两次点击间隔小于 1秒，则忽略此次点击
-    if (_lastClickTime == null || currentTime.difference(_lastClickTime!) > const Duration(milliseconds: 1000)) {
+    if (_lastClickTime == null ||
+        currentTime.difference(_lastClickTime!) >
+            const Duration(milliseconds: 1000)) {
       _lastClickTime = currentTime;
       // 执行点击事件逻辑
       widget.cancel.call();
     }
   }
-
 }

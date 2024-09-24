@@ -293,7 +293,6 @@ class CommonUtils {
         final Map<String, dynamic> params = {};
         if (urlList.first == BuildConfig.webViewPathName) {
           final newUrl = urlList.last.toString().substring(4).trim();
-
           WebViewRoute(newUrl).push(context);
         } else {
           if (urlList.length > 1 && urlList.last != '') {
@@ -332,7 +331,6 @@ class CommonUtils {
         final Map<String, dynamic> params = {};
         if (urlList.first == BuildConfig.webViewPathName) {
           final newUrl = urlList.last.toString().substring(4).trim();
-
           WebViewRoute(newUrl).push(context);
         } else {
           if (urlList.length > 1 && urlList.last != '') {
