@@ -249,9 +249,7 @@ final class VideoPlayer {
       surface.release();
     }
     if (ijkMediaPlayer != null) {
-      ijkMediaPlayer.reset();
       ijkMediaPlayer.release();
-      ijkMediaPlayer = null;
     }
   }
 }
