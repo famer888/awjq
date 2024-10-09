@@ -268,8 +268,8 @@ class VideoPlayer {
     _hls?.stopLoad();
     _hls?.destroy();
     _videoElement.currentTime = 0;
-    bool isSafari =
-        html.window.navigator.userAgent.toLowerCase().contains("iphone");
+    bool isAndroid =
+        html.window.navigator.userAgent.toLowerCase().contains("android");
     if (await _HlsHelper.shouldUseHlsLibrary(src)) {
       _hls = Hls(
         HlsConfig(
@@ -308,13 +308,13 @@ class VideoPlayer {
         if (_videoElement.duration == 0) {
           return;
         }
-        if (!_isInitialized && !isSafari) {
+        if (!_isInitialized && isAndroid) {
           _isInitialized = true;
           _sendInitialized();
         }
       });
       _videoElement.onCanPlay.listen((dynamic _) {
-        if (!_isInitialized && isSafari) {
+        if (!_isInitialized && !isAndroid) {
           _isInitialized = true;
           _sendInitialized();
         }
