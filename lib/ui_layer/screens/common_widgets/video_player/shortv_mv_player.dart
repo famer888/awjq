@@ -536,10 +536,12 @@ class _SinkPortraitLandWidgetState extends State<SinkPortraitLandWidget> {
                                             color: Colors.white),
                                         toggleFullscreen: () {
                                           if (kIsWeb) {
-                                            html.VideoElement video = html
-                                                    .document
-                                                    .querySelector('video')
-                                                as html.VideoElement;
+                                            List<html.VideoElement> elements =
+                                            html.document.querySelectorAll('video');
+                                            if (elements.isEmpty) return;
+
+                                            html.VideoElement video = elements.last;
+
                                             video.muted = false;
                                             video.volume = 1;
                                             video.setAttribute(
