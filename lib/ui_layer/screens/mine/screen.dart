@@ -181,12 +181,27 @@ class _HeaderInfo extends StatelessWidget {
                       member.nickname,
                       style: MyTheme.white18bold,
                     ),
-                    const SizedBox(width: 3),
                     if (member.agent == 1)
-                      const Icon(
-                        Icons.verified_sharp,
-                        size: 17,
-                        color: Color.fromRGBO(247, 208, 93, 1),
+                      Container(
+                        margin: EdgeInsets.only(left: 3.w),
+                        child: const Icon(
+                          Icons.verified_sharp,
+                          size: 17,
+                          color: Color.fromRGBO(247, 208, 93, 1),
+                        ),
+                      ),
+                    if (true)
+                      GestureDetector(
+                        onTap: () => VipUpgradeRoute().push(context),
+                        child: Container(
+                          margin: EdgeInsets.only(left: 6.w),
+                          child: MyImage.asset(
+                            MyImagePaths.appMineVipUpgrade,
+                            width: 71.w,
+                            height: 30.w,
+                            fit: BoxFit.fill,
+                          ),
+                        ),
                       ),
                   ],
                 ),
@@ -532,9 +547,9 @@ class _ThirdMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     final menu = [
       (
-      title: 'tyhl'.tr(context: context),
-      iconName: MyImagePaths.appMineAI,
-      onTap: () => const MineAIRecordRoute().push(context),
+        title: 'tyhl'.tr(context: context),
+        iconName: MyImagePaths.appMineAI,
+        onTap: () => const MineAIRecordRoute().push(context),
       ),
       (
         title: 'wdgm'.tr(context: context),

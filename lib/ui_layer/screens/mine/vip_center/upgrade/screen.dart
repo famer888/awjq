@@ -5,37 +5,36 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import '../../../../domain/api_validator.dart';
-import '../../../../domain/async_value.dart';
-import '../../../../domain/domain.dart';
-import '../../../../domain/enum.dart';
-import '../../../../domain/model/exp_of_vip_model.dart';
-import '../../../../domain/model/product_vip_coin_model.dart';
-import '../../../../domain/type_def.dart';
-import '../../../notifiers/user_notifier.dart';
-import '../../../router/routes.dart';
-import '../../../utils/my_toast.dart';
-import '../../common_widgets/fixed_buy_button.dart';
-import '../../common_widgets/keep_alive_wrapper.dart';
-import '../../common_widgets/member_vip.dart';
-import '../../common_widgets/my_app_bar.dart';
-import '../../common_widgets/my_avatar.dart';
-import '../../common_widgets/my_image.dart';
-import '../../common_widgets/my_tab_bar.dart';
-import '../../common_widgets/screen_background.dart';
-import '../../common_widgets/status/loading.dart';
-import '../../common_widgets/status/network_error.dart';
-import '../../image_paths.dart';
-import '../../theme.dart';
+import '../../../../../domain/api_validator.dart';
+import '../../../../../domain/async_value.dart';
+import '../../../../../domain/domain.dart';
+import '../../../../../domain/enum.dart';
+import '../../../../../domain/model/exp_of_vip_model.dart';
+import '../../../../../domain/model/product_vip_coin_model.dart';
+import '../../../../../domain/type_def.dart';
+import '../../../../notifiers/user_notifier.dart';
+import '../../../../router/routes.dart';
+import '../../../../utils/my_toast.dart';
+import '../../../common_widgets/fixed_buy_button.dart';
+import '../../../common_widgets/keep_alive_wrapper.dart';
+import '../../../common_widgets/member_vip.dart';
+import '../../../common_widgets/my_app_bar.dart';
+import '../../../common_widgets/my_avatar.dart';
+import '../../../common_widgets/my_image.dart';
+import '../../../common_widgets/my_tab_bar.dart';
+import '../../../common_widgets/screen_background.dart';
+import '../../../common_widgets/status/loading.dart';
+import '../../../common_widgets/status/network_error.dart';
+import '../../../theme.dart';
 
-class VipCenterScreen extends StatefulWidget {
-  const VipCenterScreen({super.key});
+class VipUpgradeScreen extends StatefulWidget {
+  const VipUpgradeScreen({super.key});
 
   @override
-  State<VipCenterScreen> createState() => _VipCenterScreenState();
+  State<VipUpgradeScreen> createState() => _VipUpgradeScreenState();
 }
 
-class _VipCenterScreenState extends State<VipCenterScreen> {
+class _VipUpgradeScreenState extends State<VipUpgradeScreen> {
   final _type = MyProductType.vip;
   late final _orderDomain = context.read<OrderDomain>();
   late final _signDomain = context.read<SignDomain>();
@@ -116,36 +115,7 @@ class _BodyState extends State<_Body> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        const _UserInfoArea(),
-        Expanded(
-          child: TabBarWithView.line(
-            tabBarPadding: EdgeInsets.symmetric(
-              vertical: MyTheme.pagePadding.w,
-              horizontal: MyTheme.pagePadding,
-            ),
-            labelStyle: MyTheme.white16medium,
-            unselectedLabelStyle: MyTheme.white25508_16_M,
-            tabBarHeight: 40.w,
-            isScrollable: false,
-            titles: [
-              'khy'.tr(context: context),
-              'jfdhvip'.tr(context: context),
-            ],
-            views: [
-              KeepAliveWrapper(
-                child: _openVipContent(),
-              ),
-              KeepAliveWrapper(
-                child: _pointExchangeContent(),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
+    return _openVipContent();
   }
 
   Widget _openVipContent() {
@@ -156,8 +126,12 @@ class _BodyState extends State<_Body> {
             child: Column(
               children: [
                 _TitleHintText(
-                  title: 'ktvpxs'.tr(context: context),
-                  subTitle: 'zmzxs'.tr(context: context),
+                  title: 'dqhy'.tr(context: context),
+                  subTitle: '暗网专区月卡'.tr(context: context),
+                ),
+                SizedBox(height: 10.w),
+                _TitleHintText(
+                  title: 'ksjz'.tr(context: context),
                 ),
                 SizedBox(height: 13.w),
                 _ProductCardArea(
@@ -183,23 +157,6 @@ class _BodyState extends State<_Body> {
           products: widget.productOfVIP.products,
           vipText: widget.productOfVIP.vipText,
         ),
-      ],
-    );
-  }
-
-  Widget _pointExchangeContent() {
-    return Column(
-      children: [
-        Selector<UserNotifier, int>(
-          selector: (_, userNotifier) => userNotifier.member.exp ?? 0,
-          builder: (BuildContext context, value, Widget? child) =>
-              _TitleHintText(
-            title: 'jfdh'.tr(context: context),
-            subTitle: 'dqjf'.tr(context: context) + value.toString(),
-          ),
-        ),
-        SizedBox(height: 13.w),
-        Expanded(child: _ExpArea(expOfVipList: widget.expOfVIP.list)),
       ],
     );
   }
@@ -231,40 +188,12 @@ class _UserInfoArea extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                // color: Colors.red,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Container(
-                      constraints: BoxConstraints(maxWidth: 150.w),
-                      child: Text(member.nickname,
-                          style: TextStyle(
-                              color: const Color.fromRGBO(255, 255, 255, 1),
-                              fontSize: 16.sp,
-                              overflow: TextOverflow.ellipsis,
-                              fontWeight: FontWeight.w600,
-                              height: 1.5,
-                              decoration: TextDecoration.none)),
-                    ),
-                    Container(
-                        margin: EdgeInsets.only(left: 5.w),
-                        child: MemberVipWidget(showText: member.vipStr)),
-                    if (true)
-                      GestureDetector(
-                        onTap: () => VipUpgradeRoute().push(context),
-                        child: Container(
-                          margin: EdgeInsets.only(left: 3.w),
-                          child: MyImage.asset(
-                            MyImagePaths.appMineVipUpgrade,
-                            width: 71.w,
-                            height: 30.w,
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                      ),
-                  ],
-                ),
+              Row(
+                children: [
+                  Text(member.nickname, style: MyTheme.white255_14),
+                  SizedBox(width: 10.w),
+                  MemberVipWidget(showText: member.vipStr)
+                ],
               ),
               SizedBox(height: 10.w),
               Row(
@@ -293,25 +222,24 @@ class _UserInfoArea extends StatelessWidget {
 class _TitleHintText extends StatelessWidget {
   const _TitleHintText({
     required this.title,
-    required this.subTitle,
+    this.subTitle,
   });
 
   final String title;
-  final String subTitle;
+  final String? subTitle;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             title,
             style: TextStyle(color: Colors.white, fontSize: 15.sp),
           ),
           Text(
-            subTitle,
+            subTitle ?? '',
             style: TextStyle(color: Colors.white, fontSize: 15.sp),
           )
         ],

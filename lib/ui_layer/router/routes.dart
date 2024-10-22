@@ -44,6 +44,7 @@ import '../screens/mine/setup/screen.dart';
 import '../screens/mine/share_to_user/record/screen.dart';
 import '../screens/mine/share_to_user/screen.dart';
 import '../screens/mine/vip_center/screen.dart';
+import '../screens/mine/vip_center/upgrade/screen.dart';
 import '../screens/mine/welfare/screen.dart';
 import '../screens/mine/withdrawal/bank_list/screen.dart';
 import '../screens/mine/withdrawal/record/screen.dart';
@@ -211,6 +212,19 @@ class VipCenterRoute extends GoRouteData {
   @override
   Widget build(BuildContext context, GoRouterState state) {
     return const VipCenterScreen();
+  }
+}
+
+@TypedGoRoute<VipUpgradeRoute>(path: AppRouterPaths.mineVipUpgrade)
+class VipUpgradeRoute extends GoRouteData {
+  static final GlobalKey<NavigatorState> $parentNavigatorKey =
+      AppRouter.rootNavigatorKey;
+
+  const VipUpgradeRoute();
+
+  @override
+  Widget build(BuildContext context, GoRouterState state) {
+    return const VipUpgradeScreen();
   }
 }
 

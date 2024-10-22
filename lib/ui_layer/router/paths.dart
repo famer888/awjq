@@ -54,6 +54,9 @@ class AppRouterPaths {
   /// 我的 - VIP充值
   static const mineVipCenter = '/mineVipCenter';
 
+  /// 我的 - VIP升级
+  static const mineVipUpgrade = '/mineVipUpgrade';
+
   /// 我的 - 金币充值
   static const mineCoinRecharge = '/mineCoinRecharge';
 

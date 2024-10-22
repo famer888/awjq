@@ -12,6 +12,7 @@ List<RouteBase> get $appRoutes => [
       $webViewRoute,
       $bitPostDetailRoute,
       $vipCenterRoute,
+      $vipUpgradeRoute,
       $liveVideoRoute,
       $aIRoute,
       $coinRechargeRoute,
@@ -307,6 +308,30 @@ extension $VipCenterRouteExtension on VipCenterRoute {
 
   String get location => GoRouteData.$location(
         '/mineVipCenter',
+      );
+
+  void go(BuildContext context) => context.go(location);
+
+  Future<T?> push<T>(BuildContext context) => context.push<T>(location);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location);
+
+  void replace(BuildContext context) => context.replace(location);
+}
+
+RouteBase get $vipUpgradeRoute => GoRouteData.$route(
+      path: '/mineVipUpgrade',
+      parentNavigatorKey: VipUpgradeRoute.$parentNavigatorKey,
+      factory: $VipUpgradeRouteExtension._fromState,
+    );
+
+extension $VipUpgradeRouteExtension on VipUpgradeRoute {
+  static VipUpgradeRoute _fromState(GoRouterState state) =>
+      const VipUpgradeRoute();
+
+  String get location => GoRouteData.$location(
+        '/mineVipUpgrade',
       );
 
   void go(BuildContext context) => context.go(location);
