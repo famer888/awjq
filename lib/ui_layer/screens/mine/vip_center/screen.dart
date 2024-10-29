@@ -250,7 +250,7 @@ class _UserInfoArea extends StatelessWidget {
                     Container(
                         margin: EdgeInsets.only(left: 5.w),
                         child: MemberVipWidget(showText: member.vipStr)),
-                    if (true)
+                    if (member.vipUpgrade == 1)
                       GestureDetector(
                         onTap: () => VipUpgradeRoute().push(context),
                         child: Container(

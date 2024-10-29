@@ -115,9 +115,13 @@ class _MineSetupScreenState extends State<MineSetupScreen> {
       final imgUrl = data['msg'].toString();
       final result = await userDomain.updateUserInfo(thumb: imgUrl);
       if (result.isValid) {
-        userNotifier.setThumb(
-          thumb: homeConfigNotifier.config.imgBase + imgUrl,
-        );
+        // userNotifier.setThumb(
+        //   thumb: homeConfigNotifier.config.imgBase + imgUrl,
+        // );
+        MyToast.showText(
+            text: (result.msg ?? '').isNotEmpty
+                ? result.msg.toString()
+                : result.data.toString());
       } else {
         MyToast.showText(text: result.msg!);
       }

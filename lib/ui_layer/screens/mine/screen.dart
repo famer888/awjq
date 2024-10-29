@@ -16,7 +16,6 @@ import '../common_widgets/my_list_view.dart';
 import '../common_widgets/screen_background.dart';
 import '../image_paths.dart';
 import '../theme.dart';
-import 'ai_record/screen.dart';
 
 class MineScreen extends StatefulWidget {
   const MineScreen({super.key});
@@ -190,7 +189,7 @@ class _HeaderInfo extends StatelessWidget {
                           color: Color.fromRGBO(247, 208, 93, 1),
                         ),
                       ),
-                    if (true)
+                    if (member.vipUpgrade == 1)
                       GestureDetector(
                         onTap: () => VipUpgradeRoute().push(context),
                         child: Container(

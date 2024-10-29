@@ -156,4 +156,14 @@ class UserService extends BaseService {
   }) =>
       post('/im_send', data: {'txt': type});
 
+  /// 可升级列表
+  AsyncJson getUserUpgradeGoods() => post(
+        '/upgrade_goods',
+      );
+
+  /// 金币升级VIP
+  AsyncJson userUpgrade({
+    required int goodsId,
+  }) =>
+      post('/upgrade', data: {'id': goodsId});
 }

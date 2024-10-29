@@ -10,18 +10,17 @@ import '../../../../../domain/async_value.dart';
 import '../../../../../domain/domain.dart';
 import '../../../../../domain/enum.dart';
 import '../../../../../domain/model/exp_of_vip_model.dart';
-import '../../../../../domain/model/product_vip_coin_model.dart';
+import '../../../../../domain/model/member_model.dart';
+import '../../../../../domain/model/vip_upgrade_model';
 import '../../../../../domain/type_def.dart';
 import '../../../../notifiers/user_notifier.dart';
 import '../../../../router/routes.dart';
+import '../../../../utils/common_utils.dart';
 import '../../../../utils/my_toast.dart';
-import '../../../common_widgets/fixed_buy_button.dart';
-import '../../../common_widgets/keep_alive_wrapper.dart';
-import '../../../common_widgets/member_vip.dart';
+import '../../../common_widgets/dialog/widgets/regular_dialog.dart';
 import '../../../common_widgets/my_app_bar.dart';
-import '../../../common_widgets/my_avatar.dart';
+import '../../../common_widgets/my_button.dart';
 import '../../../common_widgets/my_image.dart';
-import '../../../common_widgets/my_tab_bar.dart';
 import '../../../common_widgets/screen_background.dart';
 import '../../../common_widgets/status/loading.dart';
 import '../../../common_widgets/status/network_error.dart';
@@ -36,11 +35,13 @@ class VipUpgradeScreen extends StatefulWidget {
 
 class _VipUpgradeScreenState extends State<VipUpgradeScreen> {
   final _type = MyProductType.vip;
-  late final _orderDomain = context.read<OrderDomain>();
-  late final _signDomain = context.read<SignDomain>();
+  late final _userDomain = context.read<UserDomain>();
+  late final userNotifier = context.read<UserNotifier>();
 
-  AsyncValue<(ProductOfVipOrCoin, ExpOfVIPData)> _asyncValue =
+  AsyncValue<(List<VipUpgradeModel>, VipPayedModel)> _asyncValue =
       const AsyncInit();
+
+  List<VipUpgradeModel> _itemsList = [];
 
   @override
   void initState() {
@@ -55,21 +56,121 @@ class _VipUpgradeScreenState extends State<VipUpgradeScreen> {
       _asyncValue = const AsyncLoading();
     });
 
-    final results = await Future.wait([
-      _orderDomain.getProduct(type: _type),
-      _signDomain.getExpOfVIP(),
-    ]);
+    final res = await _userDomain.getUserUpgradeGoods();
 
     setState(() {
-      if (results[0].isValid && results[1].isValid) {
+      if (res.isValid) {
+        _itemsList = List.from(res.data['goods']
+            .map((productJson) => VipUpgradeModel.fromJson(productJson)));
+        List<VipUpgradeModel> itemsList = List.from(_itemsList);
+
+        VipPayedModel payed = VipPayedModel.fromJson(res.data['payed']);
+        // if (_itemsList case final data) {
+        //   _asyncValue = AsyncData(data);
+
         _asyncValue = AsyncData((
-          results[0].data as ProductOfVipOrCoin,
-          results[1].data as ExpOfVIPData,
+          itemsList,
+          payed,
         ));
+        // }
+        // _asyncValue = AsyncData(_itemsList, payed);
       } else {
-        _asyncValue = const AsyncError();
+        _asyncValue = AsyncError(error: res.msg);
       }
     });
+  }
+
+  Future<void> _showPay(int selectedIndex) async {
+    VipUpgradeModel item = _itemsList[selectedIndex];
+
+    CommonUtils.showDialog(
+      context: context,
+      builder: (context) => RegularDialog(
+        buttonText: 'qr'.tr(),
+        cancelText: 'qx'.tr(),
+        title: 'ts'.tr(),
+        content: RichText(
+            textAlign: TextAlign.center,
+            text: TextSpan(children: [
+              TextSpan(
+                text: '${tr('sfqrsj')}',
+                style: MyTheme.white255_15,
+              ),
+              TextSpan(
+                text: '${item.pName}',
+                style: MyTheme.blue80_15,
+              ),
+              TextSpan(
+                text: '？',
+                style: MyTheme.white255_15,
+              ),
+            ])),
+        confirmOnTap: () {
+          //前往充值
+          // context.pop();
+          // const CoinRechargeRoute().push(context);
+          context.pop();
+          _upgradePay(selectedIndex);
+        },
+        cancelOnTap: () {
+          //取消
+          context.pop();
+        },
+      ),
+    );
+  }
+
+  Future<void> _upgradePay(int selectedIndex) async {
+    Member member = context.read<UserNotifier>().member;
+
+    MyToast.showLoading();
+    VipUpgradeModel item = _itemsList[selectedIndex];
+    final res = await _userDomain.userUpgrade(goodsId: item.id ?? 0);
+
+    MyToast.closeAllLoading();
+    if (res.isValid && res.status == 1) {
+      userNotifier.setMoney(money: member.money - (item.payCoins ?? 0));
+
+      MyToast.showText(
+        text: res.msg ?? '',
+        onClose: () {
+          // context.pop();
+        },
+      );
+    } else {
+      if (res.msg == '余额不足') {
+        //余额不足，提示金币不足
+        CommonUtils.showDialog(
+          context: context,
+          builder: (context) => RegularDialog(
+            buttonText: 'qwcz'.tr(),
+            cancelText: 'qx'.tr(),
+            title: 'ts'.tr(),
+            content: RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(children: [
+                  TextSpan(
+                    text: '${tr('ndyebz')}',
+                    style: MyTheme.white255_15,
+                  ),
+                ])),
+            confirmOnTap: () {
+              //前往充值
+              context.pop();
+              const CoinRechargeRoute().push(context);
+            },
+            cancelOnTap: () {
+              //取消
+              context.pop();
+            },
+          ),
+        );
+      } else {
+        MyToast.showText(
+          text: res.msg ?? '',
+        );
+      }
+    }
   }
 
   @override
@@ -89,8 +190,9 @@ class _VipUpgradeScreenState extends State<VipUpgradeScreen> {
         ),
         body: _asyncValue.maybeWhen(
           data: (value) => _Body(
-            productOfVIP: value.$1,
-            expOfVIP: value.$2,
+            products: value.$1,
+            payedVip: value.$2.pname ?? '',
+            showPayFunc: _showPay,
           ),
           error: (_, __) => NetworkErrorView(onTap: _init),
           orElse: () => const LoadingView(),
@@ -101,10 +203,15 @@ class _VipUpgradeScreenState extends State<VipUpgradeScreen> {
 }
 
 class _Body extends StatefulWidget {
-  const _Body({required this.productOfVIP, required this.expOfVIP});
+  const _Body({
+    required this.products,
+    required this.payedVip,
+    this.showPayFunc,
+  });
 
-  final ProductOfVipOrCoin productOfVIP;
-  final ExpOfVIPData expOfVIP;
+  final List<VipUpgradeModel> products;
+  final String payedVip;
+  final Future<void> Function(int index)? showPayFunc;
 
   @override
   State<_Body> createState() => _BodyState();
@@ -127,7 +234,7 @@ class _BodyState extends State<_Body> {
               children: [
                 _TitleHintText(
                   title: 'dqhy'.tr(context: context),
-                  subTitle: '暗网专区月卡'.tr(context: context),
+                  subTitle: widget.payedVip,
                 ),
                 SizedBox(height: 10.w),
                 _TitleHintText(
@@ -135,17 +242,17 @@ class _BodyState extends State<_Body> {
                 ),
                 SizedBox(height: 13.w),
                 _ProductCardArea(
-                  products: widget.productOfVIP.products,
+                  products: widget.products,
                   selectedNotifier: productSelectedNotifier,
                 ),
                 SizedBox(height: 20.w),
                 _DescriptionArea(
                   notifier: productSelectedNotifier,
-                  products: widget.productOfVIP.products,
+                  products: widget.products,
                 ),
                 _RightArea(
                   notifier: productSelectedNotifier,
-                  products: widget.productOfVIP.products,
+                  products: widget.products,
                 ),
                 SizedBox(height: 25.w),
               ],
@@ -154,67 +261,13 @@ class _BodyState extends State<_Body> {
         ),
         FixedBuyButton(
           notifier: productSelectedNotifier,
-          products: widget.productOfVIP.products,
-          vipText: widget.productOfVIP.vipText,
+          products: widget.products,
+          vipText: '',
+          showPayFunc: (selectedIndex) {
+            return widget.showPayFunc!(selectedIndex);
+          },
         ),
       ],
-    );
-  }
-}
-
-class _UserInfoArea extends StatelessWidget {
-  const _UserInfoArea();
-
-  @override
-  Widget build(BuildContext context) {
-    final member = context.watch<UserNotifier>().member;
-    final expiredTime = member.expiredAt.toString().split(' ')[0];
-
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
-      child: Row(
-        children: [
-          MyAvatar(
-            thumb: member.thumb,
-            margin: 2,
-            size: 67.w,
-            gradient: const LinearGradient(
-              colors: [Color(0xffdfab8f), Color(0xffcf8856)],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-          ),
-          SizedBox(width: 13.w),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Text(member.nickname, style: MyTheme.white255_14),
-                  SizedBox(width: 10.w),
-                  MemberVipWidget(showText: member.vipStr)
-                ],
-              ),
-              SizedBox(height: 10.w),
-              Row(
-                children: [
-                  Text(
-                    member.vipLevel < 2
-                        ? 'khykp'.tr(context: context)
-                        : '${'dqrq'.tr(context: context)} $expiredTime',
-                    style: MyTheme.gray163_12,
-                  ),
-                  SizedBox(width: 5.w),
-                  Text(
-                    "${'syxzcs'.tr(context: context)}${member.videoDownloadValue}",
-                    style: MyTheme.gray163_12,
-                  )
-                ],
-              )
-            ],
-          )
-        ],
-      ),
     );
   }
 }
@@ -254,7 +307,7 @@ class _ProductCardArea extends StatelessWidget {
     required this.selectedNotifier,
   });
 
-  final List<Product> products;
+  final List<VipUpgradeModel> products;
   final ValueNotifier selectedNotifier;
 
   @override
@@ -286,7 +339,7 @@ class _ProductCardArea extends StatelessWidget {
 }
 
 class _ProductItem extends StatelessWidget {
-  final Product product;
+  final VipUpgradeModel product;
   final bool isSelected;
 
   const _ProductItem({
@@ -296,8 +349,8 @@ class _ProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final promoPrice = product.promoPriceYuan.split('.').first;
-    final price = '¥${product.priceYuan.split('.').first}';
+    final promoPrice = product.payCoins.toString();
+    final price = '¥${product.priceYuan!.split('.').first}';
 
     return Stack(
       children: [
@@ -328,32 +381,35 @@ class _ProductItem extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    product.pName,
-                    style:
-                        isSelected ? MyTheme.brown72_18 : MyTheme.brown248_18,
+                  FittedBox(
+                    child: Text(
+                      product.pName!,
+                      style: isSelected
+                          ? MyTheme.brown72_18_semi
+                          : MyTheme.brown248_18_semi,
+                    ),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        '¥',
+                        promoPrice + 'jb'.tr(),
                         style: TextStyle(
                             fontSize: 18.sp,
                             color: isSelected
                                 ? const Color(0xFF48170e)
                                 : const Color(0xFFffffff),
-                            fontWeight: FontWeight.bold),
+                            fontWeight: FontWeight.normal),
                       ),
-                      Text(
-                        promoPrice,
-                        style: TextStyle(
-                            fontSize: 30.sp,
-                            color: isSelected
-                                ? const Color(0xFF48170e)
-                                : const Color(0xFFffffff),
-                            fontWeight: FontWeight.bold),
-                      ),
+                      // Text(
+                      //   promoPrice,
+                      //   style: TextStyle(
+                      //       fontSize: 30.sp,
+                      //       color: isSelected
+                      //           ? const Color(0xFF48170e)
+                      //           : const Color(0xFFffffff),
+                      //       fontWeight: FontWeight.bold),
+                      // ),
                     ],
                   ),
                   Text(
@@ -374,7 +430,7 @@ class _ProductItem extends StatelessWidget {
             ),
           ],
         ),
-        if (product.giveTip.isNotEmpty)
+        if (product.giveTip!.isNotEmpty)
           Positioned(
             top: 0,
             left: 0,
@@ -390,7 +446,7 @@ class _ProductItem extends StatelessWidget {
               ),
               child: Center(
                 child: Text(
-                  product.giveTip,
+                  product.giveTip!,
                   style: TextStyle(
                     color: const Color.fromRGBO(46, 24, 12, 1),
                     fontSize: 10.sp,
@@ -410,14 +466,15 @@ class _DescriptionArea extends StatelessWidget {
   const _DescriptionArea({required this.notifier, required this.products});
 
   final ValueNotifier<int> notifier;
-  final List<Product> products;
+  final List<VipUpgradeModel> products;
 
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
         valueListenable: notifier,
         builder: (context, selectedIndex, child) {
-          final description = products[selectedIndex].description.split('#');
+          final description =
+              (products[selectedIndex].description ?? '').split('#');
           return description.isEmpty
               ? Container()
               : Padding(
@@ -441,7 +498,7 @@ class _RightArea extends StatelessWidget {
   });
 
   final ValueNotifier<int> notifier;
-  final List<Product> products;
+  final List<VipUpgradeModel> products;
 
   @override
   Widget build(BuildContext context) {
@@ -451,7 +508,7 @@ class _RightArea extends StatelessWidget {
           return GridView.builder(
             padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
             shrinkWrap: true,
-            itemCount: products[selectedIndex].rights.length,
+            itemCount: products[selectedIndex].right.length,
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               childAspectRatio: 166 / 70,
@@ -460,9 +517,9 @@ class _RightArea extends StatelessWidget {
             ),
             primary: false,
             itemBuilder: (context, index) => _RightItem(
-              logo: products[selectedIndex].rights[index].img,
-              title: products[selectedIndex].rights[index].name,
-              subTitle: products[selectedIndex].rights[index].desc,
+              logo: products[selectedIndex].right[index].img,
+              title: products[selectedIndex].right[index].name,
+              subTitle: products[selectedIndex].right[index].desc,
             ),
           );
         });
@@ -642,6 +699,88 @@ class _ExpItemState extends State<_ExpItem> {
           ),
         ),
       ],
+    );
+  }
+}
+
+class FixedBuyButton extends StatefulWidget {
+  const FixedBuyButton({
+    super.key,
+    required this.notifier,
+    required this.products,
+    required this.vipText,
+    this.showPayFunc,
+  });
+
+  final ValueNotifier<int> notifier;
+  final List<VipUpgradeModel> products;
+  final String vipText;
+  final Future<void> Function(int selectedIndex)? showPayFunc;
+
+  @override
+  State<FixedBuyButton> createState() => _FixedBuyButtonState();
+}
+
+class _FixedBuyButtonState extends State<FixedBuyButton> {
+  Future<void> _showPay(int selectedIndex) {
+    return widget.showPayFunc!.call(selectedIndex);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Color(0xFF111127), Color(0xFF111127)],
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        ),
+      ),
+      child: ValueListenableBuilder(
+        valueListenable: widget.notifier,
+        builder: (context, selectedIndex, child) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(height: 10.w),
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
+                child: MyButton.gradient(
+                  onPressed: () => _showPay(selectedIndex),
+                  minimumSize: Size.fromHeight(40.w),
+                  text:
+                      "${'ljzf'.tr(context: context)} ${widget.products[selectedIndex].payCoins}${'jb'.tr(context: context)}",
+                ),
+              ),
+              SizedBox(height: 10.w),
+              GestureDetector(
+                behavior: HitTestBehavior.translucent,
+                onTap: () => const MineCustomerServiceRoute().push(context),
+                child: Text.rich(
+                  TextSpan(
+                    text: 'zflx'.tr(context: context),
+                    style: TextStyle(
+                      color: const Color(0xFFc6c7c9),
+                      fontSize: 10.sp,
+                    ),
+                    children: [
+                      TextSpan(
+                        text: 'zxkf'.tr(context: context),
+                        style: TextStyle(
+                          color: MyTheme.gradient_90_114_colors.first,
+                          fontSize: 10.sp,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: 20.w)
+            ],
+          );
+        },
+      ),
     );
   }
 }

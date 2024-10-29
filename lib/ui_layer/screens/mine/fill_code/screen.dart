@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../domain/api_validator.dart';
 import '../../../../domain/domain.dart';
 import '../../../notifiers/user_notifier.dart';
 import '../../../utils/my_toast.dart';
@@ -48,8 +49,17 @@ class _MineFillCodeScreenState extends State<MineFillCodeScreen> {
           MyToast.showText(text: '${resultVi.msg}');
         } else {
           final result = await userDomain.updateUserInfo(nickName: value);
-          userNotifier.setNickName(nickName: value);
-          showText(status: result.status, msg: result.msg);
+
+          if (result.isValid) {
+            // userNotifier.setNickName(nickName: value);
+            MyToast.showText(
+                text: (result.msg ?? '').isNotEmpty
+                    ? result.msg.toString()
+                    : result.data.toString());
+          } else {
+            MyToast.showText(text: result.msg!);
+          }
+          // showText(status: result.status, msg: result.msg);
         }
         MyToast.closeAllLoading();
       } else if (title == tr('yqm')) {

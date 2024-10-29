@@ -138,5 +138,14 @@ mixin _User on _BaseAppRepo implements UserDomain {
       _userService.imSend(type: type).deserialize().guard;
 
   @override
+  AsyncResult getUserUpgradeGoods() =>
+      _userService.getUserUpgradeGoods().deserialize().guard;
+
+  AsyncResult userUpgrade({
+    required int goodsId,
+  }) =>
+      _userService.userUpgrade(goodsId: goodsId).deserialize().guard;
+
+  @override
   AsyncJson clearCached() => _userService.clearCached();
 }

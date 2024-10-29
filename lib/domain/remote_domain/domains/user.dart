@@ -91,6 +91,14 @@ abstract class UserDomain {
 
   AsyncResult imSend({required String type});
 
+  /// 可升级列表
+  AsyncResult getUserUpgradeGoods();
+
+  /// 金币升级VIP
+  AsyncResult userUpgrade({
+    required int goodsId,
+  });
+
   /// 清除缓存
   AsyncJson clearCached();
 }

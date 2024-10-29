@@ -936,9 +936,23 @@ class MyTheme {
       overflow: TextOverflow.ellipsis,
       decoration: TextDecoration.none);
 
+  static final TextStyle brown72_18_semi = TextStyle(
+      color: const Color.fromRGBO(72, 23, 14, 1),
+      fontSize: 18.sp,
+      fontWeight: FontWeight.w600,
+      overflow: TextOverflow.ellipsis,
+      decoration: TextDecoration.none);
+
   static final TextStyle brown248_18 = TextStyle(
       color: const Color.fromRGBO(255, 255, 255, 1),
       fontSize: 18.sp,
+      overflow: TextOverflow.ellipsis,
+      decoration: TextDecoration.none);
+
+  static final TextStyle brown248_18_semi = TextStyle(
+      color: const Color.fromRGBO(255, 255, 255, 1),
+      fontSize: 18.sp,
+      fontWeight: FontWeight.w600,
       overflow: TextOverflow.ellipsis,
       decoration: TextDecoration.none);
 
@@ -1009,10 +1023,10 @@ class MyTheme {
       decoration: TextDecoration.none);
 
   static final TextStyle blue80_13_M_Line = TextStyle(
-      color: MyTheme.jellyCyanColor103224185,
-      fontSize: 13.sp,
-      decoration: TextDecoration.underline,
-      decorationColor: jellyCyanColor103224185,
+    color: MyTheme.jellyCyanColor103224185,
+    fontSize: 13.sp,
+    decoration: TextDecoration.underline,
+    decorationColor: jellyCyanColor103224185,
   );
 
   static final TextStyle blue96_13_M = TextStyle(
