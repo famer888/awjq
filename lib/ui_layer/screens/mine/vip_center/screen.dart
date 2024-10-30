@@ -234,7 +234,7 @@ class _UserInfoArea extends StatelessWidget {
               Container(
                 // color: Colors.red,
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Container(
                       constraints: BoxConstraints(maxWidth: 150.w),
@@ -244,16 +244,29 @@ class _UserInfoArea extends StatelessWidget {
                               fontSize: 16.sp,
                               overflow: TextOverflow.ellipsis,
                               fontWeight: FontWeight.w600,
-                              height: 1.5,
+                              height: 1,
                               decoration: TextDecoration.none)),
                     ),
                     Container(
                         margin: EdgeInsets.only(left: 5.w),
-                        child: MemberVipWidget(showText: member.vipStr)),
+                        alignment: Alignment.bottomCenter,
+                        height: 30.w,
+                        // color: Colors.red,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            MemberVipWidget(showText: member.vipStr),
+                            SizedBox(
+                              height: 6.w,
+                            )
+                          ],
+                        )),
                     if (member.vipUpgrade == 1)
                       GestureDetector(
                         onTap: () => VipUpgradeRoute().push(context),
                         child: Container(
+                          // color: Colors.red,
                           margin: EdgeInsets.only(left: 3.w),
                           child: MyImage.asset(
                             MyImagePaths.appMineVipUpgrade,
