@@ -87,14 +87,15 @@ final mediaIv =
         .toList(growable: false);
 
 FutureOr<Uint8List> imageDecrypt(Uint8List data) async {
-  // final key = await AesCbcSecretKey.importRawKey(mediaKey);
-  // final decrypted = await key.decryptBytes(data, mediaIv);
-  //
-  // return decrypted;
+  final key = await AesCbcSecretKey.importRawKey(mediaKey);
+  final decrypted = await key.decryptBytes(data, mediaIv);
 
-    Encrypter encrypter = Encrypter(AES(Key.fromUtf8("f5d965df75336270"), mode: AESMode.cbc));
-    Encrypted encrypted = Encrypted.fromBase64(base64Encode(data));
-    List<int> decrypted = encrypter.decryptBytes(encrypted, iv: IV.fromUtf8("97b60394abc2fbe1"));
-    return Uint8List.fromList(decrypted);
+  return decrypted;
 
+  // Encrypter encrypter =
+  //     Encrypter(AES(Key.fromUtf8("f5d965df75336270"), mode: AESMode.cbc));
+  // Encrypted encrypted = Encrypted.fromBase64(base64Encode(data));
+  // List<int> decrypted =
+  //     encrypter.decryptBytes(encrypted, iv: IV.fromUtf8("97b60394abc2fbe1"));
+  // return Uint8List.fromList(decrypted);
 }
