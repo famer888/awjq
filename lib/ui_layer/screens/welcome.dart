@@ -1,4 +1,7 @@
 import 'dart:async';
+import 'package:awjq/ui_layer/screens/common_widgets/screen_background.dart';
+import 'package:flutter_swiper_null_safety_flutter3/flutter_swiper_null_safety_flutter3.dart';
+
 import '../utils/my_toast.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +32,8 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   late final homeConfigNotifier = context.read<HomeConfigNotifier>();
   late final userNotifier = context.read<UserNotifier>();
 
-  AdModel? welcomeAds;
+  // AdModel? welcomeAds;
+  List<AdModel>? welcomeStartScreenAds;
   String? officialWebUrl;
 
   bool isCheckingLine = true;
@@ -46,10 +50,13 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   void _loadDataFromCache() async {
     officialWebUrl = await cacheDomain.readOfficeWeb();
-    welcomeAds = await cacheDomain.readAds();
-    if (welcomeAds?.imgUrl case final url? when mounted) {
-      precacheImage(NetworkImage(url), context);
-    }
+    // welcomeAds = await cacheDomain.readAds();
+    // if (welcomeAds?.imgUrl case final url? when mounted) {
+    //   precacheImage(NetworkImage(url), context);
+    // }
+
+    welcomeStartScreenAds = await cacheDomain.readStartScreenAds();
+
     setState(() {});
   }
 
@@ -70,7 +77,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   _enterAdOrHome({bool showTip = false}) async {
     if (await homeConfigNotifier.init() && mounted) {
-      if (welcomeAds != null) {
+      if (welcomeStartScreenAds != null) {
         setState(() {
           showAd = true;
         });
@@ -166,16 +173,19 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Widget build(BuildContext context) {
     return PopScopeWrapper(
       child: Scaffold(
-        backgroundColor: MyTheme.bgColor,
-        body: showAd ? AdView(adModel: welcomeAds!) : checkLineView(),
+          // backgroundColor: MyTheme.bgColor,
+          body: showAd
+              ? AdView(adModels: welcomeStartScreenAds!)
+              : checkLineView(),
       ),
     );
   }
 }
 
 class AdView extends StatefulWidget {
-  const AdView({super.key, required this.adModel});
-  final AdModel adModel;
+  const AdView({super.key, required this.adModels});
+
+  final List<AdModel> adModels;
 
   @override
   State<AdView> createState() => _AdViewState();
@@ -198,14 +208,24 @@ class _AdViewState extends State<AdView> {
 
   @override
   Widget build(BuildContext context) {
+    final length = widget.adModels.length;
+
     return Stack(
       fit: StackFit.expand,
       children: [
-        if (widget.adModel.imgUrl case final String imgUrl)
-          Positioned.fill(
-            child: GestureDetector(
+        Positioned.fill(
+            child: Swiper(
+          autoplay: length > 1,
+          itemBuilder: (BuildContext context, int index) {
+            precacheImage(
+                NetworkImage(CommonUtils.getThumb(widget
+                    .adModels[(index + 1).clamp(0, length - 1)]
+                    .toJson())),
+                context);
+
+            return GestureDetector(
               onTap: () {
-                final ad = widget.adModel;
+                final ad = widget.adModels[index];
                 CommonUtils.openRoute(context, {
                   'report_id': ad.id,
                   'report_type': ad.type,
@@ -213,11 +233,37 @@ class _AdViewState extends State<AdView> {
                 });
               },
               child: MyImage.network(
-                imgUrl,
+                CommonUtils.getThumb(widget.adModels[index].toJson()),
                 fit: BoxFit.cover,
+              ),
+            );
+          },
+          itemCount: length,
+          pagination: SwiperPagination(
+            builder: SwiperCustomPagination(
+              builder: (context, config) => Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(
+                  length,
+                  (index) {
+                    bool isActive = config.activeIndex == index;
+                    return Container(
+                      width: 5.w,
+                      height: 5.w,
+                      margin: EdgeInsets.only(right: 7.w),
+                      decoration: BoxDecoration(
+                        color: isActive
+                            ? Colors.white
+                            : Colors.white.withOpacity(0.3),
+                        shape: BoxShape.circle,
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
           ),
+        )),
         Positioned(
           top: MediaQuery.of(context).padding.top + 10.w,
           right: 15.w,

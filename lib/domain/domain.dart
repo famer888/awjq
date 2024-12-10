@@ -33,6 +33,9 @@ abstract class CacheDomain
   /// 获取广告缓存
   Future<AdModel?> readAds();
 
+  /// 获取广告缓存
+  Future<List<AdModel>?> readStartScreenAds();
+
   Future<bool> readIsBarrage();
 
   ///获取直播弹幕开关，默认true：开
