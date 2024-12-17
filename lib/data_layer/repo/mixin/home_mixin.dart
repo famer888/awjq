@@ -10,8 +10,7 @@ mixin _Home on _BaseAppRepo implements HomeDomain {
             when ads.imgUrl?.isNotEmpty == true) {
           await _cacheManager.upsertAds(ads);
         }
-        if (value.data?.startScreenAds case final startScreenAds?
-        when startScreenAds.isNotEmpty == true) {
+        if (value.data?.startScreenAds case final startScreenAds?) {
           await _cacheManager.upsertStartScreenAds(startScreenAds);
         }
         if (value.data?.config case final config?) {
