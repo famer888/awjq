@@ -56,21 +56,27 @@ class _WebViewScreenState extends State<WebViewScreen> {
   }
 
   Widget _buildNativeWidget() {
-    return WebView(
-      initialUrl: Uri.decodeComponent(widget.url),
-      javascriptMode: JavascriptMode.unrestricted,
-      onWebViewCreated: (WebViewController webViewController) {
-        _controller = webViewController;
-      },
-      javascriptChannels: <JavascriptChannel>{
-        JavascriptChannel(
-          name: 'FlutterChannel',
-          onMessageReceived: (JavascriptMessage js) {
-            jumpToPage(js.message.toString());
+    _controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onProgress: (int progress) {
+            // Update loading bar.
           },
-        )
-      },
-    );
+          onPageStarted: (String url) {},
+          onPageFinished: (String url) {},
+          onHttpError: (HttpResponseError error) {},
+          onWebResourceError: (WebResourceError error) {},
+          onNavigationRequest: (NavigationRequest request) {
+            return NavigationDecision.navigate;
+          },
+        ),
+      )
+      ..addJavaScriptChannel('FlutterChannel', onMessageReceived: (js) {
+        jumpToPage(js.message.toString());
+      })
+      ..loadRequest(Uri.parse(Uri.decodeComponent(widget.url)));
+    return WebViewWidget(controller: _controller);
   }
 
   Widget _buildHtmlWidget() {

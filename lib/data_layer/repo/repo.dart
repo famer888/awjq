@@ -338,9 +338,9 @@ abstract class _BaseAppRepo implements AppDomain {
     }
 
     //无网络
-    ConnectivityResult connectivityResult =
-        await Connectivity().checkConnectivity();
-    if (connectivityResult == ConnectivityResult.none) {
+    final List<ConnectivityResult> connectivityResult =
+        await (Connectivity().checkConnectivity());
+    if (connectivityResult.contains(ConnectivityResult.none)) {
       failed?.call();
       return;
     }
