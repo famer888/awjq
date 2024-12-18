@@ -77,7 +77,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   _enterAdOrHome({bool showTip = false}) async {
     if (await homeConfigNotifier.init() && mounted) {
-      if (welcomeStartScreenAds != null) {
+      if (welcomeStartScreenAds?.isNotEmpty ?? false) {
         setState(() {
           showAd = true;
         });
