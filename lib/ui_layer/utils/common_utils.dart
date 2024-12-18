@@ -8,6 +8,7 @@ import 'package:awjq/ui_layer/screens/common_widgets/my_image.dart';
 import 'package:awjq/ui_layer/screens/common_widgets/swiper_tips.dart';
 import 'package:awjq/ui_layer/screens/image_paths.dart';
 import 'package:easy_localization/easy_localization.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -360,6 +361,43 @@ class CommonUtils {
       } else {
         launchUrl(data['url_str'].trim());
       }
+    }
+  }
+
+  static Page<void> buildSlideTransitionPage({
+    required GoRouterState state,
+    required Widget child,
+    Duration transitionDuration = const Duration(milliseconds: 250),
+  }) {
+    bool isWebOrIOS = kIsWeb || (defaultTargetPlatform == TargetPlatform.iOS);
+
+    if (isWebOrIOS) {
+      // iOS/web系统上使用默认的页面过渡动画（支持滑动返回）
+      return CupertinoPage(
+        key: state.pageKey,
+        child: child,
+      );
+    } else {
+      return CustomTransitionPage<void>(
+        key: state.pageKey,
+        child: child,
+        transitionDuration: transitionDuration,
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          // Define the transition animation here (slide from right to left)
+          const begin = Offset(1.0, 0.0);
+          const end = Offset.zero;
+          const curve = Curves.easeInOut;
+
+          var tween =
+          Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          var offsetAnimation = animation.drive(tween);
+
+          return SlideTransition(
+            position: offsetAnimation,
+            child: child,
+          );
+        },
+      );
     }
   }
 
@@ -785,4 +823,5 @@ class RelativeDateFormat {
   /// 格式化两位数不足补0
   static String formatTwoDigitNumber(int number) =>
       number.toString().padLeft(2, '0');
+
 }

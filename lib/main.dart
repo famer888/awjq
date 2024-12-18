@@ -128,6 +128,10 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         splashColor: Colors.transparent,
         scaffoldBackgroundColor: MyTheme.bgColor,
+        canvasColor: MyTheme.bgColor, // Canvas 背景色
+        colorScheme: const ColorScheme.light(
+          surface: MyTheme.bgColor, // ColorScheme 背景色
+        ),
         highlightColor: Colors.transparent,
         textSelectionTheme: TextSelectionThemeData(
           cursorColor: MyTheme.cyanColor00edfd,

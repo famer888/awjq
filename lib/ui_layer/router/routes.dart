@@ -53,10 +53,12 @@ import '../screens/more_video/screen.dart';
 import '../screens/restricted/screen.dart';
 import '../screens/search/result/screen.dart';
 import '../screens/search/screen.dart';
+import '../screens/theme.dart';
 import '../screens/user_center/screen.dart';
 import '../screens/video_detail/screen.dart';
 import '../screens/webview/screen.dart';
 import '../screens/welcome.dart';
+import '../utils/common_utils.dart';
 import 'paths.dart';
 import 'router.dart';
 part 'routes.g.dart';
@@ -66,8 +68,9 @@ class WelcomeRoute extends GoRouteData {
   const WelcomeRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const WelcomeScreen();
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: const WelcomeScreen());
   }
 }
 
@@ -117,6 +120,7 @@ class WelcomeRoute extends GoRouteData {
     ),
   ],
 )
+
 class StatefulShellRoute extends StatefulShellRouteData {
   const StatefulShellRoute();
 
@@ -194,11 +198,11 @@ class BitPostDetailRoute extends GoRouteData {
   const BitPostDetailRoute(this.id);
 
   final String id;
+
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return BitPostDetailScreen(
-      id: id,
-    );
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: BitPostDetailScreen(id: id));
   }
 }
 
@@ -210,8 +214,9 @@ class VipCenterRoute extends GoRouteData {
   const VipCenterRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const VipCenterScreen();
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: VipCenterScreen());
   }
 }
 
@@ -223,8 +228,9 @@ class VipUpgradeRoute extends GoRouteData {
   const VipUpgradeRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const VipUpgradeScreen();
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: const VipUpgradeScreen());
   }
 }
 
@@ -236,8 +242,9 @@ class LiveVideoRoute extends GoRouteData {
   const LiveVideoRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const HomeLiveScreen();
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: const HomeLiveScreen());
   }
 }
 
@@ -249,8 +256,9 @@ class AIRoute extends GoRouteData {
   const AIRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const HomeAiScreen();
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: const HomeAiScreen());
   }
 }
 
@@ -262,8 +270,9 @@ class CoinRechargeRoute extends GoRouteData {
   const CoinRechargeRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const CoinRechargeScreen();
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: const CoinRechargeScreen());
   }
 }
 
@@ -275,8 +284,9 @@ class CoinDetailRoute extends GoRouteData {
   const CoinDetailRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const CoinDetailScreen();
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: const CoinDetailScreen());
   }
 }
 
@@ -287,9 +297,11 @@ class RechargeRecordRoute extends GoRouteData {
 
   const RechargeRecordRoute(this.type);
   final String type;
+
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return RechargeRecordScreen(type: type);
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: RechargeRecordScreen(type: type));
   }
 }
 
@@ -301,9 +313,11 @@ class CommunityIssueRoute extends GoRouteData {
   const CommunityIssueRoute(this.type);
 
   final CommunityIssueType type;
+
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return CommunityIssueScreen(type: type);
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: CommunityIssueScreen(type: type));
   }
 }
 
@@ -315,8 +329,9 @@ class XianYuIssueRoute extends GoRouteData {
   const XianYuIssueRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const XianYuIssueScreen();
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: const XianYuIssueScreen());
   }
 }
 
@@ -333,9 +348,11 @@ class CommunityModuleRoute extends GoRouteData {
   final int id;
   final bool noLive;
   final String type;
+
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return CommunityModuleScreen(id: id, noLive: noLive, type: type);
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: CommunityModuleScreen(id: id, noLive: noLive, type: type));
   }
 }
 
@@ -348,9 +365,11 @@ class CommunityPostDetailRoute extends GoRouteData {
   const CommunityPostDetailRoute(this.id);
 
   final String id;
+
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return CommunityPostDetailScreen(id: id);
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: CommunityPostDetailScreen(id: id));
   }
 }
 
@@ -363,10 +382,8 @@ class LoginRoute extends GoRouteData {
 
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
-    return const MaterialPage(
-      fullscreenDialog: true,
-      child: LoginScreen(),
-    );
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: const LoginScreen());
   }
 }
 
@@ -378,8 +395,9 @@ class MineSetupRoute extends GoRouteData {
   const MineSetupRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const MineSetupScreen();
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: const MineSetupScreen());
   }
 }
 
@@ -391,8 +409,9 @@ class MineShareToUserRoute extends GoRouteData {
   const MineShareToUserRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const MineShareToUserScreen();
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: const MineShareToUserScreen());
   }
 }
 
@@ -405,8 +424,9 @@ class MineShareToUserRecordRoute extends GoRouteData {
   const MineShareToUserRecordRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const MineShareToUserRecordScreen();
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: const MineShareToUserRecordScreen());
   }
 }
 
@@ -418,8 +438,9 @@ class MineAgentRoute extends GoRouteData {
   const MineAgentRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const MineAgentScreen();
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: const MineAgentScreen());
   }
 }
 
@@ -431,8 +452,9 @@ class MineAgentProfitRoute extends GoRouteData {
   const MineAgentProfitRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const MineAgentProfitScreen();
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: const MineAgentProfitScreen());
   }
 }
 
@@ -445,8 +467,9 @@ class MineAgentPromoteDataRoute extends GoRouteData {
   const MineAgentPromoteDataRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const MineAgentPromoteDataScreen();
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: const MineAgentPromoteDataScreen());
   }
 }
 
@@ -458,8 +481,9 @@ class MineCustomerServiceRoute extends GoRouteData {
   const MineCustomerServiceRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const MineCustomerServiceScreen();
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: const MineCustomerServiceScreen());
   }
 }
 
@@ -473,8 +497,9 @@ class MineWithdrawalRoute extends GoRouteData {
   final bool isAgent;
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return MineWithdrawalScreen(isAgent: isAgent);
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: MineWithdrawalScreen(isAgent: isAgent));
   }
 }
 
@@ -487,8 +512,9 @@ class MineWithdrawalRecordRoute extends GoRouteData {
   const MineWithdrawalRecordRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const MineWithdrawalRecordScreen();
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: const MineWithdrawalRecordScreen());
   }
 }
 
@@ -501,8 +527,9 @@ class MineWithdrawalBankListRoute extends GoRouteData {
   const MineWithdrawalBankListRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const MineWithdrawalBankListScreen();
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: const MineWithdrawalBankListScreen());
   }
 }
 
@@ -515,8 +542,9 @@ class MineWelfareRoute extends GoRouteData {
   final int index;
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return MineWelfareScreen(index: index);
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: MineWelfareScreen(index: index));
   }
 }
 
@@ -528,8 +556,9 @@ class MinePostRoute extends GoRouteData {
   const MinePostRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const MinePostScreen();
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: const MinePostScreen());
   }
 }
 
@@ -541,8 +570,9 @@ class MineIncomeDetailRoute extends GoRouteData {
   const MineIncomeDetailRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const MineIncomeDetailScreen();
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: const MineIncomeDetailScreen());
   }
 }
 
@@ -554,8 +584,9 @@ class MineCollectionRoute extends GoRouteData {
   const MineCollectionRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const MineCollectionScreen();
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: const MineCollectionScreen());
   }
 }
 
@@ -569,8 +600,9 @@ class UserCenterRoute extends GoRouteData {
   final String aff;
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return UserCenterScreen(aff: aff);
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: UserCenterScreen(aff: aff));
   }
 }
 
@@ -587,12 +619,13 @@ class ChatMessageRoute extends GoRouteData {
   final String thumb;
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return ChatMessageScreen(
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: ChatMessageScreen(
       toUuid: toUuid,
       nickName: nickName,
       thumb: thumb,
-    );
+    ));
   }
 }
 
@@ -604,8 +637,9 @@ class MineFollowingRoute extends GoRouteData {
   const MineFollowingRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const MineFollowingScreen();
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: const MineFollowingScreen());
   }
 }
 
@@ -617,8 +651,9 @@ class OriginalEnterRoute extends GoRouteData {
   const OriginalEnterRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const OriginalEnterScreen();
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: const OriginalEnterScreen());
   }
 }
 
@@ -636,8 +671,9 @@ class CommunityTagDetailRoute extends GoRouteData {
       context.removeDuplicatePush(location);
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return CommunityTagDetailScreen(id: id, isFish: isFish);
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: CommunityTagDetailScreen(id: id, isFish: isFish));
   }
 }
 
@@ -649,8 +685,9 @@ class MineBuyRoute extends GoRouteData {
   const MineBuyRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const MineBuyScreen();
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: const MineBuyScreen());
   }
 }
 
@@ -662,8 +699,9 @@ class MineAIRecordRoute extends GoRouteData {
   const MineAIRecordRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const MineAIRecordScreen();
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: const MineAIRecordScreen());
   }
 }
 
@@ -679,8 +717,9 @@ class VideoDetailRoute extends GoRouteData {
       context.removeDuplicatePush(location, extra: $extra);
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return VideoDetailScreen(id: $extra);
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: VideoDetailScreen(id: $extra));
   }
 }
 
@@ -696,8 +735,9 @@ class LiveVideoDetailRoute extends GoRouteData {
       context.removeDuplicatePush(location, extra: $extra);
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return LiveVideoDetailScreen(id: $extra);
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: LiveVideoDetailScreen(id: $extra));
   }
 }
 
@@ -713,8 +753,9 @@ class MonitorVideoDetailRoute extends GoRouteData {
       context.removeDuplicatePush(location, extra: $extra);
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return MonitorVideoDetailScreen(id: $extra);
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: MonitorVideoDetailScreen(id: $extra));
   }
 }
 
@@ -726,8 +767,9 @@ class MineDownloadRoute extends GoRouteData {
   const MineDownloadRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const MineDownloadScreen();
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: const MineDownloadScreen());
   }
 }
 
@@ -740,8 +782,9 @@ class MineFillCodeRoute extends GoRouteData {
   final String title;
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return MineFillCodeScreen(title: title);
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: MineFillCodeScreen(title: title));
   }
 }
 
@@ -753,8 +796,9 @@ class MineHelpRoute extends GoRouteData {
   const MineHelpRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const MineHelpScreen();
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: const MineHelpScreen());
   }
 }
 
@@ -766,8 +810,9 @@ class MineOfficialGroupRoute extends GoRouteData {
   const MineOfficialGroupRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const MineOfficialGroupScreen();
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: const MineOfficialGroupScreen());
   }
 }
 
@@ -779,8 +824,9 @@ class SearchRoute extends GoRouteData {
   const SearchRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const SearchScreen();
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: const SearchScreen());
   }
 }
 
@@ -794,8 +840,9 @@ class SearchResultRoute extends GoRouteData {
   final String title;
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return SearchResultScreen(title: title);
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: SearchResultScreen(title: title));
   }
 }
 
@@ -813,8 +860,9 @@ class MoreVideoRoute extends GoRouteData {
   final String id;
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return MoreVideoScreen(name: name, id: id);
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: MoreVideoScreen(name: name, id: id));
   }
 }
 
@@ -826,8 +874,9 @@ class MessageCenterRoute extends GoRouteData {
   const MessageCenterRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const MessageCenterScreen();
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: const MessageCenterScreen());
   }
 }
 
@@ -839,8 +888,9 @@ class SystemMessageRoute extends GoRouteData {
   const SystemMessageRoute();
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return const SystemMessageScreen();
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: const SystemMessageScreen());
   }
 }
 
@@ -853,8 +903,9 @@ class MediaViewerRoute extends GoRouteData {
   final Map $extra;
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return MediaViewerScreen(pramas: $extra);
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: MediaViewerScreen(pramas: $extra));
   }
 }
 
@@ -867,8 +918,9 @@ class LocalVideoRoute extends GoRouteData {
   final VideoData $extra;
 
   @override
-  Widget build(BuildContext context, GoRouterState state) {
-    return LocalVideoScreen(data: $extra);
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: LocalVideoScreen(data: $extra));
   }
 }
 
