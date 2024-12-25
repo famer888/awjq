@@ -18,7 +18,6 @@ import url_launcher_macos
 import video_player_avfoundation
 import wakelock_plus
 import webcrypto
-import webview_flutter_wkwebview
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
   AppInstallerPlugin.register(with: registry.registrar(forPlugin: "AppInstallerPlugin"))
@@ -34,5 +33,4 @@ func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
   FVPVideoPlayerPlugin.register(with: registry.registrar(forPlugin: "FVPVideoPlayerPlugin"))
   WakelockPlusMacosPlugin.register(with: registry.registrar(forPlugin: "WakelockPlusMacosPlugin"))
   WebcryptoPlugin.register(with: registry.registrar(forPlugin: "WebcryptoPlugin"))
-  FLTWebViewFlutterPlugin.register(with: registry.registrar(forPlugin: "FLTWebViewFlutterPlugin"))
 }
