@@ -163,7 +163,7 @@ class _AppDownCenterCardState extends State<AppDownCenterCard> {
                       ),
                     );
                   }),
-              GridView.builder(
+              groupedApps.length < 2 ? Container() : GridView.builder(
                   shrinkWrap: true,
                   addRepaintBoundaries: false,
                   addAutomaticKeepAlives: false,
