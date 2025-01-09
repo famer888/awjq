@@ -14,8 +14,8 @@ class BuildConfig {
   /// 备用接口线路
   static final apiLines = kIsWeb
       ? [
-          'https://bpi3.mxpuqgdg.cc/api.php',
-          'https://lnx.mmsnmdkc.cc/api.php',
+          'https://bpi3.esfmekjl.net/api.php',
+          'https://lnx.esfmekjl.net/api.php'
         ]
       : [
           'https://d3myclmpa1s8p.cloudfront.net/api.php',
