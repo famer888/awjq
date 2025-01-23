@@ -225,7 +225,7 @@ class _MineWithdrawalScreenState extends State<MineWithdrawalScreen> {
                                 _sumResultMoney.value = int.parse(value);
                                 _sumAllResultMoney.value =
                                     (_sumResultMoney.value /
-                                            (1 - (data.proxyRate ?? 0)))
+                                        (1 - (widget.isAgent ? (data.proxyRate ?? 0) : (data.incomeRate ?? 0))))
                                         .ceil();
                               });
                             },
