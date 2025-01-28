@@ -64,7 +64,7 @@ dependencies:
 
 
 dependency_overrides:
-  win32: ">=4.0.0 <6.0.0"
+  # win32: ">=4.0.0 <6.0.0"
 
 dev_dependencies:
   flutter_test:

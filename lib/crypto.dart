@@ -37,7 +37,6 @@ class PlatformAwareCrypto {
   }
 
   static dynamic decryptResData(dynamic data) async {
-
     // final k = await AesCbcSecretKey.importRawKey(utf8.encode(BuildConfig.key));
     //
     // final raw = await k.decryptBytes(
