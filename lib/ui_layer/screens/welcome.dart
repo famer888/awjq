@@ -1,4 +1,8 @@
 import 'dart:async';
+import 'package:amplitude_flutter/amplitude.dart';
+import 'package:amplitude_flutter/configuration.dart';
+import 'package:amplitude_flutter/events/base_event.dart';
+import 'package:amplitude_flutter/events/event_options.dart';
 import 'package:awjq/ui_layer/screens/common_widgets/screen_background.dart';
 import 'package:flutter_swiper_null_safety_flutter3/flutter_swiper_null_safety_flutter3.dart';
 
@@ -40,12 +44,21 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   bool showAd = false;
 
   List<String> lines = [];
+  var amplitude;
 
   @override
   void initState() {
+    _initAmp();
     _loadDataFromCache();
     _checkLineAndFetchBeforeEnterHome();
     super.initState();
+  }
+
+  void _initAmp() async {
+    amplitude =
+        Amplitude(Configuration(apiKey: "84439ea513bfa34c23ede1958716ae99"));
+    await amplitude.track(
+        BaseEvent("open app", deviceId: appDomain.info["oauth_id"].toString()));
   }
 
   void _loadDataFromCache() async {
@@ -62,12 +75,18 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   _checkLineAndFetchBeforeEnterHome() {
     appDomain.initLine(
-      failed: () {
+      failed: () async {
         isCheckingLine = false;
         if (mounted) setState(() {});
+        await amplitude.track(BaseEvent("entry failure",
+            deviceId: appDomain.info["oauth_id"].toString(),
+            eventProperties: {"line": lines}));
       },
-      success: () {
+      success: () async {
         _enterAdOrHome();
+        await amplitude.track(BaseEvent("enter app",
+            deviceId: appDomain.info["oauth_id"].toString(),
+            eventProperties: {"line": appDomain.api}));
       },
       lines: (x) {
         lines = x;
@@ -173,10 +192,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   Widget build(BuildContext context) {
     return PopScopeWrapper(
       child: Scaffold(
-          // backgroundColor: MyTheme.bgColor,
-          body: showAd
-              ? AdView(adModels: welcomeStartScreenAds!)
-              : checkLineView(),
+        // backgroundColor: MyTheme.bgColor,
+        body:
+            showAd ? AdView(adModels: welcomeStartScreenAds!) : checkLineView(),
       ),
     );
   }

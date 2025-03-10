@@ -201,6 +201,10 @@ abstract class _BaseAppRepo implements AppDomain {
   @override
   CacheDomain get cache => _cacheManager;
 
+  @override
+  // TODO: implement api
+  String get api => _apiDio.options.baseUrl;
+
   Future<void> init() async {
     if (_isInitialized) return;
     _isInitialized = true;
@@ -290,7 +294,7 @@ abstract class _BaseAppRepo implements AppDomain {
         : {
             'bundleId': packageInfo.packageName,
             'version': packageInfo.version,
-            // "build_affcode": "dPNK2",
+            // "build_affcode": "egHYB",
           };
 
     info.addAll({

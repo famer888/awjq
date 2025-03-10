@@ -61,6 +61,7 @@ dependencies:
   connectivity_plus: any
   package_info_plus: ^8.0.2
   common_utils: ^2.1.0
+  amplitude_flutter: ^4.0.0
 
 
 dependency_overrides:

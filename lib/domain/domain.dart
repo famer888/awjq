@@ -23,6 +23,7 @@ abstract class AppDomain implements LocaleDomain, RemoteDomain {}
 abstract class LocaleDomain {
   CacheDomain get cache;
   Json get info;
+  String get api;
 }
 
 abstract class CacheDomain
