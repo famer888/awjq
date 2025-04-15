@@ -1,4 +1,3 @@
-
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -13,6 +12,8 @@ import '../../../../domain/model/post_model.dart';
 import '../../../../domain/remote_domain/domains/live.dart';
 import '../../../../domain/remote_domain/domains/monitor.dart';
 import '../../../notifiers/home_config_notifier.dart';
+import '../../../utils/common_utils.dart';
+import '../../../utils/my_toast.dart';
 import '../../bit/live_video/live_card/live_video_card.dart';
 import '../../bit/monitor_video/monitor_card/monitor_card.dart';
 import '../../common_widgets/feed/feed_card.dart';
@@ -108,7 +109,9 @@ class _VideoViewState extends State<_VideoView> {
   }) async {
     final result = await mvDomain.videoSearch(
         page: page, limit: pageSize, word: widget.word);
-
+    if (result.status != 1) {
+      MyToast.showText(text: result.msg ?? '');
+    }
     return result.data!;
   }
 
@@ -143,6 +146,9 @@ class _LiveVideoViewState extends State<_LiveVideoView> {
   }) async {
     final result = await _domain.getLiveSearch(
         page: page, limit: pageSize, word: widget.word);
+    if (result.status != 1) {
+      MyToast.showText(text: result.msg ?? '');
+    }
     return result.data;
   }
 
@@ -177,7 +183,9 @@ class _MonitorVideoViewState extends State<_MonitorVideoView> {
   }) async {
     final result = await _domain.getMonitorSearch(
         page: page, limit: pageSize, word: widget.word);
-
+    if (result.status != 1) {
+      MyToast.showText(text: result.msg ?? '');
+    }
     return result.data!;
   }
 
@@ -216,7 +224,9 @@ class _TieztViewState extends State<_TieztView> {
       limit: pageSize,
       word: widget.word,
     );
-
+    if (result.status != 1) {
+      MyToast.showText(text: result.msg ?? '');
+    }
     return result.data!;
   }
 
@@ -253,7 +263,9 @@ class _ZhozViewState extends State<_ZhozView> {
       limit: pageSize,
       word: widget.word,
     );
-
+    if (result.status != 1) {
+      MyToast.showText(text: result.msg ?? '');
+    }
     return result.data!;
   }
 
