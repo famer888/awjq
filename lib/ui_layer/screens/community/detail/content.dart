@@ -5,9 +5,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 import '../../../../domain/api_validator.dart';
+import '../../../notifiers/home_config_notifier.dart';
 import '../../../notifiers/user_notifier.dart';
 import '../../../router/routes.dart';
 import '../../common_widgets/follow_button.dart';
+import '../../common_widgets/general_banner.dart';
 import '../../common_widgets/my_image.dart';
 import '../../common_widgets/post/content/like_collect_share_area.dart';
 
@@ -109,19 +111,19 @@ class CommunityDetailContentView extends StatelessWidget {
           ),
           const Spacer(),
           SizedBox(
-                width: 65.w,
-                height: 25.w,
-              child: Selector<UserNotifier, bool>(
-                selector: (_, notifier) =>
-                    notifier.userFollowingStatus.contains('${data.user?.aff}'),
-                builder: (_, isFollowed, __) => FollowButton(
-                    isFollowed: isFollowed,
-                    onTap: () => context
-                        .read<UserNotifier>()
-                        .changeUserFollow('${data.user?.aff}'),
-                  ),
+            width: 65.w,
+            height: 25.w,
+            child: Selector<UserNotifier, bool>(
+              selector: (_, notifier) =>
+                  notifier.userFollowingStatus.contains('${data.user?.aff}'),
+              builder: (_, isFollowed, __) => FollowButton(
+                isFollowed: isFollowed,
+                onTap: () => context
+                    .read<UserNotifier>()
+                    .changeUserFollow('${data.user?.aff}'),
               ),
             ),
+          ),
         ],
       ),
     );
@@ -134,6 +136,7 @@ class CommunityDetailContentView extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
+          TopAppsListWidget(),
           PostTitleView(
             topicTitle: data.title,
             viewCount: data.viewNum,
@@ -214,7 +217,8 @@ class _ContactViewState extends State<_ContactView> {
                         color: MyTheme.cyanColor00edfd,
                         strokeWidth: 1.w),
                     alignment: Alignment.center,
-                    child: Text(tr('lxfsyyc'), style: MyTheme.blue80_14_M),//联系方式已隐藏，解锁后查看
+                    child: Text(tr('lxfsyyc'),
+                        style: MyTheme.blue80_14_M), //联系方式已隐藏，解锁后查看
                   ),
                   SizedBox(height: 10.w),
                   GestureDetector(
@@ -228,7 +232,7 @@ class _ContactViewState extends State<_ContactView> {
                         borderRadius: BorderRadius.circular(4.w),
                       ),
                       child: Text(
-                        '$unlockCoins${tr('jbjslxfs')}',//金币解锁联系方式，点击支付金币解锁
+                        '$unlockCoins${tr('jbjslxfs')}', //金币解锁联系方式，点击支付金币解锁
                         style: MyTheme.white14Medium,
                       ),
                     ),
@@ -243,7 +247,7 @@ class _ContactViewState extends State<_ContactView> {
                       Clipboard.setData(ClipboardData(
                         text: contact,
                       ));
-                      MyToast.showText(text: tr('fzcglx'));//复制成功,快去联系吧
+                      MyToast.showText(text: tr('fzcglx')); //复制成功,快去联系吧
                     },
                     child: RichText(
                       text: TextSpan(
@@ -251,7 +255,7 @@ class _ContactViewState extends State<_ContactView> {
                           TextSpan(
                             children: [
                               TextSpan(
-                                text: tr('sjlxfs'),//楼主联系方式：
+                                text: tr('sjlxfs'), //楼主联系方式：
                                 style: TextStyle(
                                   color: Colors.white70,
                                   fontSize: 14.sp,
@@ -265,7 +269,7 @@ class _ContactViewState extends State<_ContactView> {
                                 ),
                               ),
                               TextSpan(
-                                text: "【${tr('dwfz')}】",//点我复制
+                                text: "【${tr('dwfz')}】", //点我复制
                                 style: TextStyle(
                                   color: Colors.red,
                                   fontSize: 14.sp,
@@ -361,5 +365,24 @@ class _LikeCollectShareAreaState extends State<_LikeCollectShareArea> {
         ],
       ),
     );
+  }
+}
+
+class TopAppsListWidget extends StatefulWidget {
+  const TopAppsListWidget();
+
+  @override
+  State<TopAppsListWidget> createState() => _TopAppsListWidgetState();
+}
+
+class _TopAppsListWidgetState extends State<TopAppsListWidget> {
+  late final homeConfigNotifier = context.read<HomeConfigNotifier>();
+
+  @override
+  Widget build(BuildContext context) {
+    return (homeConfigNotifier.config.postDetailAds ?? []).isNotEmpty
+        ? GeneralAppsListVidget(
+            data: homeConfigNotifier.config.postDetailAds ?? [])
+        : Container();
   }
 }

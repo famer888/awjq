@@ -75,7 +75,7 @@ class _ApiLinkViewState extends State<ApiLinkView> {
         topicsNotifier.value = nav;
       }
       if (result.data['part'] case final List data
-      when data.isNotEmpty && partNotifier.value.isEmpty) {
+          when data.isNotEmpty && partNotifier.value.isEmpty) {
         final part = data.map((x) => PartModel.fromJson(x)).toList();
         partNotifier.value = part;
       }
@@ -128,7 +128,6 @@ class _ApiLinkViewState extends State<ApiLinkView> {
 }
 
 class _Header extends StatefulWidget {
-
   const _Header({
     required this.bannersNotifier,
     required this.topicsNotifier,
@@ -146,7 +145,6 @@ class _Header extends StatefulWidget {
 }
 
 class _HeaderState extends State<_Header> {
-
   List<NavModel> contentTopics = [];
   bool isShowAllTopics = false;
 
@@ -162,7 +160,7 @@ class _HeaderState extends State<_Header> {
             if (banners.isEmpty) return const SizedBox.shrink();
             return Padding(
               padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
-              child: GeneralBanner(data: banners),
+              child: GeneralAppsListVidget(data: banners),
             );
           },
         ),
@@ -180,7 +178,7 @@ class _HeaderState extends State<_Header> {
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: parts.length,
                   padding:
-                  EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
+                      EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 4,
                     childAspectRatio: 80.w / 70.w,
@@ -249,7 +247,7 @@ class _HeaderState extends State<_Header> {
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: contentTopics.length,
                   padding:
-                  EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
+                      EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 4,
                     childAspectRatio: 80.w / 35.w,
@@ -281,7 +279,7 @@ class _HeaderState extends State<_Header> {
                                 widget.onLinkNavTap(topic.linkUrl);
                               } else if (topic.openType == 1) {
                                 MoreVideoRoute(
-                                    name: topic.name, id: topic.linkUrl)
+                                        name: topic.name, id: topic.linkUrl)
                                     .push(context);
                               }
                             }
@@ -301,21 +299,31 @@ class _HeaderState extends State<_Header> {
         Offstage(
           offstage: widget.topicsNotifier.value.length <= 8,
           child: InkWell(
-                onTap: (){
-                  isShowAllTopics = !isShowAllTopics;
-                  if (mounted) {setState(() {});}
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 10.w),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(isShowAllTopics ? 'ycgd'.tr(context: context) : 'zkckgd'.tr(context: context), style: MyTheme.white08_12),
-                      SizedBox(width: 3.w),
-                      MyImage.asset( isShowAllTopics ? MyImagePaths.appGrayUp : MyImagePaths.appGrayDown, width: 10.w, height: 10.w)
-                    ]),
-                ),
-              ),
+            onTap: () {
+              isShowAllTopics = !isShowAllTopics;
+              if (mounted) {
+                setState(() {});
+              }
+            },
+            child: Container(
+              padding: EdgeInsets.symmetric(vertical: 10.w),
+              child:
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                Text(
+                    isShowAllTopics
+                        ? 'ycgd'.tr(context: context)
+                        : 'zkckgd'.tr(context: context),
+                    style: MyTheme.white08_12),
+                SizedBox(width: 3.w),
+                MyImage.asset(
+                    isShowAllTopics
+                        ? MyImagePaths.appGrayUp
+                        : MyImagePaths.appGrayDown,
+                    width: 10.w,
+                    height: 10.w)
+              ]),
+            ),
+          ),
         ),
         // Divider(
         //   color: Colors.white.withOpacity(0.04),
