@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:cross_file/cross_file.dart';
 import 'package:dio/dio.dart';
 
@@ -51,10 +53,20 @@ abstract class RemoteDomain
   String getOAuthId();
   String getOAuthType();
 
+  AsyncJson uploadImageBytes({
+    required String baseUrl,
+    required String key,
+    required Uint8List bytes,
+    String position = 'head',
+    String? id,
+    CancelToken? cancelToken,
+    ProgressCallback? progressCallback,
+  });
+
   AsyncJson uploadImage({
     required String baseUrl,
-    required XFile xFile,
     required String key,
+    required XFile xFile,
     String? id,
     String position = 'head',
     CancelToken? cancelToken,
@@ -63,9 +75,7 @@ abstract class RemoteDomain
 
   /// 视频上传
   AsyncJson uploadVideo({
-    required String baseUrl,
     required XFile xFile,
-    required String key,
     CancelToken? cancelToken,
     ProgressCallback? progressCallback,
   });

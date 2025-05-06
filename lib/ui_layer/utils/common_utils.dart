@@ -389,7 +389,7 @@ class CommonUtils {
           const curve = Curves.easeInOut;
 
           var tween =
-          Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
           var offsetAnimation = animation.drive(tween);
 
           return SlideTransition(
@@ -450,13 +450,10 @@ class CommonUtils {
   }
 
   /// xfile限制视频大小
-  static Future<bool> _videoLimitSize(XFile file, {int size = 100}) async {
+  static Future<bool> _videoLimitSize(XFile file, {int size = 2048}) async {
     int length = await file.length();
     if (length / (1024 * 1024) > size) {
-      MyToast.showText(
-        text:
-            kIsWeb ? 'qxzbmbv'.tr().replaceAll('100', '$size') : 'qxzbmbv'.tr(),
-      );
+      MyToast.showText(text: 'qxzbmbv'.tr());
       return false;
     }
     return true;
@@ -823,5 +820,4 @@ class RelativeDateFormat {
   /// 格式化两位数不足补0
   static String formatTwoDigitNumber(int number) =>
       number.toString().padLeft(2, '0');
-
 }
