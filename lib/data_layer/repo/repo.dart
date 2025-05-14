@@ -8,6 +8,7 @@ import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:cross_file/cross_file.dart';
 import 'package:http_parser/http_parser.dart';
@@ -446,7 +447,6 @@ abstract class _BaseAppRepo implements AppDomain {
     _apiDio.post('/api/home/domainCheckReport2', data: {'list': lines});
   }
 
-
   @override
   AsyncJson uploadImageBytes({
     required String baseUrl,
@@ -524,11 +524,13 @@ abstract class _BaseAppRepo implements AppDomain {
 
   @override
   AsyncJson uploadVideo({
+    required BuildContext context,
     required XFile xFile,
     CancelToken? cancelToken,
     ProgressCallback? progressCallback,
   }) async {
-    final result = await R2UploaderUtil(cancelToken: cancelToken).upload(
+    final result =
+        await R2UploaderUtil(context: context, cancelToken: cancelToken).upload(
       xFile: xFile,
       progressCallback: progressCallback,
     );

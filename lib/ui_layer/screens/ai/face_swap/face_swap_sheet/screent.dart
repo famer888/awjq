@@ -396,10 +396,8 @@ class _FaceSwapSheetViewState extends State<FaceSwapSheetView> {
   }
 
   Future<void> _imagePickerAssets() async {
-    final XFile? file = await _picker.pickImage(source: ImageSource.gallery);
+    final XFile? file = await CommonUtils.pickImage();
     if (file != null) {
-      bool flag = await CommonUtils.pngLimit2MSize(file);
-      if (flag) return;
       uploadFileImg(file);
     }
   }

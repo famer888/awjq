@@ -10,56 +10,57 @@ import 'package:provider/provider.dart';
 import '../../../../../domain/model/home_data_model.dart';
 
 class AppDownCenterDialog extends StatelessWidget {
-  const AppDownCenterDialog(
-      {super.key,
-      required this.cancel,
-      });
+  const AppDownCenterDialog({
+    super.key,
+    required this.cancel,
+  });
   final VoidCallback cancel;
 
   @override
   Widget build(BuildContext context) {
-
     late final homeConfigNotifier = context.read<HomeConfigNotifier>();
     final apps = homeConfigNotifier.homeData.noticeApps;
 
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      // onTap: () => cancel.call(),
-      child: Center(
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 35.w),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                height: 405.w,
-                decoration: BoxDecoration(
-                  color: const Color.fromRGBO(22, 24, 34, 0.95),
-                  borderRadius: BorderRadius.all(Radius.circular(10.w)),
+    return ColoredBox(
+      color: Colors.black38,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        // onTap: () => cancel.call(),
+        child: Center(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 35.w),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  height: 405.w,
+                  decoration: BoxDecoration(
+                    color: const Color.fromRGBO(22, 24, 34, 0.95),
+                    borderRadius: BorderRadius.all(Radius.circular(10.w)),
+                  ),
+                  child: const AppDownCenterCard(),
                 ),
-                child: const AppDownCenterCard(),
-              ),
-              SizedBox(height: 20.w),
-              GestureDetector(
-                onTap: () => cancel.call(),
-                child: SizedBox(
-                  child: MyImage.asset(
-                    MyImagePaths.appCancelWithCircle,
-                    fit: BoxFit.cover,
-                    width: 33.w,
-                    height: 33.w,
+                SizedBox(height: 20.w),
+                GestureDetector(
+                  onTap: () => cancel.call(),
+                  child: SizedBox(
+                    child: MyImage.asset(
+                      MyImagePaths.appCancelWithCircle,
+                      fit: BoxFit.cover,
+                      width: 33.w,
+                      height: 33.w,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 }
-
 
 class AppDownCenterCard extends StatefulWidget {
   const AppDownCenterCard({
@@ -71,7 +72,6 @@ class AppDownCenterCard extends StatefulWidget {
 }
 
 class _AppDownCenterCardState extends State<AppDownCenterCard> {
-
   late final homeConfigNotifier = context.read<HomeConfigNotifier>();
   late final apps = homeConfigNotifier.homeData.noticeApps ?? [];
 
@@ -89,7 +89,7 @@ class _AppDownCenterCardState extends State<AppDownCenterCard> {
       groupedApps.add(apps); // 如果少于或等于 6 个元素，直接将整个列表作为一组
     } else {
       groupedApps.add(apps.sublist(0, 6)); // 添加前 6 个元素
-      groupedApps.add(apps.sublist(6));    // 添加剩余的元素
+      groupedApps.add(apps.sublist(6)); // 添加剩余的元素
     }
   }
 
@@ -163,52 +163,55 @@ class _AppDownCenterCardState extends State<AppDownCenterCard> {
                       ),
                     );
                   }),
-              groupedApps.length < 2 ? Container() : GridView.builder(
-                  shrinkWrap: true,
-                  addRepaintBoundaries: false,
-                  addAutomaticKeepAlives: false,
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: groupedApps.last.length,
-                  padding: EdgeInsets.zero,
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 4,
-                    childAspectRatio: 49 / 62,
-                    // mainAxisSpacing: 10.w,
-                    // crossAxisSpacing: 10.w,
-                  ),
-                  itemBuilder: (context, index) {
-                    Notice? model = groupedApps.last[index];
-                    return GestureDetector(
-                      behavior: HitTestBehavior.translucent,
-                      onTap: () {
-                        final json = model.toJson() ?? {};
-                        CommonUtils.openRoute(context, json);
-                      },
-                      child: Column(
-                        children: [
-                          SizedBox(
-                            height: 56.w,
-                            width: 56.w,
-                            child: MyImage.network(
-                              model.imgUrl ?? '',
-                              fit: BoxFit.fill,
-                              borderRadius: 10.w,
-                            ),
-                          ),
-                          SizedBox(height: 5.w),
-                          Text(
-                            model.title ?? '',
-                            style: TextStyle(
-                                color: Colors.white,
-                                overflow: TextOverflow.ellipsis,
-                                decoration: TextDecoration.none,
-                                fontSize: 11.sp),
-                            maxLines: 1,
-                          ),
-                        ],
+              groupedApps.length < 2
+                  ? Container()
+                  : GridView.builder(
+                      shrinkWrap: true,
+                      addRepaintBoundaries: false,
+                      addAutomaticKeepAlives: false,
+                      physics: const BouncingScrollPhysics(),
+                      itemCount: groupedApps.last.length,
+                      padding: EdgeInsets.zero,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 4,
+                        childAspectRatio: 49 / 62,
+                        // mainAxisSpacing: 10.w,
+                        // crossAxisSpacing: 10.w,
                       ),
-                    );
-                  })
+                      itemBuilder: (context, index) {
+                        Notice? model = groupedApps.last[index];
+                        return GestureDetector(
+                          behavior: HitTestBehavior.translucent,
+                          onTap: () {
+                            final json = model.toJson() ?? {};
+                            CommonUtils.openRoute(context, json);
+                          },
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                height: 56.w,
+                                width: 56.w,
+                                child: MyImage.network(
+                                  model.imgUrl ?? '',
+                                  fit: BoxFit.fill,
+                                  borderRadius: 10.w,
+                                ),
+                              ),
+                              SizedBox(height: 5.w),
+                              Text(
+                                model.title ?? '',
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    overflow: TextOverflow.ellipsis,
+                                    decoration: TextDecoration.none,
+                                    fontSize: 11.sp),
+                                maxLines: 1,
+                              ),
+                            ],
+                          ),
+                        );
+                      })
             ],
           ),
         ),

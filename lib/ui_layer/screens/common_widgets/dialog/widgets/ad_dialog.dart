@@ -28,9 +28,8 @@ class AdDialogState extends State<AdDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      behavior: HitTestBehavior.opaque,
-      // onTap: () => cancel.call(),
+    return ColoredBox(
+      color: const Color.fromRGBO(0, 0, 0, 0.38),
       child: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

@@ -377,7 +377,7 @@ class _CommunityIssueScreenState extends State<CommunityIssueScreen> {
                   SizedBox(height: 20.w),
                   UploadHintText(
                     title: 'sctp'.tr(context: context),
-                    subTitle: 'spfm'.tr(context: context),
+                    subTitle: '',
                     text: 'zdjz'.tr(context: context),
                   ),
                   SizedBox(height: 10.w),
@@ -435,12 +435,9 @@ class _CommunityIssueScreenState extends State<CommunityIssueScreen> {
         MyToast.showText(text: 'qscsp'.tr(context: context));
         return;
       }
-      //设置默认第一张图为封面
+      //视频数据添加到尾部
       final index = upList.indexWhere((el) => el['type'] == 1);
       if (index == -1) {
-        video['cover'] = upList.first['media_url'];
-        video['url'] = upList.first['url'];
-        upList.removeAt(0);
         upList.add(video);
       }
     }

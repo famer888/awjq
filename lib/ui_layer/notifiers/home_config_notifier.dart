@@ -73,12 +73,14 @@ class HomeConfigNotifier extends ChangeNotifier {
   }
 
   Future<Json?> uploadVideo({
+    required BuildContext context,
     required XFile xFile,
     required void Function(int count, int total) progressCallback,
     required CancelToken cancelToken,
   }) async {
     try {
       final result = await _domain.uploadVideo(
+        context: context,
         xFile: xFile,
         progressCallback: progressCallback,
         cancelToken: cancelToken,

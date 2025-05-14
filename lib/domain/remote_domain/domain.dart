@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import 'package:cross_file/cross_file.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 
 import '../enum.dart';
 import '../type_def.dart';
@@ -75,6 +76,7 @@ abstract class RemoteDomain
 
   /// 视频上传
   AsyncJson uploadVideo({
+    required BuildContext context,
     required XFile xFile,
     CancelToken? cancelToken,
     ProgressCallback? progressCallback,

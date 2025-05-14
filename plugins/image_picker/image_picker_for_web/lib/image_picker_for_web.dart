@@ -5,6 +5,7 @@
 import 'dart:async';
 import 'dart:js_interop';
 import 'dart:typed_data';
+import 'package:js/js_util.dart' as js;
 
 import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
@@ -379,18 +380,13 @@ class WebXFile extends XFile {
   }
 
   Future<Uint8List> _blobToByteBuffer(web.Blob blob) async {
-    final reader = web.FileReader();
-    reader.readAsArrayBuffer(blob);
-
-    await reader.onLoadEnd.first;
-
-    final Uint8List? result =
-        (reader.result as JSArrayBuffer?)?.toDart.asUint8List();
-
-    if (result == null) {
+    try {
+      final buffer =
+          await js.promiseToFuture<JSArrayBuffer>(blob.arrayBuffer());
+      final Uint8List result = buffer.toDart.asUint8List();
+      return result;
+    } catch (_) {
       throw Exception('Cannot read bytes from Blob. Is it still available?');
     }
-
-    return result;
   }
 }

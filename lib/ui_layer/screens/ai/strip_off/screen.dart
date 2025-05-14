@@ -57,7 +57,7 @@ class _StripOffScreenState extends State<StripOffScreen> {
     String imgUrl = '';
     if (imgMap.isNotEmpty) {
       imgUrl = imgMap['url'];
-      imgUrl = imgUrl.substring(1);//删除第一个字符/
+      imgUrl = imgUrl.substring(1); //删除第一个字符/
       imgUrl = homeConfigNotifier.config.imgBase + imgUrl;
     }
 
@@ -271,18 +271,22 @@ class _StripOffScreenState extends State<StripOffScreen> {
     MyToast.showLoading(text: tr('aiscz'));
     final aiDomain = context.read<AIDomain>();
     final res = await aiDomain.aIStrip(
-        thumb: imgMap['url'], thumbH: imgMap['thumb_height'], thumbW: imgMap['thumb_width']);
+        thumb: imgMap['url'],
+        thumbH: imgMap['thumb_height'],
+        thumbW: imgMap['thumb_width']);
     MyToast.closeAllLoading();
     if (res.isValid) {
-      if (needCoins == 0) {//使用剩余次数不需要金币时更新用户剩余次数
+      if (needCoins == 0) {
+        //使用剩余次数不需要金币时更新用户剩余次数
         userNotifier.setStripCt(stripCt: stripCt - 1);
       } else {
-        userNotifier.setMoney(money: userNotifier.member.money - needCoins);//更新用户的金币数量
+        userNotifier.setMoney(
+            money: userNotifier.member.money - needCoins); //更新用户的金币数量
       }
 
       if (mounted) {
         setState(() {
-          imgMap = {};//清空图片数据，可重新选择上传图片
+          imgMap = {}; //清空图片数据，可重新选择上传图片
         });
       }
       _showSuccesDialog();
@@ -315,10 +319,8 @@ class _StripOffScreenState extends State<StripOffScreen> {
   }
 
   Future<void> _imagePickerAssets() async {
-    final XFile? file = await _picker.pickImage(source: ImageSource.gallery);
+    final XFile? file = await CommonUtils.pickImage();
     if (file != null) {
-      bool flag = await CommonUtils.pngLimit2MSize(file);
-      if (flag) return;
       uploadFileImg(file);
     }
   }

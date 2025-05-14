@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:collection';
 import 'dart:convert';
 import 'dart:math';
+import 'package:awjq/ui_layer/notifiers/home_config_notifier.dart';
 import 'package:cross_file/cross_file.dart';
 import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
@@ -9,22 +10,36 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
 class R2UploaderUtil {
-  R2UploaderUtil({this.cancelToken});
+  R2UploaderUtil({required BuildContext context, this.cancelToken})
+      : r2URL = Provider.of<HomeConfigNotifier>(context, listen: false)
+                .homeData
+                .config
+                .r2URL ??
+            '',
+        r2Key = Provider.of<HomeConfigNotifier>(context, listen: false)
+                .homeData
+                .config
+                .r2Key ??
+            '',
+        r2CompleteURL = Provider.of<HomeConfigNotifier>(context, listen: false)
+                .homeData
+                .config
+                .r2CompleteURL ??
+            '';
 
   final CancelToken? cancelToken;
+  final String r2URL;
+  final String r2Key;
+  final String r2CompleteURL;
 
-  late final _r2Dio = Dio(
-    BaseOptions(
-      baseUrl: 'https://r2.microservices.vip',
-    ),
-  );
+  late final _r2Dio = Dio();
 
-  final signKey = 'd2bf7126723ea8f6005ba141ea3c3e2c';
   late final timeStamp = DateTime.now().millisecondsSinceEpoch.toString();
   late final signature =
-      md5.convert(utf8.encode('$timeStamp$signKey')).toString();
+      md5.convert(utf8.encode('$timeStamp$r2Key')).toString();
 
   Future<Map<String, dynamic>> upload({
     required XFile xFile,
@@ -65,7 +80,7 @@ class R2UploaderUtil {
     });
 
     try {
-      final sliceTags = await uploader.exec(5);
+      final sliceTags = await uploader.exec(kIsWeb ? 5 : 15);
       final completeData =
           await _multipartComplete(uploadName, uploadId, sliceTags);
       if (completeData['status'] == 'success') {
@@ -83,7 +98,7 @@ class R2UploaderUtil {
   Future<Map> _getMultipartData(int numberOfChunks) async {
     try {
       final uploadResponse = await _r2Dio.post(
-        '/multipart_upload',
+        r2URL,
         data: FormData.fromMap({
           'sign': signature,
           'timestamp': timeStamp,
@@ -102,7 +117,7 @@ class R2UploaderUtil {
       String name, String id, List<Map> sliceTags) async {
     try {
       final uploadResponse = await _r2Dio.post(
-        '/multipart_complete',
+        r2CompleteURL,
         data: FormData.fromMap({
           'sign': signature,
           'timestamp': timeStamp,

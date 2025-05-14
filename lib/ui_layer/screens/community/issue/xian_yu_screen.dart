@@ -119,7 +119,7 @@ class _XianYuIssueScreenState extends State<XianYuIssueScreen> {
               SizedBox(height: 20.w),
               UploadHintText(
                 title: 'sctp'.tr(context: context),
-                subTitle: 'spfm'.tr(context: context),
+                subTitle: '',
                 text: 'zdjz'.tr(context: context),
               ),
               SizedBox(height: 10.w),
@@ -172,20 +172,10 @@ class _XianYuIssueScreenState extends State<XianYuIssueScreen> {
       return;
     }
 
-    if (video.isNotEmpty && upList.isEmpty) {
-      MyToast.showText(text: 'tjfm'.tr(context: context));
-      return;
-    }
-
-    if (video.isNotEmpty && upList.isNotEmpty) {
-      //设置默认第一张图为封面
-      final index = upList.indexWhere((el) => el['type'] == 1);
-      if (index == -1) {
-        video['cover'] = upList.first['media_url'];
-        video['url'] = upList.first['url'];
-        upList.removeAt(0);
-        upList.add(video);
-      }
+    //视频数据添加到尾部 不是必填字段
+    final index = upList.indexWhere((el) => el['type'] == 1);
+    if (index == -1 && video.isNotEmpty) {
+      upList.add(video);
     }
 
     MyToast.showLoading();

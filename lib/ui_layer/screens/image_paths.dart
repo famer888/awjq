@@ -5,7 +5,8 @@ class MyImagePaths {
   static const appMineHelp = './assets/images/app_mine_help.png';
   static const appFabuVideo = './assets/images/app_fabu_video.png';
   static const appCommunCmtN = './assets/images/app_commun_cmt_n.png';
-  static const appMineJellyShareQrBg = './assets/images/app_mine_jelly_share_qr_bg.png';
+  static const appMineJellyShareQrBg =
+      './assets/images/app_mine_jelly_share_qr_bg.png';
   static const appTabWodeN = './assets/images/app_tab_wode_n.png';
   static const appLoginBackground = './assets/images/app_login_background.png';
   static const appZfAgnN = './assets/images/app_zf_agn_n.png';
@@ -15,14 +16,17 @@ class MyImagePaths {
   static const appCollectOff = './assets/images/app_collect_off.png';
   static const appMineLogin = './assets/images/app_mine_login.png';
   static const appCommReviewN = './assets/images/app_comm_review_n.png';
-  static const appMineWelfareBackground = './assets/images/app_mine_welfare_background.png';
-  static const appMineShareQrcodeBg = './assets/images/app_mine_share_qrcode_bg.png';
+  static const appMineWelfareBackground =
+      './assets/images/app_mine_welfare_background.png';
+  static const appMineShareQrcodeBg =
+      './assets/images/app_mine_share_qrcode_bg.png';
   static const appBackIcon = './assets/images/app_back_icon.png';
   static const appMineGroup = './assets/images/app_mine_group.png';
   static const appClose = './assets/images/app_close.png';
   static const appIssueIcon = './assets/images/app_issue_icon.png';
   static const appIssueAdd = './assets/images/app_issue_add.png';
-  static const appMineShareBackground = './assets/images/app_mine_share_background.png';
+  static const appMineShareBackground =
+      './assets/images/app_mine_share_background.png';
   static const appTabShequS = './assets/images/app_tab_shequ_s.png';
   static const appHashtagIcon = './assets/images/app_hashtag_icon.png';
   static const appProxyBtnBg = './assets/images/app_proxy_btn_bg.png';
@@ -30,8 +34,10 @@ class MyImagePaths {
   static const appDlcj = './assets/images/app_dlcj.png';
   static const appFabuText = './assets/images/app_fabu_text.png';
   static const appTabXyS = './assets/images/app_tab_xy_s.png';
-  static const appMineSystemMessage = './assets/images/app_mine_system_message.png';
-  static const appRecordDeleteIcon = './assets/images/app_record_delete_icon.png';
+  static const appMineSystemMessage =
+      './assets/images/app_mine_system_message.png';
+  static const appRecordDeleteIcon =
+      './assets/images/app_record_delete_icon.png';
   static const appShareOn = './assets/images/app_share_on.png';
   static const appCommReviewH = './assets/images/app_comm_review_h.png';
   static const appZfEcnyN = './assets/images/app_zf_ecny_n.png';
@@ -57,12 +63,15 @@ class MyImagePaths {
   static const appMeOriginalN = './assets/images/app_me_original_n.png';
   static const appIssueDelete = './assets/images/app_issue_delete.png';
   static const appDlsq = './assets/images/app_dlsq.png';
-  static const appMineCustomerMessage = './assets/images/app_mine_customer_message.png';
+  static const appMineCustomerMessage =
+      './assets/images/app_mine_customer_message.png';
   static const appDljq = './assets/images/app_dljq.png';
   static const appSearchIcon = './assets/images/app_search_icon.png';
   static const appVPauseN = './assets/images/app_v_pause_n.png';
-  static const appVipBannerBackground = './assets/images/app_vip_banner_background.png';
-  static const appMineOriginalEnter = './assets/images/app_mine_original_enter.png';
+  static const appVipBannerBackground =
+      './assets/images/app_vip_banner_background.png';
+  static const appMineOriginalEnter =
+      './assets/images/app_mine_original_enter.png';
   static const appFabuPicture = './assets/images/app_fabu_picture.png';
   static const appViewIcon = './assets/images/app_view_icon.png';
   static const appUpdateUpBg = './assets/images/app_update_up_bg.png';
@@ -75,22 +84,27 @@ class MyImagePaths {
   static const appWdLxtgN = './assets/images/app_wd_lxtg_n.png';
   static const appMineSetting = './assets/images/app_mine_setting.png';
   static const appWdTzxxN = './assets/images/app_wd_tzxx_n.png';
-  static const app2024ComFenxiangOn = './assets/images/app_2024_com_fenxiang_on.png';
+  static const app2024ComFenxiangOn =
+      './assets/images/app_2024_com_fenxiang_on.png';
   static const appMineMessage = './assets/images/app_mine_message.png';
   static const app2024SqGz = './assets/images/app_2024_sq_gz.png';
-  static const appMineJellyShareIconTitle = './assets/images/app_mine_jelly_share_icon_title.png';
+  static const appMineJellyShareIconTitle =
+      './assets/images/app_mine_jelly_share_icon_title.png';
   static const appBg = './assets/images/app_bg.png';
-  static const appMineCoinChargeBackground = './assets/images/app_mine_coin_charge_background.png';
+  static const appMineCoinChargeBackground =
+      './assets/images/app_mine_coin_charge_background.png';
   static const appTaskVipIcon = './assets/images/app_task_vip_icon.png';
   static const appAnnouncement = './assets/images/app_announcement.png';
   static const appMinePost = './assets/images/app_mine_post.png';
   static const appCollectOn = './assets/images/app_collect_on.png';
   static const appThumbUpOnIcon = './assets/images/app_thumb_up_on_icon.png';
   static const appShch = './assets/images/app_shch.png';
-  static const app2024ComBofangliangBig1 = './assets/images/app_2024_com_bofangliang_big_1.png';
+  static const app2024ComBofangliangBig1 =
+      './assets/images/app_2024_com_bofangliang_big_1.png';
   static const appWdLxpotao = './assets/images/app_wd_lxpotao.png';
   static const appDialogClose = './assets/images/app_dialog_close.png';
   static const appZfUsN = './assets/images/app_zf_us_n.png';
+  static const appLoading = './assets/images/app_loading.gif';
   static const appWdServmeN = './assets/images/app_wd_servme_n.png';
   static const appTabHomeN = './assets/images/app_tab_home_n.png';
   static const appDlbtw2 = './assets/images/app_dlbtw2.png';
@@ -105,25 +119,30 @@ class MyImagePaths {
   static const appFxxbbT = './assets/images/app_fxxbb_t.png';
   static const appTabWodeS = './assets/images/app_tab_wode_s.png';
   static const appMineDownload = './assets/images/app_mine_download.png';
-  static const appCustomerServiceSelectImg = './assets/images/app_customer_service_select_img.png';
+  static const appCustomerServiceSelectImg =
+      './assets/images/app_customer_service_select_img.png';
   static const appRenqiIcon = './assets/images/app_renqi_icon.png';
   static const appTabXyN = './assets/images/app_tab_xy_n.png';
   static const appFigureN = './assets/images/app_figure_n.png';
   static const appThumbsIcon = './assets/images/app_thumbs_icon.png';
   static const appIssueCancelIcon = './assets/images/app_issue_cancel_icon.png';
   static const appWdTopbgN = './assets/images/app_wd_topbg_n.png';
-  static const appNavBottomIndicatorIcon = './assets/images/app_nav_bottom_indicator_icon.png';
+  static const appNavBottomIndicatorIcon =
+      './assets/images/app_nav_bottom_indicator_icon.png';
   static const appNoNetwork = './assets/images/app_no_network.png';
-  static const appMineMessageHighlight = './assets/images/app_mine_message_highlight.png';
+  static const appMineMessageHighlight =
+      './assets/images/app_mine_message_highlight.png';
   static const appSearHotkeyN = './assets/images/app_sear_hotkey_n.png';
   static const appVReplayN = './assets/images/app_v_replay_n.png';
   static const appYjt = './assets/images/app_yjt.png';
   static const appVipIcon = './assets/images/app_vip_icon.png';
-  static const appCancelWithCircle = './assets/images/app_cancel_with_circle.png';
+  static const appCancelWithCircle =
+      './assets/images/app_cancel_with_circle.png';
   static const appSearchLogo = './assets/images/app_search_logo.png';
   static const appTabShequN = './assets/images/app_tab_shequ_n.png';
   static const appVideoCoinN = './assets/images/app_video_coin_n.png';
-  static const appAnnouncementUpBg = './assets/images/app_announcement_up_bg.png';
+  static const appAnnouncementUpBg =
+      './assets/images/app_announcement_up_bg.png';
   static const appCardBottomBg = './assets/images/app_card_bottombg.png';
   static const appBroadcast = './assets/images/app_broadcast.png';
   static const appHots = './assets/images/app_hots.png';
@@ -141,18 +160,25 @@ class MyImagePaths {
   static const appCoinsOrange = './assets/images/app_coins_orange.png';
   static const appStripOff = './assets/images/app_strip_off.png';
   static const appUploadImg = './assets/images/app_upload_img.png';
-  static const appAIFaceSampleCorrect = './assets/images/app_ai_face_sample_correct.png';
-  static const appAIFaceSampleGlasses = './assets/images/app_ai_face_sample_glasses.png';
-  static const appAIFaceSampleMask = './assets/images/app_ai_face_sample_mask.png';
+  static const appAIFaceSampleCorrect =
+      './assets/images/app_ai_face_sample_correct.png';
+  static const appAIFaceSampleGlasses =
+      './assets/images/app_ai_face_sample_glasses.png';
+  static const appAIFaceSampleMask =
+      './assets/images/app_ai_face_sample_mask.png';
   static const appCircleSlose = './assets/images/app_circle_close.png';
   static const appChangeLine = './assets/images/app_change_line.png';
   static const appGouXWhite = './assets/images/app_gou_white.png';
   static const appMineAI = './assets/images/app_mine_ai.png';
-  static const appLiveColloctionNormal = './assets/images/app_live_colloction_n.png';
-  static const appLiveColloctionSel = './assets/images/app_live_colloction_s.png';
+  static const appLiveColloctionNormal =
+      './assets/images/app_live_colloction_n.png';
+  static const appLiveColloctionSel =
+      './assets/images/app_live_colloction_s.png';
   static const appLiveShare = './assets/images/app_live_share.png';
-  static const appMonitorColloctionNormal = './assets/images/app_monitor_colloction_n.png';
-  static const appMonitorColloctionSel = './assets/images/app_monitor_colloction_s.png';
+  static const appMonitorColloctionNormal =
+      './assets/images/app_monitor_colloction_n.png';
+  static const appMonitorColloctionSel =
+      './assets/images/app_monitor_colloction_s.png';
   static const appMonitorOffVoice = './assets/images/app_monitor_off_voice.png';
   static const appMonitorOnVoice = './assets/images/app_monitor_on_voice.png';
   static const appMonitorShare = './assets/images/app_monitor_share.png';
@@ -163,5 +189,4 @@ class MyImagePaths {
   static const appGrayUp = './assets/images/app_gray_up.png';
   static const appDownCenter = './assets/images/app_down_center.png';
   static const appMineVipUpgrade = './assets/images/app_mine_vip_upgrade.png';
-
 }

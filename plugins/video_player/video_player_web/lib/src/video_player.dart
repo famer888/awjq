@@ -189,14 +189,15 @@ class VideoPlayer {
 
   /// Disposes of the current [html.VideoElement].
   void dispose() {
-    if (_isInitialized) {
-      _hls?.stopLoad();
-      _hls?.destroy();
-      _videoElement.currentTime = 0;
-      _videoElement.removeAttribute('src');
-      _videoElement.load();
-      _isInitialized = false;
-    }
+    // if (_isInitialized) {
+    _hls?.stopLoad();
+    _hls?.destroy();
+    _videoElement.pause();
+    _videoElement.currentTime = 0;
+    _videoElement.removeAttribute('src');
+    _videoElement.load();
+    _isInitialized = false;
+    // }
   }
 
   // Sends an [VideoEventType.initialized] [VideoEvent] with info about the wrapped video.

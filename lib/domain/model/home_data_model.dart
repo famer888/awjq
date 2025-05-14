@@ -175,6 +175,14 @@ class Config {
     this.imTip,
     this.adVersion,
     this.postDetailAds,
+    this.pwaDownloadUrl,
+    this.r2URL,
+    this.r2Key,
+    this.r2CompleteURL,
+    this.pwa_apk,
+    this.keywords,
+    this.description,
+    this.title,
   });
 
   final int? imCoins;
@@ -234,6 +242,18 @@ class Config {
   final int? openLive;
   final int? adVersion;
   final List<BannerModel>? postDetailAds;
+
+  final String? pwaDownloadUrl;
+  //R2分片上传
+  final String? r2URL;
+  final String? r2Key;
+  final String? r2CompleteURL;
+  //paw_apk下载
+  final String? pwa_apk;
+  //seo
+  final String? keywords;
+  final String? description;
+  final String? title;
 
   factory Config.fromJson(Map<String, dynamic> json) => Config(
         dayPrice: json['day_price'],
@@ -306,6 +326,14 @@ class Config {
         adVersion: json['ad_version'],
         postDetailAds: List<BannerModel>.from(
             json['post_detail_ads']?.map((x) => BannerModel.fromJson(x)) ?? []),
+        pwaDownloadUrl: json['pwa_download_url'] ?? '',
+        r2URL: json['r2URL'] ?? '',
+        r2Key: json['r2Key'] ?? '',
+        r2CompleteURL: json['r2CompleteURL'] ?? '',
+        pwa_apk: json['pwa_apk'] ?? '',
+        keywords: json['keywords'] ?? '',
+        description: json['description'] ?? '',
+        title: json['title'] ?? '',
       );
 
   Map<String, dynamic> toJson() => {
@@ -363,6 +391,14 @@ class Config {
         'im_tip': imTip,
         'ad_version': adVersion,
         'post_detail_ads': postDetailAds?.map((x) => x.toJson()).toList(),
+        'pwa_download_url': pwaDownloadUrl,
+        'r2URL': r2URL,
+        'r2Key': r2Key,
+        'r2CompleteURL': r2CompleteURL,
+        'pwa_apk': pwa_apk,
+        'keywords': keywords,
+        'description': description,
+        'title': title,
       };
 }
 

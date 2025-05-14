@@ -1,5 +1,7 @@
 import 'dart:typed_data';
 import 'dart:ui' as ui;
+import 'package:awjq/ui_layer/screens/common_widgets/my_image.dart';
+import 'package:awjq/ui_layer/screens/image_paths.dart';
 import 'package:get_thumbnail_video/index.dart';
 import 'package:get_thumbnail_video/video_thumbnail.dart';
 import 'package:bot_toast/bot_toast.dart';
@@ -84,7 +86,7 @@ class XFileProgressToast extends StatefulWidget {
 
 class _XFileProgressToastState extends State<XFileProgressToast> {
   late final homeConfigNotifier = context.read<HomeConfigNotifier>();
-  String progress = 'scz'.tr();
+  final ValueNotifier<String> progress = ValueNotifier('scz'.tr());
 
   @override
   void initState() {
@@ -98,11 +100,12 @@ class _XFileProgressToastState extends State<XFileProgressToast> {
     final result = await Future.wait([
       loadCoverData(),
       homeConfigNotifier.uploadVideo(
+        context: context,
         xFile: widget.file,
         cancelToken: cancelToken,
         progressCallback: (count, total) {
           final tmp = (count / total * 100).round();
-          setState(() => progress = "${'scz'.tr()} $tmp%");
+          progress.value = "${'scz'.tr()} $tmp%";
         },
       )
     ]);
@@ -165,16 +168,24 @@ class _XFileProgressToastState extends State<XFileProgressToast> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(
-                width: 40.w,
-                height: 40.w,
-                child: CircularProgressIndicator(
-                  color: MyTheme.jellyCyanColor103224185,
-                  strokeWidth: 1.w,
+              const SizedBox(
+                width: 40,
+                height: 40,
+                child: MyImage.asset(
+                  MyImagePaths.appLoading,
+                  height: 40,
+                  width: 40,
                 ),
               ),
               SizedBox(height: 10.w),
-              Text(progress, style: MyTheme.white255_14)
+              RepaintBoundary(
+                child: ValueListenableBuilder(
+                  valueListenable: progress,
+                  builder: (_, text, __) {
+                    return Text(text, style: MyTheme.white255_14);
+                  },
+                ),
+              ),
             ],
           ),
         ),

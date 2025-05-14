@@ -2,11 +2,12 @@ import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui';
-import 'package:common_utils/common_utils.dart';
 import 'package:awjq/domain/model/live_model.dart';
+import 'package:awjq/ui_layer/notifiers/home_config_notifier.dart';
 import 'package:awjq/ui_layer/screens/common_widgets/my_image.dart';
 import 'package:awjq/ui_layer/screens/common_widgets/swiper_tips.dart';
 import 'package:awjq/ui_layer/screens/image_paths.dart';
+import 'package:common_utils/common_utils.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
@@ -29,6 +30,7 @@ import 'my_toast.dart';
 import 'package:universal_html/html.dart' as html;
 import '../../domain/domain.dart';
 import '../router/routes.dart';
+import 'package:universal_html/js_util.dart' as js_util;
 
 class CommonUtils {
   static setStatusBar({bool isLight = false}) {
@@ -44,6 +46,117 @@ class CommonUtils {
       SystemChrome.setSystemUIOverlayStyle(
           isLight ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark);
     }
+  }
+
+  //苹果PWA浏览器
+  static bool isPWA() {
+    if (kIsWeb) {
+      final isStandalone =
+          html.window.matchMedia('(display-mode: standalone)').matches;
+      final isIOSStandalone =
+          js_util.getProperty(html.window.navigator, 'standalone') as bool? ??
+              false;
+      return isStandalone || isIOSStandalone;
+    }
+    return false;
+  }
+
+  static void copyToClipboard({required String text}) {
+    if (kIsWeb) {
+      final tempTextArea = html.TextAreaElement();
+      tempTextArea.value = text;
+      html.document.body!.append(tempTextArea);
+      tempTextArea.select();
+      html.document.execCommand('copy');
+      tempTextArea.remove();
+    } else {
+      Clipboard.setData(ClipboardData(text: text));
+    }
+  }
+
+  //苹果浏览器
+  static bool isIPhoneWeb() {
+    if (kIsWeb) {
+      final userAgent = html.window.navigator.userAgent.toLowerCase();
+      return userAgent.contains("iphone") || userAgent.contains("ipad");
+    }
+    return false;
+  }
+
+  //安卓浏览器
+  static bool isAndroidWeb() {
+    if (kIsWeb) {
+      final userAgent = html.window.navigator.userAgent.toLowerCase();
+      return userAgent.contains("android");
+    }
+    return false;
+  }
+
+  //Safari浏览器
+  static bool isSafariBrowser() {
+    if (kIsWeb) {
+      final ua = html.window.navigator.userAgent.toLowerCase();
+      return ua.contains('iphone') &&
+          ua.contains('safari') &&
+          !ua.contains('crios') && // Chrome on iOS
+          !ua.contains('fxios') && // Firefox on iOS
+          !ua.contains('edg') && // Edge (new)
+          !ua.contains('qqbrowser') && // QQ
+          !ua.contains('micromessenger') && // wechat on ios
+          !ua.contains('360browser') && // 360 on ios
+          !ua.contains('baidubrowser') && // baidu on ios
+          !ua.contains('huawei') && // hauwei on ios
+          !ua.contains('miuibrowser') && // xaiomi on ios
+          !ua.contains('quark') && // quark on ios
+          !ua.contains('sogoumobilebrowser') && // sogo on ios
+          !ua.contains('maxthon') && // aoyou on ios
+          !ua.contains('cheetahbrowser') && // Cheetah on ios
+          !ua.contains('ucbrowser'); // Uc on iOS
+    }
+    return false;
+  }
+
+  //下载APP
+  static Future<void> downLoadApp(BuildContext context) async {
+    String site = Provider.of<HomeConfigNotifier>(context, listen: false)
+            .homeData
+            .config
+            .pwaDownloadUrl ??
+        '';
+    String apk = Provider.of<HomeConfigNotifier>(context, listen: false)
+            .homeData
+            .config
+            .pwa_apk ??
+        '';
+    Uri u = Uri.parse(html.window.location.href);
+    String aff = u.queryParameters[BuildConfig.affCodeKey] ?? "";
+
+    if (isIPhoneWeb()) {
+      if (isSafariBrowser()) {
+        await url_launcher.launchUrl(
+            Uri.parse('$site/index.php/index/mobileConfig?aff_code=$aff'),
+            webOnlyWindowName: '_self');
+        await Future.delayed(const Duration(seconds: 2));
+        bool flag = await url_launcher.launchUrl(
+          Uri.parse('$site/js/embedded.mobileprovision?v=1'),
+          webOnlyWindowName: '_self',
+        );
+        if (!flag) {
+          MyToast.showText(text: 'azbz'.tr());
+        }
+      } else {
+        MyToast.showText(text: 'qsyxz'.tr());
+      }
+      return;
+    }
+
+    if (isAndroidWeb()) {
+      copyToClipboard(text: "${BuildConfig.affCodeKey}:$aff");
+      html.window.open(apk, "_blank");
+      return;
+    }
+
+    html.window.open(site, "_blank");
   }
 
   static Future<void> showDialog({
@@ -439,26 +552,6 @@ class CommonUtils {
     );
   }
 
-  /// xfile限制图片大小
-  static Future<bool> _pngLimitSize(XFile file) async {
-    int length = await file.length();
-    if (length / 1024 > 800) {
-      MyToast.showText(text: 'qxzbkbp'.tr());
-      return false;
-    }
-    return true;
-  }
-
-  /// xfile限制视频大小
-  static Future<bool> _videoLimitSize(XFile file, {int size = 2048}) async {
-    int length = await file.length();
-    if (length / (1024 * 1024) > size) {
-      MyToast.showText(text: 'qxzbmbv'.tr());
-      return false;
-    }
-    return true;
-  }
-
   static Future<XFile?> pickImage() async {
     if (await ImagePicker().pickImage(source: ImageSource.gallery)
         case final xFile? when await _pngLimitSize(xFile)) {
@@ -548,15 +641,24 @@ class CommonUtils {
     return false;
   }
 
-  static Future<bool> pngLimit2MSize(XFile file) async {
+  /// xfile限制图片大小5M以内
+  static Future<bool> _pngLimitSize(XFile file) async {
     int length = await file.length();
-    if (length / 1024 > 2000) {
-      MyToast.showText(
-        text: tr('qxzb2mkbp'),
-      );
-      return true;
+    if (length / 1024 > 5120) {
+      MyToast.showText(text: 'qxzbkbp'.tr());
+      return false;
     }
-    return false;
+    return true;
+  }
+
+  /// xfile限制视频大小
+  static Future<bool> _videoLimitSize(XFile file, {int size = 2048}) async {
+    int length = await file.length();
+    if (length / (1024 * 1024) > size) {
+      MyToast.showText(text: 'qxzbmbv'.tr());
+      return false;
+    }
+    return true;
   }
 
   static Widget blurCover({Function? onTap, double? borderRadius}) {

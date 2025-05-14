@@ -347,6 +347,37 @@ class _BottomNaviBarState extends State<BottomNaviBar> {
               onTap: _goBranch,
             ),
           ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat,
+          floatingActionButton: kIsWeb && !CommonUtils.isPWA()
+              ? Padding(
+                  padding: EdgeInsets.only(bottom: 10.w),
+                  child: GestureDetector(
+                    onTap: () {
+                      CommonUtils.downLoadApp(context);
+                    },
+                    child: Container(
+                      height: 30.w,
+                      width: 200.w,
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          color: MyTheme.white09Color,
+                          borderRadius:
+                              BorderRadius.all(Radius.circular(15.w))),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          MyImage.asset(MyImagePaths.appLogoIcon,
+                              width: 18.w, height: 18.w),
+                          SizedBox(width: 5.w),
+                          Text('mrdxdk'.tr(context: context),
+                              style: MyTheme.black1434)
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+              : const SizedBox(),
         ),
       ),
       selector: (_, userNotifier) => userNotifier.isInit,
