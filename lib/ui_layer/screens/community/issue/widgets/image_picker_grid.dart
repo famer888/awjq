@@ -25,6 +25,7 @@ class _ImagePickerGridState extends State<ImagePickerGrid> {
   late final homeConfigNotifier = context.read<HomeConfigNotifier>();
   List<Map> get upList => widget.upList;
   int get picLimit => widget.picLimit;
+
   Future<void> imagePickerAssets() async {
     if (await CommonUtils.pickImage() case final xFile?) {
       MyToast.showLoading(text: 'scz'.tr());
@@ -64,7 +65,7 @@ class _ImagePickerGridState extends State<ImagePickerGrid> {
             Stack(
               children: [
                 MyImage.network(
-                  uploadData['url'],
+                  uploadData['url'] ?? "",
                   fit: BoxFit.contain,
                   width: double.infinity,
                   height: double.infinity,

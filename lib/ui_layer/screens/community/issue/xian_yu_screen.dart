@@ -172,10 +172,11 @@ class _XianYuIssueScreenState extends State<XianYuIssueScreen> {
       return;
     }
 
+    List<Map> p = List.from(upList);
     //视频数据添加到尾部 不是必填字段
     final index = upList.indexWhere((el) => el['type'] == 1);
     if (index == -1 && video.isNotEmpty) {
-      upList.add(video);
+      p.add(video);
     }
 
     MyToast.showLoading();
@@ -189,7 +190,7 @@ class _XianYuIssueScreenState extends State<XianYuIssueScreen> {
         contact: contactController.text,
         type: 'fish',
         coins: coinController.text.isEmpty ? '0' : coinController.text,
-        medias: jsonEncode(upList),
+        medias: jsonEncode(p),
         isPublic: isOpenNotifier.value ? 1 : 0,
       );
       BotToast.closeAllLoading();
