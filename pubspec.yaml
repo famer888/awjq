@@ -2,7 +2,7 @@ name: awjq
 description: ""
 publish_to: "none"
 
-version: 1.9.0+190
+version: 2.0.0+200
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -66,6 +66,7 @@ dependencies:
   amplitude_flutter: ^4.0.0
   get_thumbnail_video:
     path: plugins/video_thumbnail
+  extended_tabs: ^4.1.0
 
 dependency_overrides:
   # win32: ">=4.0.0 <6.0.0"

@@ -15,6 +15,7 @@ import '../../../const.dart';
 import '../../../notifiers/home_config_notifier.dart';
 import '../../bit/live_video/live_card/live_video_card.dart';
 import '../../bit/monitor_video/monitor_card/monitor_card.dart';
+import '../../common_widgets/feed/feed_card.dart';
 import '../../common_widgets/keep_alive_wrapper.dart';
 import '../../common_widgets/my_app_bar.dart';
 import '../../common_widgets/my_list_view.dart';
@@ -136,7 +137,7 @@ class _VideoViewState extends State<_VideoView> {
   @override
   Widget build(BuildContext context) {
     return MyListView.grid(
-      childAspectRatio: 1,
+      childAspectRatio: FeedCard.aspectRatio,
       itemBuilder: (_, item, __) => MineVideoTile(data: item),
       onFetchingMore: (currentPage, pageSize) => _getData(
         page: currentPage,

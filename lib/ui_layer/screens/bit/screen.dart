@@ -1,3 +1,4 @@
+import 'package:extended_tabs/extended_tabs.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
@@ -37,7 +38,7 @@ class _BitScreenState extends State<BitScreen> with TickerProviderStateMixin {
           tabController: tabController,
           titles: navList.map((e) => e.title).toList(),
         ),
-        body: TabBarView(
+        body: ExtendedTabBarView(
           controller: tabController,
           children: navList.map((e) {
             if (e.title == '直播') {
@@ -73,9 +74,9 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
         child: TabBar(
           padding: EdgeInsets.zero,
           controller: tabController,
-          labelPadding: const EdgeInsets.symmetric(horizontal: 10),
+          labelPadding: const EdgeInsets.symmetric(horizontal: 8),
           tabAlignment: TabAlignment.center,
-          isScrollable: true,
+          isScrollable: false,
           labelStyle: MyTheme.white255_18,
           unselectedLabelStyle: MyTheme.white06_18,
           overlayColor: WidgetStateProperty.resolveWith<Color>(

@@ -141,7 +141,7 @@ class _MyAppState extends State<MyApp> {
         scaffoldBackgroundColor: MyTheme.bgColor,
         canvasColor: MyTheme.bgColor, // Canvas 背景色
         colorScheme: const ColorScheme.light(
-          surface: MyTheme.bgColor, // ColorScheme 背景色
+          surface: Colors.white, // ColorScheme 背景色
         ),
         highlightColor: Colors.transparent,
         textSelectionTheme: TextSelectionThemeData(

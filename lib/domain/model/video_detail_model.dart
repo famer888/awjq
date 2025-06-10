@@ -1,5 +1,6 @@
 import 'banner_model.dart';
 import 'home_data_model.dart';
+import 'user_model.dart';
 
 class VideoDetailData {
   VideoDetailData({required this.detail, this.banner, this.adPops});
@@ -99,7 +100,7 @@ class VideoData {
   int? id;
   final dynamic topic;
   final dynamic userAction;
-  final dynamic member;
+  final UserModel? member;
   final String? memberUuid;
   final String? previewUrl;
   final String? title;
@@ -170,7 +171,7 @@ class VideoData {
       id: json['id'],
       topic: json['topic'],
       userAction: json['userAction'],
-      member: json['member'],
+      member: json['member'] == null ? null : UserModel.fromJson(json['member']),
       memberUuid: json['member_uuid'],
       title: json['title'],
       mvType: json['mv_type'],

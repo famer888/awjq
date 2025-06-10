@@ -1,4 +1,5 @@
 import 'dart:ui' as ui;
+import 'package:extended_tabs/extended_tabs.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -23,6 +24,7 @@ class TabBarWithView extends StatefulWidget {
     this.labelStyle,
     this.unselectedLabelStyle,
     this.tabController,
+    this.initialIndex = 0,
   })  : type = TabBarType.line,
         tabBarRightWidget = null;
 
@@ -37,6 +39,7 @@ class TabBarWithView extends StatefulWidget {
     this.labelStyle,
     this.unselectedLabelStyle,
     this.tabController,
+    this.initialIndex = 0,
   }) : type = TabBarType.fillColor;
 
   final TabBarType type;
@@ -50,6 +53,7 @@ class TabBarWithView extends StatefulWidget {
   final TextStyle? labelStyle;
   final TextStyle? unselectedLabelStyle;
   final TabController? tabController;
+  final int initialIndex;
 
   @override
   State<TabBarWithView> createState() => _TabBarWithViewState();
@@ -59,6 +63,14 @@ class _TabBarWithViewState extends State<TabBarWithView>
     with SingleTickerProviderStateMixin {
   late final TabController _tabController = widget.tabController ??
       TabController(length: widget.views.length, vsync: this);
+
+  late LinkPageController _pageController;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = LinkPageController(initialPage: widget.initialIndex);
+  }
 
   List<Widget> get tabs => widget.titles
       .map((title) => switch (widget.type) {
@@ -129,8 +141,11 @@ class _TabBarWithViewState extends State<TabBarWithView>
             ),
           ),
         Expanded(
-          child: TabBarView(
+          child: ExtendedTabBarView(
             controller: _tabController,
+            pageController: _pageController,
+            shouldIgnorePointerWhenScrolling: false,
+            link: true,
             children: widget.views,
           ),
         ),

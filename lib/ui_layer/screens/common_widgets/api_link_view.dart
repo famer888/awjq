@@ -26,8 +26,10 @@ import 'my_tab_bar.dart';
 class ApiLinkView extends StatefulWidget {
   const ApiLinkView(
       {super.key, required this.linkModel, required this.onLinkNavTap});
+
   final LinkModel linkModel;
   final ValueChanged<String> onLinkNavTap;
+
   @override
   State<ApiLinkView> createState() => _ApiLinkViewState();
 }
@@ -228,102 +230,120 @@ class _HeaderState extends State<_Header> {
             );
           },
         ),
-        SizedBox(height: 10.w),
+        SizedBox(height: 5.w),
         ValueListenableBuilder(
           valueListenable: widget.topicsNotifier,
           builder: (context, topics, child) {
             if (topics.isEmpty) return const SizedBox.shrink();
-            if (topics.length > 8 && !isShowAllTopics) {
-              contentTopics = topics.sublist(0, 8);
-            } else {
+
+            bool isGirlTopic =
+                topics.first.resourceUrl.isNotEmpty; //如果配置了图片则横行展示上图下文布局
+
+            if (isGirlTopic) {
               contentTopics = topics;
+            } else {
+              if (topics.length > 8 && !isShowAllTopics) {
+                contentTopics = topics.sublist(0, 8);
+              } else {
+                contentTopics = topics;
+              }
             }
-            return Padding(
-              padding: EdgeInsets.only(bottom: 5.w),
-              child: GridView.builder(
-                  shrinkWrap: true,
-                  addRepaintBoundaries: false,
-                  addAutomaticKeepAlives: false,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: contentTopics.length,
-                  padding:
-                      EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 4,
-                    childAspectRatio: 80.w / 35.w,
-                    mainAxisSpacing: 10.w,
-                    crossAxisSpacing: 10.w,
-                  ),
-                  itemBuilder: (context, index) {
-                    final topic = topics[index];
-                    return DecoratedBox(
-                      decoration: ShapeDecoration(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(2.w),
-                        ),
-                        color: const Color(0xff262631),
+
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                isGirlTopic
+                    ? girdTopicView(contentTopics)
+                    : Padding(
+                        padding: EdgeInsets.only(bottom: 5.w),
+                        child: GridView.builder(
+                            shrinkWrap: true,
+                            addRepaintBoundaries: false,
+                            addAutomaticKeepAlives: false,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: contentTopics.length,
+                            padding: EdgeInsets.symmetric(
+                                horizontal: MyTheme.pagePadding),
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 4,
+                              childAspectRatio: 80.w / 35.w,
+                              mainAxisSpacing: 10.w,
+                              crossAxisSpacing: 10.w,
+                            ),
+                            itemBuilder: (context, index) {
+                              final topic = topics[index];
+                              return DecoratedBox(
+                                decoration: ShapeDecoration(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(2.w),
+                                  ),
+                                  color: const Color(0xff262631),
+                                ),
+                                child: Center(
+                                  child: GestureDetector(
+                                    behavior: HitTestBehavior.translucent,
+                                    onTap: () {
+                                      final linkUrl = topic.linkUrl;
+                                      final redirectType = topic.redirectType;
+                                      if (linkUrl.isEmpty) {
+                                        return;
+                                      }
+
+                                      if (redirectType < 3) {
+                                        CommonUtils.openRoute(
+                                            context, topic.toJson());
+                                      } else {
+                                        if (topic.openType == 0) {
+                                          widget.onLinkNavTap(topic.linkUrl);
+                                        } else if (topic.openType == 1) {
+                                          MoreVideoRoute(
+                                                  name: topic.name,
+                                                  id: topic.linkUrl)
+                                              .push(context);
+                                        }
+                                      }
+                                    },
+                                    child: Text(
+                                      topic.name ?? '',
+                                      style: MyTheme.white13,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }),
                       ),
-                      child: Center(
-                        child: GestureDetector(
-                          behavior: HitTestBehavior.translucent,
+                isGirlTopic ? Container() : SizedBox(height: 5.w),
+                isGirlTopic
+                    ? Container()
+                    : Offstage(
+                        offstage: widget.topicsNotifier.value.length <= 8 ||
+                            isShowAllTopics,
+                        child: InkWell(
                           onTap: () {
-                            final linkUrl = topic.linkUrl;
-                            final redirectType = topic.redirectType;
-                            if (linkUrl.isEmpty) {
-                              return;
-                            }
-                            if (redirectType < 3) {
-                              CommonUtils.openRoute(context, topic.toJson());
-                            } else {
-                              if (topic.openType == 0) {
-                                widget.onLinkNavTap(topic.linkUrl);
-                              } else if (topic.openType == 1) {
-                                MoreVideoRoute(
-                                        name: topic.name, id: topic.linkUrl)
-                                    .push(context);
-                              }
+                            isShowAllTopics = true;
+                            if (mounted) {
+                              setState(() {});
                             }
                           },
-                          child: Text(
-                            topic.name ?? '',
-                            style: MyTheme.white13,
+                          child: Container(
+                            padding: EdgeInsets.symmetric(vertical: 10.w),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text('zkckgd'.tr(context: context),
+                                    style: MyTheme.white08_12),
+                                SizedBox(width: 3.w),
+                                MyImage.asset(MyImagePaths.appGrayDown,
+                                    width: 10.w,
+                                    height: 10.w)
+                              ],
+                            ),
                           ),
-                        ),
-                      ),
-                    );
-                  }),
+                        )),
+              ],
             );
           },
-        ),
-        SizedBox(height: 5.w),
-        Offstage(
-          offstage: widget.topicsNotifier.value.length <= 8,
-          child: InkWell(
-            onTap: () {
-              isShowAllTopics = !isShowAllTopics;
-              if (mounted) {
-                setState(() {});
-              }
-            },
-            child: Container(
-              padding: EdgeInsets.symmetric(vertical: 10.w),
-              child:
-                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                Text(
-                    isShowAllTopics
-                        ? 'ycgd'.tr(context: context)
-                        : 'zkckgd'.tr(context: context),
-                    style: MyTheme.white08_12),
-                SizedBox(width: 3.w),
-                MyImage.asset(
-                    isShowAllTopics
-                        ? MyImagePaths.appGrayUp
-                        : MyImagePaths.appGrayDown,
-                    width: 10.w,
-                    height: 10.w)
-              ]),
-            ),
-          ),
         ),
         // Divider(
         //   color: Colors.white.withOpacity(0.04),
@@ -332,6 +352,62 @@ class _HeaderState extends State<_Header> {
         //   endIndent: MyTheme.pagePadding,
         // ),
       ],
+    );
+  }
+
+  Widget girdTopicView(List<NavModel> contentTopics) {
+    return Container(
+      height: 75.w,
+      // padding: EdgeInsets.all(5.w),
+      child: GridView.builder(
+          shrinkWrap: true,
+          scrollDirection: Axis.horizontal,
+          physics: const BouncingScrollPhysics(),
+          itemCount: contentTopics.length,
+          padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 1,
+            childAspectRatio: 1 / 0.7,
+            mainAxisSpacing: 10.w,
+            crossAxisSpacing: 10.w,
+          ),
+          itemBuilder: (context, index) {
+            final topic = contentTopics[index];
+            return GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onTap: () {
+                final linkUrl = topic.linkUrl;
+                final redirectType = topic.redirectType;
+                if (linkUrl.isEmpty) {
+                  return;
+                }
+
+                if (redirectType < 3) {
+                  CommonUtils.openRoute(context, topic.toJson());
+                } else {
+                  if (topic.openType == 0) {
+                    widget.onLinkNavTap(topic.linkUrl);
+                  } else if (topic.openType == 1) {
+                    MoreVideoRoute(name: topic.name, id: topic.linkUrl)
+                        .push(context);
+                  }
+                }
+              },
+              child: Column(
+                children: [
+                  MyImage.network(topic.resourceUrl,
+                      width: 50.w,
+                      height: 50.w,
+                      borderRadius: 5.w,),
+                  SizedBox(height: 3.w),
+                  Text(
+                    topic.name ?? '',
+                    style: MyTheme.white11,
+                  ),
+                ],
+              ),
+            );
+          }),
     );
   }
 }

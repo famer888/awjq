@@ -117,73 +117,74 @@ class AdModel {
 }
 
 class Config {
-  Config({
-    required this.imgBase,
-    required this.imgUploadUrl,
-    this.mp4UploadUrl,
-    this.mobileMp4UploadUrl,
-    required this.uploadImgKey,
-    this.uploadMp4Key,
-    this.uuid,
-    this.github,
-    this.officeSite,
-    this.officialGroup,
-    this.line,
-    this.m3u8Encrypt,
-    this.videoEncryptApi,
-    this.videoEncryptReferer,
-    this.videoEncryptM3u8,
-    required this.vipLevelStr,
-    required this.vipNameStr,
-    required this.navId,
-    this.lqNavid,
-    this.dmNavid,
-    this.mhNavid,
-    this.awNavid,
-    this.githubUrl,
-    this.linesUrl,
-    this.tipsShareText,
-    this.girlCommentOption,
-    this.shortSite,
-    this.proxyJoinNum,
-    this.solution,
-    this.personAds,
-    this.dayPrice,
-    this.coverIds,
-    this.coverVipStr,
-    this.coverTips,
-    this.sortNav,
-    this.forumNav,
-    this.seedSortNav,
-    required this.seedTopNav,
-    required this.liveTopNav,
-    required this.monitorTopNav,
-    required this.faceTopNav,
-    this.showApp,
-    required this.potatoGroup,
-    required this.tgGroup,
-    required this.payAi,
-    required this.seedVipTip,
-    required this.seedCoinsTip,
-    required this.wdaiStr,
-    required this.vipLevelAwqStr,
-    required this.vipNameAwqStr,
-    this.faceCoins,
-    this.stripCoins,
-    this.openLive,
-    this.imCoins,
-    this.imTip,
-    this.adVersion,
-    this.postDetailAds,
-    this.pwaDownloadUrl,
-    this.r2URL,
-    this.r2Key,
-    this.r2CompleteURL,
-    this.pwa_apk,
-    this.keywords,
-    this.description,
-    this.title,
-  });
+  Config(
+      {required this.imgBase,
+      required this.imgUploadUrl,
+      this.mp4UploadUrl,
+      this.mobileMp4UploadUrl,
+      required this.uploadImgKey,
+      this.uploadMp4Key,
+      this.uuid,
+      this.github,
+      this.officeSite,
+      this.officialGroup,
+      this.line,
+      this.m3u8Encrypt,
+      this.videoEncryptApi,
+      this.videoEncryptReferer,
+      this.videoEncryptM3u8,
+      required this.vipLevelStr,
+      required this.vipNameStr,
+      required this.navId,
+      this.lqNavid,
+      this.dmNavid,
+      this.mhNavid,
+      this.awNavid,
+      this.githubUrl,
+      this.linesUrl,
+      this.tipsShareText,
+      this.girlCommentOption,
+      this.shortSite,
+      this.proxyJoinNum,
+      this.solution,
+      this.personAds,
+      this.dayPrice,
+      this.coverIds,
+      this.coverVipStr,
+      this.coverTips,
+      this.sortNav,
+      this.forumNav,
+      this.seedSortNav,
+      required this.seedTopNav,
+      required this.liveTopNav,
+      required this.monitorTopNav,
+      required this.faceTopNav,
+      this.showApp,
+      required this.potatoGroup,
+      required this.tgGroup,
+      required this.payAi,
+      required this.seedVipTip,
+      required this.seedCoinsTip,
+      required this.wdaiStr,
+      required this.vipLevelAwqStr,
+      required this.vipNameAwqStr,
+      this.faceCoins,
+      this.stripCoins,
+      this.openLive,
+      this.imCoins,
+      this.imTip,
+      this.adVersion,
+      this.postDetailAds,
+      this.pwaDownloadUrl,
+      this.r2URL,
+      this.r2Key,
+      this.r2CompleteURL,
+      this.pwa_apk,
+      this.keywords,
+      this.description,
+      this.title,
+      this.nav_prepend,
+      this.nav_default});
 
   final int? imCoins;
   final String? imTip;
@@ -244,18 +245,27 @@ class Config {
   final List<BannerModel>? postDetailAds;
 
   final String? pwaDownloadUrl;
+
   //R2分片上传
   final String? r2URL;
   final String? r2Key;
   final String? r2CompleteURL;
+
   //paw_apk下载
   final String? pwa_apk;
+
   //seo
   final String? keywords;
   final String? description;
   final String? title;
 
+  List<NavPrependModel>? nav_prepend;
+  int? nav_default;
+
   factory Config.fromJson(Map<String, dynamic> json) => Config(
+        nav_default: json['nav_default'],
+        nav_prepend: List<NavPrependModel>.from(
+            json['nav_prepend']?.map((x) => NavPrependModel.fromJson(x)) ?? []),
         dayPrice: json['day_price'],
         personAds: json['person_ads'],
         imgUploadUrl: json['img_upload_url'],
@@ -337,6 +347,8 @@ class Config {
       );
 
   Map<String, dynamic> toJson() => {
+        'nav_default': nav_default,
+        'nav_prepend': nav_prepend?.map((e) => e).toList() ?? [],
         'day_price': dayPrice,
         'person_ads': personAds,
         'img_upload_url': imgUploadUrl,
@@ -569,4 +581,33 @@ class HelpItem {
       views: json['views'],
       createdAt: json['created_at'],
       updatedAt: json['updated_at']);
+}
+
+class NavPrependModel {
+  NavPrependModel({
+    this.label,
+    this.type,
+    this.sort,
+    this.value,
+  });
+
+  final String? label;
+  final int? type;
+  final int? sort;
+  final String? value;
+
+  factory NavPrependModel.fromJson(Map<String, dynamic> json) =>
+      NavPrependModel(
+        label: json['label'],
+        type: json['type'],
+        sort: json['sort'],
+        value: json['value'],
+      );
+
+  Map<String, dynamic> toJson() => {
+        'label': label,
+        'type': type,
+        'sort': sort,
+        'value': value,
+      };
 }

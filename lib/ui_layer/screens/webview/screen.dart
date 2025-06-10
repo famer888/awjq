@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
@@ -15,8 +16,11 @@ import 'fake_native_widget.dart' if (dart.library.html) 'real_web_widget.dart'
     as ui;
 
 class WebViewScreen extends StatefulWidget {
-  const WebViewScreen({super.key, required this.url});
+  const WebViewScreen({super.key, required this.url, this.needNav = true});
   final String url;
+
+  final bool? needNav;
+
   @override
   State<WebViewScreen> createState() => _WebViewScreenState();
 }
@@ -29,26 +33,28 @@ class _WebViewScreenState extends State<WebViewScreen> {
   Widget build(BuildContext context) {
     return ScreenBackground(
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            titleText,
-            style: MyTheme.white255_18_B,
-          ),
-          backgroundColor: MyTheme.bgColor,
-          leading: GestureDetector(
-            onTap: () {
-              context.pop();
-            },
-            child: Center(
-              child: MyImage.asset(
-                width: 20.w,
-                height: 20.w,
-                MyImagePaths.appBackIcon,
-              ),
-            ),
-          ),
-          iconTheme: const IconThemeData(color: Colors.white),
-        ),
+        appBar: widget.needNav == true
+            ? AppBar(
+                title: Text(
+                  titleText,
+                  style: MyTheme.white255_18_B,
+                ),
+                backgroundColor: MyTheme.bgColor,
+                leading: GestureDetector(
+                  onTap: () {
+                    context.pop();
+                  },
+                  child: Center(
+                    child: MyImage.asset(
+                      width: 20.w,
+                      height: 20.w,
+                      MyImagePaths.appBackIcon,
+                    ),
+                  ),
+                ),
+                iconTheme: const IconThemeData(color: Colors.white),
+              )
+            : null,
         backgroundColor: MyTheme.bgColor,
         body: kIsWeb ? _buildHtmlWidget() : _buildNativeWidget(),
       ),
@@ -76,7 +82,14 @@ class _WebViewScreenState extends State<WebViewScreen> {
         jumpToPage(js.message.toString());
       })
       ..loadRequest(Uri.parse(Uri.decodeComponent(widget.url)));
-    return WebViewWidget(controller: _controller);
+    return WebViewWidget(
+        controller: _controller,
+        gestureRecognizers: Set()
+          ..add(
+            Factory<VerticalDragGestureRecognizer>(
+              () => VerticalDragGestureRecognizer(),
+            ),
+          ));
   }
 
   Widget _buildHtmlWidget() {
