@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../../notifiers/home_config_notifier.dart';
 import '../../../domain/model/banner_model.dart';
 import '../../utils/common_utils.dart';
+import 'general_apps_list_swiper.dart';
 import 'my_image.dart';
 
 class GeneralBanner extends StatefulWidget {
@@ -119,54 +120,10 @@ class _GeneralAppsListVidgetState extends State<GeneralAppsListVidget> {
         aspectRatio: widget.aspectRatio,
       );
     }
-    return apps.isEmpty
-        ? Container()
-        : GridView.builder(
-            shrinkWrap: true,
-            addRepaintBoundaries: false,
-            addAutomaticKeepAlives: false,
-            physics: const BouncingScrollPhysics(),
-            itemCount: apps.length,
-            padding: EdgeInsets.symmetric(vertical: 5.w),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 6,
-              mainAxisSpacing: 10.w,
-              crossAxisSpacing: 10.w,
-              childAspectRatio: 57 / 77,
-            ),
-            itemBuilder: (context, index) {
-              BannerModel? model = apps[index];
-              return GestureDetector(
-                behavior: HitTestBehavior.translucent,
-                onTap: () {
-                  final json = model.toJson() ?? {};
-                  CommonUtils.openRoute(context, json);
-                },
-                child: Column(
-                  children: [
-                    AspectRatio(
-                      aspectRatio: 1,
-                      child: MyImage.network(
-                        CommonUtils.getThumb(widget.data[index].toJson()),
-                        fit: BoxFit.fill,
-                        borderRadius: 6.w,
-                      ),
-                    ),
-                    SizedBox(height: 5.w),
-                    Text(
-                      model.name ?? model.title ?? '',
-                      style: TextStyle(
-                          color: Colors.white,
-                          overflow: TextOverflow.ellipsis,
-                          decoration: TextDecoration.none,
-                          height: 1,
-                          fontWeight: FontWeight.w600,
-                          fontSize: 10.sp),
-                      maxLines: 1,
-                    ),
-                  ],
-                ),
-              );
-            });
+    return GeneralAppListSwiper(
+      data: widget.data,
+      radius: widget.radius,
+      aspectRatio: widget.aspectRatio,
+    );
   }
 }
