@@ -561,9 +561,18 @@ class CommonUtils {
   }
 
   static Future<XFile?> pickVideo() async {
-    if (await ImagePicker().pickVideo(source: ImageSource.gallery)
-        case final xFile? when await _videoLimitSize(xFile)) {
-      return xFile;
+    try {
+      final xFile = await ImagePicker().pickVideo(source: ImageSource.gallery);
+      if (xFile != null && await _videoLimitSize(xFile)) {
+        return xFile;
+      }
+      MyToast.closeAllLoading();
+    } on PlatformException catch (e) {
+      MyToast.closeAllLoading();
+      MyToast.showText(text: '选择失败：手机内存不足，请清理手机内存后重新选择视频上传');
+    } catch (e) {
+      MyToast.closeAllLoading();
+      MyToast.showText(text: '选择失败：手机内存不足，请清理手机内存后重新选择视频上传');
     }
     return null;
   }
@@ -652,10 +661,13 @@ class CommonUtils {
   }
 
   /// xfile限制视频大小
-  static Future<bool> _videoLimitSize(XFile file, {int size = 2048}) async {
+  static Future<bool> _videoLimitSize(XFile file) async {
+    int size = kIsWeb ? 500 : 2048; //pwa限制500M, 安卓限制2G
     int length = await file.length();
     if (length / (1024 * 1024) > size) {
-      MyToast.showText(text: 'qxzbmbv'.tr());
+      MyToast.showText(
+        text: kIsWeb ? 'qxzbmbvpwa'.tr() : 'qxzbmbv'.tr(),
+      );
       return false;
     }
     return true;

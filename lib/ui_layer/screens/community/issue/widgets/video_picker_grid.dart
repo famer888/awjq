@@ -26,7 +26,9 @@ class _VideoPickerGridState extends State<VideoPickerGrid> {
   Uint8List? coverData;
 
   Future<void> _videoPickerAssets() async {
+    MyToast.showLoading();
     if (await CommonUtils.pickVideo() case final xFile?) {
+      MyToast.closeAllLoading();
       final ext = xFile.name.split('.').last.toLowerCase();
       if (ext == 'mp4' || xFile.mimeType == 'video/quicktime') {
         await uploadVideo(xFile);
