@@ -175,6 +175,7 @@ class Config {
       this.imTip,
       this.adVersion,
       this.postDetailAds,
+      this.buoy,
       this.pwaDownloadUrl,
       this.r2URL,
       this.r2Key,
@@ -243,7 +244,7 @@ class Config {
   final int? openLive;
   final int? adVersion;
   final List<BannerModel>? postDetailAds;
-
+  final List<BannerModel>? buoy;
   final String? pwaDownloadUrl;
 
   //R2分片上传
@@ -336,6 +337,8 @@ class Config {
         adVersion: json['ad_version'],
         postDetailAds: List<BannerModel>.from(
             json['post_detail_ads']?.map((x) => BannerModel.fromJson(x)) ?? []),
+        buoy: List<BannerModel>.from(
+            json['buoy']?.map((x) => BannerModel.fromJson(x)) ?? []),
         pwaDownloadUrl: json['pwa_download_url'] ?? '',
         r2URL: json['r2URL'] ?? '',
         r2Key: json['r2Key'] ?? '',
@@ -403,6 +406,7 @@ class Config {
         'im_tip': imTip,
         'ad_version': adVersion,
         'post_detail_ads': postDetailAds?.map((x) => x.toJson()).toList(),
+        'buoy': buoy?.map((x) => x.toJson()).toList(),
         'pwa_download_url': pwaDownloadUrl,
         'r2URL': r2URL,
         'r2Key': r2Key,

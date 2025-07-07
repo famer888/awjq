@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_swiper_null_safety_flutter3/flutter_swiper_null_safety_flutter3.dart';
 import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +17,7 @@ import 'package:universal_html/html.dart' as html;
 import '../../app_config.dart';
 import '../../domain/domain.dart';
 import '../../domain/enum.dart';
+import '../../domain/model/banner_model.dart';
 import '../../domain/model/home_data_model.dart';
 import '../notifiers/chat_notifier.dart';
 import '../notifiers/home_config_notifier.dart';
@@ -290,94 +292,104 @@ class _BottomNaviBarState extends State<BottomNaviBar> {
         return kIsWeb ? WebSafeAreaInsets(child: child!) : child!;
       },
       child: PopScopeWrapper(
-        child: Scaffold(
-          backgroundColor: Colors.transparent,
-          body: widget.navigationShell,
-          bottomNavigationBar: DecoratedBox(
-            decoration: const BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                    color: Color.fromRGBO(39, 39, 39, 1),
-                    spreadRadius: 0.0,
-                    offset: Offset(0.0, -0.5),
-                    blurRadius: 0.0),
-              ],
-            ),
-            child: BottomNavigationBar(
-              backgroundColor: MyTheme.bgColor,
-              elevation: 0,
-              type: BottomNavigationBarType.fixed,
-              selectedFontSize: 11.sp,
-              unselectedFontSize: 11.sp,
-              unselectedItemColor: const Color.fromRGBO(149, 148, 156, 1),
-              selectedItemColor: Colors.white,
-              items: <BottomNavigationBarItem>[
-                BottomNavigationBarItem(
-                  icon: const _Icon(MyImagePaths.appTabHomeN),
-                  activeIcon: const _Icon(MyImagePaths.appTabHomeS),
-                  label: 'sy'.tr(context: context),
+        child: Stack(
+          children: [
+            Scaffold(
+              backgroundColor: Colors.transparent,
+              body: widget.navigationShell,
+              bottomNavigationBar: DecoratedBox(
+                decoration: const BoxDecoration(
+                  boxShadow: [
+                    BoxShadow(
+                        color: Color.fromRGBO(39, 39, 39, 1),
+                        spreadRadius: 0.0,
+                        offset: Offset(0.0, -0.5),
+                        blurRadius: 0.0),
+                  ],
                 ),
-                BottomNavigationBarItem(
-                  icon: const _Icon(MyImagePaths.appTabAwN),
-                  activeIcon: const _Icon(MyImagePaths.appTabAwS),
-                  label: 'aw'.tr(context: context),
-                ),
-                BottomNavigationBarItem(
-                  icon: const _Icon(MyImagePaths.appTabZyN),
-                  activeIcon: const _Icon(MyImagePaths.appTabZyS),
-                  label: 'pojie'.tr(context: context),
-                ),
-                BottomNavigationBarItem(
-                  icon: const _Icon(MyImagePaths.appTabXyN),
-                  activeIcon: const _Icon(MyImagePaths.appTabXyS),
-                  label: 'xany'.tr(context: context),
-                ),
-                BottomNavigationBarItem(
-                  icon: const _Icon(MyImagePaths.appTabShequN),
-                  activeIcon: const _Icon(MyImagePaths.appTabShequS),
-                  label: 'ym'.tr(context: context),
-                ),
-                BottomNavigationBarItem(
-                  icon: const _Icon(MyImagePaths.appTabWodeN),
-                  activeIcon: const _Icon(MyImagePaths.appTabWodeS),
-                  label: 'wd'.tr(context: context),
-                ),
-              ],
-              currentIndex: widget.navigationShell.currentIndex,
-              onTap: _goBranch,
-            ),
-          ),
-          floatingActionButtonLocation:
-              FloatingActionButtonLocation.centerFloat,
-          floatingActionButton: kIsWeb && !CommonUtils.isPWA()
-              ? Padding(
-                  padding: EdgeInsets.only(bottom: 10.w),
-                  child: GestureDetector(
-                    onTap: () {
-                      CommonUtils.downLoadApp(context);
-                    },
-                    child: Container(
-                      height: 30.w,
-                      width: 200.w,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                          color: MyTheme.white09Color,
-                          borderRadius:
-                              BorderRadius.all(Radius.circular(15.w))),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          MyImage.asset(MyImagePaths.appLogoIcon,
-                              width: 18.w, height: 18.w),
-                          SizedBox(width: 5.w),
-                          Text('mrdxdk'.tr(context: context),
-                              style: MyTheme.black1434)
-                        ],
-                      ),
+                child: BottomNavigationBar(
+                  backgroundColor: MyTheme.bgColor,
+                  elevation: 0,
+                  type: BottomNavigationBarType.fixed,
+                  selectedFontSize: 11.sp,
+                  unselectedFontSize: 11.sp,
+                  unselectedItemColor: const Color.fromRGBO(149, 148, 156, 1),
+                  selectedItemColor: Colors.white,
+                  items: <BottomNavigationBarItem>[
+                    BottomNavigationBarItem(
+                      icon: const _Icon(MyImagePaths.appTabHomeN),
+                      activeIcon: const _Icon(MyImagePaths.appTabHomeS),
+                      label: 'sy'.tr(context: context),
                     ),
-                  ),
-                )
-              : const SizedBox(),
+                    BottomNavigationBarItem(
+                      icon: const _Icon(MyImagePaths.appTabAwN),
+                      activeIcon: const _Icon(MyImagePaths.appTabAwS),
+                      label: 'aw'.tr(context: context),
+                    ),
+                    BottomNavigationBarItem(
+                      icon: const _Icon(MyImagePaths.appTabZyN),
+                      activeIcon: const _Icon(MyImagePaths.appTabZyS),
+                      label: 'pojie'.tr(context: context),
+                    ),
+                    BottomNavigationBarItem(
+                      icon: const _Icon(MyImagePaths.appTabXyN),
+                      activeIcon: const _Icon(MyImagePaths.appTabXyS),
+                      label: 'xany'.tr(context: context),
+                    ),
+                    BottomNavigationBarItem(
+                      icon: const _Icon(MyImagePaths.appTabShequN),
+                      activeIcon: const _Icon(MyImagePaths.appTabShequS),
+                      label: 'ym'.tr(context: context),
+                    ),
+                    BottomNavigationBarItem(
+                      icon: const _Icon(MyImagePaths.appTabWodeN),
+                      activeIcon: const _Icon(MyImagePaths.appTabWodeS),
+                      label: 'wd'.tr(context: context),
+                    ),
+                  ],
+                  currentIndex: widget.navigationShell.currentIndex,
+                  onTap: _goBranch,
+                ),
+              ),
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.centerFloat,
+              floatingActionButton: kIsWeb && !CommonUtils.isPWA()
+                  ? Padding(
+                      padding: EdgeInsets.only(bottom: 10.w),
+                      child: GestureDetector(
+                        onTap: () {
+                          CommonUtils.downLoadApp(context);
+                        },
+                        child: Container(
+                          height: 30.w,
+                          width: 200.w,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                              color: MyTheme.white09Color,
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(15.w))),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              MyImage.asset(MyImagePaths.appLogoIcon,
+                                  width: 18.w, height: 18.w),
+                              SizedBox(width: 5.w),
+                              Text('mrdxdk'.tr(context: context),
+                                  style: MyTheme.black1434)
+                            ],
+                          ),
+                        ),
+                      ),
+                    )
+                  : const SizedBox(),
+            ),
+            //悬浮广告位
+            Positioned(
+              right: 13.w,
+              bottom: 130.w,
+              child: TopADWidget(toADs: homeConfigNotifier.config.buoy ?? []),
+            )
+          ],
         ),
       ),
       selector: (_, userNotifier) => userNotifier.isInit,
@@ -402,6 +414,117 @@ class _Icon extends StatelessWidget {
       path,
       width: size,
       height: size,
+    );
+  }
+}
+
+//悬浮广告view
+class TopADWidget extends StatefulWidget {
+  const TopADWidget({super.key, required this.toADs});
+
+  final List<BannerModel> toADs;
+
+  @override
+  State<StatefulWidget> createState() => _TopADWidgetState();
+}
+
+class _TopADWidgetState extends State<TopADWidget> {
+
+  bool offstage = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return widget.toADs.isEmpty
+        ? Container()
+        : _buildButton();
+  }
+
+  Widget _buildButton() {
+    return Offstage(
+      offstage: offstage,
+      child: SizedBox(
+        width: 120.w,
+        height: 120.w,
+        child: Stack(
+          children: [
+            Positioned.fill(
+                child: Container(
+                  alignment: Alignment.center,
+                  margin: EdgeInsets.all(15.w),
+                  decoration: BoxDecoration(
+                    // color: Colors.red,
+                      borderRadius: BorderRadius.all(Radius.circular(5.w))),
+                  child: Swiper(
+                    autoplay: widget.toADs.length > 1,
+                    loop: widget.toADs.length > 1,
+                    itemBuilder: (BuildContext context, int index) {
+                      double w = 80.w;
+                      return GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () {
+                          CommonUtils.openRoute(context, widget.toADs[index].toJson());
+                        },
+                        child: SizedBox(
+                            width: w,
+                            height: w,
+                            child: MyImage.network(CommonUtils.getThumb(widget.toADs[index].toJson()),
+                              borderRadius: 5.w,
+                            )),
+                      );
+                    },
+                    itemCount: widget.toADs.length,
+                    pagination: widget.toADs.length > 1
+                        ? SwiperPagination(
+                        margin: EdgeInsets.only(bottom: 5.w),
+                        builder:
+                        SwiperCustomPagination(builder: (context, config) {
+                          int count = widget.toADs.length;
+                          return Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: List.generate(count, (index) {
+                              return config.activeIndex == index
+                                  ? Container(
+                                width: 4.w,
+                                height: 4.w,
+                                margin: EdgeInsets.only(right: 4.w),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(2.w)),
+                                ),
+                              )
+                                  : Container(
+                                width: 4.w,
+                                height: 4.w,
+                                margin: EdgeInsets.only(right: 4.w),
+                                decoration: BoxDecoration(
+                                  color: MyTheme.grayColor150,
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(2.w)),
+                                ),
+                              );
+                            }),
+                          );
+                        }))
+                        : null,
+                  ),
+                )),
+            Positioned(
+                right: 0,
+                top: 0,
+                width: 20.w,
+                height: 20.w,
+                child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () {
+                      setState(() {
+                        offstage = true;
+                      });
+                    },
+                    child: const MyImage.asset(MyImagePaths.appDialogClose)))
+          ],
+        ),
+      ),
     );
   }
 }
