@@ -144,8 +144,8 @@ class _CommunityContentViewState extends State<CommunityContentView> {
           ),
         ),
         Positioned(
-            right: 15.w,
-            bottom: 15.w,
+            right: 10.w,
+            bottom: 5.w,
             child: GestureDetector(
               onTap: widget.isFish
                   ? () => const XianYuIssueRoute().push(context)

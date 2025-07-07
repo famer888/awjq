@@ -386,7 +386,7 @@ class _BottomNaviBarState extends State<BottomNaviBar> {
             //悬浮广告位
             Positioned(
               right: 13.w,
-              bottom: 130.w,
+              bottom: 115.w,
               child: TopADWidget(toADs: homeConfigNotifier.config.buoy ?? []),
             )
           ],
