@@ -2,7 +2,9 @@ import 'package:awjq/ui_layer/screens/home/live_screen/home_live_screen.dart';
 import 'package:awjq/ui_layer/screens/home/ai_screen/home_ai_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../domain/model/ai/ai_magic_model.dart';
 import '../../domain/model/video_detail_model.dart';
+import '../screens/ai/widgets/detail/ai_magic_detail.dart';
 import '../screens/bit/live_video/live_detail/screen.dart';
 import '../screens/bit/monitor_video/monitor_detail/screen.dart';
 import '../screens/community/module/screen.dart';
@@ -120,7 +122,6 @@ class WelcomeRoute extends GoRouteData {
     ),
   ],
 )
-
 class StatefulShellRoute extends StatefulShellRouteData {
   const StatefulShellRoute();
 
@@ -352,7 +353,8 @@ class CommunityModuleRoute extends GoRouteData {
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return CommonUtils.buildSlideTransitionPage(
-        state: state, child: CommunityModuleScreen(id: id, noLive: noLive, type: type));
+        state: state,
+        child: CommunityModuleScreen(id: id, noLive: noLive, type: type));
   }
 }
 
@@ -621,11 +623,12 @@ class ChatMessageRoute extends GoRouteData {
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return CommonUtils.buildSlideTransitionPage(
-        state: state, child: ChatMessageScreen(
-      toUuid: toUuid,
-      nickName: nickName,
-      thumb: thumb,
-    ));
+        state: state,
+        child: ChatMessageScreen(
+          toUuid: toUuid,
+          nickName: nickName,
+          thumb: thumb,
+        ));
   }
 }
 
@@ -936,5 +939,21 @@ extension _MyPushHelper on BuildContext {
     matchList.addAll(newMatchList);
 
     return push<T>(location, extra: extra);
+  }
+}
+
+@TypedGoRoute<AIMagicDetailRoute>(path: AppRouterPaths.aiDetail)
+class AIMagicDetailRoute extends GoRouteData {
+  static final GlobalKey<NavigatorState> $parentNavigatorKey =
+      AppRouter.rootNavigatorKey;
+
+  const AIMagicDetailRoute(this.$extra);
+
+  final AIMagicModel $extra;
+
+  @override
+  Page<void> buildPage(BuildContext context, GoRouterState state) {
+    return CommonUtils.buildSlideTransitionPage(
+        state: state, child: AIMagicDetail(data: $extra));
   }
 }

@@ -491,9 +491,9 @@ class _LiveMvPlayerState extends State<LiveMvPlayer> with NVideoURLMinxin {
             GestureDetector(
               behavior: HitTestBehavior.translucent,
               child: isbarrage
-                  ? const MyImage.asset(MyImagePaths.appOnDanmu,
+                  ? const MyImage.asset(MyImagePaths.appOndm,
                   width: 25, height: 25, fit: BoxFit.contain)
-                  : const MyImage.asset(MyImagePaths.appOffDanmu,
+                  : const MyImage.asset(MyImagePaths.appOffdm,
                   width: 25, height: 25, fit: BoxFit.contain),
               onTap: () async {
                 //弹幕开关
@@ -509,7 +509,7 @@ class _LiveMvPlayerState extends State<LiveMvPlayer> with NVideoURLMinxin {
             SizedBox(width: 16.w),
             GestureDetector(//全屏才会显示打赏
               behavior: HitTestBehavior.translucent,
-              child: const MyImage.asset(MyImagePaths.appDaSan,
+              child: const MyImage.asset(MyImagePaths.appDs,
                   width: 60, height: 25, fit: BoxFit.contain),
               onTap: () {
                 _hideKeyboard(context);
@@ -549,7 +549,7 @@ class _LiveMvPlayerState extends State<LiveMvPlayer> with NVideoURLMinxin {
                   ),
                 ),
                 (index == chanelIndex)
-                    ? const MyImage.asset(MyImagePaths.appGouXWhite,
+                    ? const MyImage.asset(MyImagePaths.appGouWhite,
                     width: 20, height: 20)
                     : const SizedBox.shrink()
               ],
@@ -949,13 +949,13 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                   SizedBox(width: 10.w),
                   FlickFullScreenToggle(
                     enterFullScreenChild: const MyImage.asset(
-                      MyImagePaths.appFullScreen,
+                      MyImagePaths.appFullscreen,
                       width: 25,
                       height: 25,
                       fit: BoxFit.contain,
                     ),
                     exitFullScreenChild: const MyImage.asset(
-                      MyImagePaths.appFullScreen,
+                      MyImagePaths.appFullscreen,
                       width: 25,
                       height: 25,
                       fit: BoxFit.contain,
@@ -1384,9 +1384,9 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
       GestureDetector(
         behavior: HitTestBehavior.translucent,
         child: isbarrage
-            ? const MyImage.asset(MyImagePaths.appOnDanmu,
+            ? const MyImage.asset(MyImagePaths.appOndm,
             width: 25, height: 25, fit: BoxFit.contain)
-            : const MyImage.asset(MyImagePaths.appOffDanmu,
+            : const MyImage.asset(MyImagePaths.appOffdm,
             width: 25, height: 25, fit: BoxFit.contain),
         onTap: () {
           optionalDanMu();
@@ -1395,7 +1395,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
       const SizedBox(width: 13),
       GestureDetector(//打赏
         behavior: HitTestBehavior.translucent,
-        child: const MyImage.asset(MyImagePaths.appDaSan,
+        child: const MyImage.asset(MyImagePaths.appDs,
             width: 60, height: 25, fit: BoxFit.contain),
         onTap: () {
           _hideKeyboard(context);
@@ -1508,7 +1508,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                   ),
                 ),
                 (index == _chanelIndex)
-                    ? const MyImage.asset(MyImagePaths.appGouXWhite,
+                    ? const MyImage.asset(MyImagePaths.appGouWhite,
                         width: 20, height: 20)
                     : const SizedBox.shrink()
               ],

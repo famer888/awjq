@@ -10,6 +10,8 @@ import 'package:utils/utils.dart';
 import 'data_layer/repo/repo.dart';
 import 'domain/domain.dart';
 import 'domain/remote_domain/domains/ai.dart';
+import 'domain/remote_domain/domains/aidraw.dart';
+import 'domain/remote_domain/domains/aimagic.dart';
 import 'domain/remote_domain/domains/live.dart';
 import 'domain/remote_domain/domains/monitor.dart';
 import 'ui_layer/notifiers/chat_notifier.dart';
@@ -70,6 +72,8 @@ void main() async {
         Provider<LiveDomain>(lazy: false, create: (_) => appRepo),
         Provider<MonitorDomain>(lazy: false, create: (_) => appRepo),
         Provider<AIDomain>(lazy: false, create: (_) => appRepo),
+        Provider<AIMagicDomain>(lazy: false, create: (_) => appRepo),
+        Provider<AIDrawDomain>(lazy: false, create: (_) => appRepo),
         Provider<DownloadUtil>(
             lazy: false, create: (_) => DownloadUtil(cache: appRepo.cache)),
         ChangeNotifierProvider(create: (_) => HomeConfigNotifier(appRepo)),

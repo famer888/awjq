@@ -85,6 +85,8 @@ class Member {
     this.imType,
     this.imValue,
     required this.vipUpgrade,
+    required this.aiMagicValue,
+    required this.aiDrawValue,
   });
 
   final int? imType;
@@ -165,6 +167,9 @@ class Member {
   final int? stripCt;
   final int? faceCt;
   final int vipUpgrade;
+
+  final int aiMagicValue;
+  final int aiDrawValue;
 
   factory Member.fromJson(Map<String, dynamic> json) => Member(
         postCount: json['post_count'] ?? 0,
@@ -251,6 +256,8 @@ class Member {
         imType: json['im_type'] ?? 0,
         imValue: json['im_value'] ?? 0,
         vipUpgrade: json['vip_upgrade'] ?? 0,
+        aiMagicValue: json['ai_magic_value'] ?? 0,
+        aiDrawValue: json['ai_draw_value'] ?? 0,
       );
 
   Map<String, dynamic> toJson() => {
@@ -332,6 +339,8 @@ class Member {
         'im_type': imType ?? 0,
         'im_value': imValue ?? 0,
         'vip_upgrade': vipUpgrade,
+        'ai_magic_value': aiMagicValue,
+        'ai_draw_value': aiDrawValue,
       };
 
   Member copyWith({
@@ -413,6 +422,8 @@ class Member {
     int? stripCt,
     int? faceCt,
     int? vipUpgrade,
+    int? aiMagicValue,
+    int? aiDrawValue,
   }) =>
       Member(
         imType: imType ?? this.imType,
@@ -493,6 +504,8 @@ class Member {
         stripCt: stripCt ?? this.stripCt,
         faceCt: faceCt ?? this.faceCt,
         vipUpgrade: vipUpgrade ?? this.vipUpgrade,
+        aiMagicValue: aiMagicValue ?? this.aiMagicValue,
+        aiDrawValue: aiDrawValue ?? this.aiDrawValue,
       );
 }
 

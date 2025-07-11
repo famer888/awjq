@@ -155,8 +155,8 @@ class _HeaderViewState extends State<_HeaderView> {
                           },
                           child: _btnItem(
                             icon: isFavorite
-                                ? MyImagePaths.appLiveColloctionSel
-                                : MyImagePaths.appLiveColloctionNormal,
+                                ? MyImagePaths.appLiveColloctionS
+                                : MyImagePaths.appLiveColloctionN,
                             name: tr('sc')
                             // name: CommonUtils.renderFixedNumber(
                             //     videoInfo.favoriteFct ?? 0),

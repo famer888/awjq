@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../domain/model/ai_model.dart';
-import '../../../router/routes.dart';
-import '../../../utils/common_utils.dart';
-import '../../common_widgets/my_image.dart';
-import '../../theme.dart';
-import '../face_swap/face_swap_sheet/screent.dart';
+import '../../../../../domain/model/ai_model.dart';
+import '../../../../router/routes.dart';
+import '../../../../utils/common_utils.dart';
+import '../../../common_widgets/my_image.dart';
+import '../../../theme.dart';
+import '../../face_swap/face_swap_sheet/screent.dart';
 
 class MaterialCard extends StatelessWidget {
   const MaterialCard({super.key, required this.data});

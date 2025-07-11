@@ -58,6 +58,7 @@ List<RouteBase> get $appRoutes => [
       $systemMessageRoute,
       $mediaViewerRoute,
       $localVideoRoute,
+      $aIMagicDetailRoute,
     ];
 
 RouteBase get $welcomeRoute => GoRouteData.$route(
@@ -1472,6 +1473,34 @@ extension $LocalVideoRouteExtension on LocalVideoRoute {
 
   String get location => GoRouteData.$location(
         '/localVideo',
+      );
+
+  void go(BuildContext context) => context.go(location, extra: $extra);
+
+  Future<T?> push<T>(BuildContext context) =>
+      context.push<T>(location, extra: $extra);
+
+  void pushReplacement(BuildContext context) =>
+      context.pushReplacement(location, extra: $extra);
+
+  void replace(BuildContext context) =>
+      context.replace(location, extra: $extra);
+}
+
+RouteBase get $aIMagicDetailRoute => GoRouteData.$route(
+      path: '/aiaiDetail',
+      parentNavigatorKey: AIMagicDetailRoute.$parentNavigatorKey,
+      factory: $AIMagicDetailRouteExtension._fromState,
+    );
+
+extension $AIMagicDetailRouteExtension on AIMagicDetailRoute {
+  static AIMagicDetailRoute _fromState(GoRouterState state) =>
+      AIMagicDetailRoute(
+        state.extra as AIMagicModel,
+      );
+
+  String get location => GoRouteData.$location(
+        '/aiaiDetail',
       );
 
   void go(BuildContext context) => context.go(location, extra: $extra);

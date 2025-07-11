@@ -7,6 +7,8 @@ import 'package:flutter/cupertino.dart';
 import '../enum.dart';
 import '../type_def.dart';
 import 'domains/account.dart';
+import 'domains/aidraw.dart';
+import 'domains/aimagic.dart';
 import 'domains/community.dart';
 import 'domains/dynamic.dart';
 import 'domains/element.dart';
@@ -42,7 +44,9 @@ abstract class RemoteDomain
         MessageDomain,
         PrivilegeDomain,
         LiveDomain,
-        MonitorDomain {
+        MonitorDomain,
+        AIMagicDomain,
+        AIDrawDomain {
   Stream<MyTokenStatus?> get tokenStatusStream;
   void initLine({
     Function? success,

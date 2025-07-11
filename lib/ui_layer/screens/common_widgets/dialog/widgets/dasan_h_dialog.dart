@@ -59,7 +59,7 @@ class DanSanHDialog extends StatelessWidget {
                     GestureDetector(
                       onTap: () => closeCall?.call(),
                       child: const MyImage.asset(
-                        MyImagePaths.appCircleSlose,
+                        MyImagePaths.appCircleClose,
                         width: 30,
                       ),
                     ),

@@ -8,7 +8,9 @@ import '../../common_widgets/my_image.dart';
 import '../../common_widgets/screen_background.dart';
 import '../../image_paths.dart';
 import '../../theme.dart';
+import 'draw_art/screen.dart';
 import 'face_swap_record/screen.dart';
+import 'magic_ai_record/screen.dart';
 import 'strip_off_record/screen.dart';
 
 class MineAIRecordScreen extends StatefulWidget {
@@ -18,9 +20,15 @@ class MineAIRecordScreen extends StatefulWidget {
   State<MineAIRecordScreen> createState() => _MineAIRecordScreenState();
 }
 
-class _MineAIRecordScreenState extends State<MineAIRecordScreen> with TickerProviderStateMixin {
+class _MineAIRecordScreenState extends State<MineAIRecordScreen>
+    with TickerProviderStateMixin {
+  List<String> navList = [
+    'aimf'.tr(),
+    'aihh'.tr(),
+    'aity'.tr(),
+    'aihl'.tr(),
+  ];
 
-  List<String> navList = [tr('aity'), tr('aihl')];
   late final tabController = TabController(length: navList.length, vsync: this);
 
   @override
@@ -35,11 +43,17 @@ class _MineAIRecordScreenState extends State<MineAIRecordScreen> with TickerProv
           controller: tabController,
           children: const [
             KeepAliveWrapper(
-              child: MineStrpOffRecordScreen(),
+              child: MineMagicRecordScreen(),
+            ),
+            KeepAliveWrapper(
+              child: MineDrawArtScreen(),
             ),
             KeepAliveWrapper(
               child: MineFaceSwapRecordScreen(),
-            )
+            ),
+            KeepAliveWrapper(
+              child: MineStrpOffRecordScreen(),
+            ),
           ],
         ),
       ),
@@ -75,17 +89,17 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: true,
       backgroundColor: Colors.transparent,
       title: SizedBox(
-        height: 30.w,
+        height: preferredSize.height,
         child: TabBar(
           padding: EdgeInsets.zero,
           controller: tabController,
           labelPadding: const EdgeInsets.symmetric(horizontal: 10),
           tabAlignment: TabAlignment.center,
           isScrollable: true,
-          labelStyle: MyTheme.white255_18_M,
-          unselectedLabelStyle: MyTheme.white06_18,
+          labelStyle: MyTheme.white255_16_M,
+          unselectedLabelStyle: MyTheme.white244_16,
           overlayColor: WidgetStateProperty.resolveWith<Color>(
-                (_) => Colors.transparent,
+            (_) => Colors.transparent,
           ),
           indicatorColor: Colors.transparent,
           indicator: BoxDecoration(
@@ -93,18 +107,7 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
           dividerColor: Colors.transparent,
           dividerHeight: 0,
-          tabs: titles.map((e) {
-            return Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15.w),
-              child: Tab(
-                iconMargin: EdgeInsets.zero,
-                height: MyTheme.navbarHegiht,
-                child: Center(
-                  child: Text(e),
-                ),
-              ),
-            );
-          }).toList(),
+          tabs: titles.map((t) => Tab(text: t)).toList(),
         ),
       ),
     );

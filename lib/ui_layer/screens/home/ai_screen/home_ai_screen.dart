@@ -9,6 +9,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../router/routes.dart';
+import '../../ai/ai_art/screen.dart';
+import '../../ai/ai_magic/screen.dart';
+import '../../common_widgets/my_image.dart';
+
 class HomeAiScreen extends StatefulWidget {
   const HomeAiScreen({super.key});
 
@@ -16,8 +21,14 @@ class HomeAiScreen extends StatefulWidget {
   State<HomeAiScreen> createState() => _HomeAiScreenState();
 }
 
-class _HomeAiScreenState extends State<HomeAiScreen> with TickerProviderStateMixin {
-  late final navList = ['aity'.tr(), 'aihl'.tr()];
+class _HomeAiScreenState extends State<HomeAiScreen>
+    with TickerProviderStateMixin {
+  late final navList = [
+    'aimf'.tr(),
+    'aihh'.tr(),
+    'aity'.tr(),
+    'aihl'.tr(),
+  ];
   late final tabController = TabController(length: navList.length, vsync: this);
   @override
   Widget build(BuildContext context) {
@@ -32,9 +43,15 @@ class _HomeAiScreenState extends State<HomeAiScreen> with TickerProviderStateMix
           children: navList.map((e) {
             if (e == 'aity'.tr()) {
               return const StripOffScreen();
-            } else {
+            } else if (e == 'aihl'.tr()) {
               return const FaceSwapScreen();
+            } else if (e == 'aimf'.tr()) {
+              return const AIMagic();
+            } else if (e == 'aihh'.tr()) {
+              return const AIArtScreen();
             }
+
+            return SizedBox();
           }).toList(),
         ),
       ),
@@ -54,10 +71,63 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      leading: GestureDetector(
+        child: Padding(
+          padding: EdgeInsets.all(12.w),
+          child: MyImage.asset(
+            MyImagePaths.appBackIcon,
+            width: 20.w,
+            height: 20.w,
+          ),
+        ),
+        onTap: () {
+          context.pop();
+        },
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            const MineAIRecordRoute().push(context);
+          },
+          child: const Center(
+            child: Text(
+              '记录',
+              style: TextStyle(color: Colors.white60),
+            ),
+          ),
+        ),
+      ],
+      // centerTitle: true,
+      backgroundColor: Colors.transparent,
+      title: SizedBox(
+        height: preferredSize.height,
+        child: TabBar(
+          padding: EdgeInsets.zero,
+          controller: tabController,
+          labelPadding: const EdgeInsets.symmetric(horizontal: 10),
+          tabAlignment: TabAlignment.center,
+          isScrollable: true,
+          labelStyle: MyTheme.white255_16_M,
+          unselectedLabelStyle: MyTheme.white244_16,
+          overlayColor: WidgetStateProperty.resolveWith<Color>(
+            (_) => Colors.transparent,
+          ),
+          indicatorColor: Colors.transparent,
+          indicator: BoxDecoration(
+            borderRadius: BorderRadius.circular(30.w),
+          ),
+          dividerColor: Colors.transparent,
+          dividerHeight: 0,
+          tabs: titles.map((t) => Tab(text: t)).toList(),
+        ),
+      ),
+    );
+
+    return AppBar(
       centerTitle: true,
       backgroundColor: Colors.transparent,
       leadingWidth: 40.w,
-      leading:GestureDetector(
+      leading: GestureDetector(
         onTap: () {
           context.pop();
         },
@@ -70,6 +140,19 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
       ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            const MineAIRecordRoute().push(context);
+          },
+          child: const Center(
+            child: Text(
+              '记录',
+              style: TextStyle(color: Colors.white60),
+            ),
+          ),
+        ),
+      ],
       title: SizedBox(
         height: 30.w,
         child: TabBar(
@@ -78,10 +161,10 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
           labelPadding: const EdgeInsets.symmetric(horizontal: 10),
           tabAlignment: TabAlignment.center,
           isScrollable: true,
-          labelStyle: MyTheme.white255_18,
-          unselectedLabelStyle: MyTheme.white06_18,
+          labelStyle: MyTheme.white255_15,
+          unselectedLabelStyle: MyTheme.white06_15,
           overlayColor: WidgetStateProperty.resolveWith<Color>(
-                (_) => Colors.transparent,
+            (_) => Colors.transparent,
           ),
           indicatorColor: Colors.transparent,
           indicator: BoxDecoration(
@@ -92,7 +175,7 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
           dividerHeight: 0,
           tabs: titles.map((e) {
             return Padding(
-              padding: EdgeInsets.symmetric(horizontal: 15.w),
+              padding: EdgeInsets.symmetric(horizontal: 0.w),
               child: Tab(
                 iconMargin: EdgeInsets.zero,
                 height: MyTheme.navbarHegiht,

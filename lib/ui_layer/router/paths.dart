@@ -171,4 +171,8 @@ class AppRouterPaths {
   //AI
   static const ai = '/ai';
 
+
+  //AI
+  static const aiDetail = '/aiaiDetail';
+
 }

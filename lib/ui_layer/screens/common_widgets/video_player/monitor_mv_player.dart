@@ -177,10 +177,10 @@ class _MonitorMvPlayerState extends State<MonitorMvPlayer>
         GestureDetector(
           behavior: HitTestBehavior.translucent,
           child: widget.info.isLike == 1
-              ? MyImage.asset(MyImagePaths.appMonitorZanSel,
+              ? MyImage.asset(MyImagePaths.appMonitorZanS,
                   width: 25.w, height: 25.w, fit: BoxFit.contain)
               : MyImage.asset(
-                  MyImagePaths.appMonitorZanNormal,
+                  MyImagePaths.appMonitorZanN,
                   width: 25.w,
                   height: 25.w,
                   fit: BoxFit.contain,
@@ -193,10 +193,10 @@ class _MonitorMvPlayerState extends State<MonitorMvPlayer>
         GestureDetector(
           behavior: HitTestBehavior.translucent,
           child: widget.info.isFavorite == 1
-              ? MyImage.asset(MyImagePaths.appMonitorColloctionSel,
+              ? MyImage.asset(MyImagePaths.appMonitorColloctionS,
                   width: 25.w, height: 25.w, fit: BoxFit.contain)
               : MyImage.asset(
-                  MyImagePaths.appMonitorColloctionNormal,
+                  MyImagePaths.appMonitorColloctionN,
                   width: 25.w,
                   height: 25.w,
                   fit: BoxFit.contain,
@@ -593,10 +593,10 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                         GestureDetector(
                           behavior: HitTestBehavior.translucent,
                           child: widget.info?.isLike == 1
-                              ? const MyImage.asset(MyImagePaths.appMonitorZanSel,
+                              ? const MyImage.asset(MyImagePaths.appMonitorZanS,
                               width: 25, height: 25, fit: BoxFit.contain)
                               : const MyImage.asset(
-                            MyImagePaths.appMonitorZanNormal,
+                            MyImagePaths.appMonitorZanN,
                             width: 25,
                             height: 25,
                             fit: BoxFit.contain,
@@ -610,10 +610,10 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                         GestureDetector(
                           behavior: HitTestBehavior.translucent,
                           child: widget.info?.isFavorite == 1
-                              ? const MyImage.asset(MyImagePaths.appMonitorColloctionSel,
+                              ? const MyImage.asset(MyImagePaths.appMonitorColloctionS,
                               width: 25, height: 25, fit: BoxFit.contain)
                               : const MyImage.asset(
-                            MyImagePaths.appMonitorColloctionNormal,
+                            MyImagePaths.appMonitorColloctionN,
                             width: 25,
                             height: 25,
                             fit: BoxFit.contain,
@@ -636,13 +636,13 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                 kIsWeb ? Container()
                     : FlickFullScreenToggle(
                         enterFullScreenChild: const MyImage.asset(
-                          MyImagePaths.appFullScreen,
+                          MyImagePaths.appFullscreen,
                           width: 25,
                           height: 25,
                           fit: BoxFit.contain,
                         ),
                         exitFullScreenChild: const MyImage.asset(
-                          MyImagePaths.appFullScreen,
+                          MyImagePaths.appFullscreen,
                           width: 25,
                           height: 25,
                           fit: BoxFit.contain,
@@ -722,10 +722,10 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                   GestureDetector(
                     behavior: HitTestBehavior.translucent,
                     child: widget.info?.isFavorite == 1
-                        ? const MyImage.asset(MyImagePaths.appMonitorColloctionSel,
+                        ? const MyImage.asset(MyImagePaths.appMonitorColloctionS,
                         width: 25, height: 25, fit: BoxFit.contain)
                         : const MyImage.asset(
-                      MyImagePaths.appMonitorColloctionNormal,
+                      MyImagePaths.appMonitorColloctionN,
                       width: 25,
                       height: 25,
                       fit: BoxFit.contain,
@@ -739,10 +739,10 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                   GestureDetector(
                     behavior: HitTestBehavior.translucent,
                     child: widget.info?.isLike == 1
-                        ? const MyImage.asset(MyImagePaths.appMonitorZanSel,
+                        ? const MyImage.asset(MyImagePaths.appMonitorZanS,
                         width: 25, height: 25, fit: BoxFit.contain)
                         : const MyImage.asset(
-                      MyImagePaths.appMonitorZanNormal,
+                      MyImagePaths.appMonitorZanN,
                       width: 25,
                       height: 25,
                       fit: BoxFit.contain,

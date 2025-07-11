@@ -78,7 +78,7 @@ class LiveVideoCard extends StatelessWidget {
               left: 0,
               right: 0,
               child: MyImage.asset(
-                MyImagePaths.appCardBottomBg,
+                MyImagePaths.appCardBottombg,
                 height: 53.w,
                 fit: BoxFit.cover,
               ),

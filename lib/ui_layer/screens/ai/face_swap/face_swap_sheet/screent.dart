@@ -178,7 +178,7 @@ class _FaceSwapSheetViewState extends State<FaceSwapSheetView> {
                     Column(
                       children: [
                         MyImage.asset(
-                          MyImagePaths.appAIFaceSampleCorrect,
+                          MyImagePaths.appAiFaceSampleCorrect,
                           width: 55.w,
                           height: 55.w,
                         ),
@@ -192,7 +192,7 @@ class _FaceSwapSheetViewState extends State<FaceSwapSheetView> {
                     Column(
                       children: [
                         MyImage.asset(
-                          MyImagePaths.appAIFaceSampleGlasses,
+                          MyImagePaths.appAiFaceSampleGlasses,
                           width: 55.w,
                           height: 55.w,
                         ),
@@ -206,7 +206,7 @@ class _FaceSwapSheetViewState extends State<FaceSwapSheetView> {
                     Column(
                       children: [
                         MyImage.asset(
-                          MyImagePaths.appAIFaceSampleMask,
+                          MyImagePaths.appAiFaceSampleMask,
                           width: 55.w,
                           height: 55.w,
                         ),
@@ -260,7 +260,7 @@ class _FaceSwapSheetViewState extends State<FaceSwapSheetView> {
               child: GestureDetector(
                 behavior: HitTestBehavior.translucent,
                 child: MyImage.asset(
-                  MyImagePaths.appCircleSlose,
+                  MyImagePaths.appCircleClose,
                   width: 25.w,
                   height: 25.w,
                   fit: BoxFit.contain,

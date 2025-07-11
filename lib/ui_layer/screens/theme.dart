@@ -1113,6 +1113,11 @@ class MyTheme {
       overflow: TextOverflow.ellipsis,
       decoration: TextDecoration.none);
 
+  static final white244_20 = TextStyle(
+      color: const Color.fromRGBO(244, 244, 244, 1),
+      fontSize: 20.sp,
+      overflow: TextOverflow.ellipsis,
+      decoration: TextDecoration.none);
   static final TextStyle white244_20_M = TextStyle(
       color: const Color.fromRGBO(244, 244, 244, 1),
       fontSize: 20.sp,
@@ -1387,6 +1392,11 @@ class MyTheme {
       overflow: TextOverflow.ellipsis,
       decoration: TextDecoration.none);
 
+  static final TextStyle red2555713_16medium = TextStyle(
+      color: blueColor81_151_241,
+      fontSize: 16.sp,
+      overflow: TextOverflow.ellipsis,
+      decoration: TextDecoration.none);
   static final TextStyle gray118_12 = TextStyle(
       color: const Color.fromRGBO(118, 118, 118, 1),
       fontSize: 12.sp,
@@ -2273,6 +2283,12 @@ class MyTheme {
       fontWeight: FontWeight.w600,
       decoration: TextDecoration.none);
 
+  static final TextStyle white06_15 = TextStyle(
+      color: white06Color,
+      fontSize: 15.sp,
+      overflow: TextOverflow.ellipsis,
+      decoration: TextDecoration.none);
+
   static final TextStyle white06_18 = TextStyle(
       color: white06Color,
       fontSize: 18.sp,
@@ -2292,7 +2308,7 @@ class MyTheme {
       decoration: TextDecoration.none);
 
   static final TextStyle white07_14 =
-  TextStyle(color: white07Color, fontSize: 14.sp);
+      TextStyle(color: white07Color, fontSize: 14.sp);
   static final TextStyle white04_10 = TextStyle(
       color: const Color.fromRGBO(255, 255, 255, 0.4),
       fontSize: 10.sp,
@@ -2417,7 +2433,7 @@ class MyTheme {
       decoration: TextDecoration.none);
 
   static final TextStyle white07_16 =
-  TextStyle(color: white07Color, fontSize: 16.sp);
+      TextStyle(color: white07Color, fontSize: 16.sp);
 
   static final TextStyle white16medium = TextStyle(
       color: const Color.fromRGBO(255, 255, 255, 1),

@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
-import '../card/material_card.dart';
+import '../widgets/card/material_card.dart';
 
 class FaceSwapView extends StatefulWidget {
   const FaceSwapView({super.key, required this.faceTopNav});

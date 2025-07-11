@@ -546,8 +546,8 @@ class _ThirdMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     final menu = [
       (
-        title: 'tyhl'.tr(context: context),
-        iconName: MyImagePaths.appMineAI,
+        title: 'wdai'.tr(context: context),
+        iconName: MyImagePaths.appMineAi,
         onTap: () => const MineAIRecordRoute().push(context),
       ),
       (

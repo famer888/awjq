@@ -20,6 +20,11 @@ import '../../app_config.dart';
 import '../../crypto.dart';
 import '../../domain/enum.dart';
 import '../../domain/model/ai_model.dart';
+import '../../domain/model/ai/ai_draw_model.dart';
+import '../../domain/model/ai/ai_draw_record_model.dart';
+import '../../domain/model/ai/ai_magic_model.dart';
+import '../../domain/model/ai/ai_magic_record_model.dart';
+
 import '../../domain/model/app_center_model.dart';
 import '../../domain/model/bank_card_model.dart';
 import '../../domain/model/bit_detail_model.dart';
@@ -63,6 +68,8 @@ import '../../domain/model/video_comment_model.dart';
 import '../../domain/model/video_detail_model.dart';
 import '../../domain/model/welfare_task_model.dart';
 import '../../domain/remote_domain/domains/ai.dart';
+import '../../domain/remote_domain/domains/aidraw.dart';
+import '../../domain/remote_domain/domains/aimagic.dart';
 import '../../domain/remote_domain/domains/live.dart';
 import '../../domain/remote_domain/domains/monitor.dart';
 import '../../domain/result.dart';
@@ -71,6 +78,9 @@ import '../../domain/domain.dart';
 import '../../logger.dart';
 import '../data_source/remote/account_service.dart';
 import '../data_source/remote/ai_service.dart';
+
+import '../data_source/remote/aidraw_service.dart';
+import '../data_source/remote/aimagic_service.dart';
 import '../data_source/remote/community_service.dart';
 import '../data_source/remote/dynamic_service.dart';
 import '../data_source/remote/element_service.dart';
@@ -129,6 +139,9 @@ part 'mixin/monitor_mixin.dart';
 
 part 'mixin/ai_mixin.dart';
 
+part 'mixin/aimagic_mixin.dart';
+part 'mixin/aidraw_mixin.dart';
+
 class AppRepo extends _BaseAppRepo
     with
         _Home,
@@ -148,7 +161,9 @@ class AppRepo extends _BaseAppRepo
         _Privilege,
         _Live,
         _Monitor,
-        _AI {}
+        _AI,
+        _AIMagic,
+        _AIDraw {}
 
 abstract class _BaseAppRepo implements AppDomain {
   late final _homeService = HomeService(_apiDio);
@@ -169,6 +184,8 @@ abstract class _BaseAppRepo implements AppDomain {
   late final _liveService = LiveService(_apiDio);
   late final _monitorService = MonitorService(_apiDio);
   late final _aiService = AIService(_apiDio);
+  late final _aiMagicService = AIMagicService(_apiDio);
+  late final _aidrawService = AIDrawService(_apiDio);
 
   final _cacheManager = _CacheManager();
 
@@ -177,11 +194,11 @@ abstract class _BaseAppRepo implements AppDomain {
       _tokenValidStreamController.stream.asBroadcastStream();
 
   final _tokenValidStreamController = StreamController<MyTokenStatus?>();
-
+ 
   late final _apiDio = Dio(
     BaseOptions(
       connectTimeout: const Duration(seconds: 60),
-      receiveTimeout: const Duration(seconds: 300),
+      receiveTimeout: const Duration(seconds:300),
       contentType: Headers.formUrlEncodedContentType,
     ),
   );

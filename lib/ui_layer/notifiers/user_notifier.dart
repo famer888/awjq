@@ -137,6 +137,16 @@ class UserNotifier extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setMagicValue({required int num}) {
+    _member = _member.copyWith(aiMagicValue: num);
+    notifyListeners();
+  }
+
+  void setDrawValue({required int num}) {
+    _member = _member.copyWith(aiDrawValue: num);
+    notifyListeners();
+  }
+
   Future logout() async {
     _userFollowingStatus.clear();
     await _remoteDomain.logout();
