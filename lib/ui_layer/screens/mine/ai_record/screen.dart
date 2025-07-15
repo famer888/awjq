@@ -49,10 +49,10 @@ class _MineAIRecordScreenState extends State<MineAIRecordScreen>
               child: MineDrawArtScreen(),
             ),
             KeepAliveWrapper(
-              child: MineFaceSwapRecordScreen(),
+              child: MineStrpOffRecordScreen(),
             ),
             KeepAliveWrapper(
-              child: MineStrpOffRecordScreen(),
+              child: MineFaceSwapRecordScreen(),
             ),
           ],
         ),
