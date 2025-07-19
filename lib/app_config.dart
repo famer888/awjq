@@ -25,7 +25,7 @@ class BuildConfig {
 
   /// 备用线路
   static const githubLine =
-      'https://raw.githubusercontent.com/little-5/backup/master/awjq.txt';
+      'https://raw.githubusercontent.com/ailiu258099-blip/master/main/awjq.txt';
 
   static final fdsKeyApi = [
     'https://wvseee.jsbacjr.com/aw.txt',
