@@ -45,7 +45,7 @@ class _VideoPickerGridState extends State<VideoPickerGrid> {
         file: file,
         response: (data) async {
           BotToast.closeAllLoading();
-          if (data?['cover']?['code'] == 1 && data?['video']?['code'] == 1) {
+          if (data?['video']?['code'] == 1) {
             final cover = data?['cover'];
 
             final url = "${data?['video']?['message']}";
@@ -62,7 +62,7 @@ class _VideoPickerGridState extends State<VideoPickerGrid> {
           } else {
             MyToast.showText(
                 text: data?['cover']?['code'] != 1
-                    ? data?['cover']?['message'] ?? data?['video']?['message']
+                    ? data?['cover']?['msg'] ?? data?['video']?['message']
                     : 'r2scsb'.tr());
 
             WidgetsBinding.instance.addPostFrameCallback((_) {
