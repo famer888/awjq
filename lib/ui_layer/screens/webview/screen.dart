@@ -29,6 +29,33 @@ class _WebViewScreenState extends State<WebViewScreen> {
   String titleText = '';
   late WebViewController _controller;
 
+  late html.EventListener _listener;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    if (kIsWeb) {
+      _listener = (event) {
+        if (event is! html.MessageEvent) return;
+        jumpToPage(event.data.toString());
+      };
+    }
+  }
+
+  @override
+  void dispose() {
+    if (kIsWeb) {
+      _listener = (event) {
+        if (event is! html.MessageEvent) return;
+        jumpToPage(event.data.toString());
+      };
+    }
+    html.window.removeEventListener('message', _listener);
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ScreenBackground(
@@ -93,22 +120,23 @@ class _WebViewScreenState extends State<WebViewScreen> {
   }
 
   Widget _buildHtmlWidget() {
+    final String viewType =
+        'iframeElement-${DateTime.now().millisecondsSinceEpoch}';
     final html.IFrameElement element = html.IFrameElement();
     element.src = Uri.decodeComponent(widget.url);
     element.style.border = 'none';
     element.style.width = '100%';
     element.style.height = '100%';
-    html.window.addEventListener('message', (event) {
-      if (event is! html.MessageEvent) return;
-      jumpToPage(event.data.toString());
-    });
+
+    html.window.addEventListener('message', _listener);
+
     // ignore: undefined_prefixed_name
     ui.platformViewRegistry.registerViewFactory(
-      'iframeElement',
+      viewType,
       (int viewId) => element,
     );
     Widget current = HtmlElementView(
-      viewType: 'iframeElement',
+      viewType: viewType,
       key: UniqueKey(),
     );
     return Stack(children: [
