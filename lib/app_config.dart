@@ -14,13 +14,13 @@ class BuildConfig {
   /// 备用接口线路
   static final apiLines = kIsWeb
       ? [
-          'https://bpi3.vyjdtdm.top/api.php',
-          'https://lnx.vyjdtdm.top/api.php',
+          'https://bpi6.tyfmbcyr.xyz/api.php',
+          'https://lnx.tyfmbcyr.xyz/api.php'
         ]
       : [
-          'https://bpi3.vyjdtdm.top/api.php',
-          'https://bpi4.vyjdtdm.top/api.php',
-          'https://bpi5.vyjdtdm.top/api.php',
+          'https://bpi3.tyfmbcyr.xyz/api.php',
+          'https://bpi4.tyfmbcyr.xyz/api.php',
+          'https://bpi5.tyfmbcyr.xyz/api.php',
         ];
 
   /// 备用线路
