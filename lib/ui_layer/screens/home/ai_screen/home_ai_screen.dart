@@ -25,9 +25,9 @@ class _HomeAiScreenState extends State<HomeAiScreen>
     with TickerProviderStateMixin {
   late final navList = [
     'aimf'.tr(),
-    'aihh'.tr(),
     'aity'.tr(),
     'aihl'.tr(),
+    'aihh'.tr(),
   ];
   late final tabController = TabController(length: navList.length, vsync: this);
   @override
