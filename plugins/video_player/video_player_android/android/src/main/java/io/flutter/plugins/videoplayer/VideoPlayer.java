@@ -91,7 +91,18 @@ final class VideoPlayer {
             int width = mp.getVideoWidth();
             int height = mp.getVideoHeight();
             long duration = mp.getDuration();
-            videoPlayerEvents.onInitialized(width, height, duration, 0);
+            // String mCodecName = mp.getMediaInfo().mMeta.mVideoStream.mCodecName;
+            String mCodecName = "unknown";
+            if (mp.getMediaInfo() != null
+                    && mp.getMediaInfo().mMeta != null
+                    && mp.getMediaInfo().mMeta.mVideoStream != null) {
+                mCodecName = mp.getMediaInfo().mMeta.mVideoStream.mCodecName;
+            } else {
+                // 没有视频轨道 → 可能是纯音频流
+                Log.w(TAG, "No video stream found, treat as audio-only playback.");
+            }
+
+            videoPlayerEvents.onInitialized(width, height, duration, 0, mCodecName);
         });
         ijkMediaPlayer.setOnCompletionListener(mp -> videoPlayerEvents.onCompleted());
         ijkMediaPlayer.setOnErrorListener((mp, what, extra) -> {

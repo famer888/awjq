@@ -6,6 +6,7 @@
 ///
 ///  * [video_thumbnail](https://pub.dev/packages/video_thumbnail)
 ///
+library;
 import 'dart:async';
 
 import 'package:cross_file/cross_file.dart';

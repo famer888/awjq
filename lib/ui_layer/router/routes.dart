@@ -35,6 +35,7 @@ import '../screens/mine/help/screen.dart';
 import '../screens/mine/income_detail/screen.dart';
 import '../screens/mine/message_center/chat_message/screen.dart';
 import '../screens/mine/message_center/customer_service/screen.dart';
+import '../screens/mine/message_center/customer_service/screen_net.dart';
 import '../screens/mine/message_center/screen.dart';
 import '../screens/mine/message_center/system_message/screen.dart';
 import '../screens/mine/official_group/screen.dart';
@@ -485,7 +486,10 @@ class MineCustomerServiceRoute extends GoRouteData {
   @override
   Page<void> buildPage(BuildContext context, GoRouterState state) {
     return CommonUtils.buildSlideTransitionPage(
-        state: state, child: const MineCustomerServiceScreen());
+        state: state, child: 
+        // const MineCustomerServiceScreen()
+        const MineCustomerServiceWebScreen()
+        );
   }
 }
 

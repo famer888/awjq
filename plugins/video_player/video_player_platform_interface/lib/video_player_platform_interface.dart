@@ -78,11 +78,10 @@ abstract class VideoPlayerPlatform extends PlatformInterface {
     throw UnimplementedError('setVolume() has not been implemented.');
   }
 
-    /// Sets the setBrightness to a range between 0.0 and 1.0.
+  /// Sets the setBrightness to a range between 0.0 and 1.0.
   Future<void> setBrightness(int textureId, double volume) {
     throw UnimplementedError('setBrightness() has not been implemented.');
   }
-
 
   /// Sets the video position to a [Duration] from the start.
   Future<void> seekTo(int textureId, Duration position) {
@@ -224,6 +223,7 @@ class VideoEvent {
     this.rotationCorrection,
     this.buffered,
     this.isPlaying,
+    this.codecName,
   });
 
   /// The type of the event.
@@ -253,6 +253,8 @@ class VideoEvent {
   ///
   /// Only used if [eventType] is [VideoEventType.isPlayingStateUpdate].
   final bool? isPlaying;
+
+  final String? codecName;
 
   @override
   bool operator ==(Object other) {
