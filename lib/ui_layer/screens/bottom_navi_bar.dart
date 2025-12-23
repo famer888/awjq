@@ -13,15 +13,23 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:safe_area_insets/safe_area_insets.dart';
 import 'package:universal_html/html.dart' as html;
+import 'package:visibility_detector/visibility_detector.dart';
 
 import '../../app_config.dart';
+import '../../data_layer/repo/repo.dart';
 import '../../domain/domain.dart';
 import '../../domain/enum.dart';
 import '../../domain/model/banner_model.dart';
 import '../../domain/model/home_data_model.dart';
+import '../../report/event_tracking.dart';
+import '../../report/ui_layer/report_app_down_center_dialog.dart';
+import '../../report/ui_layer/report_popup_alert.dart';
+import '../../report/ui_layer/report_timing_observer.dart';
+import '../../report/ui_layer/report_top_ad_widget.dart';
 import '../notifiers/chat_notifier.dart';
 import '../notifiers/home_config_notifier.dart';
 import '../notifiers/user_notifier.dart';
+import '../router/paths.dart';
 import '../router/routes.dart';
 import '../utils/common_utils.dart';
 import '../utils/my_toast.dart';
@@ -34,6 +42,10 @@ import 'common_widgets/pop_scope_wrapper.dart';
 import 'common_widgets/status/loading.dart';
 import 'image_paths.dart';
 import 'theme.dart';
+
+import '../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../report/ui_layer/report_general_banner.dart';
 
 class BottomNaviBar extends StatefulWidget {
   const BottomNaviBar({
@@ -55,6 +67,45 @@ class _BottomNaviBarState extends State<BottomNaviBar> {
   late final domain = context.read<AppDomain>();
   late final cache = domain.cache;
   MyTokenStatus? currentTokenStatus;
+
+  List<Map> tabs = [
+    {
+      'icon': MyImagePaths.appTabHomeN,
+      'activeIcon': MyImagePaths.appTabHomeS,
+      'title': 'sy'.tr(),
+      'path': AppRouterPaths.home,
+    },
+    {
+      'icon': MyImagePaths.appTabAwN,
+      'activeIcon': MyImagePaths.appTabAwS,
+      'title': 'aw'.tr(),
+      'path': AppRouterPaths.anWang,
+    },
+    {
+      'icon': MyImagePaths.appTabZyN,
+      'activeIcon': MyImagePaths.appTabZyS,
+      'title': 'pojie'.tr(),
+      'path': AppRouterPaths.ziYuan,
+    },
+    {
+      'icon': MyImagePaths.appTabXyN,
+      'activeIcon': MyImagePaths.appTabXyS,
+      'title': 'xany'.tr(),
+      'path': AppRouterPaths.xianYu,
+    },
+    {
+      'icon': MyImagePaths.appTabShequN,
+      'activeIcon': MyImagePaths.appTabShequS,
+      'title': 'ym'.tr(),
+      'path': AppRouterPaths.community,
+    },
+    {
+      'icon': MyImagePaths.appTabWodeN,
+      'activeIcon': MyImagePaths.appTabWodeS,
+      'title': 'wd'.tr(),
+      'path': AppRouterPaths.mine,
+    },
+  ];
 
   bool _isInit = false;
 
@@ -103,61 +154,69 @@ class _BottomNaviBarState extends State<BottomNaviBar> {
   Future<void> _getClipboardText() async {
     if (kIsWeb) {
       final uri = Uri.parse(html.window.location.href);
-      final affCode = uri.queryParameters[BuildConfig.affCodeKey] ?? '';
-      if (affCode.isNotEmpty) {
-        domain.toInvitation(affCode: affCode);
-      }
+      String aff = uri.queryParameters[BuildConfig.affCodeKey] ?? '';
+      if (aff.isNotEmpty) domain.toInvitation(affCode: aff);
     } else {
       final result = await Clipboard.getData(Clipboard.kTextPlain);
-      if (result?.text?.split(':') case final clipTextList?
-          when clipTextList.length > 1 &&
-              clipTextList[0] == BuildConfig.affCodeKey) {
-        if (clipTextList[1] case final affCode when affCode.isNotEmpty) {
-          domain.toInvitation(affCode: affCode);
-        }
+      if (result?.text case final String text when text.isNotEmpty) {
+        final params = Uri.splitQueryString(text);
+        String aff = params[BuildConfig.affCodeKey] ?? '';
+        if (aff.isNotEmpty) domain.toInvitation(affCode: aff);
       }
     }
   }
 
-  /// 活动弹窗
-  void _showActivityDialog({required int index}) {
+  /// 活动弹窗 带report
+  void _showActivityDialogReport() {
     final popAds = homeConfigNotifier.homeData.popAds;
-    final int adsLength = popAds?.length ?? 0;
-    final bool isLastAd = index == adsLength - 1;
-    if (popAds?.isNotEmpty == true) {
-      if (index < adsLength) {
-        final Notice? notice = popAds?[index];
-        BotToast.showWidget(
-            toastBuilder: (cancelFunc) => AdDialog(
-                  cancel: () {
-                    cancelFunc();
-                    if (isLastAd) {
-                      _showAppDownCenterDialog();
-                    } else {
-                      _showActivityDialog(index: index + 1);
-                    }
-                  },
-                  confirm: () {
-                    cancelFunc();
-                    if (notice?.redirect_type != 1) {
-                      //跳转内部结束继续弹窗
-                      if (isLastAd) {
-                        _showAppDownCenterDialog();
-                      } else {
-                        _showActivityDialog(index: index + 1);
-                      }
-                    }
-                    _adOnTap(notice: notice);
-                  },
-                  adUrl: notice?.imgUrl ?? '',
-                  adWidth: notice?.width,
-                  adHeight: notice?.height,
-                ));
-      }
-    } else {
-      _showAppDownCenterDialog();
-    }
+    ReportPopupAlert(
+      popAds,
+      context,
+      cancel: () {
+        _showAppDownCenterDialog();
+      },
+    );
   }
+
+  // /// 活动弹窗
+  // void _showActivityDialog({required int index}) {
+  //   final popAds = homeConfigNotifier.homeData.popAds;
+  //   final int adsLength = popAds?.length ?? 0;
+  //   final bool isLastAd = index == adsLength - 1;
+  //   if (popAds?.isNotEmpty == true) {
+  //     if (index < adsLength) {
+  //       final Notice? notice = popAds?[index];
+  //       BotToast.showWidget(
+  //           toastBuilder: (cancelFunc) => AdDialog(
+  //                 cancel: () {
+  //                   cancelFunc();
+  //                   if (isLastAd) {
+  //                     _showAppDownCenterDialog();
+  //                   } else {
+  //                     _showActivityDialog(index: index + 1);
+  //                   }
+  //                 },
+  //                 confirm: () {
+  //                   cancelFunc();
+  //                   if (notice?.redirect_type != 1) {
+  //                     //跳转内部结束继续弹窗
+  //                     if (isLastAd) {
+  //                       _showAppDownCenterDialog();
+  //                     } else {
+  //                       _showActivityDialog(index: index + 1);
+  //                     }
+  //                   }
+  //                   _adOnTap(notice: notice);
+  //                 },
+  //                 adUrl: notice?.imgUrl ?? '',
+  //                 adWidth: notice?.width,
+  //                 adHeight: notice?.height,
+  //               ));
+  //     }
+  //   } else {
+  //     _showAppDownCenterDialog();
+  //   }
+  // }
 
   /// 检查更新
   Future<void> _checkUpdateAnnouncement() async {
@@ -172,15 +231,15 @@ class _BottomNaviBarState extends State<BottomNaviBar> {
           (int.tryParse(currentVersion) ?? 0);
 
       if (kIsWeb) {
-        _showActivityDialog(index: 0); //web端直接去展示广告
+        _showActivityDialogReport(); //web端直接去展示广告
         return;
       }
       if (needUpdate) {
         _showAppUpdateDialog();
         return;
       }
-
-      _showActivityDialog(index: 0); // 无更新，展示广告
+      _showActivityDialogReport();
+      // _showActivityDialog(index: 0); // 无更新，展示广告
     }
   }
 
@@ -192,7 +251,8 @@ class _BottomNaviBarState extends State<BottomNaviBar> {
         toastBuilder: (cancelFunc) => UpdateDialog(
               cancel: () {
                 cancelFunc();
-                _showActivityDialog(index: 0);
+                _showActivityDialogReport();
+                // _showActivityDialog(Íindex: 0);
               },
               confirm: () {
                 cancelFunc();
@@ -231,7 +291,7 @@ class _BottomNaviBarState extends State<BottomNaviBar> {
 
     if (homeData.noticeApps?.isNotEmpty ?? false) {
       BotToast.showWidget(
-          toastBuilder: (cancelFunc) => AppDownCenterDialog(
+          toastBuilder: (cancelFunc) => ReportAppDownCenterDialog(
                 cancel: () {
                   cancelFunc();
                   _showAnnouncementDialog(); //app推荐下载弹窗展示完后再展示公告
@@ -268,6 +328,17 @@ class _BottomNaviBarState extends State<BottomNaviBar> {
       }
       await cache.upsertDownloadVideoTasks(tasks: tasks);
     }
+  }
+
+  //点击导航上报
+  void postNavClickReport(String navigation_key, String navigation_name) {
+    EventTracking().reportSingle({
+      "event": "navigation",
+      "navigation_key": navigation_key,
+      "navigation_name": navigation_name,
+    }).then((value) {
+      // CommonUtils.log(value);
+    });
   }
 
   @override
@@ -315,38 +386,15 @@ class _BottomNaviBarState extends State<BottomNaviBar> {
                   unselectedFontSize: 11.sp,
                   unselectedItemColor: const Color.fromRGBO(149, 148, 156, 1),
                   selectedItemColor: Colors.white,
-                  items: <BottomNavigationBarItem>[
-                    BottomNavigationBarItem(
-                      icon: const _Icon(MyImagePaths.appTabHomeN),
-                      activeIcon: const _Icon(MyImagePaths.appTabHomeS),
-                      label: 'sy'.tr(context: context),
-                    ),
-                    BottomNavigationBarItem(
-                      icon: const _Icon(MyImagePaths.appTabAwN),
-                      activeIcon: const _Icon(MyImagePaths.appTabAwS),
-                      label: 'aw'.tr(context: context),
-                    ),
-                    BottomNavigationBarItem(
-                      icon: const _Icon(MyImagePaths.appTabZyN),
-                      activeIcon: const _Icon(MyImagePaths.appTabZyS),
-                      label: 'pojie'.tr(context: context),
-                    ),
-                    BottomNavigationBarItem(
-                      icon: const _Icon(MyImagePaths.appTabXyN),
-                      activeIcon: const _Icon(MyImagePaths.appTabXyS),
-                      label: 'xany'.tr(context: context),
-                    ),
-                    BottomNavigationBarItem(
-                      icon: const _Icon(MyImagePaths.appTabShequN),
-                      activeIcon: const _Icon(MyImagePaths.appTabShequS),
-                      label: 'ym'.tr(context: context),
-                    ),
-                    BottomNavigationBarItem(
-                      icon: const _Icon(MyImagePaths.appTabWodeN),
-                      activeIcon: const _Icon(MyImagePaths.appTabWodeS),
-                      label: 'wd'.tr(context: context),
-                    ),
-                  ],
+                  items: tabs
+                      .map(
+                        (e) => BottomNavigationBarItem(
+                          icon: _Icon(e['icon']),
+                          activeIcon: _Icon(e['activeIcon']),
+                          label: e['title'],
+                        ),
+                      )
+                      .toList(),
                   currentIndex: widget.navigationShell.currentIndex,
                   onTap: _goBranch,
                 ),
@@ -356,7 +404,7 @@ class _BottomNaviBarState extends State<BottomNaviBar> {
               floatingActionButton: kIsWeb && !CommonUtils.isPWA()
                   ? Padding(
                       padding: EdgeInsets.only(bottom: 10.w),
-                      child: GestureDetector(
+                      child: ReportGestureDetector(
                         onTap: () {
                           CommonUtils.downLoadApp(context);
                         },
@@ -387,7 +435,8 @@ class _BottomNaviBarState extends State<BottomNaviBar> {
             Positioned(
               right: 13.w,
               bottom: 115.w,
-              child: TopADWidget(toADs: homeConfigNotifier.config.buoy ?? []),
+              child: ReportTopADWidget(
+                  toADs: homeConfigNotifier.config.buoy ?? []),
             )
           ],
         ),
@@ -399,6 +448,19 @@ class _BottomNaviBarState extends State<BottomNaviBar> {
   void _goBranch(int index) {
     widget.navigationShell.goBranch(index,
         initialLocation: index == widget.navigationShell.currentIndex);
+
+    // 获取当前路由的路径
+    final currentLocation =
+        GoRouter.of(context).routerDelegate.currentConfiguration.uri.toString();
+    PageInfo info = PageInfo.path(currentLocation);
+    RouteStore.currentPageKey = info.key;
+    RouteStore.currentPageName = info.name;
+
+    EventTracking().reportSingle({
+      "event": "navigation",
+      "navigation_key": currentLocation, //RouteStore.currentPageKey,
+      "navigation_name": RouteStore.currentPageName,
+    });
   }
 }
 
@@ -429,14 +491,11 @@ class TopADWidget extends StatefulWidget {
 }
 
 class _TopADWidgetState extends State<TopADWidget> {
-
   bool offstage = false;
 
   @override
   Widget build(BuildContext context) {
-    return widget.toADs.isEmpty
-        ? Container()
-        : _buildButton();
+    return widget.toADs.isEmpty ? Container() : _buildButton();
   }
 
   Widget _buildButton() {
@@ -449,72 +508,74 @@ class _TopADWidgetState extends State<TopADWidget> {
           children: [
             Positioned.fill(
                 child: Container(
-                  alignment: Alignment.center,
-                  margin: EdgeInsets.all(15.w),
-                  decoration: BoxDecoration(
-                    // color: Colors.red,
-                      borderRadius: BorderRadius.all(Radius.circular(5.w))),
-                  child: Swiper(
-                    autoplay: widget.toADs.length > 1,
-                    loop: widget.toADs.length > 1,
-                    itemBuilder: (BuildContext context, int index) {
-                      double w = 80.w;
-                      return GestureDetector(
-                        behavior: HitTestBehavior.opaque,
-                        onTap: () {
-                          CommonUtils.openRoute(context, widget.toADs[index].toJson());
-                        },
-                        child: SizedBox(
-                            width: w,
-                            height: w,
-                            child: MyImage.network(CommonUtils.getThumb(widget.toADs[index].toJson()),
-                              borderRadius: 5.w,
-                            )),
-                      );
+              alignment: Alignment.center,
+              margin: EdgeInsets.all(15.w),
+              decoration: BoxDecoration(
+                  // color: Colors.red,
+                  borderRadius: BorderRadius.all(Radius.circular(5.w))),
+              child: Swiper(
+                autoplay: widget.toADs.length > 1,
+                loop: widget.toADs.length > 1,
+                itemBuilder: (BuildContext context, int index) {
+                  double w = 80.w;
+                  return ReportGestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () {
+                      CommonUtils.openRoute(
+                          context, widget.toADs[index].toJson());
                     },
-                    itemCount: widget.toADs.length,
-                    pagination: widget.toADs.length > 1
-                        ? SwiperPagination(
+                    child: SizedBox(
+                        width: w,
+                        height: w,
+                        child: MyImage.network(
+                          CommonUtils.getThumb(widget.toADs[index].toJson()),
+                          borderRadius: 5.w,
+                        )),
+                  );
+                },
+                itemCount: widget.toADs.length,
+                pagination: widget.toADs.length > 1
+                    ? SwiperPagination(
                         margin: EdgeInsets.only(bottom: 5.w),
                         builder:
-                        SwiperCustomPagination(builder: (context, config) {
+                            SwiperCustomPagination(builder: (context, config) {
                           int count = widget.toADs.length;
                           return Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: List.generate(count, (index) {
                               return config.activeIndex == index
                                   ? Container(
-                                width: 4.w,
-                                height: 4.w,
-                                margin: EdgeInsets.only(right: 4.w),
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.all(
-                                      Radius.circular(2.w)),
-                                ),
-                              )
+                                      width: 4.w,
+                                      height: 4.w,
+                                      margin: EdgeInsets.only(right: 4.w),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(2.w)),
+                                      ),
+                                    )
                                   : Container(
-                                width: 4.w,
-                                height: 4.w,
-                                margin: EdgeInsets.only(right: 4.w),
-                                decoration: BoxDecoration(
-                                  color: MyTheme.grayColor150,
-                                  borderRadius: BorderRadius.all(
-                                      Radius.circular(2.w)),
-                                ),
-                              );
+                                      width: 4.w,
+                                      height: 4.w,
+                                      margin: EdgeInsets.only(right: 4.w),
+                                      decoration: BoxDecoration(
+                                        color: MyTheme.grayColor150,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(2.w)),
+                                      ),
+                                    );
                             }),
                           );
                         }))
-                        : null,
-                  ),
-                )),
+                    : null,
+              ),
+            )),
             Positioned(
                 right: 0,
                 top: 0,
                 width: 20.w,
                 height: 20.w,
-                child: GestureDetector(
+                child: ReportGestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onTap: () {
                       setState(() {

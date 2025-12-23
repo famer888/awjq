@@ -26,6 +26,11 @@ import 'comment_view.dart';
 import 'introduction_view.dart';
 
 
+
+import '../../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../../report/ui_layer/report_general_banner.dart';
+
 class MonitorVideoDetailScreen extends StatefulWidget {
   const MonitorVideoDetailScreen({super.key, required this.id});
 
@@ -35,7 +40,7 @@ class MonitorVideoDetailScreen extends StatefulWidget {
   State<MonitorVideoDetailScreen> createState() => _MonitorVideoDetailScreenState();
 }
 
-class _MonitorVideoDetailScreenState extends State<MonitorVideoDetailScreen> {
+class _MonitorVideoDetailScreenState extends State<MonitorVideoDetailScreen>{
   late final monitorDomain = context.read<MonitorDomain>();
 
   AsyncValue<MonitorVideoDetailData> _asyncValue = const AsyncInit();
@@ -75,7 +80,7 @@ class _MonitorVideoDetailScreenState extends State<MonitorVideoDetailScreen> {
         child: Scaffold(
           // extendBodyBehindAppBar: true,
           appBar: MyAppBar(title: _asyncValue.data?.monitor.title, backgroundColor: Colors.black),
-          floatingActionButton: GestureDetector(
+          floatingActionButton: ReportGestureDetector(
             onTap: () {
               context.pop();
             },

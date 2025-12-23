@@ -14,6 +14,8 @@ import '../../../common_widgets/my_list_view.dart';
 import '../../../common_widgets/status/loading.dart';
 import '../../../common_widgets/status/network_error.dart';
 import '../../../theme.dart';
+import '../../../../../report/ui_layer/report_gesture_detector.dart';
+import '../../../../../report/ui_layer/report_general_banner.dart';
 
 class AppCenterView extends StatefulWidget {
   const AppCenterView({super.key});
@@ -77,7 +79,7 @@ class _AppCenterViewState extends State<AppCenterView> {
                 ? const SizedBox.shrink()
                 : Padding(
                     padding: EdgeInsets.only(bottom: 10.w),
-                    child: GeneralBanner(data: banner),
+                    child: ReportGeneralBanner(data: banner),
                   ),
             recommend.isEmpty
                 ? const SizedBox.shrink()
@@ -101,7 +103,7 @@ class _AppCenterViewState extends State<AppCenterView> {
                           physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             final e = recommend[index];
-                            return GestureDetector(
+                            return ReportGestureDetector(
                               onTap: () {
                                 homeDomain.reqAdClickCount(
                                   id: e['report_id'],
@@ -155,7 +157,7 @@ class _AppCenterViewState extends State<AppCenterView> {
                           physics: const NeverScrollableScrollPhysics(),
                           itemBuilder: (context, index) {
                             final e = common[index];
-                            return GestureDetector(
+                            return ReportGestureDetector(
                               onTap: () {
                                 homeDomain.reqAdClickCount(
                                     id: e['report_id'], type: e['report_type']);

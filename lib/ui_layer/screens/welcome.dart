@@ -4,13 +4,21 @@ import 'package:amplitude_flutter/configuration.dart';
 import 'package:amplitude_flutter/events/base_event.dart';
 import 'package:amplitude_flutter/events/event_options.dart';
 import 'package:awjq/ui_layer/screens/common_widgets/screen_background.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_swiper_null_safety_flutter3/flutter_swiper_null_safety_flutter3.dart';
 
+import '../../data_layer/repo/repo.dart';
+import '../../report/event_tracking.dart';
+import '../../report/ui_layer/report_ad_view.dart';
+import '../../report/ui_layer/report_gesture_detector.dart';
+import '../../report/ui_layer/report_timing_observer.dart';
 import '../utils/my_toast.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import 'package:universal_html/html.dart' as html;
 
 import '../../domain/domain.dart';
 import '../../domain/model/home_data_model.dart';
@@ -22,6 +30,8 @@ import 'common_widgets/my_image.dart';
 import 'common_widgets/pop_scope_wrapper.dart';
 import 'common_widgets/status/network_error.dart';
 import 'theme.dart';
+
+import '../../report/ui_layer/report_general_banner.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -94,7 +104,25 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     );
   }
 
+  Future<void> _getClipboardText() async {
+    if (kIsWeb) {
+      final uri = Uri.parse(html.window.location.href);
+      String traceID = uri.queryParameters['trace_id'] ?? '';
+      if (traceID.isNotEmpty) context.read<AppRepo>().setReportTraceId(traceID);
+    } else {
+      final result = await Clipboard.getData(Clipboard.kTextPlain);
+      if (result?.text case final String text when text.isNotEmpty) {
+        final params = Uri.splitQueryString(text);
+        String traceID = params['trace_id'] ?? '';
+        if (traceID.isNotEmpty)
+          context.read<AppRepo>().setReportTraceId(traceID);
+      }
+    }
+  }
+
   _enterAdOrHome({bool showTip = false}) async {
+    await _getClipboardText(); //config之前先获取trace_id
+
     if (await homeConfigNotifier.init() && mounted) {
       if (welcomeStartScreenAds?.isNotEmpty ?? false) {
         setState(() {
@@ -113,7 +141,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             ? Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  GestureDetector(
+                  ReportGestureDetector(
                     onTap: () {
                       isCheckingLine = false;
                       if (mounted) setState(() {});
@@ -127,7 +155,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   ),
                   SizedBox(height: 20.w),
                   if (officialWebUrl?.isNotEmpty == true)
-                    GestureDetector(
+                    ReportGestureDetector(
                       onTap: () {
                         CommonUtils.launchUrl(officialWebUrl!);
                       },
@@ -162,7 +190,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 SizedBox(height: 20.w),
                 Column(
                   children: lines.asMap().keys.map((x) {
-                    return GestureDetector(
+                    return ReportGestureDetector(
                         behavior: HitTestBehavior.translucent,
                         onTap: () {
                           appDomain.setBaseURL(lines[x].toString().trim());
@@ -193,8 +221,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     return PopScopeWrapper(
       child: Scaffold(
         // backgroundColor: MyTheme.bgColor,
-        body:
-            showAd ? AdView(adModels: welcomeStartScreenAds!) : checkLineView(),
+        body: showAd
+            ? ReportAdView(adModels: welcomeStartScreenAds!)
+            : checkLineView(),
       ),
     );
   }
@@ -212,6 +241,40 @@ class AdView extends StatefulWidget {
 class _AdViewState extends State<AdView> {
   final ValueNotifier<int> countDownNotifier = ValueNotifier(5);
   late final Timer _timer;
+
+  //上传广告行为
+  void postActionReport(AdModel tp, String action) {
+    // final pageName = context.parentTitle;
+    // final widgetType = context.parentWidgetType.toString();
+
+    EventTracking().reportSingle({
+      "event": "advertising",
+      "event_type": action,
+      "advertising_key": tp.advertiseLocationCode,
+      "advertising_name": tp.adSlotName,
+      "advertising_id": tp.advertiseCode,
+    });
+  }
+
+  //点击广告上报
+  void postClickReport(AdModel tp) {
+    postActionReport(tp, "click");
+
+    // final pageName = context.parentTitle;
+    // final widgetType = context.parentWidgetType.toString();
+    EventTracking().reportSingle({
+      "event": "ad_click",
+      "page_key": RouteStore.currentPageKey,
+      "page_name": RouteStore.currentPageName,
+      "ad_slot_key": tp.advertiseLocationCode,
+      "ad_slot_name": tp.adSlotName,
+      "ad_id": tp.advertiseCode,
+      "creative_id": "",
+      "ad_type": tp.adType,
+    }).then((value) {
+      // CommonUtils.log(value);
+    });
+  }
 
   @override
   void initState() {
@@ -241,9 +304,10 @@ class _AdViewState extends State<AdView> {
                     .toJson())),
                 context);
 
-            return GestureDetector(
+            return ReportGestureDetector(
               onTap: () {
                 final ad = widget.adModels[index];
+                postClickReport(ad);
                 CommonUtils.openRoute(context, {
                   'report_id': ad.id,
                   'report_type': ad.type,
@@ -285,7 +349,7 @@ class _AdViewState extends State<AdView> {
         Positioned(
           top: MediaQuery.of(context).padding.top + 10.w,
           right: 15.w,
-          child: GestureDetector(
+          child: ReportGestureDetector(
             behavior: HitTestBehavior.translucent,
             onTap: () {
               if (countDownNotifier.value > 0) return;

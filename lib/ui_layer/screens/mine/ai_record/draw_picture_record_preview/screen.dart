@@ -8,6 +8,11 @@ import '../../../../../ui_layer/screens/theme.dart';
 import '../../../../../ui_layer/utils/common_utils.dart';
 import '../../../../../ui_layer/utils/my_toast.dart';
 
+
+import '../../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../../report/ui_layer/report_general_banner.dart';
+
 class DrawPictureRecordPreviewScreen extends StatefulWidget {
   const DrawPictureRecordPreviewScreen({
     super.key,
@@ -76,7 +81,7 @@ class _DrawPictureRecordPreviewScreenState
             ),
           ),
           SizedBox(height: 30.w),
-          GestureDetector(
+          ReportGestureDetector(
             behavior: HitTestBehavior.translucent,
             onTap: () {
               _saveImage(context);
@@ -95,7 +100,7 @@ class _DrawPictureRecordPreviewScreenState
             ),
           ),
           SizedBox(height: 15.w),
-          GestureDetector(
+          ReportGestureDetector(
             behavior: HitTestBehavior.translucent,
             onTap: () {
               widget.delTapCall.call();

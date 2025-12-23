@@ -13,6 +13,7 @@ import '../../../../../domain/async_value.dart';
 import '../../../../../domain/model/member_model.dart';
 import '../../../../../domain/model/proxy_detail_model.dart';
 import '../../../../../domain/remote_domain/domains/proxy.dart';
+import '../../../../../report/ui_layer/report_gesture_detector.dart';
 import '../../../../notifiers/home_config_notifier.dart';
 import '../../../../notifiers/user_notifier.dart';
 import '../../../../router/routes.dart';
@@ -28,6 +29,8 @@ import '../../../theme.dart';
 import '../../share_to_user/widgets/jelly_share.dart';
 import '../../share_to_user/widgets/share_tips.dart';
 import '../../widgets/mine_agent_apply.dart';
+
+import '../../../../../report/ui_layer/report_general_banner.dart';
 
 class AgentView extends StatefulWidget {
   const AgentView({super.key});
@@ -56,7 +59,6 @@ class _AgentViewState extends State<AgentView> {
   }
 
   Future _loadUserAgentData() async {
-
     member = context.read<UserNotifier>().member;
 
     if (_asyncValue.isLoading) return;
@@ -152,10 +154,10 @@ class _AgentViewState extends State<AgentView> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(
                   taskModel?.list?.length ?? 0, // Number of children
-                      (index) => Container(
+                  (index) => Container(
                       margin: EdgeInsets.symmetric(vertical: 5.w),
                       padding:
-                      EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
+                          EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
                       decoration: BoxDecoration(
                           color: const Color.fromRGBO(35, 34, 57, 1),
                           borderRadius: BorderRadius.all(Radius.circular(5.w))),
@@ -167,17 +169,20 @@ class _AgentViewState extends State<AgentView> {
                             Expanded(
                                 child: Text(taskModel?.list?[index].title ?? '',
                                     style: MyTheme.white13)),
-                            GestureDetector(onTap: () {
-                              const MineShareToUserRoute().push(context);
-                            },
+                            ReportGestureDetector(
+                              onTap: () {
+                                const MineShareToUserRoute().push(context);
+                              },
                               child: Container(
                                 alignment: Alignment.center,
                                 width: 70.w,
                                 height: 26.w,
                                 decoration: BoxDecoration(
                                     color: MyTheme.jellyCyanColor103224185,
-                                    borderRadius: BorderRadius.all(Radius.circular(13.w))),
-                                child: Text('ljfx'.tr(context: context), style: MyTheme.white10),
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(13.w))),
+                                child: Text('ljfx'.tr(context: context),
+                                    style: MyTheme.white10),
                               ),
                             )
                           ])))),
@@ -320,14 +325,10 @@ class _AgentViewState extends State<AgentView> {
                             MyImagePaths.appWdFxbotmbgN,
                             height: 500.w,
                           ),
-                          Positioned(
-                            bottom: 0,
-                            left: 0,
-                            right: 0,
-                            height: 20.w,
-                            child: GestureDetector(
-                              onTap: () => const MineAgentRoute().push(context),
-                            ),
+                          ReportGestureDetector(
+                            onTap: () {
+                              const MineAgentRoute().push(context);
+                            },
                           )
                         ],
                       ),
@@ -363,7 +364,7 @@ class _CardButton extends StatelessWidget {
   final String text;
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return ReportGestureDetector(
       onTap: onTap,
       child: Container(
         width: 115.w,

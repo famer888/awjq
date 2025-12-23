@@ -4,6 +4,10 @@ import 'package:go_router/go_router.dart';
 import '../../../image_paths.dart';
 import '../../my_image.dart';
 
+import '../../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../../report/ui_layer/report_general_banner.dart';
+
 class DanSanHDialog extends StatelessWidget {
   const DanSanHDialog({
     super.key,
@@ -56,7 +60,7 @@ class DanSanHDialog extends StatelessWidget {
                             decoration: TextDecoration.none),
                       ),
                     ),
-                    GestureDetector(
+                    ReportGestureDetector(
                       onTap: () => closeCall?.call(),
                       child: const MyImage.asset(
                         MyImagePaths.appCircleClose,

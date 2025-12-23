@@ -21,6 +21,11 @@ import '../../common_widgets/status/loading.dart';
 import '../../image_paths.dart';
 import '../../theme.dart';
 
+
+import '../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../report/ui_layer/report_general_banner.dart';
+
 class MineAgentScreen extends StatefulWidget {
   const MineAgentScreen({super.key});
 
@@ -28,7 +33,7 @@ class MineAgentScreen extends StatefulWidget {
   State<MineAgentScreen> createState() => _MineAgentScreenState();
 }
 
-class _MineAgentScreenState extends State<MineAgentScreen> {
+class _MineAgentScreenState extends State<MineAgentScreen>{
   late final proxyDomain = context.read<ProxyDomain>();
   late final member = context.read<UserNotifier>().member;
 
@@ -77,7 +82,7 @@ class _MineAgentScreenState extends State<MineAgentScreen> {
       appBar: MyAppBar(
         title: 'dlzq'.tr(context: context),
         rightWidget: member.isSelf
-            ? GestureDetector(
+            ? ReportGestureDetector(
                 onTap: () => const MineAgentProfitRoute().push(context),
                 child: Text(
                   'symx'.tr(context: context),
@@ -496,7 +501,7 @@ class _MineAgentScreenState extends State<MineAgentScreen> {
                             hideIcon: true,
                           ),
                           SizedBox(height: 20.w),
-                          GestureDetector(
+                          ReportGestureDetector(
                             onTap: () {
                               if (context
                                       .read<HomeConfigNotifier>()
@@ -525,7 +530,7 @@ class _MineAgentScreenState extends State<MineAgentScreen> {
                   Positioned(
                     child: Align(
                       alignment: Alignment.bottomCenter,
-                      child: GestureDetector(
+                      child: ReportGestureDetector(
                         onTap: () {
                           const MineShareToUserRoute().push(context);
                         },
@@ -642,7 +647,7 @@ class _CardButton extends StatelessWidget {
   final String text;
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return ReportGestureDetector(
       onTap: onTap,
       child: Container(
         width: 100.w,

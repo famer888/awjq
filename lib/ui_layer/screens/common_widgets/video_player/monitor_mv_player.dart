@@ -13,6 +13,7 @@ import '../../../../domain/api_validator.dart';
 import '../../../../domain/model/member_model.dart';
 import '../../../../domain/model/monitor_model.dart';
 import '../../../../domain/remote_domain/domains/monitor.dart';
+import '../../../../report/event_tracking.dart';
 import '../../../notifiers/home_config_notifier.dart';
 import '../../../notifiers/user_notifier.dart';
 import '../../../router/routes.dart';
@@ -25,6 +26,10 @@ import '../dialog/widgets/png_dialog.dart';
 import '../dialog/widgets/regular_dialog.dart';
 import '../my_image.dart';
 import 'utils/nvideourl_minxin.dart';
+
+import '../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../report/ui_layer/report_general_banner.dart';
 
 //判断hls.length > 0 直接播放
 //hls.length = 0 则判断type值
@@ -58,6 +63,14 @@ class _MonitorMvPlayerState extends State<MonitorMvPlayer>
 
   bool _isWebListen = false;
 
+  int _lastPosition = 0;
+  bool _wasPlaying = false;
+  bool _isCompleted = false;
+
+  //用来防止一次拖动触发多次快进/快退
+  bool _seekLocked = false;
+  final int _seekThresholdSec = 5; // 超过多少秒跳变算快进/快退
+  final Duration _seekCooldown = const Duration(milliseconds: 500);
 
   @override
   void initState() {
@@ -76,7 +89,135 @@ class _MonitorMvPlayerState extends State<MonitorMvPlayer>
           flickManager?.flickControlManager?.replay();
           if (mounted) setState(() {});
         });
+    flickManager?.flickVideoManager?.videoPlayerController
+        ?.addListener(_videoListener);
     if (mounted) setState(() {});
+  }
+
+  void _videoListener() {
+    final value = flickManager?.flickVideoManager?.videoPlayerController?.value;
+    if (value == null) return;
+
+    final currentSec = value.position.inSeconds;
+    final totalSec = value.duration.inSeconds;
+
+    // ===== 播放 / 暂停 =====
+
+    // 开始播放（从不播放 -> 播放）
+    if (value.isPlaying && !_wasPlaying) {
+      reportVideo(video_behavior_key: "video_play", video_behavior_name: "播放");
+      _wasPlaying = true;
+      _isCompleted = false; // 重新播放时重置完成标记
+    }
+
+    // 暂停（从播放 -> 不播放，且未到结尾）
+    if (!value.isPlaying && _wasPlaying && currentSec < totalSec) {
+      reportVideo(video_behavior_key: "video_pause", video_behavior_name: "暂停");
+      _wasPlaying = false;
+    }
+
+    // ===== 播放完成 =====
+    if (!_isCompleted &&
+        totalSec > 0 &&
+        currentSec >= totalSec &&
+        !value.isPlaying) {
+      reportVideo(
+          video_behavior_key: "video_complete", video_behavior_name: "播放完成");
+      _isCompleted = true;
+      _wasPlaying = false;
+    }
+
+    // ===== 快进 / 快退（通过 position 跳变检测）=====
+
+    final diff = currentSec - _lastPosition;
+
+    // 已经完成的就不再判定快进快退了
+    if (!_isCompleted && !_seekLocked) {
+      // 快进：位置跳到更靠后的时间点（超过阈值）
+      if (diff >= _seekThresholdSec) {
+        reportVideo(
+            video_behavior_key: "video_forward", video_behavior_name: "快进");
+        _seekLocked = true;
+        Future.delayed(_seekCooldown, () {
+          _seekLocked = false;
+        });
+      }
+
+      // 快退：位置跳到更靠前的时间点（超过阈值）
+      if (diff <= -_seekThresholdSec) {
+        reportVideo(
+            video_behavior_key: "video_rewind", video_behavior_name: "快退");
+        _seekLocked = true;
+        Future.delayed(_seekCooldown, () {
+          _seekLocked = false;
+        });
+      }
+    }
+
+    // ===== 缓冲（看你要不要上报）=====
+    if (value.isBuffering) {
+      // 需要的话在这里加一个缓冲埋点
+      // reportVideo(video_behavior_key: "video_buffer", video_behavior_name: "缓冲");
+    }
+
+    // 最后一定要更新 _lastPosition
+    _lastPosition = currentSec;
+  }
+
+  void reportVideo({
+    String video_behavior_key = "video_play",
+    String video_behavior_name = "",
+  }) {
+    // String type = widget.errIds.split("_")[1];
+
+    int play_duration =
+        flickManager?.flickVideoManager?.videoPlayerValue?.position.inSeconds ??
+            0;
+    int video_duration =
+        flickManager?.flickVideoManager?.videoPlayerValue?.duration.inSeconds ??
+            0;
+    int progress = (play_duration / video_duration * 100).round().clamp(0, 100);
+
+    List<Map> tags = [];
+    List<Map> categories = [];
+    String video_title = "";
+    int video_type_id = widget.info.videoTypeId ?? 0;
+    String video_type_name = widget.info.videoTypeName ?? "";
+    int id = 0;
+
+    String tagsString = '';
+    video_title = widget.info.title ?? '';
+    id = widget.info.id ?? 0;
+    // if (type == "1") {
+    //文章
+    // tags = List.from(CacheManager.instance.mediaMap["tags"] ?? []);
+    // categories = List.from(CacheManager.instance.mediaMap["category"] ?? []);
+    // video_title = CacheManager.instance.mediaMap["title"];
+    // video_type_id = categories.first["mid"];
+    // video_type_name = categories.first["name"];
+    // id = CacheManager.instance.mediaMap["cid"];
+
+    // if (type == "2") {
+    //帖子
+    // video_title = CacheManager.instance.mediaMap["title"];
+    // video_type_id = CacheManager.instance.mediaMap["topic"]["id"];
+    // video_type_name = CacheManager.instance.mediaMap["topic"]["name"];
+    // id = CacheManager.instance.mediaMap["id"];
+
+    EventTracking().reportSingle({
+      "event": "video_event",
+      "video_id": id,
+      "video_title": video_title,
+      "video_type_id": video_type_id,
+      "video_type_name": video_type_name,
+      "video_tag_key": '',
+      "video_tag_name": tagsString,
+      "video_duration": video_duration,
+      "play_duration": play_duration,
+      "play_progress": progress,
+      "video_behavior_key": video_behavior_key,
+      "video_behavior_name": video_behavior_name,
+    });
   }
 
   @override
@@ -152,7 +293,7 @@ class _MonitorMvPlayerState extends State<MonitorMvPlayer>
       padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
       color: const Color.fromRGBO(36, 36, 56, 0.8),
       child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        GestureDetector(
+        ReportGestureDetector(
           behavior: HitTestBehavior.translucent,
           child: isMute
               ? MyImage.asset(MyImagePaths.appMonitorOffVoice,
@@ -174,7 +315,7 @@ class _MonitorMvPlayerState extends State<MonitorMvPlayer>
             if (mounted) setState(() {});
           },
         ),
-        GestureDetector(
+        ReportGestureDetector(
           behavior: HitTestBehavior.translucent,
           child: widget.info.isLike == 1
               ? MyImage.asset(MyImagePaths.appMonitorZanS,
@@ -190,7 +331,7 @@ class _MonitorMvPlayerState extends State<MonitorMvPlayer>
             likeMonitor();
           },
         ),
-        GestureDetector(
+        ReportGestureDetector(
           behavior: HitTestBehavior.translucent,
           child: widget.info.isFavorite == 1
               ? MyImage.asset(MyImagePaths.appMonitorColloctionS,
@@ -206,7 +347,7 @@ class _MonitorMvPlayerState extends State<MonitorMvPlayer>
             colloctionMonitor();
           },
         ),
-        GestureDetector(
+        ReportGestureDetector(
           behavior: HitTestBehavior.translucent,
           child: MyImage.asset(MyImagePaths.appMonitorShare,
               width: 25.w, height: 25.w, fit: BoxFit.contain),
@@ -517,35 +658,37 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
               return const SizedBox.shrink();
             }
             return SafeArea(
-              child: SizedBox(
-                height: 30,
-                child: Row(
-                      children: [
-                        GestureDetector(
-                          behavior: HitTestBehavior.translucent,
-                          child: widget.isBack ? Container() : const MyImage.asset(
+                child: SizedBox(
+              height: 30,
+              child: Row(
+                children: [
+                  ReportGestureDetector(
+                    behavior: HitTestBehavior.translucent,
+                    child: widget.isBack
+                        ? Container()
+                        : const MyImage.asset(
                             MyImagePaths.appNavBackWN,
                             width: 20,
                             height: 20,
                             fit: BoxFit.contain,
                           ),
-                          onTap: () {
-                            if (widget.isBack) {
-                              context.pop();
-                            } else {
-                              controlManager.toggleFullscreen();
-                            }
-                          },
-                        ),
-                        FlickAutoHideChild(
-                          child: Text(isPortrait ? '' : (widget.info?.title ?? ''),
-                              style: const TextStyle(
-                                  color: Color.fromRGBO(255, 255, 255, 1),
-                                  fontSize: 20)),
-                        ),
-                      ],
-                    ),
-              ));
+                    onTap: () {
+                      if (widget.isBack) {
+                        context.pop();
+                      } else {
+                        controlManager.toggleFullscreen();
+                      }
+                    },
+                  ),
+                  FlickAutoHideChild(
+                    child: Text(isPortrait ? '' : (widget.info?.title ?? ''),
+                        style: const TextStyle(
+                            color: Color.fromRGBO(255, 255, 255, 1),
+                            fontSize: 20)),
+                  ),
+                ],
+              ),
+            ));
           }),
         ),
         Positioned(
@@ -566,7 +709,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                       widget.isBack
                           ? Container()
                           : Row(children: [
-                              GestureDetector(
+                              ReportGestureDetector(
                                 behavior: HitTestBehavior.translucent,
                                 child: controlManager.isMute
                                     ? const MyImage.asset(
@@ -589,40 +732,47 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                                   if (mounted) setState(() {});
                                 },
                               ),
-                        const SizedBox(width: 30),
-                        GestureDetector(
-                          behavior: HitTestBehavior.translucent,
-                          child: widget.info?.isLike == 1
-                              ? const MyImage.asset(MyImagePaths.appMonitorZanS,
-                              width: 25, height: 25, fit: BoxFit.contain)
-                              : const MyImage.asset(
-                            MyImagePaths.appMonitorZanN,
-                            width: 25,
-                            height: 25,
-                            fit: BoxFit.contain,
-                          ),
-                          onTap: () {
-                            //点赞
-                            likeMonitor();
-                          },
-                        ),
-                        const SizedBox(width: 30),
-                        GestureDetector(
-                          behavior: HitTestBehavior.translucent,
-                          child: widget.info?.isFavorite == 1
-                              ? const MyImage.asset(MyImagePaths.appMonitorColloctionS,
-                              width: 25, height: 25, fit: BoxFit.contain)
-                              : const MyImage.asset(
-                            MyImagePaths.appMonitorColloctionN,
-                            width: 25,
-                            height: 25,
-                            fit: BoxFit.contain,
-                          ),
-                          onTap: () {
-                            //收藏
-                            colloctionMonitor();
-                          },
-                        )])
+                              const SizedBox(width: 30),
+                              ReportGestureDetector(
+                                behavior: HitTestBehavior.translucent,
+                                child: widget.info?.isLike == 1
+                                    ? const MyImage.asset(
+                                        MyImagePaths.appMonitorZanS,
+                                        width: 25,
+                                        height: 25,
+                                        fit: BoxFit.contain)
+                                    : const MyImage.asset(
+                                        MyImagePaths.appMonitorZanN,
+                                        width: 25,
+                                        height: 25,
+                                        fit: BoxFit.contain,
+                                      ),
+                                onTap: () {
+                                  //点赞
+                                  likeMonitor();
+                                },
+                              ),
+                              const SizedBox(width: 30),
+                              ReportGestureDetector(
+                                behavior: HitTestBehavior.translucent,
+                                child: widget.info?.isFavorite == 1
+                                    ? const MyImage.asset(
+                                        MyImagePaths.appMonitorColloctionS,
+                                        width: 25,
+                                        height: 25,
+                                        fit: BoxFit.contain)
+                                    : const MyImage.asset(
+                                        MyImagePaths.appMonitorColloctionN,
+                                        width: 25,
+                                        height: 25,
+                                        fit: BoxFit.contain,
+                                      ),
+                                onTap: () {
+                                  //收藏
+                                  colloctionMonitor();
+                                },
+                              )
+                            ])
                     ],
                   ),
           ),
@@ -633,7 +783,8 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
           child: FlickAutoHideChild(
             child: Column(
               children: [
-                kIsWeb ? Container()
+                kIsWeb
+                    ? Container()
                     : FlickFullScreenToggle(
                         enterFullScreenChild: const MyImage.asset(
                           MyImagePaths.appFullscreen,
@@ -717,66 +868,67 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
         Positioned(
             bottom: 60,
             right: isPortrait ? 10 : 20,
-            child: (widget.isPlayback && !isPortrait) ? FlickAutoHideChild(
-                child: Column(children: [
-                  GestureDetector(
-                    behavior: HitTestBehavior.translucent,
-                    child: widget.info?.isFavorite == 1
-                        ? const MyImage.asset(MyImagePaths.appMonitorColloctionS,
-                        width: 25, height: 25, fit: BoxFit.contain)
-                        : const MyImage.asset(
-                      MyImagePaths.appMonitorColloctionN,
-                      width: 25,
-                      height: 25,
-                      fit: BoxFit.contain,
+            child: (widget.isPlayback && !isPortrait)
+                ? FlickAutoHideChild(
+                    child: Column(children: [
+                    ReportGestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      child: widget.info?.isFavorite == 1
+                          ? const MyImage.asset(
+                              MyImagePaths.appMonitorColloctionS,
+                              width: 25,
+                              height: 25,
+                              fit: BoxFit.contain)
+                          : const MyImage.asset(
+                              MyImagePaths.appMonitorColloctionN,
+                              width: 25,
+                              height: 25,
+                              fit: BoxFit.contain,
+                            ),
+                      onTap: () {
+                        //收藏
+                        colloctionMonitor();
+                      },
                     ),
-                    onTap: () {
-                      //收藏
-                      colloctionMonitor();
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  GestureDetector(
-                    behavior: HitTestBehavior.translucent,
-                    child: widget.info?.isLike == 1
-                        ? const MyImage.asset(MyImagePaths.appMonitorZanS,
-                        width: 25, height: 25, fit: BoxFit.contain)
-                        : const MyImage.asset(
-                      MyImagePaths.appMonitorZanN,
-                      width: 25,
-                      height: 25,
-                      fit: BoxFit.contain,
+                    const SizedBox(height: 20),
+                    ReportGestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      child: widget.info?.isLike == 1
+                          ? const MyImage.asset(MyImagePaths.appMonitorZanS,
+                              width: 25, height: 25, fit: BoxFit.contain)
+                          : const MyImage.asset(
+                              MyImagePaths.appMonitorZanN,
+                              width: 25,
+                              height: 25,
+                              fit: BoxFit.contain,
+                            ),
+                      onTap: () {
+                        //点赞
+                        likeMonitor();
+                      },
                     ),
-                    onTap: () {
-                      //点赞
-                      likeMonitor();
-                    },
-                  ),
-                  const SizedBox(height: 20),
-                  GestureDetector(
-                    behavior: HitTestBehavior.translucent,
-                    child: controlManager.isMute
-                        ? const MyImage.asset(
-                        MyImagePaths.appMonitorOffVoice,
-                        width: 25,
-                        height: 25,
-                        fit: BoxFit.contain)
-                        : const MyImage.asset(
-                      MyImagePaths.appMonitorOnVoice,
-                      width: 25,
-                      height: 25,
-                      fit: BoxFit.contain,
+                    const SizedBox(height: 20),
+                    ReportGestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      child: controlManager.isMute
+                          ? const MyImage.asset(MyImagePaths.appMonitorOffVoice,
+                              width: 25, height: 25, fit: BoxFit.contain)
+                          : const MyImage.asset(
+                              MyImagePaths.appMonitorOnVoice,
+                              width: 25,
+                              height: 25,
+                              fit: BoxFit.contain,
+                            ),
+                      onTap: () {
+                        if (controlManager.isMute) {
+                          controlManager.unmute();
+                        } else {
+                          controlManager.mute();
+                        }
+                        if (mounted) setState(() {});
+                      },
                     ),
-                    onTap: () {
-                      if (controlManager.isMute) {
-                        controlManager.unmute();
-                      } else {
-                        controlManager.mute();
-                      }
-                      if (mounted) setState(() {});
-                    },
-                  ),
-                ]))
+                  ]))
                 : Container())
       ],
     );
@@ -785,7 +937,8 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
   //收藏监控
   void colloctionMonitor() async {
     final monitorDomain = context.read<MonitorDomain>();
-    final res = await monitorDomain.getMonitorFavorite(id: widget.info?.id ?? 0);
+    final res =
+        await monitorDomain.getMonitorFavorite(id: widget.info?.id ?? 0);
     if (res.isValid) {
       if (res.data['is_favorite'] == 0) {
         widget.info?.isFavorite = 0;
@@ -876,7 +1029,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
               //             ],
               //           ),
               //           alignment: Alignment.center,
-              //           child: GestureDetector(
+              //           child: ReportGestureDetector(
               //             behavior: HitTestBehavior.translucent,
               //             child: const MyImage.asset(
               //               MyImagePaths.appNavBackWN,
@@ -914,7 +1067,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    GestureDetector(
+                    ReportGestureDetector(
                       behavior: HitTestBehavior.translucent,
                       onTap: () {
                         if (vflag) {
@@ -938,7 +1091,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                       ),
                     ),
                     const SizedBox(width: 37),
-                    GestureDetector(
+                    ReportGestureDetector(
                       behavior: HitTestBehavior.translucent,
                       onTap: () {
                         widget.shareVp?.call();

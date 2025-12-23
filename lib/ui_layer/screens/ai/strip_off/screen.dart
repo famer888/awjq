@@ -22,6 +22,11 @@ import '../../image_paths.dart';
 import '../../theme.dart';
 import 'dart:developer' as developer;
 
+
+import '../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../report/ui_layer/report_general_banner.dart';
+
 class StripOffScreen extends StatefulWidget {
   const StripOffScreen({super.key});
 
@@ -29,7 +34,7 @@ class StripOffScreen extends StatefulWidget {
   State<StripOffScreen> createState() => _StripOffScreenState();
 }
 
-class _StripOffScreenState extends State<StripOffScreen> {
+class _StripOffScreenState extends State<StripOffScreen>{
   String _aiRule = ''; //脱衣规则
   Map imgMap = {};
   final ImagePicker _picker = ImagePicker();
@@ -83,7 +88,7 @@ class _StripOffScreenState extends State<StripOffScreen> {
                       strokeWidth: 1.w)
                   : null,
               alignment: Alignment.center,
-              child: GestureDetector(
+              child: ReportGestureDetector(
                 behavior: HitTestBehavior.translucent,
                 onTap: () {
                   _showImagePicker();
@@ -126,7 +131,7 @@ class _StripOffScreenState extends State<StripOffScreen> {
             Row(
               children: [
                 Expanded(
-                  child: GestureDetector(
+                  child: ReportGestureDetector(
                     behavior: HitTestBehavior.translucent,
                     onTap: _postTakeOff,
                     child: Container(

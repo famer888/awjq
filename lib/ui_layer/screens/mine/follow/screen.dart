@@ -20,6 +20,11 @@ import '../../common_widgets/my_tab_bar.dart';
 import '../../common_widgets/screen_background.dart';
 import '../../theme.dart';
 
+
+import '../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../report/ui_layer/report_general_banner.dart';
+
 class MineFollowingScreen extends StatefulWidget {
   const MineFollowingScreen({super.key});
 
@@ -27,7 +32,7 @@ class MineFollowingScreen extends StatefulWidget {
   State<MineFollowingScreen> createState() => _MineFollowingScreenState();
 }
 
-class _MineFollowingScreenState extends State<MineFollowingScreen> {
+class _MineFollowingScreenState extends State<MineFollowingScreen>{
   @override
   Widget build(BuildContext context) {
     return ScreenBackground(
@@ -101,7 +106,7 @@ class _FollowingUserViewState extends State<FollowingUserView> {
   Widget _buildTile(FollowingUserData data) {
     final aff = '${data.aff}';
     return Column(children: [
-      GestureDetector(
+      ReportGestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () {
           UserCenterRoute(aff).push(context);
@@ -126,7 +131,7 @@ class _FollowingUserViewState extends State<FollowingUserView> {
                 ],
               ),
             ),
-            GestureDetector(
+            ReportGestureDetector(
               onTap: () async {
                 await userNotifier.changeUserFollow(aff);
               },
@@ -186,10 +191,10 @@ class FollowingTopic extends StatefulWidget {
   const FollowingTopic({super.key});
 
   @override
-  State<FollowingTopic> createState() => _FollowingTopicState();
+  State<FollowingTopic> createState() => _FollowingTopicreateState();
 }
 
-class _FollowingTopicState extends State<FollowingTopic> {
+class _FollowingTopicreateState extends State<FollowingTopic> {
   late final communityDomain = context.read<CommunityDomain>();
 
   Future<List<TopicModel>> _getData({
@@ -211,7 +216,7 @@ class _FollowingTopicState extends State<FollowingTopic> {
       width: w,
       child: Column(
         children: [
-          GestureDetector(
+          ReportGestureDetector(
             behavior: HitTestBehavior.translucent,
             onTap: () {
               CommunityTagDetailRoute('${data.id}', false).push(context);
@@ -250,7 +255,7 @@ class _FollowingTopicState extends State<FollowingTopic> {
           StatefulBuilder(builder: (_, setState) {
             final isFollowing = data.isFollow == 1;
             bool isLoading = false;
-            return GestureDetector(
+            return ReportGestureDetector(
               behavior: HitTestBehavior.translucent,
               onTap: () async {
                 if (isLoading) return;

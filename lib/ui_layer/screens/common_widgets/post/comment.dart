@@ -15,6 +15,10 @@ import '../../image_paths.dart';
 import '../../theme.dart';
 import '../../../../domain/type_def.dart';
 
+import '../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../report/ui_layer/report_general_banner.dart';
+
 class PostCommentView extends StatelessWidget {
   const PostCommentView({
     super.key,
@@ -38,7 +42,7 @@ class PostCommentView extends StatelessWidget {
           changeLike: changeLike,
         ),
         SizedBox(height: 13.w),
-        GestureDetector(
+        ReportGestureDetector(
           onTap: onReply,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -226,7 +230,7 @@ class _LikeButtonState extends State<_LikeButton> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return ReportGestureDetector(
       onTap: _changeLike,
       child: SizedBox(
         width: 40.w,
@@ -318,7 +322,7 @@ class _RepliesView extends StatelessWidget {
                       maxLines: UILayerConst.maxLine,
                     ),
                     if (index == max - 1 && comments.length > max)
-                      GestureDetector(
+                      ReportGestureDetector(
                         onTap: onMoreCommentTap,
                         child: Padding(
                           padding: EdgeInsets.only(top: 10.w),

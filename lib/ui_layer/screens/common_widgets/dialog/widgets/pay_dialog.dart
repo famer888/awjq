@@ -19,6 +19,10 @@ import '../../my_button.dart';
 import '../../my_image.dart';
 import 'regular_dialog.dart';
 
+import '../../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../../report/ui_layer/report_general_banner.dart';
+
 class PayDialog extends StatefulWidget {
   const PayDialog({super.key, required this.product, required this.tip});
   final Product product;
@@ -167,7 +171,7 @@ class _PayDialogState extends State<PayDialog> {
                           'xzzf'.tr(context: context),
                           style: MyTheme.white255_18_M,
                         ),
-                        GestureDetector(
+                        ReportGestureDetector(
                           onTap: () => context.pop(),
                           child: MyImage.asset(
                             MyImagePaths.appClose,
@@ -201,7 +205,7 @@ class _PayDialogState extends State<PayDialog> {
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: product.pays.length,
-                    itemBuilder: (context, index) => GestureDetector(
+                    itemBuilder: (context, index) => ReportGestureDetector(
                       onTap: () => paySelectedIndexNotifier.value = index,
                       behavior: HitTestBehavior.translucent,
                       child: Padding(

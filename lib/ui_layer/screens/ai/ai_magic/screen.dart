@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../domain/model/ai/ai_magic_model.dart';
 import '../../../../domain/remote_domain/domains/aimagic.dart';
+import '../../../../report/ui_layer/report_general_banner.dart';
 import '../../common_widgets/general_banner.dart';
 import '../widgets/card/magic_card.dart';
 import 'package:provider/provider.dart';
@@ -16,10 +17,10 @@ class AIMagic extends StatefulWidget {
   });
 
   @override
-  State<AIMagic> createState() => _AIMagicState();
+  State<AIMagic> createState() => _AIMagicreateState();
 }
 
-class _AIMagicState extends State<AIMagic> {
+class _AIMagicreateState extends State<AIMagic> {
   late final _appDomain = context.read<AIMagicDomain>();
   final ValueNotifier<List<BannerModel>> _bannersNotifier = ValueNotifier([]);
 
@@ -84,7 +85,7 @@ class _Header extends StatelessWidget {
             if (banners.isEmpty) return const SizedBox.shrink();
             return Padding(
               padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
-              child: GeneralAppsListVidget(data: banners),
+              child: ReportGeneralAppsListVidget(data: banners),
             );
           },
         ),

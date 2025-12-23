@@ -12,6 +12,7 @@ import '../../../common_widgets/my_list_view.dart';
 import '../../../common_widgets/screen_background.dart';
 import '../../../theme.dart';
 
+
 class MineAgentProfitScreen extends StatefulWidget {
   const MineAgentProfitScreen({super.key});
 
@@ -19,7 +20,7 @@ class MineAgentProfitScreen extends StatefulWidget {
   State<MineAgentProfitScreen> createState() => _MineAgentProfitScreenState();
 }
 
-class _MineAgentProfitScreenState extends State<MineAgentProfitScreen> {
+class _MineAgentProfitScreenState extends State<MineAgentProfitScreen>{
   late final appDomain = context.read<ProxyDomain>();
 
   Future<List<ProxyProfit>> getProxyProfitList({

@@ -5,6 +5,10 @@ import '../../../notifiers/user_notifier.dart';
 import '../../theme.dart';
 import '../my_image.dart';
 
+import '../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../report/ui_layer/report_general_banner.dart';
+
 class CommentInput extends StatelessWidget {
   const CommentInput({
     super.key,
@@ -61,7 +65,7 @@ class CommentInput extends StatelessWidget {
               );
             },
           ),
-          trailing: GestureDetector(
+          trailing: ReportGestureDetector(
             onTap: onSubmitted,
             child: const Icon(
               Icons.send_sharp,

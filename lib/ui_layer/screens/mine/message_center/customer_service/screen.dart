@@ -14,6 +14,7 @@ import '../../../../../domain/api_validator.dart';
 import '../../../../../domain/async_value.dart';
 import '../../../../../domain/model/feedback_data_model.dart';
 import '../../../../../domain/remote_domain/domains/message.dart';
+import '../../../../../report/ui_layer/report_gesture_detector.dart';
 import '../../../../notifiers/home_config_notifier.dart';
 import '../../../../utils/common_utils.dart';
 import '../../../../utils/my_toast.dart';
@@ -26,6 +27,8 @@ import '../../../common_widgets/status/network_error.dart';
 import '../../../image_paths.dart';
 import '../../../theme.dart';
 
+import '../../../../../report/ui_layer/report_general_banner.dart';
+
 class MineCustomerServiceScreen extends StatefulWidget {
   const MineCustomerServiceScreen({super.key});
 
@@ -34,7 +37,7 @@ class MineCustomerServiceScreen extends StatefulWidget {
       _MineCustomerServiceScreenState();
 }
 
-class _MineCustomerServiceScreenState extends State<MineCustomerServiceScreen> {
+class _MineCustomerServiceScreenState extends State<MineCustomerServiceScreen>{
   late final _messageDomain = context.read<MessageDomain>();
   late final _homeConfigNotifier = context.read<HomeConfigNotifier>();
 
@@ -170,7 +173,7 @@ class _MineCustomerServiceScreenState extends State<MineCustomerServiceScreen> {
                             SizedBox(
                               width: 17.5.w,
                               height: 17.w,
-                              child: GestureDetector(
+                              child: ReportGestureDetector(
                                 onTap: _imagePickerAssets,
                                 child: MyImage.asset(
                                   MyImagePaths.appCustomerServiceSelectImg,
@@ -201,7 +204,7 @@ class _MineCustomerServiceScreenState extends State<MineCustomerServiceScreen> {
                         ),
                       ),
                       SizedBox(width: 7.w),
-                      GestureDetector(
+                      ReportGestureDetector(
                         onTap: _sendMsg,
                         child: SizedBox(
                           width: 44.w,

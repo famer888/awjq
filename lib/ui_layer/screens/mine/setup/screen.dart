@@ -24,6 +24,11 @@ import '../../common_widgets/screen_background.dart';
 import '../../image_paths.dart';
 import '../../theme.dart';
 
+
+import '../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../report/ui_layer/report_general_banner.dart';
+
 class MineSetupScreen extends StatefulWidget {
   const MineSetupScreen({super.key});
 
@@ -31,7 +36,7 @@ class MineSetupScreen extends StatefulWidget {
   State<MineSetupScreen> createState() => _MineSetupScreenState();
 }
 
-class _MineSetupScreenState extends State<MineSetupScreen> {
+class _MineSetupScreenState extends State<MineSetupScreen>{
   late final cache = context.read<CacheDomain>();
   late final userDomain = context.read<UserDomain>();
   late final userNotifier = context.read<UserNotifier>();
@@ -146,7 +151,7 @@ class _MineSetupScreenState extends State<MineSetupScreen> {
                 Selector<UserNotifier, Member>(
                     selector: (_, userNotifier) => userNotifier.member,
                     builder: (context, member, child) {
-                      return GestureDetector(
+                      return ReportGestureDetector(
                         onTap: () => showUploadImg(vipLevel: member.vipLevel),
                         child: Column(
                           children: [
@@ -202,7 +207,7 @@ class _MineSetupScreenState extends State<MineSetupScreen> {
                   selector: (_, userNotifier) =>
                       userNotifier.tokenStatus == MyTokenStatus.valid,
                   builder: (context, isLogin, child) => isLogin
-                      ? GestureDetector(
+                      ? ReportGestureDetector(
                           onTap: _logOut,
                           child: Container(
                             decoration: BoxDecoration(
@@ -253,7 +258,7 @@ class SetupItem extends StatelessWidget {
   final String? subTitle;
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return ReportGestureDetector(
       onTap: () => onTap?.call(),
       behavior: HitTestBehavior.translucent,
       child: Padding(

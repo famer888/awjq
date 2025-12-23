@@ -3,6 +3,7 @@ import '../../../../../domain/model/live_model.dart';
 import '../../../../../domain/model/live_video_detail_model.dart';
 import '../../../../../domain/model/video_detail_model.dart';
 import '../../../../../domain/remote_domain/domains/live.dart';
+import '../../../../../report/ui_layer/report_gesture_detector.dart';
 import '../../../common_widgets/video_player/live_mv_palyer.dart';
 import '../../../video_detail/screen.dart';
 import '../../../common_widgets/keep_alive_wrapper.dart';
@@ -22,6 +23,8 @@ import 'comment_view.dart';
 import 'introduction_view.dart';
 
 
+import '../../../../../report/ui_layer/report_general_banner.dart';
+
 class LiveVideoDetailScreen extends StatefulWidget {
   const LiveVideoDetailScreen({super.key, required this.id});
 
@@ -31,7 +34,7 @@ class LiveVideoDetailScreen extends StatefulWidget {
   State<LiveVideoDetailScreen> createState() => _LiveVideoDetailScreenState();
 }
 
-class _LiveVideoDetailScreenState extends State<LiveVideoDetailScreen> {
+class _LiveVideoDetailScreenState extends State<LiveVideoDetailScreen>{
   late final liveDomain = context.read<LiveDomain>();
 
   AsyncValue<LiveVideoDetailData> _asyncValue = const AsyncInit();
@@ -71,7 +74,7 @@ class _LiveVideoDetailScreenState extends State<LiveVideoDetailScreen> {
         child: Scaffold(
           extendBodyBehindAppBar: true,
           // appBar: const MyAppBar(),
-          floatingActionButton: GestureDetector(
+          floatingActionButton: ReportGestureDetector(
             onTap: () {
               context.pop();
             },

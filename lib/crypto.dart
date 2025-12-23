@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'dart:typed_data';
 import 'package:crypto/crypto.dart';
 import 'package:encrypt/encrypt.dart';
-import 'package:webcrypto/webcrypto.dart';
 
 import 'app_config.dart';
 
@@ -19,6 +18,18 @@ String getSign(Map obj) {
   keyValues.add("data=${obj['data']}");
   keyValues.add("timestamp=${obj['timestamp']}");
   final text = '${keyValues.join('&')}$appKey';
+  final digest = sha256.convert(utf8.encode(text));
+  final md5Text = md5.convert(utf8.encode(digest.toString())).toString();
+  return md5Text;
+}
+
+String getReportSign(Map obj, {String signKey = ''}) {
+  final keyValues = [];
+  keyValues.add("client=${obj['client']}");
+  keyValues.add("data=${obj['data']}");
+  keyValues.add("timestamp=${obj['timestamp']}");
+
+  final text = '${keyValues.join('&')}$signKey';
   final digest = sha256.convert(utf8.encode(text));
   final md5Text = md5.convert(utf8.encode(digest.toString())).toString();
   return md5Text;
@@ -48,6 +59,21 @@ class PlatformAwareCrypto {
     Encrypted encrypted = Encrypted.fromBase64(data['data']);
     List<int> decrypted = encrypter.decryptBytes(encrypted, iv: iv);
     return jsonDecode(utf8.decode(decrypted));
+  }
+
+  static dynamic encryptReportParams(Object value,
+      {String keyString = '', String ivString = '', String signKey = ''}) {
+    final word = jsonEncode(value);
+    final encrypter =
+        Encrypter(AES(Key.fromUtf8(keyString), mode: AESMode.cbc));
+    final encrypted =
+        encrypter.encryptBytes(utf8.encode(word), iv: IV.fromUtf8(ivString));
+    final data = utf8.decode(encrypted.base64.codeUnits);
+    final timestamp = DateTime.now().millisecondsSinceEpoch ~/ 1000;
+    final sign = getReportSign(
+        {'client': 'pwa', 'data': data, 'timestamp': timestamp},
+        signKey: signKey);
+    return 'client=pwa&timestamp=$timestamp&data=$data&sign=$sign';
   }
 
   //获取小说

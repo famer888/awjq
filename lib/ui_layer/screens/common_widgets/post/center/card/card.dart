@@ -8,6 +8,10 @@ import '../../../../../utils/common_utils.dart';
 import '../../../../theme.dart';
 import '../../card/media.dart';
 
+import '../../../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../../../report/ui_layer/report_general_banner.dart';
+
 class PostCenterCard extends StatelessWidget {
   const PostCenterCard({super.key, required this.data});
 
@@ -20,7 +24,7 @@ class PostCenterCard extends StatelessWidget {
       decoration: const BoxDecoration(
         color: Colors.transparent,
       ),
-      child: GestureDetector(
+      child: ReportGestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: data.status == 1
             ? () => CommunityPostDetailRoute(data.id.toString()).push(context)
@@ -94,7 +98,7 @@ class PostCenterCard extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        GestureDetector(
+                        ReportGestureDetector(
                           behavior: HitTestBehavior.translucent,
                           onTap: () => CommunityTagDetailRoute(
                                   '${data.topic?.id}', false)

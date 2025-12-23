@@ -16,6 +16,7 @@ import '../../../../domain/domain.dart';
 import '../../../../domain/model/live_model.dart';
 import '../../../../domain/model/member_model.dart';
 import '../../../../domain/remote_domain/domains/live.dart';
+import '../../../../report/event_tracking.dart';
 import '../../../notifiers/home_config_notifier.dart';
 import '../../../notifiers/user_notifier.dart';
 import '../../../router/routes.dart';
@@ -32,6 +33,9 @@ import '../my_image.dart';
 import '../player_barrage_widget.dart';
 import 'utils/nvideourl_minxin.dart';
 
+import '../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../report/ui_layer/report_general_banner.dart';
 
 //先判断show的值 != “public” 直接显示已下线
 //判断hls.length > 0 直接播放
@@ -76,9 +80,19 @@ class _LiveMvPlayerState extends State<LiveMvPlayer> with NVideoURLMinxin {
 
   bool isShowChangeLine = false; //是否显示切换线路弹窗
 
-  final GlobalKey<_SinkPortraitLandWidgetState> _sinkPortraitLandWidgetGlobalKey = GlobalKey(); //通过全局key
+  final GlobalKey<_SinkPortraitLandWidgetState>
+      _sinkPortraitLandWidgetGlobalKey = GlobalKey(); //通过全局key
 
   OverlayEntry? _overlayEntry;
+
+  int _lastPosition = 0;
+  bool _wasPlaying = false;
+  bool _isCompleted = false;
+
+  //用来防止一次拖动触发多次快进/快退
+  bool _seekLocked = false;
+  final int _seekThresholdSec = 5; // 超过多少秒跳变算快进/快退
+  final Duration _seekCooldown = const Duration(milliseconds: 500);
 
   @override
   void initState() {
@@ -128,19 +142,25 @@ class _LiveMvPlayerState extends State<LiveMvPlayer> with NVideoURLMinxin {
           flickManager?.flickControlManager?.replay();
           if (mounted) setState(() {});
         });
+
+    flickManager?.flickVideoManager?.videoPlayerController
+        ?.addListener(_videoListener);
     if (mounted) setState(() {});
 
     _openWebVioce();
-
   }
 
   //禁止web播放时默认静音
   void _openWebVioce() {
     if (kIsWeb) {
       flickManager?.flickVideoManager?.videoPlayerController?.addListener(() {
-        if (flickManager?.flickVideoManager?.videoPlayerController?.value.isInitialized ?? false) {
+        if (flickManager?.flickVideoManager?.videoPlayerController?.value
+                .isInitialized ??
+            false) {
           // 视频初始化完成后取消静音
-          List<html.VideoElement> elements = html.document.getElementsByTagName('video').cast<html.VideoElement>();
+          List<html.VideoElement> elements = html.document
+              .getElementsByTagName('video')
+              .cast<html.VideoElement>();
           if (elements.isNotEmpty) {
             html.VideoElement videoElement = elements.first;
             videoElement.muted = false;
@@ -150,6 +170,132 @@ class _LiveMvPlayerState extends State<LiveMvPlayer> with NVideoURLMinxin {
         }
       });
     }
+  }
+
+  void _videoListener() {
+    final value = flickManager?.flickVideoManager?.videoPlayerController?.value;
+    if (value == null) return;
+
+    final currentSec = value.position.inSeconds;
+    final totalSec = value.duration.inSeconds;
+
+    // ===== 播放 / 暂停 =====
+
+    // 开始播放（从不播放 -> 播放）
+    if (value.isPlaying && !_wasPlaying) {
+      reportVideo(video_behavior_key: "video_play", video_behavior_name: "播放");
+      _wasPlaying = true;
+      _isCompleted = false; // 重新播放时重置完成标记
+    }
+
+    // 暂停（从播放 -> 不播放，且未到结尾）
+    if (!value.isPlaying && _wasPlaying && currentSec < totalSec) {
+      reportVideo(video_behavior_key: "video_pause", video_behavior_name: "暂停");
+      _wasPlaying = false;
+    }
+
+    // ===== 播放完成 =====
+    if (!_isCompleted &&
+        totalSec > 0 &&
+        currentSec >= totalSec &&
+        !value.isPlaying) {
+      reportVideo(
+          video_behavior_key: "video_complete", video_behavior_name: "播放完成");
+      _isCompleted = true;
+      _wasPlaying = false;
+    }
+
+    // ===== 快进 / 快退（通过 position 跳变检测）=====
+
+    final diff = currentSec - _lastPosition;
+
+    // 已经完成的就不再判定快进快退了
+    if (!_isCompleted && !_seekLocked) {
+      // 快进：位置跳到更靠后的时间点（超过阈值）
+      if (diff >= _seekThresholdSec) {
+        reportVideo(
+            video_behavior_key: "video_forward", video_behavior_name: "快进");
+        _seekLocked = true;
+        Future.delayed(_seekCooldown, () {
+          _seekLocked = false;
+        });
+      }
+
+      // 快退：位置跳到更靠前的时间点（超过阈值）
+      if (diff <= -_seekThresholdSec) {
+        reportVideo(
+            video_behavior_key: "video_rewind", video_behavior_name: "快退");
+        _seekLocked = true;
+        Future.delayed(_seekCooldown, () {
+          _seekLocked = false;
+        });
+      }
+    }
+
+    // ===== 缓冲（看你要不要上报）=====
+    if (value.isBuffering) {
+      // 需要的话在这里加一个缓冲埋点
+      // reportVideo(video_behavior_key: "video_buffer", video_behavior_name: "缓冲");
+    }
+
+    // 最后一定要更新 _lastPosition
+    _lastPosition = currentSec;
+  }
+
+  void reportVideo({
+    String video_behavior_key = "video_play",
+    String video_behavior_name = "",
+  }) {
+    // String type = widget.errIds.split("_")[1];
+
+    int play_duration =
+        flickManager?.flickVideoManager?.videoPlayerValue?.position.inSeconds ??
+            0;
+    int video_duration =
+        flickManager?.flickVideoManager?.videoPlayerValue?.duration.inSeconds ??
+            0;
+    int progress = (play_duration / video_duration * 100).round().clamp(0, 100);
+
+    List<Map> tags = [];
+    List<Map> categories = [];
+    String video_title = "";
+    int video_type_id = widget.info.videoTypeId ?? 0;
+    String video_type_name = widget.info.videoTypeName ?? "";
+    int id = 0;
+
+    String tagsString = '';
+    video_title = widget.info.intro ?? '';
+    id = widget.info.id ?? 0;
+    // if (type == "1") {
+    //文章
+    // tags = List.from(CacheManager.instance.mediaMap["tags"] ?? []);
+    // categories = List.from(CacheManager.instance.mediaMap["category"] ?? []);
+    // video_title = CacheManager.instance.mediaMap["title"];
+    // video_type_id = categories.first["mid"];
+    // video_type_name = categories.first["name"];
+    // id = CacheManager.instance.mediaMap["cid"];
+
+    // if (type == "2") {
+    //帖子
+    // video_title = CacheManager.instance.mediaMap["title"];
+    // video_type_id = CacheManager.instance.mediaMap["topic"]["id"];
+    // video_type_name = CacheManager.instance.mediaMap["topic"]["name"];
+    // id = CacheManager.instance.mediaMap["id"];
+
+    EventTracking().reportSingle({
+      "event": "video_event",
+      "video_id": id,
+      "video_title": video_title,
+      "video_type_id": video_type_id,
+      "video_type_name": video_type_name,
+      "video_tag_key": '',
+      "video_tag_name": tagsString,
+      "video_duration": video_duration,
+      "play_duration": play_duration,
+      "play_progress": progress,
+      "video_behavior_key": video_behavior_key,
+      "video_behavior_name": video_behavior_name,
+    });
   }
 
   @override
@@ -165,63 +311,65 @@ class _LiveMvPlayerState extends State<LiveMvPlayer> with NVideoURLMinxin {
         Positioned.fill(
           child: Column(
             children: [
-              Expanded(child: flickManager == null
-                  ? Container()
-                  : FlickVideoPlayer(
-                flickManager: flickManager!,
-                flickVideoWithControls: FlickVideoWithControls(
-                  videoFit: BoxFit.contain,
-                  playerErrorFallback: Container(),
-                  playerLoadingFallback: Stack(
-                    children: [
-                      Positioned.fill(
-                        child: MyImage.network(
-                          widget.info.cover ?? '',
-                        ),
-                      ),
-                      Container(color: Colors.black87),
-                    ],
-                  ),
-                  controls: _SinkPortraitLandWidget(
-                    key: _sinkPortraitLandWidgetGlobalKey,
-                    isBack: true,
-                    info: widget.info,
-                    noBack: widget.noBack,
-                    needCheckAspectRatio: widget.needCheckAspectRatio,
-                    chanelIndex: chanelIndex,
-                    shareVp: () {
-                      const MineWelfareRoute(index: 1).push(context);
-                    },
-                    nowToVp: () {
-                      const VipCenterRoute().push(context);
-                    },
-                    nowByKb: () {
-                      showAlertVp(goby: true);
-                    },
-                    changeLine: (index) {
-                      chanelIndex = index;
-                      final hls = widget.info.hls?[index];
-                      playerStr = hls?.url ?? '';
-                      initURL(isChangeLine: true);
-                    },
-                  ),
-                ),
-                flickVideoWithControlsFullscreen: FlickVideoWithControls(
-                  playerErrorFallback: Container(),
-                  videoFit: BoxFit.contain,
-                  controls: _SinkPortraitLandWidget(
-                    info: widget.info,
-                    noBack: false,
-                    chanelIndex: chanelIndex,
-                    changeLine: (index) {
-                      chanelIndex = index;
-                      final hls = widget.info.hls?[index];
-                      playerStr = hls?.url ?? '';
-                      initURL(isChangeLine: true);
-                    },
-                  ),
-                ),
-              )),
+              Expanded(
+                  child: flickManager == null
+                      ? Container()
+                      : FlickVideoPlayer(
+                          flickManager: flickManager!,
+                          flickVideoWithControls: FlickVideoWithControls(
+                            videoFit: BoxFit.contain,
+                            playerErrorFallback: Container(),
+                            playerLoadingFallback: Stack(
+                              children: [
+                                Positioned.fill(
+                                  child: MyImage.network(
+                                    widget.info.cover ?? '',
+                                  ),
+                                ),
+                                Container(color: Colors.black87),
+                              ],
+                            ),
+                            controls: _SinkPortraitLandWidget(
+                              key: _sinkPortraitLandWidgetGlobalKey,
+                              isBack: true,
+                              info: widget.info,
+                              noBack: widget.noBack,
+                              needCheckAspectRatio: widget.needCheckAspectRatio,
+                              chanelIndex: chanelIndex,
+                              shareVp: () {
+                                const MineWelfareRoute(index: 1).push(context);
+                              },
+                              nowToVp: () {
+                                const VipCenterRoute().push(context);
+                              },
+                              nowByKb: () {
+                                showAlertVp(goby: true);
+                              },
+                              changeLine: (index) {
+                                chanelIndex = index;
+                                final hls = widget.info.hls?[index];
+                                playerStr = hls?.url ?? '';
+                                initURL(isChangeLine: true);
+                              },
+                            ),
+                          ),
+                          flickVideoWithControlsFullscreen:
+                              FlickVideoWithControls(
+                            playerErrorFallback: Container(),
+                            videoFit: BoxFit.contain,
+                            controls: _SinkPortraitLandWidget(
+                              info: widget.info,
+                              noBack: false,
+                              chanelIndex: chanelIndex,
+                              changeLine: (index) {
+                                chanelIndex = index;
+                                final hls = widget.info.hls?[index];
+                                playerStr = hls?.url ?? '';
+                                initURL(isChangeLine: true);
+                              },
+                            ),
+                          ),
+                        )),
               _optinalContent() //播放器底部操作布局
             ],
           ),
@@ -229,47 +377,48 @@ class _LiveMvPlayerState extends State<LiveMvPlayer> with NVideoURLMinxin {
         Positioned(
           bottom: 5.w,
           right: 2.w,
-          child: isShowChangeLine ? Container(
-            width: 85.w,
-            height: (widget.info.hls?.length ?? 0) * 28 + 30,
-            decoration: BoxDecoration(
-              color: Colors.black45,
-              borderRadius: BorderRadius.circular(5),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(5),
-              child: Column(
-                children:
-                _buildChangeLineListWidget(85.w),
-              ),
-            ),
-          ) : const SizedBox.shrink(),
-        ),//切换线路按钮
-        Positioned( // 切换线路弹窗选择列表
+          child: isShowChangeLine
+              ? Container(
+                  width: 85.w,
+                  height: (widget.info.hls?.length ?? 0) * 28 + 30,
+                  decoration: BoxDecoration(
+                    color: Colors.black45,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(5),
+                    child: Column(
+                      children: _buildChangeLineListWidget(85.w),
+                    ),
+                  ),
+                )
+              : const SizedBox.shrink(),
+        ), //切换线路按钮
+        Positioned(
+          // 切换线路弹窗选择列表
           bottom: 0,
           right: 10.w,
-          child:
-        GestureDetector(
-            behavior: HitTestBehavior.translucent,
-            onTap: () {
-              if (widget.info.hls?.isEmpty ?? false) {
-                // MyToast.showText(text: tr('yhyxx'));
-                return;
-              }
-              //切换路线
-              isShowChangeLine = !isShowChangeLine;
-              if (mounted) setState(() {});
-            },
-            child: SizedBox(
-              height: 40.w,
-              child: Row(
-                children: [
-                  const MyImage.asset(MyImagePaths.appChangeLine,
-                      width: 25, height: 25, fit: BoxFit.contain),
-                  Text(tr('qhxl'), style: MyTheme.white08_12)
-                ],
-              ),
-            )),
+          child: ReportGestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onTap: () {
+                if (widget.info.hls?.isEmpty ?? false) {
+                  // MyToast.showText(text: tr('yhyxx'));
+                  return;
+                }
+                //切换路线
+                isShowChangeLine = !isShowChangeLine;
+                if (mounted) setState(() {});
+              },
+              child: SizedBox(
+                height: 40.w,
+                child: Row(
+                  children: [
+                    const MyImage.asset(MyImagePaths.appChangeLine,
+                        width: 25, height: 25, fit: BoxFit.contain),
+                    Text(tr('qhxl'), style: MyTheme.white08_12)
+                  ],
+                ),
+              )),
         ),
       ],
     );
@@ -278,9 +427,9 @@ class _LiveMvPlayerState extends State<LiveMvPlayer> with NVideoURLMinxin {
   //播放器底部操作按钮，发弹幕/打赏/切换链路
   Widget _optinalContent() {
     return Container(
-        height: 40.w,
-        color: const Color.fromRGBO(36, 36, 56, 0.8),
-        child: _danMuWidget(context),
+      height: 40.w,
+      color: const Color.fromRGBO(36, 36, 56, 0.8),
+      child: _danMuWidget(context),
     );
   }
 
@@ -363,7 +512,7 @@ class _LiveMvPlayerState extends State<LiveMvPlayer> with NVideoURLMinxin {
                             ),
                             color: MyTheme.jellyCyanColor103224185),
                         child:
-                        Text(tr('ljds'), style: MyTheme.white15semibold)),
+                            Text(tr('ljds'), style: MyTheme.white15semibold)),
                   )
                 ]),
               ),
@@ -408,7 +557,7 @@ class _LiveMvPlayerState extends State<LiveMvPlayer> with NVideoURLMinxin {
     final userNotifier = context.read<UserNotifier>();
     final liverDomain = context.read<LiveDomain>();
     final res =
-    await liverDomain.getLiveReward(id: widget.info.id ?? 0, coins: money);
+        await liverDomain.getLiveReward(id: widget.info.id ?? 0, coins: money);
     MyToast.closeAllLoading();
     if (res.isValid) {
       userNotifier.setMoney(money: userNotifier.member.money - money);
@@ -423,100 +572,102 @@ class _LiveMvPlayerState extends State<LiveMvPlayer> with NVideoURLMinxin {
   //弹幕相关布局
   Widget _danMuWidget(BuildContext context) {
     return Row(children: [
+      SizedBox(width: 10.w),
+      Container(
+        height: 28.w,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(14),
+          color: MyTheme.white02Color,
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
             SizedBox(width: 10.w),
             Container(
+              alignment: Alignment.center,
+              width: 75.w,
               height: 28.w,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(14),
-                color: MyTheme.white02Color,
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  SizedBox(width: 10.w),
-                  Container(
-                    alignment: Alignment.center,
-                    width: 75.w,
-                    height: 28.w,
-                    child: TextField(
-                      style: const TextStyle(
-                          color: MyTheme.white08Color,
-                          fontSize: 12,
-                          overflow: TextOverflow.ellipsis,
-                          decoration: TextDecoration.none),
-                      controller: _textFieldController,
-                      focusNode: _focusNode,
-                      decoration: InputDecoration(
-                        isCollapsed: true,
-                        hintText: tr('ftdm'),
-                        hintStyle: MyTheme.white08_12,
-                        contentPadding: EdgeInsets.zero,
-                        // 确保内容填充足够
-                        border: InputBorder.none,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 0, right: 5),
-                    child: GestureDetector(
-                      behavior: HitTestBehavior.translucent,
-                      child: Container(
-                        alignment: Alignment.center,
-                        height: 18,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(9),
-                          gradient: MyTheme.gradient_90_114,
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: Text(tr('fas'),
-                              style: const TextStyle(
-                                  color: MyTheme.white08Color,
-                                  fontSize: 12,
-                                  overflow: TextOverflow.ellipsis,
-                                  decoration: TextDecoration.none)),
-                        ),
-                      ),
-                      onTap: () {
-                        //发送弹幕，通知播放器组件中的发送方法去发送
-                        _sinkPortraitLandWidgetGlobalKey.currentState?.sendComment(text: _textFieldController.text);
-                        _hideKeyboard(context);
-                      },
-                    ),
-                  ),
-                ],
+              child: TextField(
+                style: const TextStyle(
+                    color: MyTheme.white08Color,
+                    fontSize: 12,
+                    overflow: TextOverflow.ellipsis,
+                    decoration: TextDecoration.none),
+                controller: _textFieldController,
+                focusNode: _focusNode,
+                decoration: InputDecoration(
+                  isCollapsed: true,
+                  hintText: tr('ftdm'),
+                  hintStyle: MyTheme.white08_12,
+                  contentPadding: EdgeInsets.zero,
+                  // 确保内容填充足够
+                  border: InputBorder.none,
+                ),
               ),
             ),
-            SizedBox(width: 16.w),
-            GestureDetector(
-              behavior: HitTestBehavior.translucent,
-              child: isbarrage
-                  ? const MyImage.asset(MyImagePaths.appOndm,
-                  width: 25, height: 25, fit: BoxFit.contain)
-                  : const MyImage.asset(MyImagePaths.appOffdm,
-                  width: 25, height: 25, fit: BoxFit.contain),
-              onTap: () async {
-                //弹幕开关
-                if (widget.info.hls?.isEmpty ?? false) {
-                  // MyToast.showText(text: tr('yhyxx'));
-                  return;
-                }
-                await _sinkPortraitLandWidgetGlobalKey.currentState?.optionalDanMu();
-                await initializeData();
-                _hideKeyboard(context);
-              },
+            Padding(
+              padding: const EdgeInsets.only(left: 0, right: 5),
+              child: ReportGestureDetector(
+                behavior: HitTestBehavior.translucent,
+                child: Container(
+                  alignment: Alignment.center,
+                  height: 18,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(9),
+                    gradient: MyTheme.gradient_90_114,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Text(tr('fas'),
+                        style: const TextStyle(
+                            color: MyTheme.white08Color,
+                            fontSize: 12,
+                            overflow: TextOverflow.ellipsis,
+                            decoration: TextDecoration.none)),
+                  ),
+                ),
+                onTap: () {
+                  //发送弹幕，通知播放器组件中的发送方法去发送
+                  _sinkPortraitLandWidgetGlobalKey.currentState
+                      ?.sendComment(text: _textFieldController.text);
+                  _hideKeyboard(context);
+                },
+              ),
             ),
-            SizedBox(width: 16.w),
-            GestureDetector(//全屏才会显示打赏
-              behavior: HitTestBehavior.translucent,
-              child: const MyImage.asset(MyImagePaths.appDs,
-                  width: 60, height: 25, fit: BoxFit.contain),
-              onTap: () {
-                _hideKeyboard(context);
-                showDaSanDialog();
-              },
-            ),
-          ]);
+          ],
+        ),
+      ),
+      SizedBox(width: 16.w),
+      ReportGestureDetector(
+        behavior: HitTestBehavior.translucent,
+        child: isbarrage
+            ? const MyImage.asset(MyImagePaths.appOndm,
+                width: 25, height: 25, fit: BoxFit.contain)
+            : const MyImage.asset(MyImagePaths.appOffdm,
+                width: 25, height: 25, fit: BoxFit.contain),
+        onTap: () async {
+          //弹幕开关
+          if (widget.info.hls?.isEmpty ?? false) {
+            // MyToast.showText(text: tr('yhyxx'));
+            return;
+          }
+          await _sinkPortraitLandWidgetGlobalKey.currentState?.optionalDanMu();
+          await initializeData();
+          _hideKeyboard(context);
+        },
+      ),
+      SizedBox(width: 16.w),
+      ReportGestureDetector(
+        //全屏才会显示打赏
+        behavior: HitTestBehavior.translucent,
+        child: const MyImage.asset(MyImagePaths.appDs,
+            width: 60, height: 25, fit: BoxFit.contain),
+        onTap: () {
+          _hideKeyboard(context);
+          showDaSanDialog();
+        },
+      ),
+    ]);
   }
 
   List<Widget> _buildChangeLineListWidget(double width) {
@@ -524,37 +675,37 @@ class _LiveMvPlayerState extends State<LiveMvPlayer> with NVideoURLMinxin {
     widget.info.hls?.asMap().forEach((index, e) {
       columnChild.add(
         InkWell(
-            onTap: () {
-              isShowChangeLine = !isShowChangeLine;
-              if (chanelIndex == index) {
-                if (mounted) setState(() {});
-                return;
-              }
-              chanelIndex = index;
-              final hls = widget.info.hls?[index];
-              playerStr = hls?.url ?? '';
-              initURL(isChangeLine: true);
+          onTap: () {
+            isShowChangeLine = !isShowChangeLine;
+            if (chanelIndex == index) {
               if (mounted) setState(() {});
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  alignment: Alignment.centerLeft,
-                  width: width - 35,
-                  height: 28,
-                  child: Text(
-                    e.label,
-                    style: MyTheme.white12,
-                  ),
+              return;
+            }
+            chanelIndex = index;
+            final hls = widget.info.hls?[index];
+            playerStr = hls?.url ?? '';
+            initURL(isChangeLine: true);
+            if (mounted) setState(() {});
+          },
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                alignment: Alignment.centerLeft,
+                width: width - 35,
+                height: 28,
+                child: Text(
+                  e.label,
+                  style: MyTheme.white12,
                 ),
-                (index == chanelIndex)
-                    ? const MyImage.asset(MyImagePaths.appGouWhite,
-                    width: 20, height: 20)
-                    : const SizedBox.shrink()
-              ],
-            ),
+              ),
+              (index == chanelIndex)
+                  ? const MyImage.asset(MyImagePaths.appGouWhite,
+                      width: 20, height: 20)
+                  : const SizedBox.shrink()
+            ],
           ),
+        ),
       );
       columnChild.add(Container(
         width: width - 10,
@@ -878,41 +1029,45 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
               return const SizedBox.shrink();
             }
             return SafeArea(
-              child: SizedBox(height: 30,
+              child: SizedBox(
+                height: 30,
                 child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      GestureDetector(
-                        behavior: HitTestBehavior.translucent,
-                        child: const MyImage.asset(
-                            MyImagePaths.appNavBackWN,
-                            width: 20,
-                            height: 20,
-                            fit: BoxFit.contain,
-                          ),
-                        onTap: () {
-                          _hideKeyboard(context);
-                          if (widget.isBack) {
-                            context.pop();
-                          } else {
-                            controlManager.toggleFullscreen();
-                          }
-                        },
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    ReportGestureDetector(
+                      behavior: HitTestBehavior.translucent,
+                      child: const MyImage.asset(
+                        MyImagePaths.appNavBackWN,
+                        width: 20,
+                        height: 20,
+                        fit: BoxFit.contain,
                       ),
-                      FlickAutoHideChild(
-                        child: Text(isPortrait ? '' : (widget.info?.username ?? ''),
-                              style: const TextStyle(
-                                  color: Color.fromRGBO(255, 255, 255, 1),
-                                  fontSize: 20))),
-                    ],
-                  ),
+                      onTap: () {
+                        _hideKeyboard(context);
+                        if (widget.isBack) {
+                          context.pop();
+                        } else {
+                          controlManager.toggleFullscreen();
+                        }
+                      },
+                    ),
+                    FlickAutoHideChild(
+                        child: Text(
+                            isPortrait ? '' : (widget.info?.username ?? ''),
+                            style: const TextStyle(
+                                color: Color.fromRGBO(255, 255, 255, 1),
+                                fontSize: 20))),
+                  ],
+                ),
               ),
             );
           }),
         ),
         Positioned(
-            bottom: widget.isBack ? 10 : (rate < 1 ? 10 : 20),//rate < 1: 全屏如果还是竖屏时位置调整
+            bottom: widget.isBack
+                ? 10
+                : (rate < 1 ? 10 : 20), //rate < 1: 全屏如果还是竖屏时位置调整
             left: _offset.dx - 26,
             child: isShowChangeLine
                 ? FlickAutoHideChild(
@@ -936,7 +1091,10 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
         Positioned(
           bottom: 10.w,
           left: 13.w,
-          child: widget.isBack ? Container() : FlickAutoHideChild(child: _danMuWidget(context, controlManager)),//全屏才会显示弹幕相关
+          child: widget.isBack
+              ? Container()
+              : FlickAutoHideChild(
+                  child: _danMuWidget(context, controlManager)), //全屏才会显示弹幕相关
         ),
         Positioned(
           bottom: 10.w,
@@ -944,40 +1102,41 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
           child: FlickAutoHideChild(
             child: Row(
               children: [
-                kIsWeb ? Container() :
-                Row(children: [
-                  SizedBox(width: 10.w),
-                  FlickFullScreenToggle(
-                    enterFullScreenChild: const MyImage.asset(
-                      MyImagePaths.appFullscreen,
-                      width: 25,
-                      height: 25,
-                      fit: BoxFit.contain,
-                    ),
-                    exitFullScreenChild: const MyImage.asset(
-                      MyImagePaths.appFullscreen,
-                      width: 25,
-                      height: 25,
-                      fit: BoxFit.contain,
-                    ),
-                    toggleFullscreen: () {
-                      _changeFullScreen(controlManager);
-                    },
-                  )
-                ]),
+                kIsWeb
+                    ? Container()
+                    : Row(children: [
+                        SizedBox(width: 10.w),
+                        FlickFullScreenToggle(
+                          enterFullScreenChild: const MyImage.asset(
+                            MyImagePaths.appFullscreen,
+                            width: 25,
+                            height: 25,
+                            fit: BoxFit.contain,
+                          ),
+                          exitFullScreenChild: const MyImage.asset(
+                            MyImagePaths.appFullscreen,
+                            width: 25,
+                            height: 25,
+                            fit: BoxFit.contain,
+                          ),
+                          toggleFullscreen: () {
+                            _changeFullScreen(controlManager);
+                          },
+                        )
+                      ]),
               ],
             ),
           ),
         ),
         Positioned.fill(
-            child: isbarrage && commentItems.isNotEmpty
+          child: isbarrage && commentItems.isNotEmpty
               ? IgnorePointer(
-                child: PlayerBarrageWidget(
+                  child: PlayerBarrageWidget(
                     globalKey: _barrageKey,
                     dataList: commentItems,
                     isOpen: true,
                   ),
-              )
+                )
               : Container(),
         )
       ],
@@ -1012,7 +1171,8 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
   }
 
   //横屏时打赏弹窗布局
-  void showFullScreenDialog(BuildContext wcontext, FlickControlManager controlManager) {
+  void showFullScreenDialog(
+      BuildContext wcontext, FlickControlManager controlManager) {
     Member member = wcontext.read<UserNotifier>().member;
 
     final overlay = Overlay.of(context);
@@ -1020,114 +1180,115 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
       builder: (context) => Center(
         child: SingleChildScrollView(
           child: DanSanHDialog(
-                  title: tr('das'),
-                  closeCall: () {
-                    _overlayEntry?.remove();
-                    _overlayEntry = null;
-                  },
-                  content: Column(
-                    children: [
-                      Text(tr('dxds'), style: const TextStyle(
-                          color: Color.fromRGBO(190, 189, 194, 1),
-                          fontSize: 16,
-                          overflow: TextOverflow.ellipsis,
-                          decoration: TextDecoration.none)), //多谢金主爸爸的打赏哦～
-                      const SizedBox(height: 15),
-                      //输入框
-                      Container(
-                        height: 46,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(23.w),
-                          border: Border.all(
-                            color: MyTheme.grayColor180, // 设置边框颜色
-                            width: 0.5, // 设置边框宽度
-                          ),
-                        ),
-                        child: Row(children: [
-                          const SizedBox(width: 20),
-                          Expanded(
-                            child: TextField(
-                              keyboardType: TextInputType.number,
-                              inputFormatters: <TextInputFormatter>[
-                                FilteringTextInputFormatter.digitsOnly,
-                              ],
-                              style: const TextStyle(
-                                  color: MyTheme.white08Color,
-                                  fontSize: 16,
-                                  overflow: TextOverflow.ellipsis,
-                                  decoration: TextDecoration.none),
-                              controller: _dsTextFieldController,
-                              focusNode: _dsFocusNode,
-                              decoration: InputDecoration(
-                                isCollapsed: true,
-                                hintText: tr('srdsje'),
-                                hintStyle: const TextStyle(
-                                    color: MyTheme.grayColor180,
-                                    fontSize: 16,
-                                    overflow: TextOverflow.ellipsis,
-                                    decoration: TextDecoration.none),
-                                contentPadding: EdgeInsets.zero,
-                                // 确保内容填充足够
-                                border: InputBorder.none,
-                              ),
-                            ),
-                          ),
-                          InkWell(
-                            onTap: () {
-                              //立即打赏
-                              if (_dsTextFieldController.text.isEmpty) {
-                                MyToast.showText(text: tr('srdsje'));
-                                return;
-                              }
-                              var payMoney =
-                                  int.parse(_dsTextFieldController.text);
-                              bool isSufficient = member.money > payMoney;
-                              if (isSufficient) {
-                                //足够余额打赏
-                                dasanOptional(payMoney);
-                              } else {
-                                MyToast.showText(text: tr('ybzcz'));
-                              }
-                            },
-                            child: Container(
-                                width: 95,
-                                height: 46,
-                                alignment: Alignment.center,
-                                decoration: const BoxDecoration(
-                                    borderRadius: BorderRadius.only(
-                                      topRight: Radius.circular(23), // 右上角圆角
-                                      bottomRight: Radius.circular(23), // 右下角圆角
-                                    ),
-                                    color: MyTheme.jellyCyanColor103224185),
-                                child:
-                                Text(tr('ljds'), style: const TextStyle(
-                                    color: Color.fromRGBO(255, 255, 255, 1),
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w600,
-                                    overflow: TextOverflow.ellipsis,
-                                    decoration: TextDecoration.none))),
-                          )
-                        ]),
-                      ),
-                      const SizedBox(height: 30),
-                      Row(
-                        children: [
-                          Text('${tr('dqye')}: ', style: const TextStyle(
-                              color: Color.fromRGBO(190, 189, 194, 1),
-                              fontSize: 13,
-                              overflow: TextOverflow.ellipsis,
-                              decoration: TextDecoration.none)), //当前余额
-                          Text("${member.money}${tr('jb')}",
-                              style: const TextStyle(
-                                  color: MyTheme.orange24718713,
-                                  fontSize: 13,
-                                  overflow: TextOverflow.ellipsis,
-                                  decoration: TextDecoration.none)), //金币
-                        ],
-                      ),
-                    ],
+            title: tr('das'),
+            closeCall: () {
+              _overlayEntry?.remove();
+              _overlayEntry = null;
+            },
+            content: Column(
+              children: [
+                Text(tr('dxds'),
+                    style: const TextStyle(
+                        color: Color.fromRGBO(190, 189, 194, 1),
+                        fontSize: 16,
+                        overflow: TextOverflow.ellipsis,
+                        decoration: TextDecoration.none)), //多谢金主爸爸的打赏哦～
+                const SizedBox(height: 15),
+                //输入框
+                Container(
+                  height: 46,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(23.w),
+                    border: Border.all(
+                      color: MyTheme.grayColor180, // 设置边框颜色
+                      width: 0.5, // 设置边框宽度
+                    ),
                   ),
+                  child: Row(children: [
+                    const SizedBox(width: 20),
+                    Expanded(
+                      child: TextField(
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
+                        style: const TextStyle(
+                            color: MyTheme.white08Color,
+                            fontSize: 16,
+                            overflow: TextOverflow.ellipsis,
+                            decoration: TextDecoration.none),
+                        controller: _dsTextFieldController,
+                        focusNode: _dsFocusNode,
+                        decoration: InputDecoration(
+                          isCollapsed: true,
+                          hintText: tr('srdsje'),
+                          hintStyle: const TextStyle(
+                              color: MyTheme.grayColor180,
+                              fontSize: 16,
+                              overflow: TextOverflow.ellipsis,
+                              decoration: TextDecoration.none),
+                          contentPadding: EdgeInsets.zero,
+                          // 确保内容填充足够
+                          border: InputBorder.none,
+                        ),
+                      ),
+                    ),
+                    InkWell(
+                      onTap: () {
+                        //立即打赏
+                        if (_dsTextFieldController.text.isEmpty) {
+                          MyToast.showText(text: tr('srdsje'));
+                          return;
+                        }
+                        var payMoney = int.parse(_dsTextFieldController.text);
+                        bool isSufficient = member.money > payMoney;
+                        if (isSufficient) {
+                          //足够余额打赏
+                          dasanOptional(payMoney);
+                        } else {
+                          MyToast.showText(text: tr('ybzcz'));
+                        }
+                      },
+                      child: Container(
+                          width: 95,
+                          height: 46,
+                          alignment: Alignment.center,
+                          decoration: const BoxDecoration(
+                              borderRadius: BorderRadius.only(
+                                topRight: Radius.circular(23), // 右上角圆角
+                                bottomRight: Radius.circular(23), // 右下角圆角
+                              ),
+                              color: MyTheme.jellyCyanColor103224185),
+                          child: Text(tr('ljds'),
+                              style: const TextStyle(
+                                  color: Color.fromRGBO(255, 255, 255, 1),
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w600,
+                                  overflow: TextOverflow.ellipsis,
+                                  decoration: TextDecoration.none))),
+                    )
+                  ]),
                 ),
+                const SizedBox(height: 30),
+                Row(
+                  children: [
+                    Text('${tr('dqye')}: ',
+                        style: const TextStyle(
+                            color: Color.fromRGBO(190, 189, 194, 1),
+                            fontSize: 13,
+                            overflow: TextOverflow.ellipsis,
+                            decoration: TextDecoration.none)), //当前余额
+                    Text("${member.money}${tr('jb')}",
+                        style: const TextStyle(
+                            color: MyTheme.orange24718713,
+                            fontSize: 13,
+                            overflow: TextOverflow.ellipsis,
+                            decoration: TextDecoration.none)), //金币
+                  ],
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
@@ -1311,7 +1472,8 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
   }
 
   //弹幕相关
-  Widget _danMuWidget(BuildContext context, FlickControlManager controlManager) {
+  Widget _danMuWidget(
+      BuildContext context, FlickControlManager controlManager) {
     return Row(children: [
       Container(
         height: 28,
@@ -1351,7 +1513,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
             ),
             Padding(
               padding: const EdgeInsets.only(left: 0, right: 5),
-              child: GestureDetector(
+              child: ReportGestureDetector(
                 behavior: HitTestBehavior.translucent,
                 child: Container(
                   alignment: Alignment.center,
@@ -1381,19 +1543,20 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
         ),
       ),
       const SizedBox(width: 13),
-      GestureDetector(
+      ReportGestureDetector(
         behavior: HitTestBehavior.translucent,
         child: isbarrage
             ? const MyImage.asset(MyImagePaths.appOndm,
-            width: 25, height: 25, fit: BoxFit.contain)
+                width: 25, height: 25, fit: BoxFit.contain)
             : const MyImage.asset(MyImagePaths.appOffdm,
-            width: 25, height: 25, fit: BoxFit.contain),
+                width: 25, height: 25, fit: BoxFit.contain),
         onTap: () {
           optionalDanMu();
         },
       ),
       const SizedBox(width: 13),
-      GestureDetector(//打赏
+      ReportGestureDetector(
+        //打赏
         behavior: HitTestBehavior.translucent,
         child: const MyImage.asset(MyImagePaths.appDs,
             width: 60, height: 25, fit: BoxFit.contain),
@@ -1408,7 +1571,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
         },
       ),
       const SizedBox(width: 13),
-      GestureDetector(
+      ReportGestureDetector(
           behavior: HitTestBehavior.translucent,
           onTap: () {
             _getWidgetInfo();
@@ -1429,7 +1592,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
   void _getWidgetInfo() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final RenderBox? renderBox =
-      _globalKey.currentContext?.findRenderObject() as RenderBox?;
+          _globalKey.currentContext?.findRenderObject() as RenderBox?;
       _offset = renderBox?.localToGlobal(Offset.zero) ?? Offset.zero;
       _size = renderBox?.size ?? Size.zero;
     });
@@ -1584,7 +1747,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                         ],
                       ),
                       alignment: Alignment.center,
-                      child: GestureDetector(
+                      child: ReportGestureDetector(
                         behavior: HitTestBehavior.translucent,
                         child: const MyImage.asset(
                           MyImagePaths.appNavBackWN,
@@ -1622,7 +1785,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  GestureDetector(
+                  ReportGestureDetector(
                     behavior: HitTestBehavior.translucent,
                     onTap: () {
                       if (vflag) {
@@ -1646,7 +1809,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
                     ),
                   ),
                   const SizedBox(width: 37),
-                  GestureDetector(
+                  ReportGestureDetector(
                     behavior: HitTestBehavior.translucent,
                     onTap: () {
                       widget.shareVp?.call();
@@ -1688,7 +1851,7 @@ class _SinkPortraitLandWidgetState extends State<_SinkPortraitLandWidget> {
           Positioned(
               top: 10.w,
               left: 10.w,
-              child: GestureDetector(
+              child: ReportGestureDetector(
                 behavior: HitTestBehavior.translucent,
                 child: const MyImage.asset(
                   MyImagePaths.appNavBackWN,

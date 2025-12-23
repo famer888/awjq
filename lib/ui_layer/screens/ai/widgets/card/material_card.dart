@@ -8,6 +8,10 @@ import '../../../common_widgets/my_image.dart';
 import '../../../theme.dart';
 import '../../face_swap/face_swap_sheet/screent.dart';
 
+import '../../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../../report/ui_layer/report_general_banner.dart';
+
 class MaterialCard extends StatelessWidget {
   const MaterialCard({super.key, required this.data});
 
@@ -19,7 +23,7 @@ class MaterialCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return ReportGestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
         _showSheetView(context, data);

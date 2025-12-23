@@ -9,6 +9,10 @@ import 'package:provider/provider.dart';
 
 import '../../../../../domain/model/home_data_model.dart';
 
+import '../../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../../report/ui_layer/report_general_banner.dart';
+
 class AppDownCenterDialog extends StatelessWidget {
   const AppDownCenterDialog({
     super.key,
@@ -23,7 +27,7 @@ class AppDownCenterDialog extends StatelessWidget {
 
     return ColoredBox(
       color: Colors.black38,
-      child: GestureDetector(
+      child: ReportGestureDetector(
         behavior: HitTestBehavior.opaque,
         // onTap: () => cancel.call(),
         child: Center(
@@ -42,7 +46,7 @@ class AppDownCenterDialog extends StatelessWidget {
                   child: const AppDownCenterCard(),
                 ),
                 SizedBox(height: 20.w),
-                GestureDetector(
+                ReportGestureDetector(
                   onTap: () => cancel.call(),
                   child: SizedBox(
                     child: MyImage.asset(
@@ -132,7 +136,7 @@ class _AppDownCenterCardState extends State<AppDownCenterCard> {
                   ),
                   itemBuilder: (context, index) {
                     Notice? model = groupedApps.first[index];
-                    return GestureDetector(
+                    return ReportGestureDetector(
                       behavior: HitTestBehavior.translucent,
                       onTap: () {
                         final json = model.toJson() ?? {};
@@ -181,7 +185,7 @@ class _AppDownCenterCardState extends State<AppDownCenterCard> {
                       ),
                       itemBuilder: (context, index) {
                         Notice? model = groupedApps.last[index];
-                        return GestureDetector(
+                        return ReportGestureDetector(
                           behavior: HitTestBehavior.translucent,
                           onTap: () {
                             final json = model.toJson() ?? {};

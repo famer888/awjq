@@ -12,6 +12,11 @@ import '../../../common_widgets/screen_background.dart';
 import '../../../theme.dart';
 import '../../../../utils/my_toast.dart';
 
+
+import '../../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../../report/ui_layer/report_general_banner.dart';
+
 class CoinDetailScreen extends StatefulWidget {
   const CoinDetailScreen({super.key});
 
@@ -19,7 +24,7 @@ class CoinDetailScreen extends StatefulWidget {
   State<CoinDetailScreen> createState() => _CoinDetailScreenState();
 }
 
-class _CoinDetailScreenState extends State<CoinDetailScreen> {
+class _CoinDetailScreenState extends State<CoinDetailScreen>{
   late final List<({String name, MyCoinFilterType type})> filterList = [
     (name: 'qb'.tr(context: context), type: MyCoinFilterType.all),
     (name: 'shr'.tr(context: context), type: MyCoinFilterType.income),
@@ -61,7 +66,7 @@ class _CoinDetailScreenState extends State<CoinDetailScreen> {
         appBar: MyAppBar(
           title: 'jbmxwa'.tr(context: context),
           showDiver: true,
-          rightWidget: GestureDetector(
+          rightWidget: ReportGestureDetector(
             onTap: () => showFilterNotifier.value = !showFilterNotifier.value,
             child: Text(
               'sx'.tr(context: context),
@@ -100,7 +105,7 @@ class _CoinDetailScreenState extends State<CoinDetailScreen> {
                       children: [
                         for (final filter in filterList)
                           Expanded(
-                            child: GestureDetector(
+                            child: ReportGestureDetector(
                               onTap: () => changeFilterType(sort: filter.type),
                               child: Center(
                                 child: Text(

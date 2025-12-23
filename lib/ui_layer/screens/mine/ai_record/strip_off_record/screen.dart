@@ -17,14 +17,14 @@ import '../card/ai_record_card.dart';
 class MineStrpOffRecordScreen extends StatefulWidget {
   const MineStrpOffRecordScreen({super.key, this.status});
 
-  final int? status;// 0-待处理 1-处理中 2-已成功 3-已失败
+  final int? status; // 0-待处理 1-处理中 2-已成功 3-已失败
 
   @override
   State<MineStrpOffRecordScreen> createState() => _MineStrpOffRecordScreenState();
 }
 
-class _MineStrpOffRecordScreenState extends State<MineStrpOffRecordScreen> {
-
+class _MineStrpOffRecordScreenState
+    extends State<MineStrpOffRecordScreen> {
   late final aiDomain = context.read<AIDomain>();
 
   Future<List<AIModel>?> _getData({
@@ -53,7 +53,7 @@ class _MineStrpOffRecordScreenState extends State<MineStrpOffRecordScreen> {
         'scsb'.tr(context: context),
       ],
       views: const [
-         KeepAliveWrapper(
+        KeepAliveWrapper(
           child: _ContentStripOffRecordScreen(status: 0),
         ),
         KeepAliveWrapper(
@@ -73,14 +73,15 @@ class _MineStrpOffRecordScreenState extends State<MineStrpOffRecordScreen> {
 class _ContentStripOffRecordScreen extends StatefulWidget {
   const _ContentStripOffRecordScreen({super.key, this.status});
 
-  final int? status;// 0-待处理 1-处理中 2-已成功 3-已失败
+  final int? status; // 0-待处理 1-处理中 2-已成功 3-已失败
 
   @override
-  State<_ContentStripOffRecordScreen> createState() => _ContentStripOffRecordScreenState();
+  State<_ContentStripOffRecordScreen> createState() =>
+      _ContentStripOffRecordScreenState();
 }
 
-class _ContentStripOffRecordScreenState extends State<_ContentStripOffRecordScreen> {
-
+class _ContentStripOffRecordScreenState
+    extends State<_ContentStripOffRecordScreen> {
   late final aiDomain = context.read<AIDomain>();
 
   Future<List<AIModel>?> _getData({
@@ -100,11 +101,13 @@ class _ContentStripOffRecordScreenState extends State<_ContentStripOffRecordScre
     return MyListView.grid(
       key: UniqueKey(),
       childAspectRatio: 170 / 250,
-      itemBuilder: (_, item, __) => AIRecordCard(data: item, type: AIRecordType.StripOff, delSucess: () {
-        context.pop();
-        setState(() {
-        });
-      }),
+      itemBuilder: (_, item, __) => AIRecordCard(
+          data: item,
+          type: AIRecordType.StripOff,
+          delSucess: () {
+            context.pop();
+            setState(() {});
+          }),
       onFetchingMore: (currentPage, pageSize) => _getData(
         page: currentPage,
         pageSize: pageSize,

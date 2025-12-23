@@ -21,6 +21,10 @@ import '../../common_widgets/post/content/media.dart';
 import '../../common_widgets/post/content/title.dart';
 import '../../theme.dart';
 
+import '../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../report/ui_layer/report_general_banner.dart';
+
 class BitDetailContentView extends StatelessWidget {
   const BitDetailContentView({super.key, required this.data});
   final BitDetail data;
@@ -114,7 +118,7 @@ class _SourceAreaState extends State<_SourceArea> {
                     child: Text(tr('nrycjsck'), style: MyTheme.blue80_14_M),
                   ),
                   SizedBox(height: 10.w),
-                  GestureDetector(
+                  ReportGestureDetector(
                     behavior: HitTestBehavior.translucent,
                     onTap: () {
                       const VipCenterRoute().push(context);
@@ -146,7 +150,7 @@ class _SourceAreaState extends State<_SourceArea> {
                     child: Text(tr('nrycjsck'), style: MyTheme.blue80_14_M),
                   ),
                   SizedBox(height: 10.w),
-                  GestureDetector(
+                  ReportGestureDetector(
                     behavior: HitTestBehavior.translucent,
                     onTap: _buyBit,
                     child: Container(
@@ -167,7 +171,7 @@ class _SourceAreaState extends State<_SourceArea> {
             ? Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  GestureDetector(
+                  ReportGestureDetector(
                     behavior: HitTestBehavior.translucent,
                     onTap: () {
                       Clipboard.setData(ClipboardData(text: secret));
@@ -197,7 +201,7 @@ class _SourceAreaState extends State<_SourceArea> {
                     ),
                   ),
                   SizedBox(height: 10.w),
-                  GestureDetector(
+                  ReportGestureDetector(
                     behavior: HitTestBehavior.translucent,
                     onTap: () {
                       Clipboard.setData(ClipboardData(text: currentLink));
@@ -225,7 +229,7 @@ class _SourceAreaState extends State<_SourceArea> {
                   )
                 ],
               )
-            : GestureDetector(
+            : ReportGestureDetector(
                 behavior: HitTestBehavior.translucent,
                 onTap: () {
                   Clipboard.setData(ClipboardData(text: currentLink));

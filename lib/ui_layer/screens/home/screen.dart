@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../app_global.dart';
 import '../../notifiers/home_config_notifier.dart';
 import '../common_widgets/screen_background.dart';
 import '../common_widgets/top_navi_view.dart';
@@ -13,12 +14,13 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen>{
   late final homeConfigNotifier = context.read<HomeConfigNotifier>();
   late final id = homeConfigNotifier.config.navId;
 
   @override
   Widget build(BuildContext context) {
+    AppGlobal.context = context;
     return ScreenBackground(
       child: Scaffold(
         appBar: const SearchAppBar(),

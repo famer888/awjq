@@ -7,6 +7,7 @@ import '../../../domain/model/banner_model.dart';
 import '../../../domain/model/bit_nav_model.dart';
 import '../../../domain/model/navigator_model.dart';
 import '../../../domain/model/post_model.dart';
+import '../../../report/ui_layer/report_general_banner.dart';
 import '../../utils/my_toast.dart';
 import '../common_widgets/my_tab_bar.dart';
 import '../../notifiers/home_config_notifier.dart';
@@ -108,7 +109,7 @@ class _Header extends StatelessWidget {
             if (banners.isEmpty) return const SizedBox.shrink();
             return Padding(
               padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
-              child: GeneralAppsListVidget(data: banners),
+              child: ReportGeneralAppsListVidget(data: banners),
             );
           },
         ),

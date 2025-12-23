@@ -13,6 +13,11 @@ import 'face_swap_record/screen.dart';
 import 'magic_ai_record/screen.dart';
 import 'strip_off_record/screen.dart';
 
+
+import '../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../report/ui_layer/report_general_banner.dart';
+
 class MineAIRecordScreen extends StatefulWidget {
   const MineAIRecordScreen({super.key});
 
@@ -73,7 +78,7 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      leading: GestureDetector(
+      leading: ReportGestureDetector(
         child: Padding(
           padding: EdgeInsets.all(12.w),
           child: MyImage.asset(

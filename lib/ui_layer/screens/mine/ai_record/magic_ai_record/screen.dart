@@ -16,14 +16,14 @@ import 'package:provider/provider.dart';
 class MineMagicRecordScreen extends StatefulWidget {
   const MineMagicRecordScreen({super.key, this.status});
 
-  final int? status;//  0-待处理 1-处理中 2-切片中 3-已成功 4-已失败
+  final int? status; //  0-待处理 1-处理中 2-切片中 3-已成功 4-已失败
 
   @override
   State<MineMagicRecordScreen> createState() => _MineMagicRecordScreenState();
 }
 
-class _MineMagicRecordScreenState extends State<MineMagicRecordScreen> {
-
+class _MineMagicRecordScreenState
+    extends State<MineMagicRecordScreen> {
   @override
   Widget build(BuildContext context) {
     return TabBarWithView.line(
@@ -39,37 +39,38 @@ class _MineMagicRecordScreenState extends State<MineMagicRecordScreen> {
         'scsb'.tr(context: context),
       ],
       views: const [
-         KeepAliveWrapper(
-          child: _ContentStripOffRecordScreen(status: 0),
+        KeepAliveWrapper(
+          child: _ContentMagicRecordScreen(status: 0),
         ),
         KeepAliveWrapper(
-          child: _ContentStripOffRecordScreen(status: 1),
+          child: _ContentMagicRecordScreen(status: 1),
         ),
         KeepAliveWrapper(
-          child: _ContentStripOffRecordScreen(status: 2),
+          child: _ContentMagicRecordScreen(status: 2),
         ),
         KeepAliveWrapper(
-          child: _ContentStripOffRecordScreen(status: 3),
+          child: _ContentMagicRecordScreen(status: 3),
         ),
         KeepAliveWrapper(
-          child: _ContentStripOffRecordScreen(status: 4),
+          child: _ContentMagicRecordScreen(status: 4),
         ),
       ],
     );
   }
 }
 
-class _ContentStripOffRecordScreen extends StatefulWidget {
-  const _ContentStripOffRecordScreen({super.key, this.status});
+class _ContentMagicRecordScreen extends StatefulWidget {
+  const _ContentMagicRecordScreen({super.key, this.status});
 
-  final int? status;// 0-待处理 1-处理中 2-切片中 3-已成功 4-已失败
+  final int? status; // 0-待处理 1-处理中 2-切片中 3-已成功 4-已失败
 
   @override
-  State<_ContentStripOffRecordScreen> createState() => _ContentStripOffRecordScreenState();
+  State<_ContentMagicRecordScreen> createState() =>
+      _ContentMagicRecordScreenState();
 }
 
-class _ContentStripOffRecordScreenState extends State<_ContentStripOffRecordScreen> {
-
+class _ContentMagicRecordScreenState
+    extends State<_ContentMagicRecordScreen> {
   late final aiDomain = context.read<AIMagicDomain>();
 
   Future<List<AIMagicRecordModel>?> _getData({
@@ -89,11 +90,12 @@ class _ContentStripOffRecordScreenState extends State<_ContentStripOffRecordScre
     return MyListView.grid(
       key: UniqueKey(),
       childAspectRatio: 170 / 250,
-      itemBuilder: (_, item, __) => AIMagicRecordCard(data: item,  delSucess: () {
-        context.pop();
-        setState(() {
-        });
-      }),
+      itemBuilder: (_, item, __) => AIMagicRecordCard(
+          data: item,
+          delSucess: () {
+            context.pop();
+            setState(() {});
+          }),
       onFetchingMore: (currentPage, pageSize) => _getData(
         page: currentPage,
         pageSize: pageSize,

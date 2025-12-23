@@ -11,6 +11,10 @@ import '../../../../../ui_layer/utils/common_utils.dart';
 import '../../../../../ui_layer/utils/my_toast.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../../report/ui_layer/report_general_banner.dart';
+
 class AIMagicRecordCard extends StatefulWidget {
   const AIMagicRecordCard(
       {super.key, required this.data, required this.delSucess, this.status});
@@ -34,7 +38,7 @@ class _AIMagicRecordCardState extends State<AIMagicRecordCard> {
         borderRadius: BorderRadius.circular(6.w),
         // color: MyTheme.white08Color,
       ),
-      child: GestureDetector(
+      child: ReportGestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () {
           if (widget.data.status != 3) {
@@ -63,7 +67,7 @@ class _AIMagicRecordCardState extends State<AIMagicRecordCard> {
                       children: [
                         Container(
                             margin: EdgeInsets.only(bottom: 13.w),
-                            child: GestureDetector(
+                            child: ReportGestureDetector(
                               behavior: HitTestBehavior.translucent,
                               onTap: () {
                                 _saveVideo(widget.data.video);

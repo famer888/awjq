@@ -28,15 +28,18 @@ class LiveModel {
   final String? username;
   final int? viewFct;
   final int? commentCt;
-        int? favoriteFct;
-        List<HlsModel>? hls;
-        String? show;
-        int? type;
+  int? favoriteFct;
+  List<HlsModel>? hls;
+  String? show;
+  int? type;
   final int? coins;
-        int? isFavorite;
+  int? isFavorite;
   final String? payTip;
   final String? intro;
   final String? thumb;
+
+  final int? videoTypeId;
+  final String? videoTypeName;
 
   LiveModel({
     this.id,
@@ -52,27 +55,30 @@ class LiveModel {
     this.isFavorite,
     this.payTip,
     this.intro,
-    this.thumb
+    this.thumb,
+    this.videoTypeId,
+    this.videoTypeName,
   });
 
   factory LiveModel.fromJson(Map<String, dynamic> json) => LiveModel(
-        id: json['id'],
-        cover: json['cover'],
-        username: json['username'],
-        viewFct: json['view_fct'],
-        favoriteFct: json['favorite_fct'] ?? 0,
-        commentCt: json['comment_ct'],
-        hls: json['hls'] != null
-            ? List.from(json['hls'].map((e) => HlsModel.fromJson(e)))
-            : null,
-        show: json['show'],
-        type: json['type'],
-        coins: json['coins'],
-        isFavorite: json['is_favorite'] ?? 0,
-        payTip: json['pay_tip'],
-        intro: json['intro'],
-        thumb: json['thumb'],
-      );
+      id: json['id'],
+      cover: json['cover'],
+      username: json['username'],
+      viewFct: json['view_fct'],
+      favoriteFct: json['favorite_fct'] ?? 0,
+      commentCt: json['comment_ct'],
+      hls: json['hls'] != null
+          ? List.from(json['hls'].map((e) => HlsModel.fromJson(e)))
+          : null,
+      show: json['show'],
+      type: json['type'],
+      coins: json['coins'],
+      isFavorite: json['is_favorite'] ?? 0,
+      payTip: json['pay_tip'],
+      intro: json['intro'],
+      thumb: json['thumb'],
+      videoTypeId: json['video_type_id'] ?? 0,
+      videoTypeName: json['video_type_name'] ?? '');
 
   Map<String, dynamic> toJson() => {
         'id': id,
@@ -89,7 +95,9 @@ class LiveModel {
         'pay_tip': payTip,
         'intro': intro,
         'thumb': thumb,
-  };
+        'video_type_id': videoTypeId ?? 0,
+        'video_type_name': videoTypeName ?? '',
+      };
 }
 
 class HlsModel {
@@ -162,7 +170,7 @@ class RecLiveWithBannersModel {
         banners: List<BannerModel>.from(
             json['banners'].map((e) => BannerModel.fromJson(e))),
         tips:
-        List<TipModel>.from(json['tips'].map((e) => TipModel.fromJson(e))),
+            List<TipModel>.from(json['tips'].map((e) => TipModel.fromJson(e))),
       );
 
   Map<String, dynamic> toJson() =>
@@ -174,24 +182,14 @@ class ThemesModel {
   final String? name;
   List<LiveModel>? lives;
 
-  ThemesModel({
-    this.id,
-    this.name,
-    this.lives});
+  ThemesModel({this.id, this.name, this.lives});
 
-  factory ThemesModel.fromJson(Map<String, dynamic> json) =>
-      ThemesModel(
+  factory ThemesModel.fromJson(Map<String, dynamic> json) => ThemesModel(
         id: json['id'],
         name: json['name'],
         lives: List<LiveModel>.from(
             json['lives'].map((e) => LiveModel.fromJson(e))),
-
       );
 
-  Map<String, dynamic> toJson() =>
-      {
-        'id': id,
-        'name': name,
-        'lives': lives
-      };
+  Map<String, dynamic> toJson() => {'id': id, 'name': name, 'lives': lives};
 }

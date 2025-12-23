@@ -32,6 +32,9 @@ import '../../theme.dart';
 import '../widgets/mine_agent_apply.dart';
 import 'widgets/jelly_share.dart';
 import 'widgets/share_tips.dart';
+import '../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../report/ui_layer/report_general_banner.dart';
 
 class MineShareToUserScreen extends StatefulWidget {
   const MineShareToUserScreen({super.key});
@@ -40,7 +43,7 @@ class MineShareToUserScreen extends StatefulWidget {
   State<MineShareToUserScreen> createState() => _MineShareToUserScreenState();
 }
 
-class _MineShareToUserScreenState extends State<MineShareToUserScreen> {
+class _MineShareToUserScreenState extends State<MineShareToUserScreen>{
   late final proxyDomain = context.read<ProxyDomain>();
   late Member member;
 
@@ -107,7 +110,7 @@ class _MineShareToUserScreenState extends State<MineShareToUserScreen> {
           ? Scaffold(
               appBar: MyAppBar(
                 title: '分享推广',
-                rightWidget: GestureDetector(
+                rightWidget: ReportGestureDetector(
                   onTap: () => const MineShareToUserRecordRoute().push(context),
                   child: Text(
                     'yqjl'.tr(context: context),
@@ -407,7 +410,7 @@ class _BodyState extends State<_Body> {
           extendBodyBehindAppBar: true,
           appBar: MyAppBar(
             title: '分享推广',
-            rightWidget: GestureDetector(
+            rightWidget: ReportGestureDetector(
               onTap: () => const MineShareToUserRecordRoute().push(context),
               child: Text(
                 'yqjl'.tr(context: context),
@@ -456,7 +459,7 @@ class _BodyState extends State<_Body> {
                             left: 0,
                             right: 0,
                             height: 20.w,
-                            child: GestureDetector(
+                            child: ReportGestureDetector(
                               onTap: () => const MineAgentRoute().push(context),
                             ),
                           )

@@ -6,6 +6,10 @@ import '../../../../router/routes.dart';
 import '../../../../utils/common_utils.dart';
 import '../../../theme.dart';
 
+import '../../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../../report/ui_layer/report_general_banner.dart';
+
 class MagicCard extends StatelessWidget {
   const MagicCard({super.key, required this.data});
   final AIMagicModel data;
@@ -15,7 +19,7 @@ class MagicCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return ReportGestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
         AIMagicDetailRoute(data).push(context);

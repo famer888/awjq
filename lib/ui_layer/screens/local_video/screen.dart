@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../domain/model/video_detail_model.dart';
 import '../common_widgets/video_player/shortv_mv_player.dart';
 
+
 class LocalVideoScreen extends StatefulWidget {
   const LocalVideoScreen({super.key, required this.data});
 
@@ -12,7 +13,7 @@ class LocalVideoScreen extends StatefulWidget {
   State<LocalVideoScreen> createState() => _LocalVideoScreenState();
 }
 
-class _LocalVideoScreenState extends State<LocalVideoScreen> {
+class _LocalVideoScreenState extends State<LocalVideoScreen>{
   @override
   Widget build(BuildContext context) {
     return Scaffold(

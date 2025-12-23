@@ -25,6 +25,7 @@ import '../../common_widgets/screen_background.dart';
 import '../common_widgets/video_tile.dart';
 import '../../theme.dart';
 
+
 class MineBuyScreen extends StatefulWidget {
   const MineBuyScreen({super.key});
 
@@ -32,7 +33,7 @@ class MineBuyScreen extends StatefulWidget {
   State<MineBuyScreen> createState() => _MineBuyScreenState();
 }
 
-class _MineBuyScreenState extends State<MineBuyScreen> {
+class _MineBuyScreenState extends State<MineBuyScreen>{
 
   late final homeConfigNotifier = context.read<HomeConfigNotifier>();
   @override

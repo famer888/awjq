@@ -8,6 +8,10 @@ import '../theme.dart';
 import 'dialog/widgets/pay_dialog.dart';
 import 'my_button.dart';
 
+import '../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../report/ui_layer/report_general_banner.dart';
+
 class FixedBuyButton extends StatefulWidget {
   const FixedBuyButton({
     super.key,
@@ -63,7 +67,7 @@ class _FixedBuyButtonState extends State<FixedBuyButton> {
                 ),
               ),
               SizedBox(height: 10.w),
-              GestureDetector(
+              ReportGestureDetector(
                 behavior: HitTestBehavior.translucent,
                 onTap: () => const MineCustomerServiceRoute().push(context),
                 child: Text.rich(

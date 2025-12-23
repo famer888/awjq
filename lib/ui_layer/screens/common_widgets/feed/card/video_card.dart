@@ -7,6 +7,10 @@ import '../../../../utils/common_utils.dart';
 import '../../../theme.dart';
 import '../../my_image.dart';
 
+import '../../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../../report/ui_layer/report_general_banner.dart';
+
 class VideoCard extends StatelessWidget {
   const VideoCard({super.key, required this.data});
   final FeedVideoModel data;
@@ -15,7 +19,7 @@ class VideoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return ReportGestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
         VideoDetailRoute('${data.id}').push(context);

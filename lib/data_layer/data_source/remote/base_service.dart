@@ -16,7 +16,7 @@ abstract class BaseService {
       throw ResponseNullException();
     }
     //打印返回数据
-    developer.log('RequstPath: ${_dio.options.baseUrl}/api/$service$path, params: $data, \nResult: $result');
+    // developer.log('RequstPath: ${_dio.options.baseUrl}/api/$service$path, params: $data, \nResult: $result');
     return result;
   }
 }

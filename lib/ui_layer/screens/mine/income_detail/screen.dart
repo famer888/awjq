@@ -5,6 +5,7 @@ import '../../common_widgets/my_app_bar.dart';
 import '../../common_widgets/screen_background.dart';
 import 'widgets/income_detail_view.dart';
 
+
 class MineIncomeDetailScreen extends StatefulWidget {
   const MineIncomeDetailScreen({super.key});
 
@@ -12,7 +13,7 @@ class MineIncomeDetailScreen extends StatefulWidget {
   State<MineIncomeDetailScreen> createState() => _MineIncomeDetailScreenState();
 }
 
-class _MineIncomeDetailScreenState extends State<MineIncomeDetailScreen> {
+class _MineIncomeDetailScreenState extends State<MineIncomeDetailScreen>{
   @override
   Widget build(BuildContext context) {
     return ScreenBackground(

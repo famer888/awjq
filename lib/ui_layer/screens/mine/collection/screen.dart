@@ -25,6 +25,7 @@ import '../../common_widgets/screen_background.dart';
 import '../common_widgets/video_tile.dart';
 import '../../theme.dart';
 
+
 class MineCollectionScreen extends StatefulWidget {
   const MineCollectionScreen({super.key});
 
@@ -32,7 +33,7 @@ class MineCollectionScreen extends StatefulWidget {
   State<MineCollectionScreen> createState() => _MineCollectionScreenState();
 }
 
-class _MineCollectionScreenState extends State<MineCollectionScreen> {
+class _MineCollectionScreenState extends State<MineCollectionScreen>{
 
   late final homeConfigNotifier = context.read<HomeConfigNotifier>();
 

@@ -27,6 +27,11 @@ import '../theme.dart';
 import 'content.dart';
 import 'issue/screen.dart';
 
+
+import '../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../report/ui_layer/report_general_banner.dart';
+
 class CommunityScreen extends StatefulWidget {
   const CommunityScreen({super.key, required this.isFish});
 
@@ -37,7 +42,7 @@ class CommunityScreen extends StatefulWidget {
   State<CommunityScreen> createState() => _CommunityScreenState();
 }
 
-class _CommunityScreenState extends State<CommunityScreen> {
+class _CommunityScreenState extends State<CommunityScreen>{
   // Future<void> _showIssueAlert() {
   //   final issues = [
   //     (
@@ -84,7 +89,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
   //                     'xzfblx'.tr(),
   //                     style: MyTheme.white16bold,
   //                   ),
-  //                   GestureDetector(
+  //                   ReportGestureDetector(
   //                     onTap: () => context.pop(),
   //                     child: MyImage.asset(
   //                       MyImagePaths.appIssueClose,
@@ -100,7 +105,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
   //               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
   //               children: [
   //                 for (final issue in issues)
-  //                   GestureDetector(
+  //                   ReportGestureDetector(
   //                     behavior: HitTestBehavior.translucent,
   //                     onTap: () {
   //                       context.pop();
@@ -137,7 +142,7 @@ class _CommunityScreenState extends State<CommunityScreen> {
       child: Scaffold(
         appBar: const SearchAppBar(),
         body: _Body(isFish: widget.isFish),
-        // floatingActionButton: GestureDetector(
+        // floatingActionButton: ReportGestureDetector(
         //   onTap: widget.isFish
         //       ? () => const XianYuIssueRoute().push(context)
         //       : _showIssueAlert,
@@ -239,7 +244,7 @@ class _BlurView extends StatelessWidget {
           return const SizedBox.shrink();
         }
 
-        return GestureDetector(
+        return ReportGestureDetector(
           behavior: HitTestBehavior.translucent,
           onTap: () {
             const VipCenterRoute().push(context);

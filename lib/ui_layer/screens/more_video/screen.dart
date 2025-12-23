@@ -13,6 +13,7 @@ import '../common_widgets/my_tab_bar.dart';
 import '../common_widgets/screen_background.dart';
 import '../theme.dart';
 
+
 class MoreVideoScreen extends StatefulWidget {
   const MoreVideoScreen({super.key, required this.name, required this.id});
 
@@ -23,7 +24,7 @@ class MoreVideoScreen extends StatefulWidget {
   State<MoreVideoScreen> createState() => _MoreVideoScreenState();
 }
 
-class _MoreVideoScreenState extends State<MoreVideoScreen> {
+class _MoreVideoScreenState extends State<MoreVideoScreen>{
   @override
   Widget build(BuildContext context) {
     return ScreenBackground(

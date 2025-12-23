@@ -11,6 +11,10 @@ import '../../../common_widgets/my_image.dart';
 import '../../../image_paths.dart';
 import '../../../theme.dart';
 
+import '../../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../../report/ui_layer/report_general_banner.dart';
+
 class LiveVideoCard extends StatelessWidget {
   const LiveVideoCard({super.key, required this.data});
 
@@ -21,7 +25,7 @@ class LiveVideoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return ReportGestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
         LiveVideoDetailRoute('${data.id}').push(context);

@@ -26,6 +26,11 @@ import '../../../common_widgets/status/loading.dart';
 import '../../../common_widgets/status/network_error.dart';
 import '../../../theme.dart';
 
+
+import '../../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../../report/ui_layer/report_general_banner.dart';
+
 class VipUpgradeScreen extends StatefulWidget {
   const VipUpgradeScreen({super.key});
 
@@ -33,7 +38,7 @@ class VipUpgradeScreen extends StatefulWidget {
   State<VipUpgradeScreen> createState() => _VipUpgradeScreenState();
 }
 
-class _VipUpgradeScreenState extends State<VipUpgradeScreen> {
+class _VipUpgradeScreenState extends State<VipUpgradeScreen>{
   final _type = MyProductType.vip;
   late final _userDomain = context.read<UserDomain>();
   late final userNotifier = context.read<UserNotifier>();
@@ -179,7 +184,7 @@ class _VipUpgradeScreenState extends State<VipUpgradeScreen> {
       child: Scaffold(
         appBar: MyAppBar(
           title: 'hyzx'.tr(context: context),
-          rightWidget: GestureDetector(
+          rightWidget: ReportGestureDetector(
             behavior: HitTestBehavior.translucent,
             onTap: () => RechargeRecordRoute(_type.id.toString()).push(context),
             child: Text(
@@ -320,7 +325,7 @@ class _ProductCardArea extends StatelessWidget {
         physics: const BouncingScrollPhysics(),
         scrollDirection: Axis.horizontal,
         itemCount: products.length,
-        itemBuilder: (context, index) => GestureDetector(
+        itemBuilder: (context, index) => ReportGestureDetector(
           behavior: HitTestBehavior.translucent,
           onTap: () => selectedNotifier.value = index,
           child: ValueListenableBuilder(
@@ -677,7 +682,7 @@ class _ExpItemState extends State<_ExpItem> {
                   ),
                 ],
               ),
-              GestureDetector(
+              ReportGestureDetector(
                 behavior: HitTestBehavior.translucent,
                 onTap: _sendExpCoverVIP,
                 child: Container(
@@ -754,7 +759,7 @@ class _FixedBuyButtonState extends State<FixedBuyButton> {
                 ),
               ),
               SizedBox(height: 10.w),
-              GestureDetector(
+              ReportGestureDetector(
                 behavior: HitTestBehavior.translucent,
                 onTap: () => const MineCustomerServiceRoute().push(context),
                 child: Text.rich(

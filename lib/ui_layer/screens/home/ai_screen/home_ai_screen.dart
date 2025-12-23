@@ -14,6 +14,10 @@ import '../../ai/ai_art/screen.dart';
 import '../../ai/ai_magic/screen.dart';
 import '../../common_widgets/my_image.dart';
 
+import '../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../report/ui_layer/report_general_banner.dart';
+
 class HomeAiScreen extends StatefulWidget {
   const HomeAiScreen({super.key});
 
@@ -71,7 +75,7 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      leading: GestureDetector(
+      leading: ReportGestureDetector(
         child: Padding(
           padding: EdgeInsets.all(12.w),
           child: MyImage.asset(
@@ -127,7 +131,7 @@ class _AppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: true,
       backgroundColor: Colors.transparent,
       leadingWidth: 40.w,
-      leading: GestureDetector(
+      leading: ReportGestureDetector(
         onTap: () {
           context.pop();
         },

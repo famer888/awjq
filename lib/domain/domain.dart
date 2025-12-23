@@ -17,6 +17,11 @@ export 'remote_domain/domains/message.dart';
 export 'remote_domain/domains/mv.dart';
 export 'remote_domain/domains/privilege.dart';
 export 'remote_domain/domains/search.dart';
+export 'remote_domain/domains/ai.dart';
+export 'remote_domain/domains/aidraw.dart';
+export 'remote_domain/domains/aimagic.dart';
+export 'remote_domain/domains/live.dart';
+export 'remote_domain/domains/monitor.dart';
 
 abstract class AppDomain implements LocaleDomain, RemoteDomain {}
 

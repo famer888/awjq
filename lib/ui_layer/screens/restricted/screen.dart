@@ -11,6 +11,11 @@ import '../common_widgets/top_navi_view.dart';
 import '../common_widgets/search_app_bar.dart';
 import '../theme.dart';
 
+
+import '../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../report/ui_layer/report_general_banner.dart';
+
 class RestrictedScreen extends StatefulWidget {
   const RestrictedScreen({super.key});
 
@@ -18,7 +23,7 @@ class RestrictedScreen extends StatefulWidget {
   State<RestrictedScreen> createState() => _RestrictedScreenState();
 }
 
-class _RestrictedScreenState extends State<RestrictedScreen> {
+class _RestrictedScreenState extends State<RestrictedScreen>{
   late final homeConfigNotifier = context.read<HomeConfigNotifier>();
   late final id = homeConfigNotifier.config.awNavid;
 
@@ -52,7 +57,7 @@ class _BlurView extends StatelessWidget {
           return const SizedBox.shrink();
         }
 
-        return GestureDetector(
+        return ReportGestureDetector(
           behavior: HitTestBehavior.translucent,
           onTap: () {
             const VipCenterRoute().push(context);

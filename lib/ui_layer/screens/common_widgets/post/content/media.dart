@@ -12,6 +12,10 @@ import '../../../image_paths.dart';
 import '../../../theme.dart';
 import '../../my_image.dart';
 
+import '../../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../../report/ui_layer/report_general_banner.dart';
+
 class PostMediaView extends StatelessWidget {
   const PostMediaView(
       {super.key,
@@ -53,7 +57,7 @@ class PostMediaView extends StatelessWidget {
                 child: SizedBox(
                   width: width,
                   height: width / w * h,
-                  child: GestureDetector(
+                  child: ReportGestureDetector(
                     behavior: HitTestBehavior.translucent,
                     onTap: () => goPictureView(index),
                     child: MyImage.network(
@@ -86,7 +90,7 @@ class PostMediaView extends StatelessWidget {
                   SizedBox(
                     width: 1.sw - MyTheme.pagePadding * 2,
                     height: (1.sw - MyTheme.pagePadding * 2) / 16 * 9,
-                    child: GestureDetector(
+                    child: ReportGestureDetector(
                       behavior: HitTestBehavior.translucent,
                       onTap: () => goPictureView(index),
                       child: Stack(

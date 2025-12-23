@@ -11,6 +11,10 @@ import '../../common_widgets/screen_background.dart';
 import '../../image_paths.dart';
 import '../../theme.dart';
 
+import '../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../report/ui_layer/report_general_banner.dart';
+
 class OriginalEnterScreen extends StatefulWidget {
   const OriginalEnterScreen({super.key});
 
@@ -18,7 +22,7 @@ class OriginalEnterScreen extends StatefulWidget {
   State<OriginalEnterScreen> createState() => _OriginalEnterScreenState();
 }
 
-class _OriginalEnterScreenState extends State<OriginalEnterScreen> {
+class _OriginalEnterScreenState extends State<OriginalEnterScreen>{
   @override
   Widget build(BuildContext context) {
     final config = context.read<HomeConfigNotifier>().config;
@@ -48,7 +52,7 @@ class _OriginalEnterScreenState extends State<OriginalEnterScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      GestureDetector(
+                      ReportGestureDetector(
                         behavior: HitTestBehavior.translucent,
                         onTap: () {
                           CommonUtils.launchUrl(config.potatoGroup);
@@ -63,7 +67,7 @@ class _OriginalEnterScreenState extends State<OriginalEnterScreen> {
                           ],
                         ),
                       ),
-                      GestureDetector(
+                      ReportGestureDetector(
                         behavior: HitTestBehavior.translucent,
                         onTap: () {
                           CommonUtils.launchUrl(config.tgGroup);

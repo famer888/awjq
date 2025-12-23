@@ -20,6 +20,11 @@ import '../theme.dart';
 import 'package:universal_html/html.dart' as html;
 import 'package:webview_flutter_android/webview_flutter_android.dart';
 
+
+import '../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../report/ui_layer/report_general_banner.dart';
+
 class InAppWebViewScreen extends StatefulWidget {
   const InAppWebViewScreen({super.key, required this.url, this.needNav = true});
   final String url;
@@ -29,7 +34,7 @@ class InAppWebViewScreen extends StatefulWidget {
   State<InAppWebViewScreen> createState() => _InAppWebViewScreenState();
 }
 
-class _InAppWebViewScreenState extends State<InAppWebViewScreen> {
+class _InAppWebViewScreenState extends State<InAppWebViewScreen>{
   String titleText = '';
   // late WebViewController _controller;
 
@@ -71,7 +76,7 @@ class _InAppWebViewScreenState extends State<InAppWebViewScreen> {
                   style: MyTheme.white255_18_B,
                 ),
                 backgroundColor: MyTheme.bgColor,
-                leading: GestureDetector(
+                leading: ReportGestureDetector(
                   onTap: () {
                     context.pop();
                   },

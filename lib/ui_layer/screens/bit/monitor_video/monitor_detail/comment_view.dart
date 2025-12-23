@@ -18,6 +18,10 @@ import '../../../theme.dart';
 import '../../../../utils/my_toast.dart';
 import '../../../../../domain/api_validator.dart';
 
+import '../../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../../report/ui_layer/report_general_banner.dart';
+
 class MonitorVideoCommentView extends StatefulWidget {
   const MonitorVideoCommentView({super.key, required this.id});
   final String id;
@@ -71,7 +75,7 @@ class _MonitorVideoCommentViewState extends State<MonitorVideoCommentView> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return ReportGestureDetector(
       onTap: () {
         inputFocusNode.unfocus();
       },
@@ -162,7 +166,7 @@ class _CommentTile extends StatelessWidget {
           ),
           StatefulBuilder(builder: (_, setState) {
             final isLike = data.isLike == 1;
-            return GestureDetector(
+            return ReportGestureDetector(
               behavior: HitTestBehavior.translucent,
               onTap: () async {
                 if (data.id case final id?) {

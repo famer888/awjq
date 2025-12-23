@@ -29,6 +29,11 @@ import 'widgets/topic_field.dart';
 import 'widgets/upload_hint_text.dart';
 import 'widgets/video_picker_grid.dart';
 
+
+import '../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../report/ui_layer/report_general_banner.dart';
+
 class XianYuIssueScreen extends StatefulWidget {
   const XianYuIssueScreen({super.key});
 
@@ -36,7 +41,7 @@ class XianYuIssueScreen extends StatefulWidget {
   State<XianYuIssueScreen> createState() => _XianYuIssueScreenState();
 }
 
-class _XianYuIssueScreenState extends State<XianYuIssueScreen> {
+class _XianYuIssueScreenState extends State<XianYuIssueScreen>{
   late final config = context.read<HomeConfigNotifier>().config;
   late final userNotifier = context.read<UserNotifier>();
   late final domain = context.read<CommunityDomain>();
@@ -243,7 +248,7 @@ class _XianYuIssueScreenState extends State<XianYuIssueScreen> {
             onTap: _send,
           ),
         ),
-        body: GestureDetector(
+        body: ReportGestureDetector(
           behavior: HitTestBehavior.translucent,
           onTap: () => FocusScope.of(context).unfocus(),
           child: SingleChildScrollView(

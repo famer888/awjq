@@ -21,6 +21,10 @@ import '../../../common_widgets/status/network_error.dart';
 import '../../../image_paths.dart';
 import '../../../theme.dart';
 
+import '../../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../../report/ui_layer/report_general_banner.dart';
+
 class TaskView extends StatefulWidget {
   const TaskView({super.key});
 
@@ -210,7 +214,7 @@ class _MemberView extends StatelessWidget {
                         );
                 },
               ),
-              GestureDetector(
+              ReportGestureDetector(
                 onTap: () => const VipCenterRoute().push(context),
                 child: Container(
                   width: 300.w,
@@ -301,7 +305,7 @@ class _Header extends StatelessWidget {
                       ));
                 },
                 selector: (_, notifier) => notifier.member),
-            GestureDetector(
+            ReportGestureDetector(
               onTap: () async {
                 const VipCenterRoute().push(context);
               },
@@ -384,7 +388,7 @@ class _Tile extends StatelessWidget {
             ),
           ),
           SizedBox(width: 10.w),
-          GestureDetector(
+          ReportGestureDetector(
             onTap: () async {
               if (state == 2) {
                 _tapSignListTask(context);

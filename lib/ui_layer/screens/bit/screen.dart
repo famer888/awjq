@@ -17,6 +17,7 @@ import 'live_video/rec_screen.dart';
 import 'live_video/screen.dart';
 import 'monitor_video/screen.dart';
 
+
 class BitScreen extends StatefulWidget {
   const BitScreen({super.key});
 
@@ -24,7 +25,7 @@ class BitScreen extends StatefulWidget {
   State<BitScreen> createState() => _BitScreenState();
 }
 
-class _BitScreenState extends State<BitScreen> with TickerProviderStateMixin {
+class _BitScreenState extends State<BitScreen>with TickerProviderStateMixin {
   late final config = context.read<HomeConfigNotifier>().config;
   late final navList = config.seedTopNav;
   late final tabController = TabController(length: navList.length, vsync: this);

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../report/ui_layer/report_search_click.dart';
 import '../../../const.dart';
 import '../../../../domain/domain.dart';
 import '../../../../domain/model/feed/feed_model.dart';
@@ -34,12 +35,10 @@ class SearchResultScreen extends StatefulWidget {
 }
 
 class _SearchResultScreenState extends State<SearchResultScreen> {
-
   late final homeConfigNotifier = context.read<HomeConfigNotifier>();
 
   @override
   Widget build(BuildContext context) {
-
     final openLive = homeConfigNotifier.config.openLive == 1 ? true : false;
 
     return ScreenBackground(
@@ -53,40 +52,44 @@ class _SearchResultScreenState extends State<SearchResultScreen> {
             horizontal: MyTheme.pagePadding,
           ),
           tabBarHeight: 32.w,
-          titles: openLive ? [
-            'sping'.tr(context: context),
-            'zhibo'.tr(context: context),
-            'jiankong'.tr(context: context),
-            'tiezt'.tr(context: context),
-          ] : [
-            'sping'.tr(context: context),
-            'jiankong'.tr(context: context),
-            'tiezt'.tr(context: context),
-          ],
-          views: openLive ?  [
-            KeepAliveWrapper(
-              child: _VideoView(word: widget.title),
-            ),
-            KeepAliveWrapper(
-              child: _LiveVideoView(word: widget.title),
-            ),
-            KeepAliveWrapper(
-              child: _MonitorVideoView(word: widget.title),
-            ),
-            KeepAliveWrapper(
-              child: _TieztView(word: widget.title),
-            ),
-          ] : [
-            KeepAliveWrapper(
-              child: _VideoView(word: widget.title),
-            ),
-            KeepAliveWrapper(
-              child: _MonitorVideoView(word: widget.title),
-            ),
-            KeepAliveWrapper(
-              child: _TieztView(word: widget.title),
-            ),
-          ],
+          titles: openLive
+              ? [
+                  'sping'.tr(context: context),
+                  'zhibo'.tr(context: context),
+                  'jiankong'.tr(context: context),
+                  'tiezt'.tr(context: context),
+                ]
+              : [
+                  'sping'.tr(context: context),
+                  'jiankong'.tr(context: context),
+                  'tiezt'.tr(context: context),
+                ],
+          views: openLive
+              ? [
+                  KeepAliveWrapper(
+                    child: _VideoView(word: widget.title),
+                  ),
+                  KeepAliveWrapper(
+                    child: _LiveVideoView(word: widget.title),
+                  ),
+                  KeepAliveWrapper(
+                    child: _MonitorVideoView(word: widget.title),
+                  ),
+                  KeepAliveWrapper(
+                    child: _TieztView(word: widget.title),
+                  ),
+                ]
+              : [
+                  KeepAliveWrapper(
+                    child: _VideoView(word: widget.title),
+                  ),
+                  KeepAliveWrapper(
+                    child: _MonitorVideoView(word: widget.title),
+                  ),
+                  KeepAliveWrapper(
+                    child: _TieztView(word: widget.title),
+                  ),
+                ],
         ),
       ),
     );
@@ -121,7 +124,14 @@ class _VideoViewState extends State<_VideoView> {
       padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
       childAspectRatio: FeedCard.aspectRatio,
       crossAxisSpacing: 8.w,
-      itemBuilder: (_, item, __) => VideoCard(data: item),
+      itemBuilder: (_, item, index) => VideoCard(data: item).withSearchReport({
+        "event": "keyword_click",
+        "keyword": widget.word,
+        "click_item_id": item.id,
+        "click_item_type_key": "video",
+        "click_item_type_name": "视频",
+        "click_ position": index,
+      }),
       onFetchingMore: (currentPage, pageSize) => _getData(
         page: currentPage,
         pageSize: pageSize,
@@ -158,7 +168,15 @@ class _LiveVideoViewState extends State<_LiveVideoView> {
       padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
       childAspectRatio: UILayerConst.videoRatio,
       crossAxisSpacing: 8.w,
-      itemBuilder: (_, item, __) => LiveVideoCard(data: item),
+      itemBuilder: (_, item, index) =>
+          LiveVideoCard(data: item).withSearchReport({
+        "event": "keyword_click",
+        "keyword": widget.word,
+        "click_item_id": item.id,
+        "click_item_type_key": "live",
+        "click_item_type_name": "直播",
+        "click_ position": index,
+      }),
       onFetchingMore: (currentPage, pageSize) => _getData(
         page: currentPage,
         pageSize: pageSize,
@@ -195,7 +213,15 @@ class _MonitorVideoViewState extends State<_MonitorVideoView> {
       padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
       childAspectRatio: UILayerConst.videoRatio2,
       crossAxisSpacing: 8.w,
-      itemBuilder: (_, item, __) => MonitorCard(data: item),
+      itemBuilder: (_, item, index) =>
+          MonitorCard(data: item).withSearchReport({
+        "event": "keyword_click",
+        "keyword": widget.word,
+        "click_item_id": item.id,
+        "click_item_type_key": "monitor",
+        "click_item_type_name": "监控",
+        "click_ position": index,
+      }),
       onFetchingMore: (currentPage, pageSize) => _getData(
         page: currentPage,
         pageSize: pageSize,
@@ -234,7 +260,15 @@ class _TieztViewState extends State<_TieztView> {
   Widget build(BuildContext context) {
     return MyListView.list(
       contentPadding: 15.w,
-      itemBuilder: (context, item, index) => PostCard.community(data: item),
+      itemBuilder: (context, item, index) =>
+          PostCard.community(data: item).withSearchReport({
+        "event": "keyword_click",
+        "keyword": widget.word,
+        "click_item_id": item.id,
+        "click_item_type_key": "community",
+        "click_item_type_name": "帖子",
+        "click_ position": index,
+      }),
       onFetchingMore: (currentPage, pageSize) => _getData(
         page: currentPage,
         pageSize: pageSize,
@@ -273,11 +307,28 @@ class _ZhozViewState extends State<_ZhozView> {
   Widget build(BuildContext context) {
     return MyListView.list(
       contentPadding: 15.w,
-      itemBuilder: (context, item, index) => PostCard.bit(data: item),
+      itemBuilder: (context, item, index) =>
+          PostCard.bit(data: item).withSearchReport({
+        "event": "keyword_click",
+        "keyword": widget.word,
+        "click_item_id": item.id,
+        "click_item_type_key": "bit",
+        "click_item_type_name": "种子",
+        "click_ position": index,
+      }),
       onFetchingMore: (currentPage, pageSize) => _getData(
         page: currentPage,
         pageSize: pageSize,
       ),
+    );
+  }
+}
+
+extension EventClick on Widget {
+  Widget withSearchReport(Map data) {
+    return ReportSearchClick(
+      child: this,
+      data: data,
     );
   }
 }

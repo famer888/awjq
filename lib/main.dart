@@ -9,19 +9,19 @@ import 'package:utils/utils.dart';
 
 import 'data_layer/repo/repo.dart';
 import 'domain/domain.dart';
-import 'domain/remote_domain/domains/ai.dart';
-import 'domain/remote_domain/domains/aidraw.dart';
-import 'domain/remote_domain/domains/aimagic.dart';
-import 'domain/remote_domain/domains/live.dart';
-import 'domain/remote_domain/domains/monitor.dart';
+import 'report/ui_layer/report_timing_observer.dart';
 import 'ui_layer/notifiers/chat_notifier.dart';
 import 'ui_layer/notifiers/home_config_notifier.dart';
 import 'ui_layer/notifiers/user_notifier.dart';
 import 'ui_layer/router/router.dart';
+import 'ui_layer/screens/common_widgets/my_image.dart';
+import 'ui_layer/screens/image_paths.dart';
 import 'ui_layer/screens/theme.dart';
 import 'ui_layer/utils/common_utils.dart';
 import 'ui_layer/utils/download_utils.dart';
 import 'package:universal_html/html.dart' as html;
+
+import 'ui_layer/utils/my_toast.dart';
 
 //防止键盘弹出时web界面被放大
 void disableZoomOnWeb() {
@@ -52,6 +52,7 @@ void main() async {
   runApp(
     MultiProvider(
       providers: [
+        Provider<AppRepo>(lazy: false, create: (_) => appRepo),
         Provider<AppDomain>(lazy: false, create: (_) => appRepo),
         Provider<CacheDomain>(lazy: false, create: (_) => appRepo.cache),
         Provider<HomeDomain>(lazy: false, create: (_) => appRepo),

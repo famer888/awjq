@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:math';
+import 'dart:developer' as dev;
 import 'dart:typed_data';
 import 'dart:ui';
 import 'package:awjq/domain/model/live_model.dart';
@@ -31,6 +32,10 @@ import 'package:universal_html/html.dart' as html;
 import '../../domain/domain.dart';
 import '../router/routes.dart';
 import 'package:universal_html/js_util.dart' as js_util;
+
+import '../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../report/ui_layer/report_general_banner.dart';
 
 class CommonUtils {
   static setStatusBar({bool isLight = false}) {
@@ -176,7 +181,7 @@ class CommonUtils {
 
   static log(dynamic object) {
     if (_isDebug) {
-      logger.i(object);
+      dev.log(object);
     }
   }
 
@@ -678,7 +683,7 @@ class CommonUtils {
         borderRadius: BorderRadius.circular(borderRadius ?? 0.w), // 圆角半径
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-          child: GestureDetector(
+          child: ReportGestureDetector(
             behavior: HitTestBehavior.translucent,
             onTap: () {
               onTap?.call();

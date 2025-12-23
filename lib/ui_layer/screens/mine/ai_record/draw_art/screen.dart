@@ -15,6 +15,7 @@ import '../../../../../ui_layer/screens/mine/ai_record/card/draw_record_card.dar
 import '../../../../../ui_layer/screens/theme.dart';
 import 'package:provider/provider.dart';
 
+
 class MineDrawArtScreen extends StatefulWidget {
   const MineDrawArtScreen({super.key, this.status});
 
@@ -40,34 +41,34 @@ class _MineDrawArtScreenState extends State<MineDrawArtScreen> {
       ],
       views: const [
         KeepAliveWrapper(
-          child: _ContentStripOffRecordScreen(status: 0),
+          child: _ContentDrawRecordScreen(status: 0),
         ),
         KeepAliveWrapper(
-          child: _ContentStripOffRecordScreen(status: 1),
+          child: _ContentDrawRecordScreen(status: 1),
         ),
         KeepAliveWrapper(
-          child: _ContentStripOffRecordScreen(status: 2),
+          child: _ContentDrawRecordScreen(status: 2),
         ),
         KeepAliveWrapper(
-          child: _ContentStripOffRecordScreen(status: 3),
+          child: _ContentDrawRecordScreen(status: 3),
         ),
       ],
     );
   }
 }
 
-class _ContentStripOffRecordScreen extends StatefulWidget {
-  const _ContentStripOffRecordScreen({super.key, this.status});
+class _ContentDrawRecordScreen extends StatefulWidget {
+  const _ContentDrawRecordScreen({super.key, this.status});
 
   final int? status; // 0-待处理 1-处理中 2-已成功 3-已失败
 
   @override
-  State<_ContentStripOffRecordScreen> createState() =>
-      _ContentStripOffRecordScreenState();
+  State<_ContentDrawRecordScreen> createState() =>
+      _ContentDrawRecordScreenState();
 }
 
-class _ContentStripOffRecordScreenState
-    extends State<_ContentStripOffRecordScreen> {
+class _ContentDrawRecordScreenState
+    extends State<_ContentDrawRecordScreen> {
   late final aiDomain = context.read<AIDrawDomain>();
 
   Future<List<AIDrawRecordModel>?> _getData({

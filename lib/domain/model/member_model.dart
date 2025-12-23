@@ -87,6 +87,8 @@ class Member {
     required this.vipUpgrade,
     required this.aiMagicValue,
     required this.aiDrawValue,
+    this.clickAppId,
+    this.clickTransitPath,
   });
 
   final int? imType;
@@ -170,6 +172,9 @@ class Member {
 
   final int aiMagicValue;
   final int aiDrawValue;
+
+  final String? clickAppId;
+  final String? clickTransitPath;
 
   factory Member.fromJson(Map<String, dynamic> json) => Member(
         postCount: json['post_count'] ?? 0,
@@ -258,6 +263,8 @@ class Member {
         vipUpgrade: json['vip_upgrade'] ?? 0,
         aiMagicValue: json['ai_magic_value'] ?? 0,
         aiDrawValue: json['ai_draw_value'] ?? 0,
+        clickAppId: json['click_app_id'],
+        clickTransitPath: json['click_transit_path'],
       );
 
   Map<String, dynamic> toJson() => {
@@ -341,6 +348,8 @@ class Member {
         'vip_upgrade': vipUpgrade,
         'ai_magic_value': aiMagicValue,
         'ai_draw_value': aiDrawValue,
+        'click_app_id': clickAppId,
+        'click_transit_path': clickTransitPath,
       };
 
   Member copyWith({
@@ -424,6 +433,8 @@ class Member {
     int? vipUpgrade,
     int? aiMagicValue,
     int? aiDrawValue,
+    String? clickAppId,
+    String? clickTransitPath,
   }) =>
       Member(
         imType: imType ?? this.imType,
@@ -506,6 +517,8 @@ class Member {
         vipUpgrade: vipUpgrade ?? this.vipUpgrade,
         aiMagicValue: aiMagicValue ?? this.aiMagicValue,
         aiDrawValue: aiDrawValue ?? this.aiDrawValue,
+        clickAppId: clickAppId ?? this.clickAppId,
+        clickTransitPath: clickTransitPath ?? this.clickTransitPath,
       );
 }
 

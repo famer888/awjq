@@ -39,6 +39,11 @@ import '../../media_viewer/screen.dart';
 import '../../theme.dart';
 import 'content.dart';
 
+
+import '../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../report/ui_layer/report_general_banner.dart';
+
 class CommunityPostDetailScreen extends StatefulWidget {
   const CommunityPostDetailScreen({super.key, required this.id});
 
@@ -242,7 +247,7 @@ class _CommunityPostDetailScreenState extends State<CommunityPostDetailScreen>
   Widget _fishBody(TopicDetail data) {
     final topViewHeight = 210.w;
     final topViewWidth = ScreenUtil().screenWidth;
-    return GestureDetector(
+    return ReportGestureDetector(
       onTap: () {
         unfocus();
       },
@@ -261,7 +266,7 @@ class _CommunityPostDetailScreenState extends State<CommunityPostDetailScreen>
           Positioned(
               top: MediaQuery.of(context).padding.top + 10.w,
               left: MyTheme.pagePadding,
-              child: GestureDetector(
+              child: ReportGestureDetector(
                 onTap: () {
                   FocusManager.instance.primaryFocus?.unfocus();
                   context.pop();
@@ -286,7 +291,7 @@ class _CommunityPostDetailScreenState extends State<CommunityPostDetailScreen>
   }
 
   Widget _body(TopicDetail data) {
-    return GestureDetector(
+    return ReportGestureDetector(
       onTap: () {
         unfocus();
       },
@@ -343,7 +348,7 @@ class _AvatarWithNickName extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        GestureDetector(
+        ReportGestureDetector(
           onTap: () {
             FocusManager.instance.primaryFocus?.unfocus();
             context.pop();
@@ -359,7 +364,7 @@ class _AvatarWithNickName extends StatelessWidget {
           ),
         ),
         SizedBox(width: 10.w),
-        GestureDetector(
+        ReportGestureDetector(
           behavior: HitTestBehavior.translucent,
           onTap: () {
             UserCenterRoute('${user?.aff}').push(context);
@@ -453,7 +458,7 @@ class _TopViewState extends State<_TopView> {
                 minScale: 1.0,
                 maxScale: 10.0,
                 child: e.type == MyMediaType.video
-                    ? GestureDetector(
+                    ? ReportGestureDetector(
                         behavior: HitTestBehavior.translucent,
                         onTap: () =>
                             _goPictureView(widget.pramas['resources'], index),
@@ -475,7 +480,7 @@ class _TopViewState extends State<_TopView> {
                           ],
                         ),
                       )
-                    : GestureDetector(
+                    : ReportGestureDetector(
                         onTap: () {
                           _goPictureView(widget.pramas['resources'], index);
                         },

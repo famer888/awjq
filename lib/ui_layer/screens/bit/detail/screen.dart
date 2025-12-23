@@ -23,6 +23,10 @@ import '../../common_widgets/status/network_error.dart';
 import '../../theme.dart';
 import 'content.dart';
 
+import '../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../report/ui_layer/report_general_banner.dart';
+
 class BitPostDetailScreen extends StatelessWidget {
   const BitPostDetailScreen({super.key, required this.id});
   final String id;
@@ -202,7 +206,7 @@ class _BodyState extends State<_Body> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return _asyncValue.maybeWhen(
       data: (data) {
-        return GestureDetector(
+        return ReportGestureDetector(
           onTap: () {
             unfocus();
           },

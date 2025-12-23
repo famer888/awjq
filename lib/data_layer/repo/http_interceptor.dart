@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:awjq/ui_layer/utils/common_utils.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart' as fd;
+import '../../app_global.dart';
 import '../../crypto.dart';
 
 class AutoEncryptAndDecryptInterceptor extends Interceptor {
@@ -15,6 +18,9 @@ class AutoEncryptAndDecryptInterceptor extends Interceptor {
     if (options.data != null) {
       data.addAll(options.data);
     }
+    if (AppGlobal.reportTraceId.isNotEmpty) {
+      data['trace_id'] = AppGlobal.reportTraceId;
+    }
     CommonUtils.log('url: ${options.uri.path} --- $data');
     // options.data = await fd.compute(PlatformAwareCrypto.encryptReqParams, data);
     options.data = PlatformAwareCrypto.encryptReqParams(data);
@@ -28,7 +34,8 @@ class AutoEncryptAndDecryptInterceptor extends Interceptor {
           await fd.compute(PlatformAwareCrypto.decryptResData, response.data);
       // response.data = await PlatformAwareCrypto.decryptResData(response.data);
     }
-    CommonUtils.log(response.data);
+
+    if (fd.kDebugMode) CommonUtils.log(jsonEncode(response.data));
     return super.onResponse(response, handler);
   }
 }

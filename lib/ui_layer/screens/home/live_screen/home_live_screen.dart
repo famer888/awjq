@@ -4,6 +4,7 @@ import 'package:awjq/ui_layer/screens/common_widgets/screen_background.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
+
 class HomeLiveScreen extends StatefulWidget {
   const HomeLiveScreen({super.key});
 
@@ -11,7 +12,7 @@ class HomeLiveScreen extends StatefulWidget {
   State<HomeLiveScreen> createState() => _HomeLiveScreenState();
 }
 
-class _HomeLiveScreenState extends State<HomeLiveScreen> {
+class _HomeLiveScreenState extends State<HomeLiveScreen>{
   @override
   Widget build(BuildContext context) {
     return ScreenBackground(

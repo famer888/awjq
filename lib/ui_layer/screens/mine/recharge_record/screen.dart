@@ -15,6 +15,11 @@ import '../../common_widgets/screen_background.dart';
 import '../../image_paths.dart';
 import '../../theme.dart';
 
+
+import '../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../report/ui_layer/report_general_banner.dart';
+
 class RechargeRecordScreen extends StatefulWidget {
   const RechargeRecordScreen({super.key, required this.type});
   final String type;
@@ -22,7 +27,7 @@ class RechargeRecordScreen extends StatefulWidget {
   State<RechargeRecordScreen> createState() => _RechargeRecordScreenState();
 }
 
-class _RechargeRecordScreenState extends State<RechargeRecordScreen> {
+class _RechargeRecordScreenState extends State<RechargeRecordScreen>{
   late final _orderDomain = context.read<OrderDomain>();
 
   Future<List<Order>?> _getData(
@@ -43,7 +48,7 @@ class _RechargeRecordScreenState extends State<RechargeRecordScreen> {
       appBar: MyAppBar(
         showDiver: true,
         title: 'czjl'.tr(context: context),
-        rightWidget: GestureDetector(
+        rightWidget: ReportGestureDetector(
           behavior: HitTestBehavior.translucent,
           onTap: () => const MineCustomerServiceRoute().push(context),
           child: Text(
@@ -83,7 +88,7 @@ class OrderItem extends StatelessWidget {
                 '${'ddbh'.tr(context: context)}：${order.id}',
                 style: MyTheme.white23_12,
               ),
-              GestureDetector(
+              ReportGestureDetector(
                 onTap: () {
                   Clipboard.setData(ClipboardData(
                       text: '${'ddbh'.tr(context: context)}：${order.id}'));

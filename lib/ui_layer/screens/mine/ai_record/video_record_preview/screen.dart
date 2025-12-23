@@ -7,6 +7,11 @@ import '../../../../../ui_layer/screens/common_widgets/video_player/shortv_mv_pl
 import '../../../../../ui_layer/screens/theme.dart';
 import '../../../../utils/my_toast.dart';
 
+
+import '../../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../../report/ui_layer/report_general_banner.dart';
+
 class VideoRecordPreviewScreen extends StatefulWidget {
   const VideoRecordPreviewScreen(
       {super.key, required this.data, required this.delTapCall});
@@ -19,7 +24,7 @@ class VideoRecordPreviewScreen extends StatefulWidget {
       _VideoRecordPreviewScreenState();
 }
 
-class _VideoRecordPreviewScreenState extends State<VideoRecordPreviewScreen> {
+class _VideoRecordPreviewScreenState extends State<VideoRecordPreviewScreen>{
   @override
   Widget build(BuildContext context) {
     final sheetHeight = ScreenUtil().screenHeight * 0.8;
@@ -47,7 +52,7 @@ class _VideoRecordPreviewScreenState extends State<VideoRecordPreviewScreen> {
           AspectRatio(
               aspectRatio: 1, child: ShortvMvPlayer(info: datas, noBack: true)),
           SizedBox(height: 30.w),
-          GestureDetector(
+          ReportGestureDetector(
             behavior: HitTestBehavior.translucent,
             onTap: () {
               _saveVideo(widget.data.video);
@@ -66,7 +71,7 @@ class _VideoRecordPreviewScreenState extends State<VideoRecordPreviewScreen> {
             ),
           ),
           SizedBox(height: 15.w),
-          GestureDetector(
+          ReportGestureDetector(
             behavior: HitTestBehavior.translucent,
             onTap: () {
               widget.delTapCall.call();

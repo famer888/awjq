@@ -6,6 +6,7 @@ import '../../../../domain/model/ai_model.dart';
 import '../../../../domain/model/banner_model.dart';
 import '../../../../domain/model/bit_nav_model.dart';
 import '../../../../domain/remote_domain/domains/ai.dart';
+import '../../../../report/ui_layer/report_general_banner.dart';
 import '../../../notifiers/home_config_notifier.dart';
 import '../../../utils/my_toast.dart';
 import '../../common_widgets/general_banner.dart';
@@ -20,7 +21,7 @@ class FaceSwapScreen extends StatefulWidget {
   State<FaceSwapScreen> createState() => _FaceSwapScreenState();
 }
 
-class _FaceSwapScreenState extends State<FaceSwapScreen> {
+class _FaceSwapScreenState extends State<FaceSwapScreen>{
 
   late final _aimain = context.read<AIDomain>();
   final ValueNotifier<List<BannerModel>> _bannersNotifier = ValueNotifier([]);
@@ -101,7 +102,7 @@ class _Header extends StatelessWidget {
             if (banners.isEmpty) return const SizedBox.shrink();
             return Padding(
               padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
-              child: GeneralAppsListVidget(data: banners),
+              child: ReportGeneralAppsListVidget(data: banners),
             );
           },
         ),

@@ -13,6 +13,10 @@ import '../../utils/common_utils.dart';
 import '../theme.dart';
 import 'my_image.dart';
 
+import '../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../report/ui_layer/report_general_banner.dart';
+
 class GeneralAppListSwiper extends StatefulWidget {
   GeneralAppListSwiper({
     super.key,
@@ -72,7 +76,7 @@ class _GeneralAppListSwiperState extends State<GeneralAppListSwiper> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: List.generate(firstPart.length, (index) {
                 final item = firstPart[index];
-                return GestureDetector(
+                return ReportGestureDetector(
                   onTap: () {
                     CommonUtils.openRoute(context, item.toJson());
                   },
@@ -168,7 +172,7 @@ class _GeneralAppListSwiperState extends State<GeneralAppListSwiper> {
                                   children: pages[index].map((e) {
                                     // return Container();
 
-                                    return GestureDetector(
+                                    return ReportGestureDetector(
                                         behavior: HitTestBehavior.translucent,
                                         onTap: () {
                                           FocusManager.instance.primaryFocus
@@ -369,7 +373,7 @@ class _InfiniteBannerListState extends State<InfiniteBannerList> {
               itemCount: widget.banners.length * 2,
               itemBuilder: (context, index) {
                 final banner = widget.banners[index % widget.banners.length];
-                return GestureDetector(
+                return ReportGestureDetector(
                   onTap: () {
                     FocusManager.instance.primaryFocus?.unfocus();
                     CommonUtils.openRoute(context, banner.toJson());

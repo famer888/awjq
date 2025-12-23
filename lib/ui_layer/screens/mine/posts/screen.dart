@@ -11,6 +11,10 @@ import '../../common_widgets/post/center/post_center.dart';
 import '../../common_widgets/screen_background.dart';
 import '../../theme.dart';
 
+import '../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../report/ui_layer/report_general_banner.dart';
+
 class MinePostScreen extends StatefulWidget {
   const MinePostScreen({super.key});
 
@@ -18,7 +22,7 @@ class MinePostScreen extends StatefulWidget {
   State<MinePostScreen> createState() => _MinePostScreenState();
 }
 
-class _MinePostScreenState extends State<MinePostScreen> {
+class _MinePostScreenState extends State<MinePostScreen>{
   @override
   Widget build(BuildContext context) {
     return ScreenBackground(
@@ -63,7 +67,7 @@ class _Header extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              GestureDetector(
+              ReportGestureDetector(
                 behavior: HitTestBehavior.translucent,
                 onTap: () {
                   const MineWithdrawalRoute(false).push(context);
@@ -82,7 +86,7 @@ class _Header extends StatelessWidget {
                   ),
                 ),
               ),
-              GestureDetector(
+              ReportGestureDetector(
                 behavior: HitTestBehavior.translucent,
                 onTap: () {
                   const MineIncomeDetailRoute().push(context);

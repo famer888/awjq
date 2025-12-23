@@ -28,6 +28,11 @@ import '../../common_widgets/status/network_error.dart';
 import '../../image_paths.dart';
 import '../../theme.dart';
 
+
+import '../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../report/ui_layer/report_general_banner.dart';
+
 class VipCenterScreen extends StatefulWidget {
   const VipCenterScreen({super.key});
 
@@ -35,7 +40,7 @@ class VipCenterScreen extends StatefulWidget {
   State<VipCenterScreen> createState() => _VipCenterScreenState();
 }
 
-class _VipCenterScreenState extends State<VipCenterScreen> {
+class _VipCenterScreenState extends State<VipCenterScreen>{
   final _type = MyProductType.vip;
   late final _orderDomain = context.read<OrderDomain>();
   late final _signDomain = context.read<SignDomain>();
@@ -79,7 +84,7 @@ class _VipCenterScreenState extends State<VipCenterScreen> {
       child: Scaffold(
         appBar: MyAppBar(
           title: 'hyzx'.tr(context: context),
-          rightWidget: GestureDetector(
+          rightWidget: ReportGestureDetector(
             behavior: HitTestBehavior.translucent,
             onTap: () => RechargeRecordRoute(_type.id.toString()).push(context),
             child: Text(
@@ -263,7 +268,7 @@ class _UserInfoArea extends StatelessWidget {
                           ],
                         )),
                     if (member.vipUpgrade == 1)
-                      GestureDetector(
+                      ReportGestureDetector(
                         onTap: () => VipUpgradeRoute().push(context),
                         child: Container(
                           // color: Colors.red,
@@ -352,7 +357,7 @@ class _ProductCardArea extends StatelessWidget {
         physics: const BouncingScrollPhysics(),
         scrollDirection: Axis.horizontal,
         itemCount: products.length,
-        itemBuilder: (context, index) => GestureDetector(
+        itemBuilder: (context, index) => ReportGestureDetector(
           behavior: HitTestBehavior.translucent,
           onTap: () => selectedNotifier.value = index,
           child: ValueListenableBuilder(
@@ -705,7 +710,7 @@ class _ExpItemState extends State<_ExpItem> {
                   ),
                 ],
               ),
-              GestureDetector(
+              ReportGestureDetector(
                 behavior: HitTestBehavior.translucent,
                 onTap: _sendExpCoverVIP,
                 child: Container(

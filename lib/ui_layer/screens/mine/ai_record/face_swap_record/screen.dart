@@ -16,14 +16,14 @@ import '../card/ai_record_card.dart';
 class MineFaceSwapRecordScreen extends StatefulWidget {
   const MineFaceSwapRecordScreen({super.key, this.status});
 
-  final int? status;// 0-待处理 1-处理中 2-已成功 3-已失败
+  final int? status; // 0-待处理 1-处理中 2-已成功 3-已失败
 
   @override
   State<MineFaceSwapRecordScreen> createState() => _MineFaceSwapRecordScreenState();
 }
 
-class _MineFaceSwapRecordScreenState extends State<MineFaceSwapRecordScreen> {
-
+class _MineFaceSwapRecordScreenState
+    extends State<MineFaceSwapRecordScreen> {
   late final aiDomain = context.read<AIDomain>();
 
   Future<List<AIModel>?> _getData({
@@ -72,14 +72,15 @@ class _MineFaceSwapRecordScreenState extends State<MineFaceSwapRecordScreen> {
 class _ContentFaceSwapRecordScreen extends StatefulWidget {
   const _ContentFaceSwapRecordScreen({super.key, this.status});
 
-  final int? status;// 0-待处理 1-处理中 2-已成功 3-已失败
+  final int? status; // 0-待处理 1-处理中 2-已成功 3-已失败
 
   @override
-  State<_ContentFaceSwapRecordScreen> createState() => _ContentFaceSwapRecordScreenState();
+  State<_ContentFaceSwapRecordScreen> createState() =>
+      _ContentFaceSwapRecordScreenState();
 }
 
-class _ContentFaceSwapRecordScreenState extends State<_ContentFaceSwapRecordScreen> {
-
+class _ContentFaceSwapRecordScreenState
+    extends State<_ContentFaceSwapRecordScreen> {
   late final aiDomain = context.read<AIDomain>();
 
   Future<List<AIModel>?> _getData({
@@ -99,11 +100,13 @@ class _ContentFaceSwapRecordScreenState extends State<_ContentFaceSwapRecordScre
     return MyListView.grid(
       key: UniqueKey(),
       childAspectRatio: 170 / 250,
-      itemBuilder: (_, item, __) => AIRecordCard(data: item, type: AIRecordType.FaceSwap, delSucess: () {
-        context.pop();
-        setState(() {
-        });
-      }),
+      itemBuilder: (_, item, __) => AIRecordCard(
+          data: item,
+          type: AIRecordType.FaceSwap,
+          delSucess: () {
+            context.pop();
+            setState(() {});
+          }),
       onFetchingMore: (currentPage, pageSize) => _getData(
         page: currentPage,
         pageSize: pageSize,

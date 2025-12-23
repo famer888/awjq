@@ -13,10 +13,12 @@ import 'package:flutter/foundation.dart';
 import 'package:cross_file/cross_file.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:universal_html/js.dart';
 import 'package:utils/utils.dart';
 import 'package:universal_html/html.dart' as html;
 
 import '../../app_config.dart';
+import '../../app_global.dart';
 import '../../crypto.dart';
 import '../../domain/enum.dart';
 import '../../domain/model/ai_model.dart';
@@ -76,6 +78,8 @@ import '../../domain/result.dart';
 import '../../domain/type_def.dart';
 import '../../domain/domain.dart';
 import '../../logger.dart';
+import '../../report/event_tracking.dart';
+import '../../report/ui_layer/report_timing_interceptor.dart';
 import '../data_source/remote/account_service.dart';
 import '../data_source/remote/ai_service.dart';
 
@@ -194,12 +198,19 @@ abstract class _BaseAppRepo implements AppDomain {
       _tokenValidStreamController.stream.asBroadcastStream();
 
   final _tokenValidStreamController = StreamController<MyTokenStatus?>();
- 
-  late final _apiDio = Dio(
+
+  late final _apiDio = Dio(BaseOptions(
+    connectTimeout: const Duration(seconds: 60),
+    receiveTimeout: const Duration(seconds: 300),
+    contentType: Headers.formUrlEncodedContentType,
+  ))
+    ..interceptors.add(ReportTimingInterceptor());
+
+  /// 未加密网路服务/广告事件上报
+  late final _reportApiDio = Dio(
     BaseOptions(
       connectTimeout: const Duration(seconds: 60),
-      receiveTimeout: const Duration(seconds:300),
-      contentType: Headers.formUrlEncodedContentType,
+      receiveTimeout: const Duration(seconds: 300),
     ),
   );
 
@@ -345,6 +356,12 @@ abstract class _BaseAppRepo implements AppDomain {
   }
 
   @override
+  void setReportTraceId(String id) async {
+    _cacheManager.upsertReportTraceId(id);
+    AppGlobal.reportTraceId = id;
+  }
+
+  @override
   void initLine({
     Function? success,
     Function? failed,
@@ -358,6 +375,24 @@ abstract class _BaseAppRepo implements AppDomain {
       final fdsKey = await _getFdsKey();
       final secretValue = PlatformAwareCrypto.secretValue(fdsKey: fdsKey);
       _apiDio.options.headers = {'Cf-Ray-Xf': secretValue};
+    }
+
+    // // 读取本地上报线路
+    // final String? localReportUrl = await _cacheManager.readReportUrl();
+    // if (localReportUrl case final String reportUrl) {
+    //   // setReportURL(reportUrl);
+    // }
+
+    // 读取本地上报AppId
+    final String? localReportAppId = await _cacheManager.readReportAppId();
+    if (localReportAppId case final String reportAppId) {
+      AppGlobal.reportAppId = reportAppId;
+    }
+
+    // 读取本地上报traceId
+    final String? localReportTraceId = await _cacheManager.readReportTraceId();
+    if (localReportTraceId case final String reportTraceId) {
+      AppGlobal.reportTraceId = reportTraceId;
     }
 
     //无网络

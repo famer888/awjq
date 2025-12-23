@@ -10,8 +10,14 @@ import '../../../common_widgets/my_image.dart';
 import '../../../theme.dart';
 import 'dart:ui' as ui;
 
+
+import '../../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../../report/ui_layer/report_general_banner.dart';
+
 class PictureRecordPreviewScreen extends StatefulWidget {
-  const PictureRecordPreviewScreen({super.key, required this.url, required this.delTapCall});
+  const PictureRecordPreviewScreen(
+      {super.key, required this.url, required this.delTapCall});
 
   final String url;
 
@@ -23,19 +29,24 @@ class PictureRecordPreviewScreen extends StatefulWidget {
 
 class _PictureRecordPreviewScreenState
     extends State<PictureRecordPreviewScreen> {
-
   @override
   Widget build(BuildContext context) {
     final sheetHeight = ScreenUtil().screenHeight * 0.8;
 
     return Container(
-        padding: EdgeInsets.only(left: MyTheme.pagePadding, top: MyTheme.pagePadding, right: MyTheme.pagePadding, bottom: 44.w),
+        padding: EdgeInsets.only(
+            left: MyTheme.pagePadding,
+            top: MyTheme.pagePadding,
+            right: MyTheme.pagePadding,
+            bottom: 44.w),
         color: MyTheme.bgColor,
         height: sheetHeight,
         child: Column(children: [
-          Expanded(child: MyImage.network(widget.url, fit: BoxFit.contain, borderRadius: 14.w)),
+          Expanded(
+              child: MyImage.network(widget.url,
+                  fit: BoxFit.contain, borderRadius: 14.w)),
           SizedBox(height: 30.w),
-          GestureDetector(
+          ReportGestureDetector(
             behavior: HitTestBehavior.translucent,
             onTap: () {
               _saveImage(context);
@@ -54,7 +65,7 @@ class _PictureRecordPreviewScreenState
             ),
           ),
           SizedBox(height: 15.w),
-          GestureDetector(
+          ReportGestureDetector(
             behavior: HitTestBehavior.translucent,
             onTap: () {
               widget.delTapCall.call();
@@ -83,5 +94,4 @@ class _PictureRecordPreviewScreenState
       MyToast.showText(text: tr('tpbcsb'));
     }
   }
-
 }

@@ -9,6 +9,10 @@ import '../../../../utils/my_toast.dart';
 import '../../../common_widgets/my_image.dart';
 import '../../../image_paths.dart';
 
+import '../../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../../report/ui_layer/report_general_banner.dart';
+
 class ImagePickerGrid extends StatefulWidget {
   const ImagePickerGrid({
     super.key,
@@ -74,7 +78,7 @@ class _ImagePickerGridState extends State<ImagePickerGrid> {
                 Positioned(
                   top: 0,
                   right: 0,
-                  child: GestureDetector(
+                  child: ReportGestureDetector(
                     behavior: HitTestBehavior.translucent,
                     onTap: () => setState(() => upList.remove(uploadData)),
                     child: MyImage.asset(
@@ -89,7 +93,7 @@ class _ImagePickerGridState extends State<ImagePickerGrid> {
           if (upList.length != picLimit)
             Stack(
               children: [
-                GestureDetector(
+                ReportGestureDetector(
                   onTap: imagePickerAssets,
                   child: const MyImage.asset(MyImagePaths.appIssueAdd),
                 ),

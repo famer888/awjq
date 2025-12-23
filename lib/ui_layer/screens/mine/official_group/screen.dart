@@ -16,6 +16,10 @@ import '../../common_widgets/status/loading.dart';
 import '../../image_paths.dart';
 import '../../theme.dart';
 
+import '../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../report/ui_layer/report_general_banner.dart';
+
 class MineOfficialGroupScreen extends StatefulWidget {
   const MineOfficialGroupScreen({super.key});
 
@@ -24,7 +28,7 @@ class MineOfficialGroupScreen extends StatefulWidget {
       _MineOfficialGroupScreenState();
 }
 
-class _MineOfficialGroupScreenState extends State<MineOfficialGroupScreen> {
+class _MineOfficialGroupScreenState extends State<MineOfficialGroupScreen>{
   late final homeDomain = context.read<HomeDomain>();
   AsyncValue<List<OfficeContact>> _asyncValue = const AsyncInit();
 
@@ -149,7 +153,7 @@ class AppInfo extends StatelessWidget {
               ))
             ],
           )),
-          GestureDetector(
+          ReportGestureDetector(
             onTap: () {
               CommonUtils.launchUrl(info.url ?? '');
             },

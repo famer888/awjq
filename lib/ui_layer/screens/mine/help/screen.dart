@@ -12,6 +12,11 @@ import '../../common_widgets/screen_background.dart';
 import '../../image_paths.dart';
 import '../../theme.dart';
 
+
+import '../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../report/ui_layer/report_general_banner.dart';
+
 class MineHelpScreen extends StatefulWidget {
   const MineHelpScreen({super.key});
 
@@ -19,7 +24,7 @@ class MineHelpScreen extends StatefulWidget {
   State<MineHelpScreen> createState() => _MineHelpScreenState();
 }
 
-class _MineHelpScreenState extends State<MineHelpScreen> {
+class _MineHelpScreenState extends State<MineHelpScreen>{
   Widget _questionItem(HelpItem help) {
     return Padding(
       padding: EdgeInsets.only(bottom: 32.5.w),
@@ -86,7 +91,7 @@ class _MineHelpScreenState extends State<MineHelpScreen> {
           Positioned(
             right: 17.w,
             bottom: 50.w,
-            child: GestureDetector(
+            child: ReportGestureDetector(
               behavior: HitTestBehavior.translucent,
               onTap: () {
                 const MineCustomerServiceRoute().push(context);

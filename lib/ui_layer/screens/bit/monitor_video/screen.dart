@@ -5,6 +5,7 @@ import '../../../../domain/model/bit_nav_model.dart';
 import '../../../../domain/model/live_model.dart';
 import '../../../../domain/model/monitor_model.dart';
 import '../../../../domain/remote_domain/domains/monitor.dart';
+import '../../../../report/ui_layer/report_general_banner.dart';
 import '../../../const.dart';
 import '../../common_widgets/general_banner.dart';
 import '../../common_widgets/marquee_widget.dart';
@@ -93,7 +94,7 @@ class _Header extends StatelessWidget {
             if (banners.isEmpty) return const SizedBox.shrink();
             return Padding(
               padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
-              child: GeneralAppsListVidget(data: banners),
+              child: ReportGeneralAppsListVidget(data: banners),
             );
           },
         ),

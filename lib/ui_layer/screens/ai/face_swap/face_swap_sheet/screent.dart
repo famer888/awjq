@@ -21,6 +21,10 @@ import '../../../image_paths.dart';
 import '../../../theme.dart';
 import 'dart:developer' as developer;
 
+import '../../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../../report/ui_layer/report_general_banner.dart';
+
 class FaceSwapSheetView extends StatefulWidget {
   const FaceSwapSheetView({super.key, required this.data});
 
@@ -87,7 +91,7 @@ class _FaceSwapSheetViewState extends State<FaceSwapSheetView> {
                     Expanded(
                       child: Column(
                         children: [
-                          GestureDetector(
+                          ReportGestureDetector(
                             behavior: HitTestBehavior.translucent,
                             onTap: () {
                               // _isChooseFaceImage = false;
@@ -113,7 +117,7 @@ class _FaceSwapSheetViewState extends State<FaceSwapSheetView> {
                     Expanded(
                       child: Column(
                         children: [
-                          GestureDetector(
+                          ReportGestureDetector(
                             behavior: HitTestBehavior.translucent,
                             onTap: () {
                               _showImagePicker();
@@ -220,7 +224,7 @@ class _FaceSwapSheetViewState extends State<FaceSwapSheetView> {
                   ],
                 ),
                 SizedBox(height: 30.w),
-                GestureDetector(
+                ReportGestureDetector(
                   behavior: HitTestBehavior.translucent,
                   onTap: _postTakeOff,
                   child: Container(
@@ -257,7 +261,7 @@ class _FaceSwapSheetViewState extends State<FaceSwapSheetView> {
               //关闭按钮
               top: 13.w,
               right: 0.w,
-              child: GestureDetector(
+              child: ReportGestureDetector(
                 behavior: HitTestBehavior.translucent,
                 child: MyImage.asset(
                   MyImagePaths.appCircleClose,

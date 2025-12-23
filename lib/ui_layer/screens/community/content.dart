@@ -25,6 +25,10 @@ import '../image_paths.dart';
 import '../theme.dart';
 import 'issue/screen.dart';
 
+import '../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../report/ui_layer/report_general_banner.dart';
+
 class CommunityContentView extends StatefulWidget {
   const CommunityContentView(
       {super.key, required this.id, required this.isFish});
@@ -146,7 +150,7 @@ class _CommunityContentViewState extends State<CommunityContentView> {
         Positioned(
             right: 10.w,
             bottom: 5.w,
-            child: GestureDetector(
+            child: ReportGestureDetector(
               onTap: widget.isFish
                   ? () => const XianYuIssueRoute().push(context)
                   : _showIssueAlert,
@@ -207,7 +211,7 @@ class _CommunityContentViewState extends State<CommunityContentView> {
                       'xzfblx'.tr(),
                       style: MyTheme.white16bold,
                     ),
-                    GestureDetector(
+                    ReportGestureDetector(
                       onTap: () => context.pop(),
                       child: MyImage.asset(
                         MyImagePaths.appIssueClose,
@@ -223,7 +227,7 @@ class _CommunityContentViewState extends State<CommunityContentView> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   for (final issue in issues)
-                    GestureDetector(
+                    ReportGestureDetector(
                       behavior: HitTestBehavior.translucent,
                       onTap: () {
                         context.pop();
@@ -279,7 +283,7 @@ class _Header extends StatelessWidget {
             if (banners.isEmpty) return const SizedBox.shrink();
             return Padding(
               padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
-              child: GeneralAppsListVidget(data: banners),
+              child: ReportGeneralAppsListVidget(data: banners),
             );
           },
         ),
@@ -319,7 +323,7 @@ class _Header extends StatelessWidget {
                             topic.bgThumb,
                             borderRadius: 6.w,
                           ),
-                          GestureDetector(
+                          ReportGestureDetector(
                             behavior: HitTestBehavior.translucent,
                             onTap: () {
                               CommunityTagDetailRoute('${topic.id}', isFish)

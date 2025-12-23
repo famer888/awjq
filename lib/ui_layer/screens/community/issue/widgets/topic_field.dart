@@ -9,6 +9,10 @@ import '../../../image_paths.dart';
 import '../../../theme.dart';
 import '../screen.dart';
 
+import '../../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../../report/ui_layer/report_general_banner.dart';
+
 class TopicField extends StatelessWidget {
   const TopicField({
     super.key,
@@ -23,7 +27,7 @@ class TopicField extends StatelessWidget {
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
       valueListenable: topicNotifier,
-      builder: (_, topic, __) => GestureDetector(
+      builder: (_, topic, __) => ReportGestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () async {
           if (await CommunityModuleRoute(
@@ -73,7 +77,7 @@ class FishTopicField extends StatelessWidget {
   Widget build(BuildContext context) {
     return ValueListenableBuilder(
       valueListenable: topicNotifier,
-      builder: (_, topic, __) => GestureDetector(
+      builder: (_, topic, __) => ReportGestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () async {
           if (await CommunityModuleRoute(

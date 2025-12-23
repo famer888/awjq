@@ -16,6 +16,11 @@ import '../../common_widgets/status/loading.dart';
 import '../../common_widgets/status/network_error.dart';
 import '../../theme.dart';
 
+
+import '../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../report/ui_layer/report_general_banner.dart';
+
 class CoinRechargeScreen extends StatefulWidget {
   const CoinRechargeScreen({super.key});
 
@@ -23,7 +28,7 @@ class CoinRechargeScreen extends StatefulWidget {
   State<CoinRechargeScreen> createState() => _CoinRechargeScreenState();
 }
 
-class _CoinRechargeScreenState extends State<CoinRechargeScreen> {
+class _CoinRechargeScreenState extends State<CoinRechargeScreen>{
   final _type = MyProductType.coin;
   final productSelectedNotifier = ValueNotifier(0);
   late final _orderDomain = context.read<OrderDomain>();
@@ -61,7 +66,7 @@ class _CoinRechargeScreenState extends State<CoinRechargeScreen> {
         child: Scaffold(
       appBar: MyAppBar(
         title: 'jbcz'.tr(context: context),
-        rightWidget: GestureDetector(
+        rightWidget: ReportGestureDetector(
           onTap: () => RechargeRecordRoute(_type.id.toString()).push(context),
           child: Text(
             'czjl'.tr(context: context),
@@ -174,7 +179,7 @@ class _TopArea extends StatelessWidget {
                       }),
                 ),
                 SizedBox(width: 10.w),
-                GestureDetector(
+                ReportGestureDetector(
                   behavior: HitTestBehavior.translucent,
                   onTap: () => const CoinDetailRoute().push(context),
                   child: Text(
@@ -219,7 +224,7 @@ class _ProductArea extends StatelessWidget {
               childAspectRatio: 94 / 114,
             ),
             itemCount: products.length,
-            itemBuilder: (context, index) => GestureDetector(
+            itemBuilder: (context, index) => ReportGestureDetector(
               behavior: HitTestBehavior.translucent,
               onTap: () => productSelectedNotifier.value = index,
               child: _CoinItem(

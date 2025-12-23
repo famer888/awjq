@@ -5,6 +5,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provider/provider.dart';
+import '../../../report/ui_layer/report_gesture_detector.dart';
 import '../../router/routes.dart';
 import '../../utils/common_utils.dart';
 import '../theme.dart';
@@ -22,6 +23,8 @@ import 'feed/feed_card.dart';
 import 'general_banner.dart';
 import 'my_list_view.dart';
 import 'my_tab_bar.dart';
+
+import '../../../report/ui_layer/report_general_banner.dart';
 
 class ApiLinkView extends StatefulWidget {
   const ApiLinkView(
@@ -162,7 +165,7 @@ class _HeaderState extends State<_Header> {
             if (banners.isEmpty) return const SizedBox.shrink();
             return Padding(
               padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
-              child: GeneralAppsListVidget(data: banners),
+              child: ReportGeneralAppsListVidget(data: banners),
             );
           },
         ),
@@ -189,7 +192,7 @@ class _HeaderState extends State<_Header> {
                   ),
                   itemBuilder: (context, index) {
                     final partsItem = parts[index];
-                    return GestureDetector(
+                    return ReportGestureDetector(
                       behavior: HitTestBehavior.translucent,
                       onTap: () {
                         final linkUrl = partsItem.urlStr;
@@ -281,7 +284,7 @@ class _HeaderState extends State<_Header> {
                                   color: const Color(0xff262631),
                                 ),
                                 child: Center(
-                                  child: GestureDetector(
+                                  child: ReportGestureDetector(
                                     behavior: HitTestBehavior.translucent,
                                     onTap: () {
                                       final linkUrl = topic.linkUrl;
@@ -373,7 +376,7 @@ class _HeaderState extends State<_Header> {
           ),
           itemBuilder: (context, index) {
             final topic = contentTopics[index];
-            return GestureDetector(
+            return ReportGestureDetector(
               behavior: HitTestBehavior.translucent,
               onTap: () {
                 final linkUrl = topic.linkUrl;

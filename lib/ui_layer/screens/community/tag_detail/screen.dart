@@ -26,6 +26,7 @@ import '../../common_widgets/status/loading.dart';
 import '../../common_widgets/status/network_error.dart';
 import '../../theme.dart';
 
+
 class CommunityTagDetailScreen extends StatefulWidget {
   const CommunityTagDetailScreen({super.key, required this.id, this.isFish});
   final String id;
@@ -37,7 +38,7 @@ class CommunityTagDetailScreen extends StatefulWidget {
       _CommunityTagDetailScreenState();
 }
 
-class _CommunityTagDetailScreenState extends State<CommunityTagDetailScreen> {
+class _CommunityTagDetailScreenState extends State<CommunityTagDetailScreen>{
   late final _homeConfig = context.read<HomeConfigNotifier>();
   late final _communityDomain = context.read<CommunityDomain>();
 

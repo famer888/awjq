@@ -12,6 +12,7 @@ import '../../../../domain/api_validator.dart';
 import '../../../../domain/model/member_model.dart';
 import '../../../../domain/model/video_detail_model.dart';
 import '../../../../domain/remote_domain/domains/mv.dart';
+import '../../../../report/event_tracking.dart';
 import '../../../notifiers/home_config_notifier.dart';
 import '../../../notifiers/user_notifier.dart';
 import '../../../router/routes.dart';
@@ -25,6 +26,10 @@ import '../dialog/widgets/png_dialog.dart';
 import '../dialog/widgets/regular_dialog.dart';
 import '../my_image.dart';
 import 'utils/nvideourl_minxin.dart';
+
+import '../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../report/ui_layer/report_general_banner.dart';
 
 class ShortvMvPlayer extends StatefulWidget {
   const ShortvMvPlayer({
@@ -43,7 +48,7 @@ class ShortvMvPlayer extends StatefulWidget {
 
   /// 显示全屏按钮是否判断视频长宽比
   final bool needCheckAspectRatio;
-  final bool needSlide;//是否需要滑动快进，默认需要
+  final bool needSlide; //是否需要滑动快进，默认需要
 
   @override
   State<ShortvMvPlayer> createState() => _ShortvMvPlayerState();
@@ -54,6 +59,15 @@ class _ShortvMvPlayerState extends State<ShortvMvPlayer> with NVideoURLMinxin {
   bool opened = true;
   bool isPreview = false;
   bool isDone = false;
+
+  int _lastPosition = 0;
+  bool _wasPlaying = false;
+  bool _isCompleted = false;
+
+  //用来防止一次拖动触发多次快进/快退
+  bool _seekLocked = false;
+  final int _seekThresholdSec = 5; // 超过多少秒跳变算快进/快退
+  final Duration _seekCooldown = const Duration(milliseconds: 500);
 
   @override
   void initState() {
@@ -81,7 +95,136 @@ class _ShortvMvPlayerState extends State<ShortvMvPlayer> with NVideoURLMinxin {
           isDone = true;
           if (mounted) setState(() {});
         });
+
+    flickManager?.flickVideoManager?.videoPlayerController
+        ?.addListener(_videoListener);
     if (mounted) setState(() {});
+  }
+
+  void _videoListener() {
+    final value = flickManager?.flickVideoManager?.videoPlayerController?.value;
+    if (value == null) return;
+
+    final currentSec = value.position.inSeconds;
+    final totalSec = value.duration.inSeconds;
+
+    // ===== 播放 / 暂停 =====
+
+    // 开始播放（从不播放 -> 播放）
+    if (value.isPlaying && !_wasPlaying) {
+      reportVideo(video_behavior_key: "video_play", video_behavior_name: "播放");
+      _wasPlaying = true;
+      _isCompleted = false; // 重新播放时重置完成标记
+    }
+
+    // 暂停（从播放 -> 不播放，且未到结尾）
+    if (!value.isPlaying && _wasPlaying && currentSec < totalSec) {
+      reportVideo(video_behavior_key: "video_pause", video_behavior_name: "暂停");
+      _wasPlaying = false;
+    }
+
+    // ===== 播放完成 =====
+    if (!_isCompleted &&
+        totalSec > 0 &&
+        currentSec >= totalSec &&
+        !value.isPlaying) {
+      reportVideo(
+          video_behavior_key: "video_complete", video_behavior_name: "播放完成");
+      _isCompleted = true;
+      _wasPlaying = false;
+    }
+
+    // ===== 快进 / 快退（通过 position 跳变检测）=====
+
+    final diff = currentSec - _lastPosition;
+
+    // 已经完成的就不再判定快进快退了
+    if (!_isCompleted && !_seekLocked) {
+      // 快进：位置跳到更靠后的时间点（超过阈值）
+      if (diff >= _seekThresholdSec) {
+        reportVideo(
+            video_behavior_key: "video_forward", video_behavior_name: "快进");
+        _seekLocked = true;
+        Future.delayed(_seekCooldown, () {
+          _seekLocked = false;
+        });
+      }
+
+      // 快退：位置跳到更靠前的时间点（超过阈值）
+      if (diff <= -_seekThresholdSec) {
+        reportVideo(
+            video_behavior_key: "video_rewind", video_behavior_name: "快退");
+        _seekLocked = true;
+        Future.delayed(_seekCooldown, () {
+          _seekLocked = false;
+        });
+      }
+    }
+
+    // ===== 缓冲（看你要不要上报）=====
+    if (value.isBuffering) {
+      // 需要的话在这里加一个缓冲埋点
+      // reportVideo(video_behavior_key: "video_buffer", video_behavior_name: "缓冲");
+    }
+
+    // 最后一定要更新 _lastPosition
+    _lastPosition = currentSec;
+  }
+
+  void reportVideo({
+    String video_behavior_key = "video_play",
+    String video_behavior_name = "",
+  }) {
+    // String type = widget.errIds.split("_")[1];
+
+    int play_duration =
+        flickManager?.flickVideoManager?.videoPlayerValue?.position.inSeconds ??
+            0;
+    int video_duration =
+        flickManager?.flickVideoManager?.videoPlayerValue?.duration.inSeconds ??
+            0;
+    int progress = (play_duration / video_duration * 100).round().clamp(0, 100);
+
+    List<Map> tags = [];
+    List<Map> categories = [];
+    String video_title = "";
+    int video_type_id = widget.info.videoTypeId ?? 0;
+    String video_type_name = widget.info.videoTypeName ?? "";
+    int id = 0;
+
+    String tagsString = widget.info.tags ?? '';
+    video_title = widget.info.title ?? '';
+    id = widget.info.id ?? 0;
+    // if (type == "1") {
+    //文章
+    // tags = List.from(CacheManager.instance.mediaMap["tags"] ?? []);
+    // categories = List.from(CacheManager.instance.mediaMap["category"] ?? []);
+    // video_title = CacheManager.instance.mediaMap["title"];
+    // video_type_id = categories.first["mid"];
+    // video_type_name = categories.first["name"];
+    // id = CacheManager.instance.mediaMap["cid"];
+
+    // if (type == "2") {
+    //帖子
+    // video_title = CacheManager.instance.mediaMap["title"];
+    // video_type_id = CacheManager.instance.mediaMap["topic"]["id"];
+    // video_type_name = CacheManager.instance.mediaMap["topic"]["name"];
+    // id = CacheManager.instance.mediaMap["id"];
+
+    EventTracking().reportSingle({
+      "event": "video_event",
+      "video_id": id,
+      "video_title": video_title,
+      "video_type_id": video_type_id,
+      "video_type_name": video_type_name,
+      "video_tag_key": '',
+      "video_tag_name": tagsString,
+      "video_duration": video_duration,
+      "play_duration": play_duration,
+      "play_progress": progress,
+      "video_behavior_key": video_behavior_key,
+      "video_behavior_name": video_behavior_name,
+    });
   }
 
   @override
@@ -296,7 +439,7 @@ class SinkPortraitLandWidget extends StatefulWidget {
 
   /// 显示全屏按钮是否判断视频长宽比
   final bool needCheckAspectRatio;
-  final bool needSlide;//是否需要滑动快进，默认需要
+  final bool needSlide; //是否需要滑动快进，默认需要
 
   @override
   State<SinkPortraitLandWidget> createState() => _SinkPortraitLandWidgetState();
@@ -379,75 +522,77 @@ class _SinkPortraitLandWidgetState extends State<SinkPortraitLandWidget> {
       children: [
         Positioned.fill(
           child: FlickShowControlsAction(
-            child: widget.needSlide ? FlickSlideVideoAction(
-              fontSize: 16,
-              child: Center(
-                child: flag
-                    ? Center(
-                  child: SizedBox(
-                    height: 40,
-                    width: 40,
-                    child: CircularProgressIndicator(
-                      backgroundColor: Colors.grey[400],
-                      strokeWidth: 1.5,
+            child: widget.needSlide
+                ? FlickSlideVideoAction(
+                    fontSize: 16,
+                    child: Center(
+                      child: flag
+                          ? Center(
+                              child: SizedBox(
+                                height: 40,
+                                width: 40,
+                                child: CircularProgressIndicator(
+                                  backgroundColor: Colors.grey[400],
+                                  strokeWidth: 1.5,
+                                ),
+                              ),
+                            )
+                          : const FlickAutoHideChild(
+                              showIfVideoNotInitialized: false,
+                              child: FlickPlayToggle(
+                                replayChild: MyImage.asset(
+                                  MyImagePaths.appVReplayN,
+                                  width: 40,
+                                  height: 40,
+                                ),
+                                playChild: MyImage.asset(
+                                  MyImagePaths.appVPlayN,
+                                  width: 40,
+                                  height: 40,
+                                ),
+                                pauseChild: MyImage.asset(
+                                  MyImagePaths.appVPauseN,
+                                  width: 40,
+                                  height: 40,
+                                ),
+                              ),
+                            ),
                     ),
-                  ),
-                )
-                    : const FlickAutoHideChild(
-                  showIfVideoNotInitialized: false,
-                  child: FlickPlayToggle(
-                    replayChild: MyImage.asset(
-                      MyImagePaths.appVReplayN,
-                      width: 40,
-                      height: 40,
-                    ),
-                    playChild: MyImage.asset(
-                      MyImagePaths.appVPlayN,
-                      width: 40,
-                      height: 40,
-                    ),
-                    pauseChild: MyImage.asset(
-                      MyImagePaths.appVPauseN,
-                      width: 40,
-                      height: 40,
-                    ),
-                  ),
-                ),
-              ),
-            ) :
-            FlickSeekVideoAction(child: Center(
-              child: flag
-                  ? Center(
-                child: SizedBox(
-                  height: 40,
-                  width: 40,
-                  child: CircularProgressIndicator(
-                    backgroundColor: Colors.grey[400],
-                    strokeWidth: 1.5,
-                  ),
-                ),
-              )
-                  : const FlickAutoHideChild(
-                showIfVideoNotInitialized: false,
-                child: FlickPlayToggle(
-                  replayChild: MyImage.asset(
-                    MyImagePaths.appVReplayN,
-                    width: 40,
-                    height: 40,
-                  ),
-                  playChild: MyImage.asset(
-                    MyImagePaths.appVPlayN,
-                    width: 40,
-                    height: 40,
-                  ),
-                  pauseChild: MyImage.asset(
-                    MyImagePaths.appVPauseN,
-                    width: 40,
-                    height: 40,
-                  ),
-                ),
-              ),
-            )),
+                  )
+                : FlickSeekVideoAction(
+                    child: Center(
+                    child: flag
+                        ? Center(
+                            child: SizedBox(
+                              height: 40,
+                              width: 40,
+                              child: CircularProgressIndicator(
+                                backgroundColor: Colors.grey[400],
+                                strokeWidth: 1.5,
+                              ),
+                            ),
+                          )
+                        : const FlickAutoHideChild(
+                            showIfVideoNotInitialized: false,
+                            child: FlickPlayToggle(
+                              replayChild: MyImage.asset(
+                                MyImagePaths.appVReplayN,
+                                width: 40,
+                                height: 40,
+                              ),
+                              playChild: MyImage.asset(
+                                MyImagePaths.appVPlayN,
+                                width: 40,
+                                height: 40,
+                              ),
+                              pauseChild: MyImage.asset(
+                                MyImagePaths.appVPauseN,
+                                width: 40,
+                                height: 40,
+                              ),
+                            ),
+                          ),
+                  )),
           ),
         ),
         FlickAutoHideChild(
@@ -521,7 +666,8 @@ class _SinkPortraitLandWidgetState extends State<SinkPortraitLandWidget> {
                                       ),
                                     )
                                   : Container(),
-                              (rate > 1 || !widget.needCheckAspectRatio) && !widget.isPreview ||
+                              (rate > 1 || !widget.needCheckAspectRatio) &&
+                                          !widget.isPreview ||
                                       kIsWeb && !widget.isPreview
                                   ? Padding(
                                       padding: const EdgeInsets.only(left: 10),
@@ -537,10 +683,12 @@ class _SinkPortraitLandWidgetState extends State<SinkPortraitLandWidget> {
                                         toggleFullscreen: () {
                                           if (kIsWeb) {
                                             List<html.VideoElement> elements =
-                                            html.document.querySelectorAll('video');
+                                                html.document
+                                                    .querySelectorAll('video');
                                             if (elements.isEmpty) return;
 
-                                            html.VideoElement video = elements.last;
+                                            html.VideoElement video =
+                                                elements.last;
 
                                             video.muted = false;
                                             video.volume = 1;
@@ -592,7 +740,7 @@ class _SinkPortraitLandWidgetState extends State<SinkPortraitLandWidget> {
                   ? Positioned(
                       right: 0,
                       bottom: 40.w,
-                      child: GestureDetector(
+                      child: ReportGestureDetector(
                         behavior: HitTestBehavior.translucent,
                         onTap: () {
                           widget.skiPreview?.call();
@@ -662,7 +810,7 @@ class _SinkPortraitLandWidgetState extends State<SinkPortraitLandWidget> {
             if (widget.noBack) {
               return const SizedBox.shrink();
             }
-            return GestureDetector(
+            return ReportGestureDetector(
               behavior: HitTestBehavior.translucent,
               child: SafeArea(
                 top: false,
@@ -749,7 +897,7 @@ class _SinkPortraitLandWidgetState extends State<SinkPortraitLandWidget> {
                     ],
                   ),
                   alignment: Alignment.center,
-                  child: GestureDetector(
+                  child: ReportGestureDetector(
                     behavior: HitTestBehavior.translucent,
                     child: const MyImage.asset(
                       MyImagePaths.appNavBackWN,
@@ -787,7 +935,7 @@ class _SinkPortraitLandWidgetState extends State<SinkPortraitLandWidget> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              GestureDetector(
+              ReportGestureDetector(
                 behavior: HitTestBehavior.translucent,
                 onTap: () {
                   if (vflag) {
@@ -810,7 +958,7 @@ class _SinkPortraitLandWidgetState extends State<SinkPortraitLandWidget> {
                 ),
               ),
               const SizedBox(width: 37),
-              GestureDetector(
+              ReportGestureDetector(
                 behavior: HitTestBehavior.translucent,
                 onTap: () {
                   widget.shareVp?.call();

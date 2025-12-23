@@ -15,6 +15,10 @@ import 'dart:ui' as ui;
 
 import '../picture_record_preview/screen.dart';
 
+import '../../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../../report/ui_layer/report_general_banner.dart';
+
 enum AIRecordType {
   StripOff,
   FaceSwap;
@@ -52,7 +56,7 @@ class _AIRecordCardState extends State<AIRecordCard> {
         borderRadius: BorderRadius.circular(6.w),
         // color: MyTheme.white08Color,
       ),
-      child: GestureDetector(
+      child: ReportGestureDetector(
         behavior: HitTestBehavior.translucent,
         onTap: () {
           if (widget.data.status == 2) {
@@ -93,7 +97,7 @@ class _AIRecordCardState extends State<AIRecordCard> {
                       children: [
                         Container(
                             margin: EdgeInsets.only(bottom: 13.w),
-                            child: GestureDetector(
+                            child: ReportGestureDetector(
                               behavior: HitTestBehavior.translucent,
                               onTap: () {
                                 _saveImage(imgStr);

@@ -24,6 +24,10 @@ import '../../common_widgets/post/content/media.dart';
 import '../../common_widgets/post/content/title.dart';
 import '../../theme.dart';
 
+import '../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../report/ui_layer/report_general_banner.dart';
+
 class CommunityDetailContentView extends StatelessWidget {
   const CommunityDetailContentView({super.key, required this.data});
 
@@ -80,7 +84,7 @@ class CommunityDetailContentView extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          GestureDetector(
+          ReportGestureDetector(
             behavior: HitTestBehavior.translucent,
             onTap: () {
               UserCenterRoute('${data.user?.aff}').push(context);
@@ -221,7 +225,7 @@ class _ContactViewState extends State<_ContactView> {
                         style: MyTheme.blue80_14_M), //联系方式已隐藏，解锁后查看
                   ),
                   SizedBox(height: 10.w),
-                  GestureDetector(
+                  ReportGestureDetector(
                     behavior: HitTestBehavior.translucent,
                     onTap: _pay,
                     child: Container(
@@ -241,7 +245,7 @@ class _ContactViewState extends State<_ContactView> {
               )
             : contact.contains('111111')
                 ? const SizedBox.shrink()
-                : GestureDetector(
+                : ReportGestureDetector(
                     behavior: HitTestBehavior.opaque,
                     onTap: () {
                       Clipboard.setData(ClipboardData(
@@ -381,7 +385,7 @@ class _TopAppsListWidgetState extends State<TopAppsListWidget> {
   @override
   Widget build(BuildContext context) {
     return (homeConfigNotifier.config.postDetailAds ?? []).isNotEmpty
-        ? GeneralAppsListVidget(
+        ? ReportGeneralAppsListVidget(
             data: homeConfigNotifier.config.postDetailAds ?? [])
         : Container();
   }

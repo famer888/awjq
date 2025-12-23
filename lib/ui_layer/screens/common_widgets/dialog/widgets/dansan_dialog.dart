@@ -5,6 +5,10 @@ import '../../../image_paths.dart';
 import '../../../theme.dart';
 import '../../my_image.dart';
 
+import '../../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../../report/ui_layer/report_general_banner.dart';
+
 class DanSanDialog extends StatelessWidget {
   const DanSanDialog({
     super.key,
@@ -51,7 +55,7 @@ class DanSanDialog extends StatelessWidget {
                         style: MyTheme.white255_18_M,
                       ),
                     ),
-                    GestureDetector(
+                    ReportGestureDetector(
                       onTap: () => context.pop(),
                       child: MyImage.asset(
                         MyImagePaths.appCircleClose,

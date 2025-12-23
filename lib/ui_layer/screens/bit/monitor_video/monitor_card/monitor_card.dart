@@ -8,6 +8,10 @@ import '../../../common_widgets/my_image.dart';
 import '../../../image_paths.dart';
 import '../../../theme.dart';
 
+import '../../../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../../../report/ui_layer/report_general_banner.dart';
+
 class MonitorCard extends StatelessWidget {
   const MonitorCard({super.key, required this.data});
 
@@ -19,7 +23,7 @@ class MonitorCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return ReportGestureDetector(
       behavior: HitTestBehavior.translucent,
       onTap: () {
         MonitorVideoDetailRoute('${data.id}').push(context);

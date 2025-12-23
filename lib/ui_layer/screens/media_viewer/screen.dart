@@ -22,6 +22,11 @@ import '../common_widgets/video_player/shortv_mv_player.dart';
 import '../image_paths.dart';
 import '../theme.dart';
 
+
+import '../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../report/ui_layer/report_general_banner.dart';
+
 class MediaViewerScreen extends StatefulWidget {
   const MediaViewerScreen({super.key, required this.pramas});
   final Map pramas;
@@ -65,7 +70,7 @@ class _MediaViewerScreenState extends State<MediaViewerScreen> {
         children: [
           Stack(
             children: [
-              GestureDetector(
+              ReportGestureDetector(
                 behavior: HitTestBehavior.opaque,
                 onHorizontalDragUpdate: (e) {},
                 onTap: () {
@@ -143,7 +148,7 @@ class _MediaViewerScreenState extends State<MediaViewerScreen> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            GestureDetector(
+                            ReportGestureDetector(
                               behavior: HitTestBehavior.translucent,
                               child: SizedBox(
                                 height: double.infinity,
@@ -219,7 +224,7 @@ class _ShortVPlayerState extends State<ShortVPlayer> {
               ),
               Container(color: Colors.black87),
               Center(
-                child: GestureDetector(
+                child: ReportGestureDetector(
                   behavior: HitTestBehavior.translucent,
                   onTap: _pay,
                   child: Container(
@@ -257,7 +262,7 @@ class _ShortVPlayerState extends State<ShortVPlayer> {
               info: videoInfo,
               needCheckAspectRatio: true,
               noBack: true,
-              needSlide: false,//防止滑动冲突，导致无法滑动到照片页
+              needSlide: false, //防止滑动冲突，导致无法滑动到照片页
             );
           });
   }

@@ -6,6 +6,10 @@ import '../theme.dart';
 
 import '../image_paths.dart';
 
+import '../../../report/ui_layer/report_gesture_detector.dart';
+
+import '../../../report/ui_layer/report_general_banner.dart';
+
 class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
   const SearchAppBar({super.key});
 
@@ -21,7 +25,7 @@ class SearchAppBar extends StatelessWidget implements PreferredSizeWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
-              child: GestureDetector(
+              child: ReportGestureDetector(
                 onTap: () => const SearchRoute().push(context),
                 child: Container(
                   height: 35.w,

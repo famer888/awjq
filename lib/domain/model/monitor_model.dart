@@ -1,4 +1,3 @@
-
 import 'banner_model.dart';
 import 'live_model.dart';
 
@@ -16,7 +15,7 @@ class MonitorWithBannersModel {
         banners: List<BannerModel>.from(
             json['banners'].map((e) => BannerModel.fromJson(e))),
         tips:
-        List<TipModel>.from(json['tips'].map((e) => TipModel.fromJson(e))),
+            List<TipModel>.from(json['tips'].map((e) => TipModel.fromJson(e))),
       );
 
   Map<String, dynamic> toJson() =>
@@ -27,19 +26,21 @@ class MonitorModel {
   final int? id;
   final String? title;
   final String? cover;
-        String? hls;
+  String? hls;
   final String? show;
-        int? type;
+  int? type;
   final int? coins;
   final String? intro;
-        int? isFavorite;
-        int? isLike;
+  int? isFavorite;
+  int? isLike;
   final String? payTip;
   final int? viewFct;
   final int? commentCt;
-        int? favoriteFct;
+  int? favoriteFct;
   final int? streamType;
 
+  final int? videoTypeId;
+  final String? videoTypeName;
   MonitorModel({
     this.id,
     this.title,
@@ -56,41 +57,46 @@ class MonitorModel {
     this.isLike,
     this.commentCt,
     this.streamType,
+    this.videoTypeId,
+    this.videoTypeName,
   });
 
   factory MonitorModel.fromJson(Map<String, dynamic> json) => MonitorModel(
-    id: json['id'],
-    cover: json['cover'],
-    title: json['title'],
-    hls: json['hls'],
-    show: json['show'],
-    type: json['type'],
-    coins: json['coins'],
-    intro: json['intro'],
-    isFavorite: json['is_favorite'] ?? 0,
-    payTip: json['pay_tip'],
-    viewFct: json['view_fct'],
-    favoriteFct: json['favorite_fct'] ?? 0,
-    isLike: json['is_like'] ?? 0,
-    commentCt: json['comment_ct'],
-    streamType: json['stream_type'],
-  );
+      id: json['id'],
+      cover: json['cover'],
+      title: json['title'],
+      hls: json['hls'],
+      show: json['show'],
+      type: json['type'],
+      coins: json['coins'],
+      intro: json['intro'],
+      isFavorite: json['is_favorite'] ?? 0,
+      payTip: json['pay_tip'],
+      viewFct: json['view_fct'],
+      favoriteFct: json['favorite_fct'] ?? 0,
+      isLike: json['is_like'] ?? 0,
+      commentCt: json['comment_ct'],
+      streamType: json['stream_type'],
+      videoTypeId: json['video_type_id'] ?? 0,
+      videoTypeName: json['video_type_name'] ?? '');
 
   Map<String, dynamic> toJson() => {
-    'id': id,
-    'cover': cover,
-    'title': title,
-    'hls': hls,
-    'show': show,
-    'type': type,
-    'coins': coins,
-    'intro': intro,
-    'is_favorite': isFavorite,
-    'is_like': isLike,
-    'pay_tip': payTip,
-    'view_fct': viewFct,
-    'comment_ct': commentCt,
-    'favorite_fct': favoriteFct,
-    'stream_type': streamType,
-  };
+        'id': id,
+        'cover': cover,
+        'title': title,
+        'hls': hls,
+        'show': show,
+        'type': type,
+        'coins': coins,
+        'intro': intro,
+        'is_favorite': isFavorite,
+        'is_like': isLike,
+        'pay_tip': payTip,
+        'view_fct': viewFct,
+        'comment_ct': commentCt,
+        'favorite_fct': favoriteFct,
+        'stream_type': streamType,
+        'video_type_id': videoTypeId ?? 0,
+        'video_type_name': videoTypeName ?? '',
+      };
 }
