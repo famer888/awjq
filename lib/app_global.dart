@@ -10,4 +10,5 @@ class AppGlobal {
   static String reportAppId = '';
 
   static String reportTraceId = '';
+  static String affXCode = '';
 }

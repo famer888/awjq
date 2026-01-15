@@ -56,7 +56,7 @@ abstract class RemoteDomain
   void setBaseURL(String url);
 
   void setReportTraceId(String id);
-
+  void setAffXCode(String code);
   String getOAuthId();
   String getOAuthType();
 

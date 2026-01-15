@@ -3,6 +3,7 @@ import 'package:amplitude_flutter/amplitude.dart';
 import 'package:amplitude_flutter/configuration.dart';
 import 'package:amplitude_flutter/events/base_event.dart';
 import 'package:amplitude_flutter/events/event_options.dart';
+import 'package:awjq/app_config.dart';
 import 'package:awjq/ui_layer/screens/common_widgets/screen_background.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
@@ -109,6 +110,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       final uri = Uri.parse(html.window.location.href.replaceAll('amp;', ''));
       String traceID = uri.queryParameters['trace_id'] ?? '';
       if (traceID.isNotEmpty) context.read<AppRepo>().setReportTraceId(traceID);
+
+      String aff = uri.queryParameters[BuildConfig.affCodeKey] ?? '';
+      if (aff.isNotEmpty) context.read<AppRepo>().setAffXCode(aff);
     } else {
       final result = await Clipboard.getData(Clipboard.kTextPlain);
       if (result?.text case final String text when text.isNotEmpty) {
@@ -117,6 +121,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           String traceID = params['trace_id'] ?? '';
           if (traceID.isNotEmpty)
             context.read<AppRepo>().setReportTraceId(traceID);
+
+          String aff = params[BuildConfig.affCodeKey] ?? '';
+          if (aff.isNotEmpty) context.read<AppRepo>().setAffXCode(aff);
         } catch (e) {
           return;
         }
