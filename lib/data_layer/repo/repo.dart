@@ -508,7 +508,9 @@ abstract class _BaseAppRepo implements AppDomain {
   /// 上报线路
   void _reportLine(List<Map<String, Object>> lines) {
     if (lines.isEmpty) return;
-    _apiDio.post('/api/home/domainCheckReport2', data: {'list': lines});
+    Future.delayed(const Duration(seconds: 5)).then((_) {
+      _apiDio.post('/api/home/domainCheckReport2', data: {'list': lines});
+    });
   }
 
   @override
