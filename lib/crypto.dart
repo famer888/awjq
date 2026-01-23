@@ -14,6 +14,7 @@ final mediaIv = IV.fromUtf8(BuildConfig.mediaIv);
 
 String getSign(Map obj) {
   final keyValues = [];
+  keyValues.add("_ver=${obj['_ver']}");
   keyValues.add("client=${obj['client']}");
   keyValues.add("data=${obj['data']}");
   keyValues.add("timestamp=${obj['timestamp']}");
@@ -42,9 +43,13 @@ class PlatformAwareCrypto {
     final encrypted = encrypter.encryptBytes(utf8.encode(word), iv: iv);
     final data = utf8.decode(encrypted.base64.codeUnits);
     final timestamp = DateTime.now().millisecondsSinceEpoch ~/ 1000;
-    final sign =
-        getSign({'client': 'pwa', 'data': data, 'timestamp': timestamp});
-    return 'client=pwa&timestamp=$timestamp&data=$data&sign=$sign';
+    final sign = getSign({
+      '_ver': BuildConfig.ver,
+      'client': 'pwa',
+      'data': data,
+      'timestamp': timestamp,
+    });
+    return '_ver=${BuildConfig.ver}&client=pwa&timestamp=$timestamp&data=$data&sign=$sign';
   }
 
   static dynamic decryptResData(dynamic data) async {

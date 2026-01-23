@@ -1,9 +1,13 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/foundation.dart' as fd;
 
 class BuildConfig {
-  static const key = '2acf7e91e9864673';
-  static const iv = '1c29882d3ddfcfd6';
-  static const appKey = '5589d41f92a597d016b037ac37db243d';
+  static const key = fd.kIsWeb ? '6435a8c95c5ab9c0' : '6899ab796191b571';
+  static const iv = fd.kIsWeb ? '3c451ea1fbd72f04' : '236ee31a968bd338';
+  static const appKey = fd.kIsWeb
+      ? 'e62c8d1db825a4f83861c3e74e9277f2'
+      : 'c81cc86e312c375dfdbd2cc6e60515c6';
+  static const ver = fd.kIsWeb ? 'v4' : 'v3';
+
   static const mediaKey = 'f5d965df75336270';
   static const mediaIv = '97b60394abc2fbe1';
   static const secretKey = 'f61acd3544f69e7e';
@@ -12,7 +16,7 @@ class BuildConfig {
       'aCwhyaDuBLBNyDbBCuJVzrKTwp7ctPx0ThvoJEFhXL9C9YGtPJqOmNE9ivKMy8hw';
 
   /// 备用接口线路
-  static final apiLines = kIsWeb
+  static final apiLines = fd.kIsWeb
       ? [
           'https://bpi6.ufvmysfg.com/api.php',
           'https://lnx.ufvmysfg.com/api.php',
