@@ -11,4 +11,6 @@ class AppGlobal {
 
   static String reportTraceId = '';
   static String affXCode = '';
+
+  static String officeSite = '';
 }
