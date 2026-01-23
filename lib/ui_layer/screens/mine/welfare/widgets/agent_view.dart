@@ -305,31 +305,39 @@ class _AgentViewState extends State<AgentView> {
                     _buildActionView(),
                     _buildShareView(),
                     SizedBox(height: 30.w),
-                    Center(
-                      child: Text(
-                        'yqbz'.tr(context: context),
-                        style: MyTheme.white255_24_B,
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'yqbz'.tr(context: context),
+                          style: MyTheme.white255_24_B,
+                        ),
+                      ],
                     ),
-                    Center(
-                      child: Text(
-                        config.tipsShareText ?? 'loading',
-                        style: MyTheme.white255_15,
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          config.tipsShareText ?? 'loading',
+                          style: MyTheme.white255_15,
+                        ),
+                      ],
                     ),
                     SizedBox(height: 50.w),
-                    Center(
-                      child: Stack(
+                    SizedBox(
+                      height: 500.w,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          MyImage.asset(
-                            MyImagePaths.appWdFxbotmbgN,
-                            height: 500.w,
-                          ),
                           ReportGestureDetector(
                             onTap: () {
                               const MineAgentRoute().push(context);
                             },
-                          )
+                            child: MyImage.asset(
+                              MyImagePaths.appWdFxbotmbgN,
+                              height: 500.w,
+                            ),
+                          ),
                         ],
                       ),
                     ),
