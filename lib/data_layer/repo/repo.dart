@@ -206,6 +206,8 @@ abstract class _BaseAppRepo implements AppDomain {
   ))
     ..interceptors.add(ReportTimingInterceptor());
 
+  Dio get apiDio => _apiDio;
+
   /// 未加密网路服务/广告事件上报
   late final _reportApiDio = Dio(
     BaseOptions(

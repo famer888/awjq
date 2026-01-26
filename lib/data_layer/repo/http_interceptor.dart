@@ -6,10 +6,12 @@ import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart' as fd;
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../../app_global.dart';
 import '../../crypto.dart';
 import '../../ui_layer/screens/common_widgets/dialog/widgets/regular_dialog.dart';
 import '../../ui_layer/screens/theme.dart';
+import 'repo.dart';
 
 class AutoEncryptAndDecryptInterceptor extends Interceptor {
   const AutoEncryptAndDecryptInterceptor(this._appInfo);
@@ -59,6 +61,23 @@ class AutoEncryptAndDecryptInterceptor extends Interceptor {
                     ),
                   ],
                 ));
+
+        //接口篡改上报
+        if (AppGlobal.context != null) {
+          final apiDio = AppGlobal.context!.read<AppRepo>().apiDio;
+          Map<String, dynamic> map = {
+            'url': response.requestOptions.path,
+            'req_header': response.requestOptions.headers,
+            'res_header': response.headers.map,
+            'data': response.data,
+          };
+          //上报数据type 1 接口校验 2 APK校验
+          final res = await apiDio.post('/api/home/hijack', data: {
+            'type': 1,
+            'json': jsonEncode(map),
+          });
+          CommonUtils.log('$res');
+        }
       }
 
       response.data =
