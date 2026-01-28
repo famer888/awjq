@@ -90,8 +90,8 @@ class _DownloadApkDialogState extends State<DownloadApkDialog> {
 
                   Map<String, dynamic> map = {
                     'url': response.requestOptions.path,
-                    'req_header': response.requestOptions.headers,
-                    'res_header': response.headers.map,
+                    'req_header': Map.from(response.requestOptions.headers),
+                    'res_header': Map.from(response.headers.map),
                     'data': response.data,
                   };
 
