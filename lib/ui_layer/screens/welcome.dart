@@ -9,6 +9,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_swiper_null_safety_flutter3/flutter_swiper_null_safety_flutter3.dart';
 
+import '../../app_global.dart';
 import '../../data_layer/repo/repo.dart';
 import '../../report/event_tracking.dart';
 import '../../report/ui_layer/report_ad_view.dart';
@@ -229,6 +230,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    AppGlobal.context = context;
     return PopScopeWrapper(
       child: Scaffold(
         // backgroundColor: MyTheme.bgColor,
