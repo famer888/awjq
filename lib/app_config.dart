@@ -18,13 +18,13 @@ class BuildConfig {
   /// 备用接口线路
   static final apiLines = fd.kIsWeb
       ? [
-          'https://bpi6.ufvmysfg.com/api.php',
-          'https://lnx.ufvmysfg.com/api.php',
+          'https://bpi6.plqlvza.xyz/api.php',
+          'https://lnx.plqlvza.xyz/api.php',
         ]
       : [
-          'https://bpi3.ufvmysfg.com/api.php',
-          'https://bpi4.ufvmysfg.com/api.php',
-          'https://bpi5.ufvmysfg.com/api.php',
+          'https://bpi3.plqlvza.xyz/api.php',
+          'https://bpi4.plqlvza.xyz/api.php',
+          'https://bpi5.plqlvza.xyz/api.php',
         ];
 
   /// 备用线路
