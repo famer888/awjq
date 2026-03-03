@@ -56,7 +56,7 @@ class _ReportGeneralAppListSwiperState extends State<ReportGeneralAppListSwiper>
   void initState() {
     super.initState();
     _ColumNumber = widget.columnNumber;
-    threshold = _ColumNumber * 2;
+    threshold = _ColumNumber * 4; // 最多4行（3行固定 + 1行可能滚动）
   }
 
   void _showBanner(BannerModel banner) {
@@ -135,115 +135,50 @@ class _ReportGeneralAppListSwiperState extends State<ReportGeneralAppListSwiper>
 
   @override
   Widget build(BuildContext context) {
-    final itemWidth = (ScreenUtil().screenWidth - (_ColumNumber + 1) * 6.w - MyTheme.pagePadding * 2) / _ColumNumber;
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 2),
-          child: GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: _ColumNumber,
-                mainAxisSpacing: 10.w,
-                crossAxisSpacing: 6.w,
-                childAspectRatio: 57 / 76,
-              ),
-              itemCount: widget.data.length,
-              itemBuilder: (context, index) {
-                final item = widget.data[index];
-                _showBanner(item);
-                return ReportGestureDetector(
-                  onTap: () {
-                    postClickReport(widget.data[index]);
-                    CommonUtils.openRoute(context, item.toJson());
-                  },
-                  child: SizedBox(
-                      width: itemWidth,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          SizedBox(
-                            width: itemWidth,
-                            height: itemWidth,
-                            child: AspectRatio(
-                              aspectRatio: 1,
-                              child: MyImage.network(CommonUtils.getThumb(item.toJson()),
-                                  fit: BoxFit.cover, borderRadius: 8.w),
-                            ),
-                          ),
-                          SizedBox(height: 8.w),
-                          Text(
-                            item.name ?? item.title ?? "",
-                            style: TextStyle(
-                                color: Colors.white,
-                                overflow: TextOverflow.ellipsis,
-                                decoration: TextDecoration.none,
-                                height: 1,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 11.sp),
-                          ),
-                        ],
-                      )),
-                );
-              }),
-        ),
-        // if (secondPart.isNotEmpty && secondPart is List<BannerModel>)
-        //   SizedBox(height: 10.w),
-        // if (secondPart.isNotEmpty && secondPart is List<BannerModel>)
-        //   ReportInfiniteBannerList(
-        //     banners: secondPart,
-        //     columNumber: _ColumNumber,
-        //     showFunc: (item) {
-        //       _showBanner(item);
-        //     },
-        //     tapFunc: (item) {
-        //       postClickReport(item);
-        //       CommonUtils.openRoute(context, item.toJson());
-        //     },
-        //   ),
-      ],
-    );
-    if (widget.data.length > threshold) {
-      // 取前 _ColumNumber 个（不足 _ColumNumber 个则全取）
-      final firstPart = widget.data.sublist(0, min(_ColumNumber, widget.data.length));
-      // 取第 _ColumNumber+1 个之后的部分（如果不够 _ColumNumber 个就为空）
-      final secondPart = widget.data.length > _ColumNumber ? widget.data.sublist(_ColumNumber) : [];
-      final itemWidth = (ScreenUtil().screenWidth - (_ColumNumber + 1) * 6.w - MyTheme.pagePadding * 2) / _ColumNumber;
+    if (widget.data.length >= threshold) {
+      // 如果超过24个，取前18个（3行*6列）用GridView显示
+      final gridCount = widget.data.length == threshold ? threshold : _ColumNumber * 3; // 18个
+      final firstPart = widget.data.sublist(0, min(gridCount, widget.data.length));
+      // 剩余的用滚动列表显示
+      final secondPart = widget.data.length > gridCount ? widget.data.sublist(gridCount) : [];
+      final itemWidth = (ScreenUtil().screenWidth - (_ColumNumber + 1) * 10.w - MyTheme.pagePadding * 2) / _ColumNumber;
 
       return Column(
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 2),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            padding: EdgeInsets.symmetric(horizontal: MyTheme.pagePadding),
+            child: GridView.count(
+              crossAxisCount: _ColumNumber,
+              mainAxisSpacing: 10.w,
+              crossAxisSpacing: 10.w,
+              physics: const NeverScrollableScrollPhysics(),
+              childAspectRatio: _childAspectRatio,
+              shrinkWrap: true,
               children: List.generate(firstPart.length, (index) {
                 final item = firstPart[index];
 
                 _showBanner(item);
                 return ReportGestureDetector(
                   onTap: () {
-                    postClickReport(widget.data[index]);
+                    postClickReport(item);
                     CommonUtils.openRoute(context, item.toJson());
                   },
-                  child: SizedBox(
-                      width: itemWidth,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          SizedBox(
-                            width: itemWidth,
-                            height: itemWidth,
-                            child: AspectRatio(
-                              aspectRatio: 1,
-                              child: MyImage.network(CommonUtils.getThumb(item.toJson()),
-                                  fit: BoxFit.cover, borderRadius: 8.w),
-                            ),
-                          ),
-                          SizedBox(height: 8.w),
-                          Text(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: itemWidth,
+                        height: itemWidth,
+                        child: AspectRatio(
+                          aspectRatio: 1,
+                          child: MyImage.network(CommonUtils.getThumb(item.toJson()),
+                              fit: BoxFit.cover, borderRadius: 8.w),
+                        ),
+                      ),
+                      Expanded(
+                        child: Container(
+                          alignment: Alignment.center,
+                          child: Text(
                             item.name ?? item.title ?? "",
                             style: TextStyle(
                                 color: Colors.white,
@@ -253,8 +188,10 @@ class _ReportGeneralAppListSwiperState extends State<ReportGeneralAppListSwiper>
                                 fontWeight: FontWeight.w600,
                                 fontSize: 11.sp),
                           ),
-                        ],
-                      )),
+                        ),
+                      ),
+                    ],
+                  ),
                 );
               }),
             ),
