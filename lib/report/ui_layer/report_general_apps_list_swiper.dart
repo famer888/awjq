@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_swiper_null_safety_flutter3/flutter_swiper_null_safety_flutter3.dart';
 import 'package:provider/provider.dart';
+
 // import 'package:hjsq/ui_layer/screens/common_widgets/auto_carousel_slider.dart';
 // import 'package:hjsq/ui_layer/screens/theme.dart';
 
@@ -26,7 +27,7 @@ class ReportGeneralAppListSwiper extends StatefulWidget {
     this.radius = 5,
     this.aspectRatio = 7 / 3,
     this.maxWidth = 375,
-    this.columnNumber = 5,
+    this.columnNumber = 6,
     this.useMargin = false,
   });
 
@@ -39,15 +40,13 @@ class ReportGeneralAppListSwiper extends StatefulWidget {
   bool useMargin = false;
 
   @override
-  State<ReportGeneralAppListSwiper> createState() =>
-      _ReportGeneralAppListSwiperState();
+  State<ReportGeneralAppListSwiper> createState() => _ReportGeneralAppListSwiperState();
 }
 
-class _ReportGeneralAppListSwiperState
-    extends State<ReportGeneralAppListSwiper> {
+class _ReportGeneralAppListSwiperState extends State<ReportGeneralAppListSwiper> {
   final double _childAspectRatio = 57 / 76;
   int threshold = 10;
-  int _ColumNumber = 5;
+  int _ColumNumber = 6;
 
   Map<String, bool> adIdMap = {}; // 已经显示true 未显示null
   List<String> get adIds => List<String>.from(adIdMap.keys);
@@ -136,18 +135,82 @@ class _ReportGeneralAppListSwiperState
 
   @override
   Widget build(BuildContext context) {
+    final itemWidth = (ScreenUtil().screenWidth - (_ColumNumber + 1) * 6.w - MyTheme.pagePadding * 2) / _ColumNumber;
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 2),
+          child: GridView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: _ColumNumber,
+                mainAxisSpacing: 10.w,
+                crossAxisSpacing: 6.w,
+                childAspectRatio: 57 / 76,
+              ),
+              itemCount: widget.data.length,
+              itemBuilder: (context, index) {
+                final item = widget.data[index];
+                _showBanner(item);
+                return ReportGestureDetector(
+                  onTap: () {
+                    postClickReport(widget.data[index]);
+                    CommonUtils.openRoute(context, item.toJson());
+                  },
+                  child: SizedBox(
+                      width: itemWidth,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(
+                            width: itemWidth,
+                            height: itemWidth,
+                            child: AspectRatio(
+                              aspectRatio: 1,
+                              child: MyImage.network(CommonUtils.getThumb(item.toJson()),
+                                  fit: BoxFit.cover, borderRadius: 8.w),
+                            ),
+                          ),
+                          SizedBox(height: 8.w),
+                          Text(
+                            item.name ?? item.title ?? "",
+                            style: TextStyle(
+                                color: Colors.white,
+                                overflow: TextOverflow.ellipsis,
+                                decoration: TextDecoration.none,
+                                height: 1,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 11.sp),
+                          ),
+                        ],
+                      )),
+                );
+              }),
+        ),
+        // if (secondPart.isNotEmpty && secondPart is List<BannerModel>)
+        //   SizedBox(height: 10.w),
+        // if (secondPart.isNotEmpty && secondPart is List<BannerModel>)
+        //   ReportInfiniteBannerList(
+        //     banners: secondPart,
+        //     columNumber: _ColumNumber,
+        //     showFunc: (item) {
+        //       _showBanner(item);
+        //     },
+        //     tapFunc: (item) {
+        //       postClickReport(item);
+        //       CommonUtils.openRoute(context, item.toJson());
+        //     },
+        //   ),
+      ],
+    );
     if (widget.data.length > threshold) {
       // 取前 _ColumNumber 个（不足 _ColumNumber 个则全取）
-      final firstPart =
-          widget.data.sublist(0, min(_ColumNumber, widget.data.length));
+      final firstPart = widget.data.sublist(0, min(_ColumNumber, widget.data.length));
       // 取第 _ColumNumber+1 个之后的部分（如果不够 _ColumNumber 个就为空）
-      final secondPart = widget.data.length > _ColumNumber
-          ? widget.data.sublist(_ColumNumber)
-          : [];
-      final itemWidth = (ScreenUtil().screenWidth -
-              (_ColumNumber + 1) * 6.w -
-              MyTheme.pagePadding * 2) /
-          _ColumNumber;
+      final secondPart = widget.data.length > _ColumNumber ? widget.data.sublist(_ColumNumber) : [];
+      final itemWidth = (ScreenUtil().screenWidth - (_ColumNumber + 1) * 6.w - MyTheme.pagePadding * 2) / _ColumNumber;
 
       return Column(
         children: [
@@ -175,10 +238,8 @@ class _ReportGeneralAppListSwiperState
                             height: itemWidth,
                             child: AspectRatio(
                               aspectRatio: 1,
-                              child: MyImage.network(
-                                  CommonUtils.getThumb(item.toJson()),
-                                  fit: BoxFit.cover,
-                                  borderRadius: 8.w),
+                              child: MyImage.network(CommonUtils.getThumb(item.toJson()),
+                                  fit: BoxFit.cover, borderRadius: 8.w),
                             ),
                           ),
                           SizedBox(height: 8.w),
@@ -198,8 +259,7 @@ class _ReportGeneralAppListSwiperState
               }),
             ),
           ),
-          if (secondPart.isNotEmpty && secondPart is List<BannerModel>)
-            SizedBox(height: 10.w),
+          if (secondPart.isNotEmpty && secondPart is List<BannerModel>) SizedBox(height: 10.w),
           if (secondPart.isNotEmpty && secondPart is List<BannerModel>)
             ReportInfiniteBannerList(
               banners: secondPart,
@@ -234,13 +294,11 @@ class _ReportGeneralAppListSwiperState
             ? Container()
             : LayoutBuilder(builder: (context, constrains) {
                 double width = constrains.maxWidth;
-                double itemWidth =
-                    (width - (_ColumNumber - 1) * 10.w) / _ColumNumber;
+                double itemWidth = (width - (_ColumNumber - 1) * 10.w) / _ColumNumber;
                 double itemHeight = itemWidth / _childAspectRatio;
                 // double bannerHeight = widget.data.length >= 10 ? itemHeight + (pages.first.length > _ColumeNumber ? 10.w : 7.w) :
                 // (itemHeight * (pages.first.length <= _ColumeNumber ? 1 : 2)) + (pages.first.length > _ColumeNumber ? 15.w : 0);
-                double bannerHeight = (itemHeight *
-                        (pages.first.length <= _ColumNumber ? 1 : 2)) +
+                double bannerHeight = (itemHeight * (pages.first.length <= _ColumNumber ? 1 : 2)) +
                     (pages.first.length > _ColumNumber ? 15.w : 0);
 
                 return SizedBox(
@@ -259,8 +317,7 @@ class _ReportGeneralAppListSwiperState
                                 if (didReport) {
                                   return;
                                 }
-                                if (info.visibleFraction > 0.8 &&
-                                    adIds.length < widget.data.length) {
+                                if (info.visibleFraction > 0.8 && adIds.length < widget.data.length) {
                                   for (var bannerModel in pages[index]) {
                                     _showBanner(bannerModel);
                                     // adIds.add(bannerModel.reportId);
@@ -275,27 +332,21 @@ class _ReportGeneralAppListSwiperState
                                       crossAxisCount: _ColumNumber,
                                       mainAxisSpacing: 10.w,
                                       crossAxisSpacing: 10.w,
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
+                                      physics: const NeverScrollableScrollPhysics(),
                                       childAspectRatio: _childAspectRatio,
                                       shrinkWrap: true,
                                       children: pages[index].map((e) {
                                         // return Container();
 
                                         return ReportGestureDetector(
-                                            behavior:
-                                                HitTestBehavior.translucent,
+                                            behavior: HitTestBehavior.translucent,
                                             onTap: () {
-                                              FocusManager.instance.primaryFocus
-                                                  ?.unfocus();
-                                              postClickReport(
-                                                  widget.data[index]);
-                                              CommonUtils.openRoute(
-                                                  context, e.toJson());
+                                              FocusManager.instance.primaryFocus?.unfocus();
+                                              postClickReport(widget.data[index]);
+                                              CommonUtils.openRoute(context, e.toJson());
                                             },
                                             child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
+                                              mainAxisAlignment: MainAxisAlignment.center,
                                               children: [
                                                 SizedBox(
                                                   width: w,
@@ -303,8 +354,7 @@ class _ReportGeneralAppListSwiperState
                                                   child: AspectRatio(
                                                     aspectRatio: 1,
                                                     child: MyImage.network(
-                                                      CommonUtils.getThumb(
-                                                          e.toJson()),
+                                                      CommonUtils.getThumb(e.toJson()),
                                                       fit: BoxFit.cover,
                                                       borderRadius: 8.w,
                                                     ),
@@ -319,14 +369,10 @@ class _ReportGeneralAppListSwiperState
                                                       e.name ?? e.title ?? "",
                                                       style: TextStyle(
                                                           color: Colors.white,
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          decoration:
-                                                              TextDecoration
-                                                                  .none,
+                                                          overflow: TextOverflow.ellipsis,
+                                                          decoration: TextDecoration.none,
                                                           height: 1,
-                                                          fontWeight:
-                                                              FontWeight.w600,
+                                                          fontWeight: FontWeight.w600,
                                                           fontSize: 11.sp),
                                                     ),
                                                   ),
@@ -347,38 +393,29 @@ class _ReportGeneralAppListSwiperState
                           pagination: pages.length > 1 || true
                               ? SwiperPagination(
                                   margin: EdgeInsets.zero,
-                                  builder: SwiperCustomPagination(
-                                      builder: (context, config) {
+                                  builder: SwiperCustomPagination(builder: (context, config) {
                                     int count = pages.length;
                                     return Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                      mainAxisAlignment: MainAxisAlignment.center,
                                       children: List.generate(count, (index) {
                                         return config.activeIndex == index
                                             ? Container(
                                                 width: 10.w,
                                                 height: 4.w,
-                                                margin:
-                                                    EdgeInsets.only(right: 4.w),
+                                                margin: EdgeInsets.only(right: 4.w),
                                                 decoration: BoxDecoration(
                                                   // color: StyleTheme.white255Color,
-                                                  gradient:
-                                                      MyTheme.gradient_90_114,
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(2.w)),
+                                                  gradient: MyTheme.gradient_90_114,
+                                                  borderRadius: BorderRadius.all(Radius.circular(2.w)),
                                                 ),
                                               )
                                             : Container(
                                                 width: 4.w,
                                                 height: 4.w,
-                                                margin:
-                                                    EdgeInsets.only(right: 4.w),
+                                                margin: EdgeInsets.only(right: 4.w),
                                                 decoration: BoxDecoration(
                                                   color: MyTheme.white08Color,
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(2.w)),
+                                                  borderRadius: BorderRadius.all(Radius.circular(2.w)),
                                                 ),
                                               );
                                       }),
@@ -408,8 +445,7 @@ class ReportInfiniteBannerList extends StatefulWidget {
   });
 
   @override
-  State<ReportInfiniteBannerList> createState() =>
-      _ReportInfiniteBannerListState();
+  State<ReportInfiniteBannerList> createState() => _ReportInfiniteBannerListState();
 }
 
 class _ReportInfiniteBannerListState extends State<ReportInfiniteBannerList> {
@@ -459,17 +495,14 @@ class _ReportInfiniteBannerListState extends State<ReportInfiniteBannerList> {
   void dispose() {
     _controller.dispose();
     _autoScrollRunning = false;
-    VisibilityDetectorController.instance
-        .forget(ValueKey('ReportInfiniteBannerList_${widget.hashCode}'));
+    VisibilityDetectorController.instance.forget(ValueKey('ReportInfiniteBannerList_${widget.hashCode}'));
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final itemWidth = (ScreenUtil().screenWidth -
-            (widget.columNumber + 1) * 7 -
-            MyTheme.pagePadding * 2) /
-        widget.columNumber;
+    final itemWidth =
+        (ScreenUtil().screenWidth - (widget.columNumber + 1) * 7 - MyTheme.pagePadding * 2) / widget.columNumber;
 
     return VisibilityDetector(
       key: ValueKey('ReportInfiniteBannerList_${widget.hashCode}'),
@@ -488,8 +521,7 @@ class _ReportInfiniteBannerListState extends State<ReportInfiniteBannerList> {
         child: SizedBox(
           height: itemWidth + 28,
           child: ScrollConfiguration(
-            behavior:
-                ScrollConfiguration.of(context).copyWith(scrollbars: false),
+            behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
             child: ListView.builder(
               controller: _controller,
               scrollDirection: Axis.horizontal,
