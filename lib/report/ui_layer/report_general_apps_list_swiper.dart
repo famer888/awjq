@@ -40,10 +40,12 @@ class ReportGeneralAppListSwiper extends StatefulWidget {
   bool useMargin = false;
 
   @override
-  State<ReportGeneralAppListSwiper> createState() => _ReportGeneralAppListSwiperState();
+  State<ReportGeneralAppListSwiper> createState() =>
+      _ReportGeneralAppListSwiperState();
 }
 
-class _ReportGeneralAppListSwiperState extends State<ReportGeneralAppListSwiper> {
+class _ReportGeneralAppListSwiperState
+    extends State<ReportGeneralAppListSwiper> {
   final double _childAspectRatio = 57 / 76;
   int _ColumNumber = 6;
 
@@ -139,7 +141,10 @@ class _ReportGeneralAppListSwiperState extends State<ReportGeneralAppListSwiper>
 
     final firstPart = widget.data.sublist(0, gridCount);
     final secondPart = widget.data.sublist(gridCount);
-    final itemWidth = (ScreenUtil().screenWidth - (_ColumNumber + 1) * 10.w - MyTheme.pagePadding * 2) / _ColumNumber;
+    final itemWidth = (ScreenUtil().screenWidth -
+            (_ColumNumber + 1) * 10.w -
+            MyTheme.pagePadding * 2) /
+        _ColumNumber;
 
     return Column(
       children: [
@@ -169,8 +174,10 @@ class _ReportGeneralAppListSwiperState extends State<ReportGeneralAppListSwiper>
                       height: itemWidth,
                       child: AspectRatio(
                         aspectRatio: 1,
-                        child: MyImage.network(CommonUtils.getThumb(item.toJson()),
-                            fit: BoxFit.cover, borderRadius: 8.w),
+                        child: MyImage.network(
+                            CommonUtils.getThumb(item.toJson()),
+                            fit: BoxFit.cover,
+                            borderRadius: 8.w),
                       ),
                     ),
                     Expanded(
@@ -194,7 +201,8 @@ class _ReportGeneralAppListSwiperState extends State<ReportGeneralAppListSwiper>
             }),
           ),
         ),
-        if (secondPart.isNotEmpty && secondPart is List<BannerModel>) SizedBox(height: 10.w),
+        if (secondPart.isNotEmpty && secondPart is List<BannerModel>)
+          SizedBox(height: 10.w),
         if (secondPart.isNotEmpty && secondPart is List<BannerModel>)
           ReportInfiniteBannerList(
             banners: secondPart,
@@ -380,7 +388,8 @@ class ReportInfiniteBannerList extends StatefulWidget {
   });
 
   @override
-  State<ReportInfiniteBannerList> createState() => _ReportInfiniteBannerListState();
+  State<ReportInfiniteBannerList> createState() =>
+      _ReportInfiniteBannerListState();
 }
 
 class _ReportInfiniteBannerListState extends State<ReportInfiniteBannerList> {
@@ -414,10 +423,12 @@ class _ReportInfiniteBannerListState extends State<ReportInfiniteBannerList> {
       if (_controller.hasClients) {
         final max = _controller.position.maxScrollExtent;
         final pos = _controller.position.pixels;
+        // 前半内容总宽度 = (maxScrollExtent + viewport) / 2
+        // 当 pos 越过中点，无缝跳到前半段的对应位置，内容完全一致
+        final halfContent = (max + _controller.position.viewportDimension) / 2;
 
-        if (pos >= max - 1) {
-          final middle = max / 2;
-          _controller.jumpTo(middle);
+        if (pos >= halfContent) {
+          _controller.jumpTo(pos - halfContent);
         } else {
           _controller.jumpTo(pos + scrollSpeed);
         }
@@ -429,15 +440,19 @@ class _ReportInfiniteBannerListState extends State<ReportInfiniteBannerList> {
   @override
   void dispose() {
     _controller.dispose();
+
     _autoScrollRunning = false;
-    VisibilityDetectorController.instance.forget(ValueKey('ReportInfiniteBannerList_${widget.hashCode}'));
+    VisibilityDetectorController.instance
+        .forget(ValueKey('ReportInfiniteBannerList_${widget.hashCode}'));
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final itemWidth =
-        (ScreenUtil().screenWidth - (widget.columNumber + 1) * 7 - MyTheme.pagePadding * 2) / widget.columNumber;
+    final itemWidth = (ScreenUtil().screenWidth -
+            (widget.columNumber + 1) * 7 -
+            MyTheme.pagePadding * 2) /
+        widget.columNumber;
 
     return VisibilityDetector(
       key: ValueKey('ReportInfiniteBannerList_${widget.hashCode}'),
@@ -456,7 +471,8 @@ class _ReportInfiniteBannerListState extends State<ReportInfiniteBannerList> {
         child: SizedBox(
           height: itemWidth + 28,
           child: ScrollConfiguration(
-            behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
+            behavior:
+                ScrollConfiguration.of(context).copyWith(scrollbars: false),
             child: ListView.builder(
               controller: _controller,
               scrollDirection: Axis.horizontal,
@@ -472,35 +488,35 @@ class _ReportInfiniteBannerListState extends State<ReportInfiniteBannerList> {
                     // CommonUtils.openRoute(context, banner.toJson());
                   },
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 4),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SizedBox.square(
-                          dimension: itemWidth,
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: MyImage.network(
-                              CommonUtils.getThumb(banner.toJson()),
-                              fit: BoxFit.cover,
+                      padding: const EdgeInsets.symmetric(horizontal: 4),
+                      child:  Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SizedBox.square(
+                              dimension: itemWidth,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: MyImage.network(
+                                  CommonUtils.getThumb(banner.toJson()),
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
                             ),
-                          ),
+                            const SizedBox(height: 8),
+                            Text(
+                              "${banner.name ?? banner.title ?? ""}",
+                              style: const TextStyle(
+                                color: Colors.white,
+                                overflow: TextOverflow.ellipsis,
+                                decoration: TextDecoration.none,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 11,
+                              ),
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 8),
-                        Text(
-                          banner.name ?? banner.title ?? "",
-                          style: const TextStyle(
-                            color: Colors.white,
-                            overflow: TextOverflow.ellipsis,
-                            decoration: TextDecoration.none,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 11,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                      ),
                 );
               },
             ),
